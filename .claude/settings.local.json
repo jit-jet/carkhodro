@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(cd \"d:\\\\code\\\\aaa\\\\carkhodro\" ; $proc = Start-Process -NoNewWindow -PassThru -FilePath \"node\" -ArgumentList \"$env:APPDATA\\\\npm\\\\node_modules\\\\next\\\\dist\\\\bin\\\\next\", \"dev\" -RedirectStandardOutput \"$env:TEMP\\\\nextdev.log\" -RedirectStandardError \"$env:TEMP\\\\nextdev.err\" ; Start-Sleep -Seconds 6 ; Get-Content \"$env:TEMP\\\\nextdev.log\" -ErrorAction SilentlyContinue ; Get-Content \"$env:TEMP\\\\nextdev.err\" -ErrorAction SilentlyContinue ; Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(cd \"d:\\\\code\\\\aaa\\\\carkhodro\" ; $proc = Start-Process -NoNewWindow -PassThru -FilePath \"npx\" -ArgumentList \"next\", \"dev\" -RedirectStandardOutput \"$env:TEMP\\\\nextdev.log\" -RedirectStandardError \"$env:TEMP\\\\nextdev.err\" ; Start-Sleep -Seconds 8 ; Get-Content \"$env:TEMP\\\\nextdev.log\" -ErrorAction SilentlyContinue ; Get-Content \"$env:TEMP\\\\nextdev.err\" -ErrorAction SilentlyContinue ; Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue)"
+    ]
+  }
+}
