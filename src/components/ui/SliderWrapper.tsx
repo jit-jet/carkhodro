@@ -2,11 +2,6 @@
 
 import { useRef, useState } from "react";
 
-interface SliderWrapperProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
 function ChevronRightIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-5 h-5">
@@ -24,62 +19,130 @@ function ChevronLeftIcon() {
 }
 
 const BTN =
-  "absolute top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity hover:bg-accent hover:text-charcoal text-gray-600";
+  "absolute top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all duration-200 hover:bg-accent hover:text-charcoal active:scale-90 text-gray-600";
+
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+interface SliderWrapperProps {
+  children: React.ReactNode;
+  className?: string;
+}
 
 export default function SliderWrapper({ children, className = "" }: SliderWrapperProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
-  const lastX = useRef(0);
+  const rafRef      = useRef<number | null>(null);
+  const velocityRef = useRef(0);
+  const lastXRef    = useRef(0);
   const [dragging, setDragging] = useState(false);
 
-  // Measure one card width + gap so each arrow click moves exactly one slide
+  /* ── cancel any running RAF ───────────────────── */
+  const cancelRaf = () => {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+  };
+
+  /* ── custom eased scroll (arrow buttons) ─────── */
+  const animateScroll = (totalDelta: number, duration = 360) => {
+    const el = containerRef.current;
+    if (!el) return;
+    cancelRaf();
+
+    const t0 = performance.now();
+    let scrolled = 0;
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - t0) / duration, 1);
+      const target   = totalDelta * easeOutCubic(progress);
+      // scrollBy keeps the call RTL-safe (positive left = scroll right, negative = left)
+      el.scrollBy({ left: target - scrolled });
+      scrolled = target;
+      rafRef.current = progress < 1 ? requestAnimationFrame(tick) : null;
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  /* ── measure one card slot ───────────────────── */
   const getStep = (): number => {
     const el = containerRef.current;
     if (!el) return 280;
     const first = el.firstElementChild as HTMLElement | null;
-    return first ? first.offsetWidth + 16 : 280; // offsetWidth + gap-4
+    return first ? first.offsetWidth + 16 : 280; // width + gap-4
   };
 
   const scroll = (dir: "next" | "prev") => {
-    const el = containerRef.current;
-    if (!el) return;
     const step = getStep();
-    // RTL: next items are to the LEFT  → scrollBy negative-left scrolls the viewport left
-    //      prev items are to the RIGHT → scrollBy positive-left scrolls the viewport right
-    el.scrollBy({ left: dir === "next" ? -step : step, behavior: "smooth" });
+    // RTL: next items are to the LEFT → negative delta
+    //      prev items are to the RIGHT → positive delta
+    animateScroll(dir === "next" ? -step : step);
   };
 
+  /* ── mouse drag ──────────────────────────────── */
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    isDragging.current = true;
-    lastX.current = e.pageX;
-    setDragging(true);
-  };
+    e.preventDefault(); // prevent text-selection highlight during drag
+    cancelRaf();
 
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDragging.current) return;
+    lastXRef.current    = e.pageX;
+    velocityRef.current = 0;
+    setDragging(true);
+
     const el = containerRef.current;
     if (!el) return;
-    const dx = lastX.current - e.pageX; // positive = mouse moved left
-    // Use scrollBy so RTL direction is handled consistently by the browser
-    // mouse moved left (dx > 0) → scroll viewport left (reveal next items) → left: -dx
-    el.scrollBy({ left: -dx });
-    lastX.current = e.pageX;
-  };
 
-  const stopDrag = () => {
-    isDragging.current = false;
-    setDragging(false);
+    let totalDrag = 0;
+    let moved = false;
+
+    const handleMove = (ev: MouseEvent) => {
+      const dx = lastXRef.current - ev.pageX; // positive = mouse moved left
+      totalDrag += Math.abs(dx);
+      if (totalDrag > 6) moved = true;
+      velocityRef.current = dx;
+      // -dx: moving left (dx > 0) → scrollBy negative-left = scroll left = reveal next items ✓
+      el.scrollBy({ left: dx });
+      lastXRef.current = ev.pageX;
+    };
+
+    const handleUp = () => {
+      setDragging(false);
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mouseup",   handleUp);
+
+      // Block the click event that fires immediately after mouseup if the user actually dragged,
+      // so that links/buttons inside cards don't activate accidentally.
+      if (moved) {
+        window.addEventListener(
+          "click",
+          (ev) => {
+            ev.preventDefault();   // stops link navigation
+            ev.stopPropagation();  // stops other click handlers
+          },
+          { once: true, capture: true }
+        );
+      }
+
+      // Momentum coast — amplify last recorded velocity and decelerate with friction
+      let vel = velocityRef.current * 6;
+      if (Math.abs(vel) < 1) return;
+
+      const coast = () => {
+        vel *= 0.88; // friction: ~0.5s to stop
+        if (Math.abs(vel) < 0.5) { rafRef.current = null; return; }
+        el.scrollBy({ left: vel });
+        rafRef.current = requestAnimationFrame(coast);
+      };
+      rafRef.current = requestAnimationFrame(coast);
+    };
+
+    // Attach to window so drag continues even when cursor leaves the container
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseup",   handleUp);
   };
 
   return (
     <div className="relative group/slider">
-      {/*
-        RTL layout: start = RIGHT edge, end = LEFT edge.
-        Prev button belongs on the RIGHT (start) — shows a → (go back right).
-        Next button belongs on the LEFT (end) — shows a ← (reveal more items left).
-      */}
-
-      {/* Prev — RIGHT side (start-0 = right in RTL) */}
+      {/* Prev — RIGHT side (inset-s-0 = right in RTL) */}
       <button
         onClick={() => scroll("prev")}
         aria-label="قبلی"
@@ -94,14 +157,11 @@ export default function SliderWrapper({ children, className = "" }: SliderWrappe
           dragging ? "cursor-grabbing select-none" : "cursor-grab"
         } ${className}`}
         onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={stopDrag}
-        onMouseLeave={stopDrag}
       >
         {children}
       </div>
 
-      {/* Next — LEFT side (end-0 = left in RTL) */}
+      {/* Next — LEFT side (inset-e-0 = left in RTL) */}
       <button
         onClick={() => scroll("next")}
         aria-label="بعدی"

@@ -2,7 +2,33 @@
   "permissions": {
     "allow": [
       "PowerShell(cd \"d:\\\\code\\\\aaa\\\\carkhodro\" ; $proc = Start-Process -NoNewWindow -PassThru -FilePath \"node\" -ArgumentList \"$env:APPDATA\\\\npm\\\\node_modules\\\\next\\\\dist\\\\bin\\\\next\", \"dev\" -RedirectStandardOutput \"$env:TEMP\\\\nextdev.log\" -RedirectStandardError \"$env:TEMP\\\\nextdev.err\" ; Start-Sleep -Seconds 6 ; Get-Content \"$env:TEMP\\\\nextdev.log\" -ErrorAction SilentlyContinue ; Get-Content \"$env:TEMP\\\\nextdev.err\" -ErrorAction SilentlyContinue ; Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue)",
-      "PowerShell(cd \"d:\\\\code\\\\aaa\\\\carkhodro\" ; $proc = Start-Process -NoNewWindow -PassThru -FilePath \"npx\" -ArgumentList \"next\", \"dev\" -RedirectStandardOutput \"$env:TEMP\\\\nextdev.log\" -RedirectStandardError \"$env:TEMP\\\\nextdev.err\" ; Start-Sleep -Seconds 8 ; Get-Content \"$env:TEMP\\\\nextdev.log\" -ErrorAction SilentlyContinue ; Get-Content \"$env:TEMP\\\\nextdev.err\" -ErrorAction SilentlyContinue ; Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue)"
+      "PowerShell(cd \"d:\\\\code\\\\aaa\\\\carkhodro\" ; $proc = Start-Process -NoNewWindow -PassThru -FilePath \"npx\" -ArgumentList \"next\", \"dev\" -RedirectStandardOutput \"$env:TEMP\\\\nextdev.log\" -RedirectStandardError \"$env:TEMP\\\\nextdev.err\" ; Start-Sleep -Seconds 8 ; Get-Content \"$env:TEMP\\\\nextdev.log\" -ErrorAction SilentlyContinue ; Get-Content \"$env:TEMP\\\\nextdev.err\" -ErrorAction SilentlyContinue ; Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue)",
+      "WebSearch",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "PowerShell(Get-ChildItem -Path \"d:\\\\code\\\\aaa\\\\carkhodro\" -Force | Select-Object Name, @{Name=\"Type\"; Expression={if\\($_.PSIsContainer\\){\"Directory\"}else{\"File\"}}} | Format-Table -AutoSize)",
+      "Bash(Get-ChildItem -Path \"d:\\\\code\\\\aaa\\\\carkhodro\" -Recurse -Directory)",
+      "Bash(Select-Object -First 50 FullName)",
+      "Bash(npx tsc *)",
+      "Bash(Get-ChildItem -Path \"d:\\\\code\\\\aaa\\\\carkhodro\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(mkdir -p \"d:/code/aaa/carkhodro/app/products/[id]\")",
+      "Bash(npm run *)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/products/1)",
+      "Bash(chromium-cli --session pdp-verify)",
+      "Read(//usr/local/**)",
+      "Read(//c/Users/reza/AppData/Local/**)",
+      "Bash(node -e \"const { chromium } = require\\('playwright'\\); \\(async \\(\\) => { const b = await chromium.launch\\({args:['--no-sandbox']}\\); const p = await b.newPage\\(\\); await p.goto\\('http://localhost:3000/products/1'\\); await p.waitForSelector\\('h1'\\); const title = await p.textContent\\('h1'\\); console.log\\('TITLE:', title\\); await p.screenshot\\({path:'/tmp/pdp1.png', fullPage:true}\\); await p.goto\\('http://localhost:3000/products/8'\\); await p.waitForSelector\\('h1'\\); const t2 = await p.textContent\\('h1'\\); console.log\\('TITLE_8:', t2\\); const notifyBtn = await p.textContent\\('button:has-text\\(\\\\\"موجود\\\\\"\\)'\\).catch\\(\\(\\)=>null\\); console.log\\('NOTIFY_BTN:', notifyBtn\\); await p.screenshot\\({path:'/tmp/pdp8.png', fullPage:true}\\); await b.close\\(\\); }\\)\\(\\);\")",
+      "Bash(curl -s http://localhost:3000/products/1)",
+      "Bash(curl -s http://localhost:3000/products/8)",
+      "Bash(curl -s http://localhost:3000/products/99 -o /dev/null -w \"%{http_code}\")",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(New-Item -ItemType Directory -Path \"d:\\\\code\\\\aaa\\\\carkhodro\\\\prisma\" -Force)",
+      "Bash(Out-Null)"
+    ],
+    "additionalDirectories": [
+      "d:\\code\\aaa\\carkhodro\\app\\products"
     ]
   }
 }

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import SliderWrapper from "@/src/components/ui/SliderWrapper";
 import SectionTitle from "@/src/components/ui/SectionTitle";
-import { carBrands, carModels } from "@/src/data/mockData";
+import { spareBrands, carModels } from "@/src/data/mockData";
 
 export default function CarModelsSlider() {
   const [selectedBrandId, setSelectedBrandId] = useState<number | null>(null);
@@ -34,7 +35,7 @@ export default function CarModelsSlider() {
           >
             همه
           </button>
-          {carBrands.map((brand) => (
+          {spareBrands.map((brand) => (
             <button
               key={brand.id}
               onClick={() => setSelectedBrandId(brand.id)}
@@ -58,18 +59,17 @@ export default function CarModelsSlider() {
               className="flex-shrink-0 w-44 sm:w-48 bg-white rounded-2xl p-4 shadow-sm hover:shadow-md border border-gray-100 hover:border-accent transition-all duration-200 group"
             >
               {/* Car visual */}
-              <div
-                className="w-full h-24 rounded-xl flex items-center justify-center text-5xl mb-3"
-                style={{ backgroundColor: model.color + "20" }}
-              >
-                🚙
+              <div className="relative w-full h-24 rounded-xl overflow-hidden mb-3 bg-gray-100">
+                <Image
+                  src={model.image}
+                  alt={model.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-200"
+                />
               </div>
 
               {/* Model info */}
-              <div
-                className="text-xs font-semibold px-2 py-0.5 rounded-full inline-block mb-1"
-                style={{ backgroundColor: model.color + "20", color: model.color }}
-              >
+              <div className="text-xs font-semibold px-2 py-0.5 rounded-full inline-block mb-1 bg-accent/20 text-accent-dark">
                 {model.brandName}
               </div>
               <h3 className="font-bold text-charcoal text-sm group-hover:text-accent-dark transition-colors">
