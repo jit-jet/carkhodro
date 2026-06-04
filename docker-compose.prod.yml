@@ -1,0 +1,44 @@
+services:
+  # ── PostgreSQL (production) ───────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: carkhodro_db_prod
+    restart: always
+    environment:
+      POSTGRES_USER:     ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB:       ${POSTGRES_DB:-carkhodro}
+    # No port binding — only the app container needs to reach the DB
+    expose:
+      - "5432"
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-carkhodro}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ── Next.js production server (standalone, ~150 MB image) ────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner        # uses the optimized "runner" stage
+    container_name: carkhodro_app_prod
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: >-
+        postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-carkhodro}?schema=public
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+    depends_on:
+      db:
+        condition: service_healthy
+    # No volumes — immutable, reproducible deployment
+
+volumes:
+  postgres_prod_data:

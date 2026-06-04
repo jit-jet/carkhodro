@@ -1,0 +1,108 @@
+services:
+  # ── PostgreSQL ───────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: carkhodro_db_dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB:       ${POSTGRES_DB:-carkhodro}
+    # No host port binding — app reaches Postgres via Docker internal network.
+    # On Windows, Hyper-V reserves port ranges that block common DB ports.
+    # To connect from a GUI client: docker compose --profile dbport up
+    expose:
+      - "5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-carkhodro}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # Optional sidecar — only starts with: docker compose --profile dbport up
+  # Exposes Postgres on localhost:15432 for GUI clients (TablePlus, DataGrip)
+  db-exposed:
+    image: postgres:16-alpine
+    profiles:
+      - dbport
+    network_mode: "service:db"
+    ports:
+      - "15432:5432"
+
+  # ── Prisma migrations (one-shot) ─────────────────────────────────────────────
+  # Uses the "migrate" image stage which has node_modules + prisma baked in.
+  # This avoids the anonymous-volume problem where a stale volume shadows the
+  # rebuilt image's node_modules (causing missing @prisma/studio-core errors).
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    container_name: carkhodro_migrate
+    restart: "no"
+    environment:
+      DATABASE_URL: >-
+        postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-carkhodro}?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── Prisma Studio (optional) ─────────────────────────────────────────────────
+  # Only starts when you run: docker compose --profile studio up
+  # Then open http://localhost:5555 in your browser.
+  studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    profiles:
+      - studio
+    container_name: carkhodro_studio
+    ports:
+      - "51212:51212"
+    environment:
+      DATABASE_URL: >-
+        postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-carkhodro}?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - node
+      - node_modules/prisma/build/index.js
+      - studio
+      - --browser
+      - none
+
+  # ── Next.js dev server (hot-reload) ──────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: carkhodro_app_dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: >-
+        postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-carkhodro}?schema=public
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    command: ["npm", "run", "dev"]
+
+volumes:
+  postgres_dev_data:

@@ -125,7 +125,7 @@ export default function HeroBanner() {
               {/* Stat card 2 */}
               <div
                 style={{ animation: "fade-in-up 0.5s ease-out 0.85s both, float 4.5s ease-in-out 1.7s infinite", willChange: "transform" }}
-                className="absolute -bottom-2 -start-4 bg-white text-charcoal rounded-2xl shadow-xl p-4 text-center min-w-28"
+                className="absolute -bottom-2 max-md:bottom-28 -start-4 bg-white text-charcoal rounded-2xl shadow-xl p-4 text-center min-w-28"
               >
                 <p className="text-2xl font-black text-green-600">۹۸٪</p>
                 <p className="text-xs font-medium text-gray-500 mt-0.5">رضایت مشتریان</p>
