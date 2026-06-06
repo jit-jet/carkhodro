@@ -33,7 +33,10 @@ docker compose --profile studio up studio
 
 # Copy .env.example → .env.prod and fill in real credentials, then:
 docker compose -f docker-compose.prod.yml --env-file .env.prod up --build -d
-Prisma migrations (dev, if needed manually):
+# or this with .env :
+docker compose -f docker-compose.prod.yml up --build -d
+
+# Prisma migrations (dev, if needed manually):
 
 
 docker compose exec app npx prisma migrate dev --name your_migration_name

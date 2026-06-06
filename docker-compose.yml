@@ -49,6 +49,24 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    command: ["node", "node_modules/prisma/build/index.js", "db", "push"]
+
+  # ── Prisma seed (one-shot, idempotent) ───────────────────────────────────────
+  # Runs after migrate. The seed script skips itself if data already exists.
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    container_name: carkhodro_seed
+    restart: "no"
+    environment:
+      DATABASE_URL: >-
+        postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-carkhodro}?schema=public
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    command: ["node_modules/.bin/tsx", "prisma/seed.ts"]
 
   # ── Prisma Studio (optional) ─────────────────────────────────────────────────
   # Only starts when you run: docker compose --profile studio up
@@ -101,6 +119,8 @@ services:
       db:
         condition: service_healthy
       migrate:
+        condition: service_completed_successfully
+      seed:
         condition: service_completed_successfully
     command: ["npm", "run", "dev"]
 
