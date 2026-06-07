@@ -1,15 +1,17 @@
 import SliderWrapper from "@/src/components/ui/SliderWrapper";
 import SectionTitle from "@/src/components/ui/SectionTitle";
-import { categories } from "@/src/data/mockData";
+import { getCategories } from "@/actions/categories";
+import type { CategoryVM } from "@/src/lib/serializers";
 
-export default function CategoriesSlider() {
+export default async function CategoriesSlider() {
+  const categories = await getCategories();
   return (
     <section className="py-10 bg-silver-light">
       <div className="max-w-7xl mx-auto px-4">
         <SectionTitle
           title="دسته‌بندی قطعات"
           subtitle="قطعه مورد نظر خود را بر اساس دسته‌بندی پیدا کنید"
-          linkHref="/categories"
+          linkHref="/products"
           linkLabel="همه دسته‌بندی‌ها"
         />
 
@@ -34,10 +36,10 @@ export default function CategoriesSlider() {
   );
 }
 
-function CategoryCard({ cat }: { cat: (typeof categories)[number] }) {
+function CategoryCard({ cat }: { cat: CategoryVM }) {
   return (
     <a
-      href={`/category/${cat.id}`}
+      href={`/products?category=${cat.key}`}
       className="group rounded-2xl p-5 flex flex-col items-center text-center hover:shadow-lg transition-all duration-200 border border-transparent hover:border-current/10"
       style={{ backgroundColor: cat.bgColor }}
     >

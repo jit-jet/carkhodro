@@ -2,17 +2,20 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/src/components/layout/Header";
 import Footer from "@/src/components/layout/Footer";
+import { getNavLinks } from "@/actions/navigation";
 
 export const metadata: Metadata = {
   title: "کارخودرو | فروشگاه قطعات یدکی خودرو",
   description: "خرید آنلاین قطعات یدکی خودروهای ایرانی و خارجی با بهترین قیمت و ضمانت اصالت کالا",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const navLinks = await getNavLinks();
+
   return (
     <html lang="fa" dir="rtl">
       <head>
@@ -24,7 +27,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-charcoal font-sans antialiased flex flex-col">
-        <Header />
+        <Header navLinks={navLinks} />
         <main className="flex-1">
           {children}
         </main>

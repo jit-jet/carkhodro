@@ -3,16 +3,16 @@
 import Image from "next/image";
 import SliderWrapper from "@/src/components/ui/SliderWrapper";
 import SectionTitle from "@/src/components/ui/SectionTitle";
-import { spareBrands } from "@/src/data/mockData";
+import type { CarBrandVM } from "@/src/lib/serializers";
 
-export default function BrandsSlider() {
+export default function BrandsSlider({ spareBrands }: { spareBrands: CarBrandVM[] }) {
   return (
     <section className="py-10 bg-white">
       <div className="max-w-7xl mx-auto px-4">
         <SectionTitle
           title="جستجو بر اساس برند"
           subtitle="برند خودرو خود را انتخاب کنید"
-          linkHref="/brands"
+          linkHref="/products"
           linkLabel="همه برندها"
         />
 
@@ -20,7 +20,7 @@ export default function BrandsSlider() {
           {spareBrands.map((brand) => (
             <a
               key={brand.id}
-              href={`/brand/${brand.id}`}
+              href={`/products?brand=${encodeURIComponent(brand.name)}`}
               className="flex-shrink-0 w-36 sm:w-40 bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg border border-gray-100 hover:border-accent transition-all duration-200 group flex flex-col items-center text-center"
             >
               {/* Brand logo */}

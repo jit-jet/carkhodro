@@ -49,6 +49,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    # Mount the live schema so the service always reflects the current state of
+    # prisma/schema.prisma rather than the snapshot baked into the image.
+    volumes:
+      - ./prisma:/app/prisma
+      - ./prisma.config.ts:/app/prisma.config.ts
     command: ["node", "node_modules/prisma/build/index.js", "db", "push"]
 
   # ── Prisma seed (one-shot, idempotent) ───────────────────────────────────────

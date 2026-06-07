@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { navLinks } from "@/src/data/mockData";
+import type { NavLinkVM } from "@/src/lib/serializers";
 
 function PhoneIcon() {
   return (
@@ -69,7 +69,7 @@ function CloseIcon() {
   );
 }
 
-export default function Header() {
+export default function Header({ navLinks }: { navLinks: NavLinkVM[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -142,27 +142,21 @@ export default function Header() {
           {/* Actions */}
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* Cart */}
-            <button className="relative flex items-center gap-1.5 bg-accent hover:bg-accent-dark text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors hidden sm:flex">
+            <Link href="/cart" className="relative flex items-center gap-1.5 bg-accent hover:bg-accent-dark text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors hidden sm:flex">
               <CartIcon />
               <span className="hidden md:inline">سبد خرید</span>
-              <span className="absolute -top-1.5 -start-1.5 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                ۳
-              </span>
-            </button>
+            </Link>
 
             {/* Cart (mobile) */}
-            <button className="relative sm:hidden text-charcoal p-2">
+            <Link href="/cart" className="relative sm:hidden text-charcoal p-2">
               <CartIcon />
-              <span className="absolute -top-1 -start-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                ۳
-              </span>
-            </button>
+            </Link>
 
             {/* User */}
-            <button className="flex items-center gap-1.5 border-2 border-silver hover:border-accent text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors hidden sm:flex">
+            <Link href="/login" className="flex items-center gap-1.5 border-2 border-silver hover:border-accent text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors hidden sm:flex">
               <UserIcon />
               <span className="hidden md:inline">ورود / ثبت‌نام</span>
-            </button>
+            </Link>
           </div>
         </div>
       </div>

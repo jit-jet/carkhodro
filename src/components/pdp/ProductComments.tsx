@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import type { PDPComment } from '@/src/data/pdpMockData';
+import { useState, useTransition } from 'react';
+import { createReview } from '@/actions/review-actions';
+import type { ReviewVM } from '@/src/lib/serializers';
 
 interface Props {
   description: string;
-  comments: PDPComment[];
-  productId: number;
+  comments: ReviewVM[];
+  productId: string;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -72,10 +73,11 @@ function StarPicker({
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function ProductComments({ description, comments: initial, productId: _productId }: Props) {
+export default function ProductComments({ description, comments: initial, productId }: Props) {
   const [activeTab, setActiveTab] = useState<'description' | 'comments'>('description');
-  const [comments,  setComments]  = useState<PDPComment[]>(initial);
+  const [comments,  setComments]  = useState<ReviewVM[]>(initial);
   const [formOpen,  setFormOpen]  = useState(false);
+  const [pending, startTransition] = useTransition();
 
   // form state
   const [name,    setName]    = useState('');
@@ -92,23 +94,26 @@ export default function ProductComments({ description, comments: initial, produc
     if (!text.trim())  errs.push('متن نظر را وارد کنید.');
     if (errs.length) { setErrors(errs); return; }
 
-    const now = new Date().toLocaleDateString('fa-IR');
-    setComments(prev => [
-      {
-        id: Date.now(),
-        author: name.trim(),
-        date: now,
+    startTransition(async () => {
+      const result = await createReview({
+        productId,
+        authorName: name.trim(),
         rating,
         text: text.trim(),
-        verified: false,
-      },
-      ...prev,
-    ]);
-    setName(''); setRating(0); setText('');
-    setErrors([]);
-    setSuccess(true);
-    setFormOpen(false);
-    setTimeout(() => setSuccess(false), 4000);
+      });
+
+      if (!result.ok) {
+        setErrors([result.error]);
+        return;
+      }
+
+      setComments(prev => [result.data, ...prev]);
+      setName(''); setRating(0); setText('');
+      setErrors([]);
+      setSuccess(true);
+      setFormOpen(false);
+      setTimeout(() => setSuccess(false), 4000);
+    });
   }
 
   const avgRating =
@@ -254,9 +259,10 @@ export default function ProductComments({ description, comments: initial, produc
               <div className="flex gap-3">
                 <button
                   type="submit"
-                  className="flex-1 bg-accent hover:bg-accent-dark active:scale-95 text-charcoal font-bold text-sm py-3 rounded-xl transition-all"
+                  disabled={pending}
+                  className="flex-1 bg-accent hover:bg-accent-dark active:scale-95 text-charcoal font-bold text-sm py-3 rounded-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  ثبت نظر
+                  {pending ? 'در حال ثبت…' : 'ثبت نظر'}
                 </button>
                 <button
                   type="button"

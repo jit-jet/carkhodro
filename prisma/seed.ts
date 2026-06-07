@@ -1,4 +1,4 @@
-import { PrismaClient, ShippingMethod, UserRole } from '@prisma/client';
+import { PrismaClient, ShippingMethod, UserRole } from '../generated/prisma_client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 const prisma = new PrismaClient({
@@ -204,6 +204,20 @@ async function main() {
     })),
   });
 
+  // ── Nav Links ──────────────────────────────────────────────────────────────
+  await prisma.navLink.createMany({
+    data: [
+      { href: '/',            label: 'خانه',         sortOrder: 1 },
+      { href: '/products',    label: 'همه محصولات',  sortOrder: 2 },
+      { href: '/engine',      label: 'قطعات موتوری', sortOrder: 3 },
+      { href: '/body',        label: 'بدنه خودرو',   sortOrder: 4 },
+      { href: '/electrical',  label: 'برق خودرو',    sortOrder: 5 },
+      { href: '/accessories', label: 'لوازم جانبی',  sortOrder: 6 },
+      { href: '/brands',      label: 'برندها',       sortOrder: 7 },
+      { href: '/contact',     label: 'تماس با ما',   sortOrder: 8 },
+    ],
+  });
+
   // ── Shipping Options ───────────────────────────────────────────────────────
   await prisma.shippingOption.createMany({
     data: [
@@ -236,8 +250,39 @@ async function main() {
     },
   });
 
+  const p = (i: number) => products[i - 1].id; // 1-based mock index → DB id
+
+  // ── Carts & cart items (mirrors initialCartItems from cartMockData.ts) ──────
+  await prisma.cart.create({
+    data: {
+      userId: 'usr_001',
+      items: {
+        createMany: {
+          data: [
+            { productId: p(1),  quantity: 2 }, // فیلتر روغن موتور بوش
+            { productId: p(9),  quantity: 1 }, // لنت ترمز جلو بوش
+            { productId: p(14), quantity: 4 }, // شمع NGK
+            { productId: p(4),  quantity: 1 }, // تسمه تایم بوش
+          ],
+        },
+      },
+    },
+  });
+  await prisma.cart.create({
+    data: {
+      userId: 'usr_002',
+      items: {
+        createMany: {
+          data: [
+            { productId: p(23), quantity: 1 }, // روغن موتور ۴ لیتری بوش
+            { productId: p(31), quantity: 2 }, // فیلتر کابین بوش
+          ],
+        },
+      },
+    },
+  });
+
   // ── Reviews ────────────────────────────────────────────────────────────────
-  const p = (i: number) => products[i - 1].id; // 1-based index helper
   await prisma.review.createMany({
     data: [
       { productId: p(1),  authorName: 'محمد رضایی',   rating: 5, text: 'کیفیت عالی، کاملاً اصل، موتورم بعد از نصب روان‌تر کار می‌کنه.',          isVerifiedPurchase: true  },
@@ -263,7 +308,9 @@ async function main() {
   console.log(`  ${provinces.length} provinces, ${cities.length} cities`);
   console.log(`  ${carBrands.length} car brands, ${carModels.length} car models`);
   console.log(`  ${partsBrands.length} parts brands, ${categories.length} categories`);
-  console.log(`  ${products.length} products, 16 reviews, 2 users`);
+  console.log(`  ${products.length} products`);
+  console.log(`  8 nav links, 2 shipping options`);
+  console.log(`  2 users, 2 carts (6 cart items), 16 reviews`);
 }
 
 main()

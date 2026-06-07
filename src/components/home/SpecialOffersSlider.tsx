@@ -1,9 +1,10 @@
 import SliderWrapper from "@/src/components/ui/SliderWrapper";
 import SectionTitle from "@/src/components/ui/SectionTitle";
 import ProductCard from "@/src/components/ui/ProductCard";
-import { offerProducts } from "@/src/data/mockData";
+import { getSpecialOffers } from "@/actions/products";
 
-export default function SpecialOffersSlider() {
+export default async function SpecialOffersSlider() {
+  const offerProducts = await getSpecialOffers();
   return (
     <section className="py-10 bg-white relative overflow-hidden">
       {/* Subtle background decoration */}

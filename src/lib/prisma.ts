@@ -1,4 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+// Prisma 7 generates the client to a custom output (`generated/prisma_client`,
+// see schema.prisma) — import from there, NOT from `@prisma/client`.
+import { PrismaClient } from '@/generated/prisma_client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
 

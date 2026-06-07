@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import type { Product } from '@/src/data/pdpMockData';
+import type { ProductVM as Product } from '@/src/lib/serializers';
 
 interface Props {
   products: Product[];

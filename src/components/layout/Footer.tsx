@@ -2,20 +2,20 @@ import Link from "next/link";
 
 const quickLinks = [
   { href: "/", label: "صفحه اصلی" },
-  { href: "/engine", label: "قطعات موتوری" },
-  { href: "/body", label: "بدنه و شیشه" },
-  { href: "/electrical", label: "برق خودرو" },
-  { href: "/accessories", label: "لوازم جانبی" },
-  { href: "/brands", label: "همه برندها" },
+  { href: "/products?category=engine", label: "قطعات موتوری" },
+  { href: "/products?category=body", label: "بدنه و شیشه" },
+  { href: "/products?category=electrical", label: "برق خودرو" },
+  { href: "/products", label: "لوازم جانبی" },
+  { href: "/products", label: "همه برندها" },
 ];
 
 const categoryLinks = [
-  { href: "/cat/engine", label: "موتور و قطعات" },
-  { href: "/cat/brake", label: "ترمز و تعلیق" },
-  { href: "/cat/cooling", label: "سیستم خنک‌کننده" },
-  { href: "/cat/electrical", label: "برق و روشنایی" },
-  { href: "/cat/oil", label: "روغن و مایعات" },
-  { href: "/cat/filters", label: "فیلترها" },
+  { href: "/products?category=engine", label: "موتور و قطعات" },
+  { href: "/products?category=brake", label: "ترمز و تعلیق" },
+  { href: "/products?category=cooling", label: "سیستم خنک‌کننده" },
+  { href: "/products?category=electrical", label: "برق و روشنایی" },
+  { href: "/products?category=oil", label: "روغن و مایعات" },
+  { href: "/products", label: "فیلترها" },
 ];
 
 const infoLinks = [

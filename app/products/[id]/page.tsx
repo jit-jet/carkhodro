@@ -1,5 +1,7 @@
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { getPDPProduct, getRelatedProducts } from '@/src/data/pdpMockData';
+import { getProductById, getRelatedProducts } from '@/actions/products';
+import { getProductReviews } from '@/actions/reviews';
 import ImageGallery    from '@/src/components/pdp/ImageGallery';
 import CartActions     from '@/src/components/pdp/CartActions';
 import ProductComments from '@/src/components/pdp/ProductComments';
@@ -39,16 +41,31 @@ function StarDisplay({ rating }: { rating: number }) {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-export default async function ProductPage({
+// `params` is request-time data under Cache Components. Rather than enumerate
+// every id at build (which would require DB access during `next build`), the
+// product detail streams inside a Suspense boundary while a skeleton ships in
+// the static shell. The data itself is still cached via `getProductById`.
+export default function ProductPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  return (
+    <Suspense fallback={<ProductDetailSkeleton />}>
+      <ProductDetail params={params} />
+    </Suspense>
+  );
+}
+
+async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = getPDPProduct(parseInt(id, 10));
+  const product = await getProductById(id);
   if (!product) notFound();
 
-  const relatedProducts = getRelatedProducts(product.relatedProductIds);
+  const [relatedProducts, comments] = await Promise.all([
+    getRelatedProducts(product.id, product.categoryId),
+    getProductReviews(product.id),
+  ]);
   const flag = ORIGIN_FLAGS[product.origin] ?? '🏭';
 
   const attrs: [string, string][] = [
@@ -86,7 +103,7 @@ export default async function ProductPage({
 
           {/* Image gallery */}
           <ImageGallery
-            images={[product.mainImage, ...product.images]}
+            images={[product.mainImage, ...product.images.filter((u) => u !== product.mainImage)]}
             name={product.name}
           />
 
@@ -163,7 +180,7 @@ export default async function ProductPage({
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <ProductComments
             description={product.description}
-            comments={product.comments}
+            comments={comments}
             productId={product.id}
           />
         </div>
@@ -173,6 +190,21 @@ export default async function ProductPage({
           <RelatedProducts products={relatedProducts} />
         )}
 
+      </div>
+    </div>
+  );
+}
+
+function ProductDetailSkeleton() {
+  return (
+    <div className="bg-silver-light min-h-screen" dir="rtl">
+      <div className="bg-white border-b border-gray-100 h-12" />
+      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6 animate-pulse">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <div className="h-[420px] bg-white rounded-2xl border border-gray-100" />
+          <div className="h-[420px] bg-white rounded-2xl border border-gray-100" />
+        </div>
+        <div className="h-64 bg-white rounded-2xl border border-gray-100" />
       </div>
     </div>
   );

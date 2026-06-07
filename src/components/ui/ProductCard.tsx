@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import type { Product } from '@/src/data/plpMockData';
+import type { ProductVM as Product } from '@/src/lib/serializers';
 
 interface ProductCardProps {
   product: Product;
@@ -19,8 +19,6 @@ const ORIGIN_FLAGS: Record<string, string> = {
   'چین':    '🇨🇳',
 };
 
-const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
-
 function formatPrice(price: number) {
   return price.toLocaleString('fa-IR') + ' تومان';
 }
@@ -35,8 +33,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
   const flag    = ORIGIN_FLAGS[product.origin] ?? '🏭';
   const maxQty  = inStock ? product.stock : 0;
 
-  // "جدید" badge shown for products added within the last 3 days
-  const isNew = Date.now() - new Date(product.createdDate).getTime() <= THREE_DAYS_MS;
+  const isNew = product.isNew;
 
   function changeQty(delta: number) {
     setQty(q => Math.min(maxQty, Math.max(1, q + delta)));

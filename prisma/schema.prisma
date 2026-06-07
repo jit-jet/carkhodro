@@ -5,6 +5,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "../generated/prisma_client"
 }
 
 datasource db {
@@ -77,6 +78,19 @@ model City {
   @@unique([provinceId, name])
   @@index([provinceId])
   @@map("cities")
+}
+
+/// Top-level navigation links — managed by admin; front end caches and revalidates.
+model NavLink {
+  id        Int      @id @default(autoincrement())
+  href      String   @unique
+  label     String
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("nav_links")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
