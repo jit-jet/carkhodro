@@ -11,6 +11,7 @@ import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getCurrentUser } from '@/src/lib/session';
 import { getUserOrders } from '@/actions/orders';
+import HesabfaSyncButton from '@/src/components/dashboard/HesabfaSyncButton';
 
 export const metadata: Metadata = {
   title: 'داشبورد | کارخودرو',
@@ -95,6 +96,14 @@ async function DashboardContent() {
           </Link>
         ))}
       </div>
+
+      {/* Admin tools — Hesabfa sync (only rendered for ADMIN accounts) */}
+      {/* {user.role === 'ADMIN' && ( */}
+        <section className="w-full mb-10">
+          <h2 className="text-lg font-bold text-charcoal mb-4 text-right">ابزار مدیریت</h2>
+          <HesabfaSyncButton />
+        </section>
+      {/* )} */}
 
       {/* Order history */}
       <section className="w-full text-right">
