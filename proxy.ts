@@ -18,7 +18,7 @@ import type { NextRequest } from 'next/server';
 const SESSION_COOKIE = 'session_token';
 
 /** Routes that require a logged-in user. */
-const PROTECTED_PREFIXES = ['/dashboard', '/checkout'];
+const PROTECTED_PREFIXES = ['/dashboard', '/checkout', '/wishlist'];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -37,5 +37,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/checkout/:path*'],
+  matcher: ['/dashboard/:path*', '/checkout/:path*', '/wishlist'],
 };

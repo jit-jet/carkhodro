@@ -6,6 +6,8 @@ import ImageGallery    from '@/src/components/pdp/ImageGallery';
 import CartActions     from '@/src/components/pdp/CartActions';
 import ProductComments from '@/src/components/pdp/ProductComments';
 import RelatedProducts from '@/src/components/pdp/RelatedProducts';
+import WishlistButton  from '@/src/components/product/WishlistButton';
+import CompareButton   from '@/src/components/product/CompareButton';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -172,6 +174,12 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
 
             {/* Cart actions */}
             <CartActions product={product} />
+
+            {/* Wishlist + Compare */}
+            <div className="flex items-center gap-3">
+              <WishlistButton productId={product.id} productName={product.name} variant="full" />
+              <CompareButton productId={product.id} productName={product.name} variant="full" />
+            </div>
 
           </div>
         </div>

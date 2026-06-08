@@ -113,11 +113,13 @@ model User {
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
 
-  addresses Address[]
-  sessions  Session[]
-  orders    Order[]
-  reviews   Review[]
-  cart      Cart?
+  addresses    Address[]
+  sessions     Session[]
+  orders       Order[]
+  reviews      Review[]
+  cart         Cart?
+  wishlist     WishlistItem[]
+  compareItems CompareItem[]
 
   @@index([phoneNumber])
   @@map("users")
@@ -318,6 +320,8 @@ model Product {
   reviews         Review[]
   cartItems       CartItem[]
   orderItems      OrderItem[]
+  wishlistedBy    WishlistItem[]
+  comparedBy      CompareItem[]
 
   @@index([sku])
   @@index([accountancyId])
@@ -410,6 +414,44 @@ model CartItem {
   @@unique([cartId, productId])
   @@index([cartId])
   @@map("cart_items")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WISHLIST & COMPARE
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// A product a user has saved for later. Independent of the cart — purely a
+/// per-user bookmark. One row per (user, product); re-adding is a no-op.
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  productId String   @map("product_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+  @@map("wishlist_items")
+}
+
+/// A product a user has added to their side-by-side compare list. Same shape as
+/// the wishlist but a separate concern; the app caps the active list size.
+model CompareItem {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  productId String   @map("product_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+  @@map("compare_items")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

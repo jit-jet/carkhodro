@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { NavLinkVM } from "@/src/lib/serializers";
 import { getCartCount } from "@/actions/cart";
 import { useCartUI } from "@/src/store/cart-ui";
+import { useListsUI, ensureListsHydrated } from "@/src/store/lists-ui";
 
 function PhoneIcon() {
   return (
@@ -40,6 +41,36 @@ function CartIcon() {
       <circle cx="20" cy="21" r="1" />
       <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
     </svg>
+  );
+}
+
+function HeartOutlineIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+      <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z" />
+    </svg>
+  );
+}
+
+function CompareBarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+      <path d="M9 3v18M15 3v18" />
+      <path d="M9 7l-4 4 4 4M15 7l4 4-4 4" />
+    </svg>
+  );
+}
+
+/** Coloured count bubble — hidden when count is 0. */
+function NavBadge({ count, color }: { count: number; color: 'red' | 'blue' }) {
+  if (count <= 0) return null;
+  return (
+    <span className={[
+      'absolute -top-1.5 -inset-e-1.5 min-w-4.5 h-4.5 px-1 flex items-center justify-center text-white text-[9px] font-bold rounded-full tabular-nums leading-none',
+      color === 'red' ? 'bg-red-500' : 'bg-blue-600',
+    ].join(' ')}>
+      {count.toLocaleString('fa-IR')}
+    </span>
   );
 }
 
@@ -88,12 +119,15 @@ export default function Header({
   // it instantly. Seed it from the server on mount — done client-side so the
   // root layout stays a static shell. (Auth state is NOT seeded here anymore;
   // it's resolved server-side per request via the `account` slot.)
-  const cartCount = useCartUI((s) => s.count);
-  const setCount = useCartUI((s) => s.setCount);
+  const cartCount      = useCartUI((s) => s.count);
+  const setCount       = useCartUI((s) => s.setCount);
+  const wishlistCount  = useListsUI((s) => s.wishlist.size);
+  const compareCount   = useListsUI((s) => s.compare.size);
 
   useEffect(() => {
     let active = true;
     getCartCount().then((n) => active && setCount(n));
+    ensureListsHydrated();
     return () => {
       active = false;
     };
@@ -166,7 +200,39 @@ export default function Header({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+
+            {/* Wishlist */}
+            <Link
+              href="/wishlist"
+              aria-label="علاقه‌مندی‌ها"
+              title="علاقه‌مندی‌ها"
+              className="relative flex items-center gap-1.5 text-gray-500 hover:text-red-500 hover:bg-red-50 p-2 sm:px-2.5 sm:py-2 rounded-xl transition-colors"
+            >
+              <HeartOutlineIcon />
+              <span className="hidden lg:inline text-sm font-medium text-charcoal hover:text-red-500">
+                علاقه‌مندی‌ها
+              </span>
+              <NavBadge count={wishlistCount} color="red" />
+            </Link>
+
+            {/* Compare */}
+            <Link
+              href="/compare"
+              aria-label="لیست مقایسه"
+              title="لیست مقایسه"
+              className="relative flex items-center gap-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 p-2 sm:px-2.5 sm:py-2 rounded-xl transition-colors"
+            >
+              <CompareBarIcon />
+              <span className="hidden lg:inline text-sm font-medium text-charcoal hover:text-blue-600">
+                مقایسه
+              </span>
+              <NavBadge count={compareCount} color="blue" />
+            </Link>
+
+            {/* Divider */}
+            <span className="hidden sm:block w-px h-7 bg-gray-200 mx-1" />
+
             {/* Cart */}
             <Link href="/cart" className="relative flex items-center gap-1.5 bg-accent hover:bg-accent-dark text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors hidden sm:flex">
               <CartIcon />

@@ -6,6 +6,8 @@ import Link from 'next/link';
 import type { ProductVM as Product } from '@/src/lib/serializers';
 import { addToCart } from '@/actions/cart';
 import { announceAddedToCart, useCartUI } from '@/src/store/cart-ui';
+import WishlistButton from '@/src/components/product/WishlistButton';
+import CompareButton from '@/src/components/product/CompareButton';
 
 interface ProductCardProps {
   product: Product;
@@ -85,33 +87,36 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
       ].join(' ')}
     >
       {/* ── Product image ──────────────────────────────────── */}
-      <Link href={`/products/${product.id}`} className={`relative bg-white overflow-hidden block ${isGrid ? 'h-48' : 'h-40'}`}>
-        <Image
-          src={product.mainImage}
-          alt={product.name}
-          fill
-          sizes={isGrid
-            ? '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
-            : '240px'}
-          className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
-        />
+      <div className={`relative ${isGrid ? 'h-48' : 'h-40'}`}>
+        <Link href={`/products/${product.id}`} className="block w-full h-full bg-white overflow-hidden">
+          <Image
+            src={product.mainImage}
+            alt={product.name}
+            fill
+            sizes={isGrid
+              ? '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
+              : '240px'}
+            className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
+          />
 
-        {/* Discount / New badge — end side (left in RTL) */}
-        {product.discount ? (
-          <span className="absolute top-2 inset-e-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
-            {product.discount}٪ تخفیف
-          </span>
-        ) : isNew ? (
-          <span className="absolute top-2 inset-e-2 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
-            جدید
-          </span>
-        ) : null}
+          {/* Discount / New badge — end side (left in RTL) */}
+          {product.discount ? (
+            <span className="absolute top-2 inset-e-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
+              {product.discount}٪ تخفیف
+            </span>
+          ) : isNew ? (
+            <span className="absolute top-2 inset-e-2 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
+              جدید
+            </span>
+          ) : null}
 
-        {/* Warranty badge — start side (right in RTL) */}
-        <span className="absolute top-2 inset-s-2 bg-blue-600/85 text-white text-xs font-medium px-2 py-0.5 rounded-full shadow backdrop-blur-sm">
-          {product.warranty} گارانتی
-        </span>
-      </Link>
+          {/* Warranty badge — start side (right in RTL) */}
+          <span className="absolute top-2 inset-s-2 bg-blue-600/85 text-white text-xs font-medium px-2 py-0.5 rounded-full shadow backdrop-blur-sm">
+            {product.warranty} گارانتی
+          </span>
+        </Link>
+
+      </div>
 
       {/* ── SKU code ───────────────────────────────────────── */}
       <div className="px-3 pt-2">
@@ -154,6 +159,12 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
           <p className="text-base font-bold text-accent-dark leading-none">
             {formatPrice(product.price)}
           </p>
+        </div>
+
+        {/* Wishlist + Compare */}
+        <div className="flex items-center gap-2 mb-3">
+          <WishlistButton productId={product.id} productName={product.name} variant="compact" />
+          <CompareButton productId={product.id} productName={product.name} variant="compact" />
         </div>
 
         {inStock ? (

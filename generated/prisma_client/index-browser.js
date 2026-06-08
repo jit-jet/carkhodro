@@ -296,6 +296,20 @@ exports.Prisma.CartItemScalarFieldEnum = {
   addedAt: 'addedAt'
 };
 
+exports.Prisma.WishlistItemScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  productId: 'productId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CompareItemScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  productId: 'productId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ShippingOptionScalarFieldEnum = {
   id: 'id',
   method: 'method',
@@ -409,6 +423,8 @@ exports.Prisma.ModelName = {
   Review: 'Review',
   Cart: 'Cart',
   CartItem: 'CartItem',
+  WishlistItem: 'WishlistItem',
+  CompareItem: 'CompareItem',
   ShippingOption: 'ShippingOption',
   Order: 'Order',
   OrderItem: 'OrderItem'
