@@ -3,7 +3,7 @@ import ProductsBrowser from '@/src/components/plp/ProductsBrowser';
 import { getProducts, getProductFilters } from '@/actions/products';
 
 interface Props {
-  searchParams: Promise<{ brand?: string; category?: string; car?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export default async function ProductsPage({ searchParams }: Props) {
@@ -90,16 +90,13 @@ async function FilteredBrowser({
   filters: Filters;
   searchParams: Props['searchParams'];
 }) {
-  const { brand = '', category = '', car = '' } = await searchParams;
+  await searchParams; // unwrap the Promise so this component suspends correctly
   return (
     <ProductsBrowser
       products={products}
       allBrands={filters.brands}
       allCarTypes={filters.carTypes}
       allCategories={filters.categories}
-      initialBrand={brand}
-      initialCategory={category}
-      initialCar={car}
     />
   );
 }

@@ -1,10 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import type { PDPProduct } from '@/src/data/pdpMockData';
+import { useState, useTransition } from 'react';
+import { addToCart } from '@/actions/cart';
+import { announceAddedToCart, useCartUI } from '@/src/store/cart-ui';
 
 interface Props {
-  product: Pick<PDPProduct, 'stock' | 'name'>;
+  // Only the fields this widget needs. The PDP passes a full PDPProductVM,
+  // which satisfies this shape (id is the DB cuid → string).
+  product: { id: string; stock: number; name: string };
 }
 
 function ShoppingBagIcon() {
@@ -34,6 +37,8 @@ export default function CartActions({ product }: Props) {
   const [added,       setAdded]       = useState(false);
   const [phone,       setPhone]       = useState('');
   const [notifyState, setNotifyState] = useState<'idle' | 'success' | 'error'>('idle');
+  const [pending, startTransition]    = useTransition();
+  const notify = useCartUI((s) => s.notify);
 
   function changeQty(delta: number) {
     setQty(q => Math.min(maxQty, Math.max(1, q + delta)));
@@ -45,8 +50,16 @@ export default function CartActions({ product }: Props) {
   }
 
   function handleAddToCart() {
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2200);
+    startTransition(async () => {
+      const res = await addToCart(product.id, qty);
+      if (res.ok) {
+        announceAddedToCart(product.name, qty, res.data.totalItems);
+        setAdded(true);
+        setTimeout(() => setAdded(false), 2200);
+      } else {
+        notify({ variant: 'error', title: 'خطا', description: res.error });
+      }
+    });
   }
 
   function handleNotify() {
@@ -161,14 +174,17 @@ export default function CartActions({ product }: Props) {
         {/* Add to cart button */}
         <button
           onClick={handleAddToCart}
+          disabled={pending}
           className={[
-            'flex-1 flex items-center justify-center gap-2 font-bold text-base py-3 rounded-xl transition-all duration-200',
+            'flex-1 flex items-center justify-center gap-2 font-bold text-base py-3 rounded-xl transition-all duration-200 disabled:opacity-60',
             added
               ? 'bg-green-500 text-white scale-95'
               : 'bg-accent hover:bg-accent-dark active:scale-95 text-charcoal',
           ].join(' ')}
         >
-          {added ? (
+          {pending ? (
+            'در حال افزودن…'
+          ) : added ? (
             <>
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 6L9 17l-5-5" />

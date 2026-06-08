@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import CartView from '@/src/components/cart/CartView';
 import { getCart } from '@/src/lib/cart-data';
-import { getShippingOptions } from '@/actions/navigation';
+import { getCurrentUser } from '@/src/lib/session';
 
 export default function CartPage() {
   return (
@@ -28,12 +28,14 @@ export default function CartPage() {
 }
 
 async function CartContent() {
-  const [cart, shippingOptions] = await Promise.all([getCart(), getShippingOptions()]);
+  // Guests can view and build a cart; checkout itself requires auth (the
+  // /checkout route is proxy-gated). `getCart()` returns the user's DB cart or
+  // the guest cookie cart. Shipping/payment selection now lives on /checkout.
+  const [cart, user] = await Promise.all([getCart(), getCurrentUser()]);
 
-  if (!cart) return <SignInPrompt />;
   if (cart.items.length === 0) return <EmptyCart />;
 
-  return <CartView initialCart={cart} shippingOptions={shippingOptions} />;
+  return <CartView initialCart={cart} isAuthenticated={!!user} />;
 }
 
 function CartSkeleton() {
@@ -63,25 +65,6 @@ function EmptyCart() {
         className="bg-accent hover:bg-accent-dark text-charcoal font-semibold px-8 py-3 rounded-xl transition-colors shadow hover:shadow-md"
       >
         مشاهده محصولات
-      </Link>
-    </div>
-  );
-}
-
-function SignInPrompt() {
-  return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
-      <svg className="w-20 h-20 mb-5 text-silver" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-      <h2 className="text-xl font-bold text-charcoal mb-2">برای مشاهده سبد خرید وارد شوید</h2>
-      <p className="text-sm text-gray-400 mb-8">سبد خرید شما به حساب کاربری‌تان متصل است.</p>
-      <Link
-        href="/login"
-        className="bg-accent hover:bg-accent-dark text-charcoal font-semibold px-8 py-3 rounded-xl transition-colors shadow hover:shadow-md"
-      >
-        ورود / ثبت‌نام
       </Link>
     </div>
   );

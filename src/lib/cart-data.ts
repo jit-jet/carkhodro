@@ -9,6 +9,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { productInclude, toCartItemVM, type CartVM } from '@/src/lib/serializers';
 import { getCurrentUser } from '@/src/lib/session';
+import { readGuestCart, buildGuestCartVM } from '@/src/lib/guest-cart';
 import type { Prisma } from '@/generated/prisma_client';
 
 const cartArgs = {
@@ -38,14 +39,37 @@ export async function loadCartByUserId(userId: string): Promise<CartVM> {
   return cart ? buildCartVM(cart) : { id: '', items: [], subtotal: 0, totalItems: 0 };
 }
 
-/** Current user's cart, or null when signed out. */
-export async function getCart(): Promise<CartVM | null> {
+/**
+ * The current actor's cart as a view-model — never null. Signed-in users get
+ * their DB cart; guests get the cart reconstructed from the `guest_cart` cookie.
+ *
+ * Cookie reads (`getCurrentUser`, `readGuestCart`) are intentionally kept OUTSIDE
+ * the try/catch: under Cache Components, `cookies()` "suspends" during the static
+ * prerender, and catching that would freeze the page in its empty shell instead
+ * of streaming. Only the DB work is guarded, falling back to an empty cart so a
+ * transient query failure doesn't crash the page.
+ */
+export async function getCart(): Promise<CartVM> {
   const user = await getCurrentUser();
-  if (!user) return null;
-  try {
-    return await loadCartByUserId(user.id);
-  } catch (err) {
-    console.error('[cart:getCart]', err);
-    return null;
+
+  if (user) {
+    try {
+      return await loadCartByUserId(user.id);
+    } catch (err) {
+      console.error('[cart:getCart:user]', err);
+      return emptyCart();
+    }
   }
+
+  const lines = await readGuestCart();
+  try {
+    return await buildGuestCartVM(lines);
+  } catch (err) {
+    console.error('[cart:getCart:guest]', err);
+    return emptyCart();
+  }
+}
+
+function emptyCart(): CartVM {
+  return { id: '', items: [], subtotal: 0, totalItems: 0 };
 }

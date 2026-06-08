@@ -1,35 +1,33 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import CartItemRow from '@/src/components/cart/CartItemRow';
-import ShippingSelector from '@/src/components/cart/ShippingSelector';
-import PaymentSelector from '@/src/components/cart/PaymentSelector';
 import OrderSummary from '@/src/components/cart/OrderSummary';
-import {
-  updateCartItemQuantity,
-  removeCartItem,
-} from '@/actions/cart';
-import { createOrder } from '@/actions/orders';
-import type { CartVM, CartItemVM, ShippingOptionVM } from '@/src/lib/serializers';
-import type { PaymentMethod } from '@/src/data/cartMockData';
+import { updateCartItemQuantity, removeCartItem } from '@/actions/cart';
+import type { CartVM, CartItemVM } from '@/src/lib/serializers';
+import { useCartUI } from '@/src/store/cart-ui';
 
 interface Props {
   initialCart: CartVM;
-  shippingOptions: ShippingOptionVM[];
+  /** False for guests — proceeding to checkout sends them to login first. */
+  isAuthenticated: boolean;
 }
 
-export default function CartView({ initialCart, shippingOptions }: Props) {
+/**
+ * The cart is now review-only: edit quantities / remove items here, then proceed
+ * to /checkout where shipping, payment and delivery details are collected. The
+ * checkout route is auth-gated, so guests are routed through the SMS login and
+ * returned to /checkout afterwards.
+ */
+export default function CartView({ initialCart, isAuthenticated }: Props) {
+  const router = useRouter();
   const [items, setItems] = useState<CartItemVM[]>(initialCart.items);
-  const [shippingId, setShippingId] = useState(shippingOptions[0]?.id ?? '');
-  const [payment, setPayment] = useState<PaymentMethod>('online');
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState('');
-  const [placed, setPlaced] = useState(false);
+  const setCount = useCartUI((s) => s.setCount);
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shippingCost = shippingOptions.find((s) => s.id === shippingId)?.cost ?? 0;
-  const total = subtotal + shippingCost;
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
   function updateQty(id: string, delta: number) {
@@ -42,8 +40,10 @@ export default function CartView({ initialCart, shippingOptions }: Props) {
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, quantity: nextQty } : i)));
     startTransition(async () => {
       const result = await updateCartItemQuantity(id, nextQty);
-      if (result.ok) setItems(result.data.items);
-      else setError(result.error);
+      if (result.ok) {
+        setItems(result.data.items);
+        setCount(result.data.totalItems);
+      } else setError(result.error);
     });
   }
 
@@ -52,48 +52,20 @@ export default function CartView({ initialCart, shippingOptions }: Props) {
     setItems((prev) => prev.filter((i) => i.id !== id));
     startTransition(async () => {
       const result = await removeCartItem(id);
-      if (result.ok) setItems(result.data.items);
-      else {
+      if (result.ok) {
+        setItems(result.data.items);
+        setCount(result.data.totalItems);
+      } else {
         setItems(snapshot);
         setError(result.error);
       }
     });
   }
 
-  function placeOrder() {
-    setError('');
-    startTransition(async () => {
-      const result = await createOrder({
-        shippingOptionId: shippingId,
-        paymentMethod: payment === 'online' ? 'ONLINE' : 'COD',
-      });
-      if (result.ok) {
-        setPlaced(true);
-        setItems([]);
-      } else {
-        setError(result.error);
-      }
-    });
-  }
-
-  if (placed) {
-    return (
-      <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="w-16 h-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-5">
-          <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 6L9 17l-5-5" />
-          </svg>
-        </div>
-        <h2 className="text-xl font-bold text-charcoal mb-2">سفارش شما با موفقیت ثبت شد</h2>
-        <p className="text-sm text-gray-400 mb-8">به زودی با شما تماس می‌گیریم. 🎉</p>
-        <Link
-          href="/products"
-          className="bg-accent hover:bg-accent-dark text-charcoal font-semibold px-8 py-3 rounded-xl transition-colors shadow hover:shadow-md"
-        >
-          ادامه خرید
-        </Link>
-      </div>
-    );
+  function proceedToCheckout() {
+    // Checkout requires authentication. Send guests to login (preserving the
+    // server-side cart) and bring them back to /checkout afterwards.
+    router.push(isAuthenticated ? '/checkout' : '/login?redirect=/checkout');
   }
 
   return (
@@ -129,14 +101,6 @@ export default function CartView({ initialCart, shippingOptions }: Props) {
             ))}
           </div>
         </section>
-
-        <ShippingSelector
-          options={shippingOptions}
-          selected={shippingId}
-          onChange={setShippingId}
-        />
-
-        <PaymentSelector selected={payment} onChange={setPayment} />
       </div>
 
       {/* Sidebar */}
@@ -144,11 +108,18 @@ export default function CartView({ initialCart, shippingOptions }: Props) {
         <div className="sticky top-24">
           <OrderSummary
             subtotal={subtotal}
-            shippingCost={shippingCost}
-            total={total}
+            shippingCost={null}
+            total={subtotal}
             itemCount={totalItems}
-            onPlaceOrder={placeOrder}
+            ctaLabel="ادامه و تسویه حساب"
+            onPlaceOrder={proceedToCheckout}
+            busy={pending}
           />
+          {!isAuthenticated && (
+            <p className="text-center text-xs text-gray-400 mt-3 leading-5">
+              برای تکمیل خرید ابتدا وارد می‌شوید؛ سبد خرید شما حفظ می‌شود.
+            </p>
+          )}
           {pending && (
             <p className="text-center text-xs text-gray-400 mt-3">در حال به‌روزرسانی…</p>
           )}

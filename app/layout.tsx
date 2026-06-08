@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import Header from "@/src/components/layout/Header";
+import AccountMenu, { AccountMenuFallback } from "@/src/components/layout/AccountMenu";
 import Footer from "@/src/components/layout/Footer";
+import Toaster from "@/src/components/ui/Toaster";
 import { getNavLinks } from "@/actions/navigation";
 
 export const metadata: Metadata = {
@@ -27,11 +30,20 @@ export default async function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-charcoal font-sans antialiased flex flex-col">
-        <Header navLinks={navLinks} />
+        <Header
+          navLinks={navLinks}
+          account={
+            <Suspense fallback={<AccountMenuFallback />}>
+              <AccountMenu />
+            </Suspense>
+          }
+        />
         <main className="flex-1">
           {children}
         </main>
         <Footer />
+        {/* Global toast viewport — driven by the cart UI store. */}
+        <Toaster />
       </body>
     </html>
   );

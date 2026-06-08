@@ -14,7 +14,7 @@ import AuthCard from '@/src/components/auth/AuthCard';
 import SignupForm from '@/src/components/auth/SignupForm';
 
 interface Props {
-  searchParams: Promise<{ phone?: string }>;
+  searchParams: Promise<{ phone?: string; redirect?: string }>;
 }
 
 export default function SignupPage({ searchParams }: Props) {
@@ -23,7 +23,7 @@ export default function SignupPage({ searchParams }: Props) {
       title="تکمیل اطلاعات"
       subtitle="برای تکمیل ثبت‌نام، لطفاً اطلاعات زیر را وارد کنید."
     >
-      <Suspense fallback={<SignupForm phoneNumber="" />}>
+      <Suspense fallback={<SignupForm phoneNumber="" redirectTo="/dashboard" />}>
         <SignupFormWithPhone searchParams={searchParams} />
       </Suspense>
     </AuthCard>
@@ -31,6 +31,6 @@ export default function SignupPage({ searchParams }: Props) {
 }
 
 async function SignupFormWithPhone({ searchParams }: Props) {
-  const { phone = '' } = await searchParams;
-  return <SignupForm phoneNumber={phone} />;
+  const { phone = '', redirect = '/dashboard' } = await searchParams;
+  return <SignupForm phoneNumber={phone} redirectTo={redirect} />;
 }

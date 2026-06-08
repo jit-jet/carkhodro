@@ -141,12 +141,35 @@ export interface OrderSummaryVM {
   createdDate: string;
 }
 
+/**
+ * Contact + delivery details collected on the checkout page. Persisted to the
+ * user's profile / default address at order time (see `submitCheckout`), so a
+ * first-time buyer's empty profile is filled in and later edits are saved.
+ */
+export interface CheckoutContact {
+  firstName: string;
+  lastName: string;
+  province: string;
+  city: string;
+  street: string;
+  postalCode: string;
+}
+
 export interface CheckoutInput {
-  /** Optional — falls back to the user's default (or first) saved address. */
-  addressId?: string;
   shippingOptionId: string;
   paymentMethod: PaymentMethod;
+  contact: CheckoutContact;
   notes?: string;
+}
+
+/** Pre-fill payload for the checkout form — the user's saved profile/address. */
+export interface CheckoutProfileVM extends CheckoutContact {
+  /** Account phone — verified at signup, always read-only on checkout. */
+  phoneNumber: string;
+  /** true when the user already has a saved delivery address row. */
+  hasSavedAddress: boolean;
+  /** true when name + full address are all present (no forced edit needed). */
+  isComplete: boolean;
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────

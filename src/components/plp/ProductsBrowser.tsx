@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import FilterSidebar from '@/src/components/plp/FilterSidebar';
 import ProductCard from '@/src/components/ui/ProductCard';
 import type { ProductVM as Product } from '@/src/lib/serializers';
@@ -114,22 +115,53 @@ export default function ProductsBrowser({
   allBrands,
   allCarTypes,
   allCategories,
-  initialBrand = '',
-  initialCategory = '',
-  initialCar = '',
 }: Props) {
-  const [searchQuery,        setSearchQuery]        = useState('');
-  const [selectedBrands,     setSelectedBrands]     = useState<string[]>(
-    initialBrand ? [initialBrand] : []
-  );
-  const [selectedCarTypes,   setSelectedCarTypes]   = useState<string[]>(
-    initialCar ? [initialCar] : []
-  );
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    initialCategory ? [initialCategory] : []
-  );
-  const [sortBy,             setSortBy]             = useState<SortOption>('newest');
-  const [sidebarOpen,        setSidebarOpen]        = useState(false);
+  const router      = useRouter();
+  const pathname    = usePathname();
+  const searchParams = useSearchParams();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // All filter state is derived from URL — single source of truth
+  const searchQuery        = searchParams.get('q') ?? '';
+  const selectedBrands     = searchParams.getAll('brand');
+  const selectedCarTypes   = searchParams.getAll('car');
+  const selectedCategories = searchParams.getAll('category');
+  const sortBy             = (searchParams.get('sort') ?? 'newest') as SortOption;
+
+  function buildUrl(updates: Record<string, string | string[] | null>): string {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, val] of Object.entries(updates)) {
+      params.delete(key);
+      if (Array.isArray(val) && val.length > 0) {
+        val.forEach(v => params.append(key, v));
+      } else if (typeof val === 'string' && val !== '') {
+        params.set(key, val);
+      }
+    }
+    const qs = params.toString();
+    return qs ? `${pathname}?${qs}` : pathname;
+  }
+
+  function push(url: string) {
+    router.replace(url, { scroll: false });
+  }
+
+  function handleSearchChange(v: string)    { push(buildUrl({ q: v || null })); }
+  function handleBrandToggle(b: string)     { push(buildUrl({ brand:    toggleValue(selectedBrands,     b) })); }
+  function handleCarTypeToggle(ct: string)  { push(buildUrl({ car:      toggleValue(selectedCarTypes,   ct) })); }
+  function handleCategoryToggle(c: string)  { push(buildUrl({ category: toggleValue(selectedCategories, c) })); }
+  function handleSortChange(s: SortOption)  { push(buildUrl({ sort: s })); }
+
+  function removeFilter(type: string, value: string) {
+    switch (type) {
+      case 'brand':    push(buildUrl({ brand:    selectedBrands.filter(b => b !== value)      })); break;
+      case 'car':      push(buildUrl({ car:      selectedCarTypes.filter(c => c !== value)    })); break;
+      case 'category': push(buildUrl({ category: selectedCategories.filter(c => c !== value) })); break;
+      case 'q':        push(buildUrl({ q: null })); break;
+    }
+  }
+
+  function clearAll() { push(pathname); }
 
   const filteredProducts = useMemo(() => {
     let result = products;
@@ -157,12 +189,17 @@ export default function ProductsBrowser({
     selectedCategories.length +
     (searchQuery.trim() ? 1 : 0);
 
-  function clearAll() {
-    setSearchQuery('');
-    setSelectedBrands([]);
-    setSelectedCarTypes([]);
-    setSelectedCategories([]);
-  }
+  type AppliedFilter = { type: string; value: string; label: string };
+  const appliedFilters: AppliedFilter[] = [
+    ...selectedBrands.map(b     => ({ type: 'brand',    value: b,  label: b })),
+    ...selectedCarTypes.map(c   => ({ type: 'car',      value: c,  label: c })),
+    ...selectedCategories.map(c => ({
+      type: 'category',
+      value: c,
+      label: allCategories.find(a => a.key === c)?.label ?? c,
+    })),
+    ...(searchQuery.trim() ? [{ type: 'q', value: searchQuery, label: `جستجو: ${searchQuery}` }] : []),
+  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -194,19 +231,21 @@ export default function ProductsBrowser({
         <div className={`${sidebarOpen ? 'block' : 'hidden'} lg:block lg:sticky lg:top-44`}>
           <FilterSidebar
             searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
+            onSearchChange={handleSearchChange}
             selectedBrands={selectedBrands}
-            onBrandToggle={b    => setSelectedBrands(prev     => toggleValue(prev, b))}
+            onBrandToggle={handleBrandToggle}
             selectedCarTypes={selectedCarTypes}
-            onCarTypeToggle={ct => setSelectedCarTypes(prev   => toggleValue(prev, ct))}
+            onCarTypeToggle={handleCarTypeToggle}
             selectedCategories={selectedCategories}
-            onCategoryToggle={c => setSelectedCategories(prev => toggleValue(prev, c))}
+            onCategoryToggle={handleCategoryToggle}
             onClearAll={clearAll}
+            onRemoveFilter={removeFilter}
             onExportPDF={() => openPDFWindow(filteredProducts)}
             allBrands={allBrands}
             allCarTypes={allCarTypes}
             allCategories={allCategories}
             activeFilterCount={activeFilterCount}
+            appliedFilters={appliedFilters}
           />
         </div>
 
@@ -227,7 +266,7 @@ export default function ProductsBrowser({
               <select
                 id="plp-sort"
                 value={sortBy}
-                onChange={e => setSortBy(e.target.value as SortOption)}
+                onChange={e => handleSortChange(e.target.value as SortOption)}
                 className="border border-gray-200 rounded-xl px-3 py-1.5 text-sm text-charcoal bg-white focus:outline-none focus:border-accent transition-colors cursor-pointer"
               >
                 {SORT_OPTIONS.map(opt => (
