@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+type AppliedFilter = { type: string; value: string; label: string };
+
 interface FilterSidebarProps {
   searchQuery: string;
   onSearchChange: (v: string) => void;
@@ -12,11 +14,13 @@ interface FilterSidebarProps {
   selectedCategories: string[];
   onCategoryToggle: (cat: string) => void;
   onClearAll: () => void;
+  onRemoveFilter: (type: string, value: string) => void;
   onExportPDF: () => void;
   allBrands: string[];
   allCarTypes: string[];
   allCategories: { key: string; label: string }[];
   activeFilterCount: number;
+  appliedFilters: AppliedFilter[];
 }
 
 function AccordionSection({
@@ -105,14 +109,16 @@ export default function FilterSidebar({
   selectedCategories,
   onCategoryToggle,
   onClearAll,
+  onRemoveFilter,
   onExportPDF,
   allBrands,
   allCarTypes,
   allCategories,
   activeFilterCount,
+  appliedFilters,
 }: FilterSidebarProps) {
   return (
-    <aside className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+    <aside className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-base font-bold text-charcoal">فیلترها</h2>
@@ -125,6 +131,30 @@ export default function FilterSidebar({
           </button>
         )}
       </div>
+
+      {/* Applied filter chips */}
+      {appliedFilters.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {appliedFilters.map(f => (
+            <span
+              key={`${f.type}-${f.value}`}
+              className="inline-flex items-center gap-1 bg-accent/10 border border-accent/30 text-charcoal text-xs font-medium px-2.5 py-1 rounded-full"
+            >
+              {f.label}
+              <button
+                onClick={() => onRemoveFilter(f.type, f.value)}
+                aria-label={`حذف فیلتر ${f.label}`}
+                className="text-gray-400 hover:text-red-500 transition-colors leading-none"
+              >
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6"  y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Search */}
       <div className="relative mb-4">

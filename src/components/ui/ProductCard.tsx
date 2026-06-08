@@ -1,8 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import Image from 'next/image';
-import type { Product } from '@/src/data/plpMockData';
+import Link from 'next/link';
+import type { ProductVM as Product } from '@/src/lib/serializers';
+import { addToCart } from '@/actions/cart';
+import { announceAddedToCart, useCartUI } from '@/src/store/cart-ui';
 
 interface ProductCardProps {
   product: Product;
@@ -19,8 +22,6 @@ const ORIGIN_FLAGS: Record<string, string> = {
   'چین':    '🇨🇳',
 };
 
-const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
-
 function formatPrice(price: number) {
   return price.toLocaleString('fa-IR') + ' تومان';
 }
@@ -29,14 +30,16 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
   const [qty, setQty] = useState(1);
   const [phone, setPhone]           = useState('');
   const [notifyState, setNotifyState] = useState<'idle' | 'success' | 'error'>('idle');
+  const [added, setAdded]           = useState(false);
+  const [pending, startTransition]  = useTransition();
+  const notify = useCartUI((s) => s.notify);
 
   const isGrid  = variant === 'grid';
   const inStock = product.stock > 0;
   const flag    = ORIGIN_FLAGS[product.origin] ?? '🏭';
   const maxQty  = inStock ? product.stock : 0;
 
-  // "جدید" badge shown for products added within the last 3 days
-  const isNew = Date.now() - new Date(product.createdDate).getTime() <= THREE_DAYS_MS;
+  const isNew = product.isNew;
 
   function changeQty(delta: number) {
     setQty(q => Math.min(maxQty, Math.max(1, q + delta)));
@@ -45,6 +48,22 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const v = parseInt(e.target.value, 10);
     if (!isNaN(v)) setQty(Math.min(maxQty, Math.max(1, v)));
+  }
+
+  // Add to cart works for guests and signed-in users alike (the server action
+  // resolves the actor). On success we fire the global "added" toast (product
+  // name + quantity) and refresh the header badge count.
+  function handleAddToCart() {
+    startTransition(async () => {
+      const res = await addToCart(product.id, qty);
+      if (res.ok) {
+        announceAddedToCart(product.name, qty, res.data.totalItems);
+        setAdded(true);
+        setTimeout(() => setAdded(false), 1800);
+      } else {
+        notify({ variant: 'error', title: 'خطا', description: res.error });
+      }
+    });
   }
 
   function handleNotify() {
@@ -66,7 +85,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
       ].join(' ')}
     >
       {/* ── Product image ──────────────────────────────────── */}
-      <div className={`relative bg-white overflow-hidden ${isGrid ? 'h-48' : 'h-40'}`}>
+      <Link href={`/products/${product.id}`} className={`relative bg-white overflow-hidden block ${isGrid ? 'h-48' : 'h-40'}`}>
         <Image
           src={product.mainImage}
           alt={product.name}
@@ -92,7 +111,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
         <span className="absolute top-2 inset-s-2 bg-blue-600/85 text-white text-xs font-medium px-2 py-0.5 rounded-full shadow backdrop-blur-sm">
           {product.warranty} گارانتی
         </span>
-      </div>
+      </Link>
 
       {/* ── SKU code ───────────────────────────────────────── */}
       <div className="px-3 pt-2">
@@ -109,9 +128,11 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
         </p>
 
         {/* Product name */}
-        <h3 className="text-sm font-semibold text-charcoal leading-5 line-clamp-2 flex-1 mb-2">
-          {product.name}
-        </h3>
+        <Link href={`/products/${product.id}`} className="flex-1 mb-2">
+          <h3 className="text-sm font-semibold text-charcoal hover:text-accent-dark leading-5 line-clamp-2 transition-colors">
+            {product.name}
+          </h3>
+        </Link>
 
         {/* Origin + Stock */}
         <div className="flex items-center gap-2 flex-wrap mb-3">
@@ -170,8 +191,17 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
             </div>
 
             {/* Add to cart */}
-            <button className="w-full bg-accent hover:bg-accent-dark active:scale-95 text-charcoal font-semibold text-sm py-2 rounded-xl transition-all duration-150">
-              افزودن به سبد
+            <button
+              onClick={handleAddToCart}
+              disabled={pending}
+              className={[
+                'w-full active:scale-95 font-semibold text-sm py-2 rounded-xl transition-all duration-150 disabled:opacity-60',
+                added
+                  ? 'bg-green-500 text-white'
+                  : 'bg-accent hover:bg-accent-dark text-charcoal',
+              ].join(' ')}
+            >
+              {pending ? 'در حال افزودن…' : added ? '✓ اضافه شد' : 'افزودن به سبد'}
             </button>
           </>
         ) : (

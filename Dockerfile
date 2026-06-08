@@ -21,6 +21,7 @@ FROM base AS migrate
 COPY --from=deps /app/node_modules ./node_modules
 COPY prisma ./prisma
 COPY prisma.config.ts ./
+RUN DATABASE_URL="postgresql://x:x@localhost/x" node node_modules/prisma/build/index.js generate
 CMD ["node", "node_modules/prisma/build/index.js", "migrate", "deploy"]
 
 # ─────────────────────────────────────────────────────────────────────────────

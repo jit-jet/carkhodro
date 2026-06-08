@@ -2,32 +2,32 @@ function formatPrice(n: number) {
   return n.toLocaleString('fa-IR') + ' تومان';
 }
 
-interface Row {
-  label: string;
-  value: number;
-  highlight?: boolean;
-}
-
 interface Props {
   subtotal: number;
-  shippingCost: number;
+  /** `null` until the user picks a shipping method (cart → checkout handoff). */
+  shippingCost: number | null;
+  /** VAT / fees. Omit or 0 to hide the row. */
+  taxAmount?: number;
   total: number;
   itemCount: number;
+  /** CTA label, e.g. "ادامه و تسویه حساب" (cart) or "ثبت و پرداخت سفارش" (checkout). */
+  ctaLabel: string;
   onPlaceOrder: () => void;
+  disabled?: boolean;
+  busy?: boolean;
 }
 
 export default function OrderSummary({
   subtotal,
   shippingCost,
+  taxAmount = 0,
   total,
   itemCount,
+  ctaLabel,
   onPlaceOrder,
+  disabled = false,
+  busy = false,
 }: Props) {
-  const rows: Row[] = [
-    { label: `جمع محصولات (${itemCount.toLocaleString('fa-IR')} مورد)`, value: subtotal },
-    { label: 'هزینه ارسال', value: shippingCost },
-  ];
-
   return (
     <aside className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       {/* Header */}
@@ -50,12 +50,24 @@ export default function OrderSummary({
       <div className="p-5 space-y-5">
         {/* Line items */}
         <div className="space-y-3">
-          {rows.map((row) => (
-            <div key={row.label} className="flex items-center justify-between text-sm">
-              <span className="text-gray-500">{row.label}</span>
-              <span className="font-medium text-charcoal">{formatPrice(row.value)}</span>
-            </div>
-          ))}
+          <Row
+            label={`جمع محصولات (${itemCount.toLocaleString('fa-IR')} مورد)`}
+            value={formatPrice(subtotal)}
+          />
+          <Row
+            label="هزینه ارسال"
+            value={
+              shippingCost === null
+                ? 'در مرحله بعد محاسبه می‌شود'
+                : shippingCost === 0
+                  ? 'رایگان'
+                  : formatPrice(shippingCost)
+            }
+            muted={shippingCost === null}
+          />
+          {taxAmount > 0 && (
+            <Row label="مالیات بر ارزش افزوده" value={formatPrice(taxAmount)} />
+          )}
         </div>
 
         {/* Divider + total */}
@@ -71,9 +83,15 @@ export default function OrderSummary({
         {/* CTA */}
         <button
           onClick={onPlaceOrder}
-          className="w-full bg-accent hover:bg-accent-dark active:scale-[0.98] text-charcoal font-bold text-base py-3.5 rounded-xl transition-all duration-150 shadow hover:shadow-md"
+          disabled={disabled || busy}
+          className="w-full bg-accent hover:bg-accent-dark active:scale-[0.98] text-charcoal font-bold text-base py-3.5 rounded-xl transition-all duration-150 shadow hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2"
         >
-          ثبت و پرداخت سفارش
+          {busy && (
+            <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+            </svg>
+          )}
+          {ctaLabel}
         </button>
 
         {/* Trust badge */}
@@ -94,5 +112,16 @@ export default function OrderSummary({
         </div>
       </div>
     </aside>
+  );
+}
+
+function Row({ label, value, muted = false }: { label: string; value: string; muted?: boolean }) {
+  return (
+    <div className="flex items-center justify-between text-sm">
+      <span className="text-gray-500">{label}</span>
+      <span className={muted ? 'text-xs text-gray-400' : 'font-medium text-charcoal'}>
+        {value}
+      </span>
+    </div>
   );
 }

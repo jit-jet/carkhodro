@@ -1,0 +1,502 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Carkhodro — Auto Spare Parts E-Commerce
+// PostgreSQL · Prisma ORM
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma_client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  RETAIL
+  WHOLESALE
+  ADMIN // full back-office access
+  SUPPORT // read-only order/customer access
+}
+
+enum OrderStatus {
+  PENDING // awaiting payment / confirmation
+  CONFIRMED // payment received, pending warehouse pick
+  PROCESSING // warehouse is packing the order
+  SHIPPED // handed to carrier
+  DELIVERED // confirmed delivery
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  ONLINE // IPG redirect
+  COD // cash on delivery
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum ShippingMethod {
+  STANDARD // post — 3-5 business days
+  EXPRESS // 1-2 business days
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REFERENCE DATA
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// The 31 Iranian provinces — seeded once; never deleted.
+model Province {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cities City[]
+
+  @@map("provinces")
+}
+
+/// Cities nested under a province — seeded from a standard list; admin can add more.
+model City {
+  id         Int      @id @default(autoincrement())
+  provinceId Int      @map("province_id")
+  name       String
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  province  Province  @relation(fields: [provinceId], references: [id])
+  addresses Address[]
+
+  @@unique([provinceId, name])
+  @@index([provinceId])
+  @@map("cities")
+}
+
+/// Top-level navigation links — managed by admin; front end caches and revalidates.
+model NavLink {
+  id        Int      @id @default(autoincrement())
+  href      String   @unique
+  label     String
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("nav_links")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AUTHENTICATION
+// ─────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String    @id @default(cuid())
+  /// Iranian mobile format: 09XXXXXXXXX (11 digits)
+  phoneNumber  String    @unique @map("phone_number")
+  firstName    String    @map("first_name")
+  lastName     String    @map("last_name")
+  role         UserRole  @default(RETAIL)
+  /// Set to true after the first successful OTP verification
+  isVerified   Boolean   @default(false) @map("is_verified")
+  /// Wholesale customers must supply a shop/business name
+  shopName     String?   @map("shop_name")
+  birthDate    DateTime? @map("birth_date")
+  profileImage String?   @map("profile_image")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  addresses Address[]
+  sessions  Session[]
+  orders    Order[]
+  reviews   Review[]
+  cart      Cart?
+
+  @@index([phoneNumber])
+  @@map("users")
+}
+
+/// One active OTP per phone number — upserted on every send request.
+model OtpSession {
+  id          String   @id @default(cuid())
+  phoneNumber String   @unique @map("phone_number")
+  /// Bcrypt-hashed in production; store plain only in dev/test
+  codeHash    String   @map("code_hash")
+  /// Hard cutoff — reject even if code matches after this time
+  expiresAt   DateTime @map("expires_at")
+  /// Count repeated send attempts to enable rate-limiting
+  attempts    Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([phoneNumber])
+  @@map("otp_sessions")
+}
+
+/// Server-issued session token — created after OTP is consumed.
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+/// User delivery addresses — one user may save many; at most one isDefault.
+model Address {
+  id         String   @id @default(cuid())
+  userId     String   @map("user_id")
+  cityId     Int      @map("city_id")
+  street     String
+  postalCode String   @map("postal_code")
+  isDefault  Boolean  @default(false) @map("is_default")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  city   City    @relation(fields: [cityId], references: [id])
+  orders Order[]
+
+  @@index([userId])
+  @@index([cityId])
+  @@map("addresses")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CATALOGUE — CAR TAXONOMY
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Automobile manufacturers: ایران‌خودرو, سایپا, تویوتا, …
+model CarBrand {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  /// URL-safe slug, e.g. "iran-khodro"
+  slug         String   @unique
+  logoImage    String?  @map("logo_image")
+  /// Denormalized counter — refreshed by a background job or DB trigger
+  productCount Int      @default(0) @map("product_count")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  carModels CarModel[]
+
+  @@map("car_brands")
+}
+
+/// Specific car models — FK carBrandId → car_brands.id
+model CarModel {
+  id         Int      @id @default(autoincrement())
+  carBrandId Int      @map("car_brand_id")
+  name       String
+  /// Gregorian year production began (null = unknown)
+  yearStart  Int?     @map("year_start")
+  /// Gregorian year production ended (null = still in production)
+  yearEnd    Int?     @map("year_end")
+  image      String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  carBrand        CarBrand               @relation(fields: [carBrandId], references: [id])
+  compatibilities ProductCompatibility[]
+
+  @@index([carBrandId])
+  @@map("car_models")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CATALOGUE — PARTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Spare-parts suppliers / manufacturers: بوش, NGK, ایساکو, …
+/// Distinct from CarBrand — a Bosch brake pad fits a Toyota, not made by Toyota.
+model PartsBrand {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  logoImage String?  @map("logo_image")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  products Product[]
+
+  @@map("parts_brands")
+}
+
+/// Product category: موتور و قطعات, ترمز و تعلیق, برق و روشنایی, …
+model Category {
+  id           Int      @id @default(autoincrement())
+  /// URL / filter slug, e.g. "engine", "brake"
+  key          String   @unique
+  name         String
+  icon         String?
+  color        String?
+  bgColor      String?  @map("bg_color")
+  sortOrder    Int      @default(0) @map("sort_order")
+  /// Denormalized counter — refreshed by a background job or DB trigger
+  productCount Int      @default(0) @map("product_count")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  products Product[]
+
+  @@map("categories")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PRODUCT
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Product {
+  id           String @id @default(cuid())
+  /// Human-readable part number, e.g. "BSH-ENG-206-001"
+  sku          String @unique
+  name         String
+  partsBrandId Int    @map("parts_brand_id")
+  categoryId   Int    @map("category_id")
+
+  // ── Pricing ────────────────────────────────────────────────────────────────
+  /// Live retail price in Iranian Rial — synced from accountancy API
+  basePrice            BigInt  @map("base_price")
+  /// Percentage deducted for WHOLESALE role users (0–100).
+  /// Wholesale price = basePrice × (1 − wholesaleDiscountPct / 100)
+  wholesaleDiscountPct Decimal @default(0) @map("wholesale_discount_pct") @db.Decimal(5, 2)
+  /// Crossed-out "was" price shown in the UI — synced from accountancy API
+  oldPrice             BigInt? @map("old_price")
+  isOffer              Boolean @default(false) @map("is_offer")
+
+  // ── External accounting / ERP sync ────────────────────────────────────────
+  /// Primary key in the external accountancy system.
+  /// Nullable until first sync — product must not go live until populated.
+  accountancyId String?   @unique @map("accountancy_id")
+  /// Timestamp of the last successful price + stock pull from the external API
+  lastSyncedAt  DateTime? @map("last_synced_at")
+
+  // ── Inventory — synced from accountancy API ───────────────────────────────
+  stock Int @default(0)
+
+  // ── Physical / logistics details (managed by local admin) ─────────────────
+  warranty       String?
+  /// Country of origin, e.g. "آلمان", "ژاپن", "ایران"
+  origin         String?
+  /// Units per retail pack (e.g. spark plugs come in sets of 4)
+  packQuantity   Int     @default(1) @map("pack_quantity")
+  /// Retail packs per master carton — for wholesale order sizing
+  cartonQuantity Int     @default(1) @map("carton_quantity")
+  /// true = OEM / genuine part; false = aftermarket
+  isOriginal     Boolean @default(true) @map("is_original")
+
+  // ── Content (managed by local admin) ──────────────────────────────────────
+  mainImage   String? @map("main_image")
+  description String? @db.Text
+
+  // ── Analytics ──────────────────────────────────────────────────────────────
+  viewCount   Int     @default(0) @map("view_count")
+  saleCount   Int     @default(0) @map("sale_count")
+  /// Denormalized average star rating (1.00–5.00) — recomputed on each new review
+  ratingAvg   Decimal @default(0) @map("rating_avg") @db.Decimal(3, 2)
+  reviewCount Int     @default(0) @map("review_count")
+
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  partsBrand      PartsBrand             @relation(fields: [partsBrandId], references: [id])
+  category        Category               @relation(fields: [categoryId], references: [id])
+  images          ProductImage[]
+  compatibilities ProductCompatibility[]
+  reviews         Review[]
+  cartItems       CartItem[]
+  orderItems      OrderItem[]
+
+  @@index([sku])
+  @@index([accountancyId])
+  @@index([categoryId])
+  @@index([partsBrandId])
+  @@index([isActive, isOffer])
+  @@index([saleCount])
+  @@index([viewCount])
+  @@map("products")
+}
+
+/// Additional product gallery images (beyond mainImage).
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String  @map("product_id")
+  url       String
+  alt       String?
+  sortOrder Int     @default(0) @map("sort_order")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+/// Many-to-many: a spare part can be compatible with multiple car models.
+model ProductCompatibility {
+  id         String @id @default(cuid())
+  productId  String @map("product_id")
+  carModelId Int    @map("car_model_id")
+
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  carModel CarModel @relation(fields: [carModelId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, carModelId])
+  @@index([productId])
+  @@index([carModelId])
+  @@map("product_compatibilities")
+}
+
+/// Customer review and star rating on a product.
+model Review {
+  id                 String   @id @default(cuid())
+  productId          String   @map("product_id")
+  /// Nullable — preserves display name even if the user account is deleted
+  userId             String?  @map("user_id")
+  authorName         String   @map("author_name")
+  /// 1–5
+  rating             Int
+  text               String   @db.Text
+  /// true only when the author has a completed order containing this product
+  isVerifiedPurchase Boolean  @default(false) @map("is_verified_purchase")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([productId])
+  @@index([userId])
+  @@map("reviews")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CART
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// One active cart per user — created lazily on first add-to-cart action.
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String   @map("cart_id")
+  productId String   @map("product_id")
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now()) @map("added_at")
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId])
+  @@index([cartId])
+  @@map("cart_items")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ORDERS
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Shipping methods and their current cost — editable by admin.
+model ShippingOption {
+  id          String         @id @default(cuid())
+  method      ShippingMethod @unique
+  label       String
+  description String?
+  cost        BigInt
+  isActive    Boolean        @default(true) @map("is_active")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  orders Order[]
+
+  @@map("shipping_options")
+}
+
+model Order {
+  id               String        @id @default(cuid())
+  userId           String        @map("user_id")
+  /// FK kept for history; address data also snapshotted below.
+  addressId        String        @map("address_id")
+  shippingOptionId String        @map("shipping_option_id")
+  status           OrderStatus   @default(PENDING)
+  paymentMethod    PaymentMethod @map("payment_method")
+  paymentStatus    PaymentStatus @default(PENDING) @map("payment_status")
+
+  // ── Snapshotted delivery address ──────────────────────────────────────────
+  // Copied at checkout so later edits to the address row don't affect history.
+  snapshotProvince   String @map("snapshot_province")
+  snapshotCity       String @map("snapshot_city")
+  snapshotStreet     String @map("snapshot_street")
+  snapshotPostalCode String @map("snapshot_postal_code")
+
+  // ── Financials ─────────────────────────────────────────────────────────────
+  subtotal     BigInt @map("subtotal")
+  shippingCost BigInt @map("shipping_cost")
+  /// VAT or other applicable tax collected on this order
+  taxAmount    BigInt @default(0) @map("tax_amount")
+  /// subtotal + shippingCost + taxAmount (stored to prevent drift)
+  totalAmount  BigInt @map("total_amount")
+
+  notes        String?
+  trackingCode String? @map("tracking_code")
+
+  paidAt      DateTime? @map("paid_at")
+  shippedAt   DateTime? @map("shipped_at")
+  deliveredAt DateTime? @map("delivered_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user           User           @relation(fields: [userId], references: [id])
+  address        Address        @relation(fields: [addressId], references: [id])
+  shippingOption ShippingOption @relation(fields: [shippingOptionId], references: [id])
+  items          OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String @map("order_id")
+  productId String @map("product_id")
+
+  // ── Immutable purchase snapshot ───────────────────────────────────────────
+  productName     String @map("product_name")
+  productSku      String @map("product_sku")
+  /// Exact price charged to this customer — frozen at checkout.
+  /// Reflects the role-based price (retail vs. wholesale) active at that moment.
+  priceAtPurchase BigInt @map("price_at_purchase")
+  /// Tax portion of this line item (e.g. VAT on priceAtPurchase × quantity)
+  taxAmount       BigInt @default(0) @map("tax_amount")
+  quantity        Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}

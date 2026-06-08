@@ -1,9 +1,10 @@
 import SliderWrapper from "@/src/components/ui/SliderWrapper";
 import SectionTitle from "@/src/components/ui/SectionTitle";
 import ProductCard from "@/src/components/ui/ProductCard";
-import { newProducts } from "@/src/data/mockData";
+import { getNewArrivals } from "@/actions/products";
 
-export default function NewArrivalsSlider() {
+export default async function NewArrivalsSlider() {
+  const newProducts = await getNewArrivals();
   return (
     <section className="py-10 bg-silver-light">
       <div className="max-w-7xl mx-auto px-4">

@@ -89,7 +89,7 @@ export default function HeroBanner() {
                 </svg>
               </Link>
               <Link
-                href="/brands"
+                href="/products"
                 className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-accent text-white hover:text-accent font-bold px-8 py-3.5 rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] text-base"
               >
                 جستجو بر اساس خودرو

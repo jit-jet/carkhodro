@@ -4,9 +4,15 @@ import { useState } from "react";
 import Image from "next/image";
 import SliderWrapper from "@/src/components/ui/SliderWrapper";
 import SectionTitle from "@/src/components/ui/SectionTitle";
-import { spareBrands, carModels } from "@/src/data/mockData";
+import type { CarBrandVM, CarModelVM } from "@/src/lib/serializers";
 
-export default function CarModelsSlider() {
+export default function CarModelsSlider({
+  spareBrands,
+  carModels,
+}: {
+  spareBrands: CarBrandVM[];
+  carModels: CarModelVM[];
+}) {
   const [selectedBrandId, setSelectedBrandId] = useState<number | null>(null);
 
   const filteredModels = selectedBrandId
@@ -19,7 +25,7 @@ export default function CarModelsSlider() {
         <SectionTitle
           title="جستجو بر اساس مدل خودرو"
           subtitle="خودرو خود را انتخاب کنید و قطعات مرتبط را بیابید"
-          linkHref="/models"
+          linkHref="/products"
           linkLabel="همه مدل‌ها"
         />
 
@@ -55,7 +61,7 @@ export default function CarModelsSlider() {
           {filteredModels.map((model) => (
             <a
               key={model.id}
-              href={`/model/${model.id}`}
+              href={`/products?car=${encodeURIComponent(model.name)}`}
               className="flex-shrink-0 w-44 sm:w-48 bg-white rounded-2xl p-4 shadow-sm hover:shadow-md border border-gray-100 hover:border-accent transition-all duration-200 group"
             >
               {/* Car visual */}

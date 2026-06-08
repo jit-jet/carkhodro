@@ -1,14 +1,14 @@
 import Image from 'next/image';
-import type { CartItem } from '@/src/data/cartMockData';
+import type { CartItemVM } from '@/src/lib/serializers';
 
 function formatPrice(n: number) {
   return n.toLocaleString('fa-IR') + ' تومان';
 }
 
 interface Props {
-  item: CartItem;
-  onUpdateQuantity: (id: number, delta: number) => void;
-  onRemove: (id: number) => void;
+  item: CartItemVM;
+  onUpdateQuantity: (id: string, delta: number) => void;
+  onRemove: (id: string) => void;
 }
 
 export default function CartItemRow({ item, onUpdateQuantity, onRemove }: Props) {

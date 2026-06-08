@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { IRANIAN_PROVINCES } from '@/src/data/mockUsers';
-import { registerUser } from '@/src/lib/authApi';
+import { registerUser } from '@/actions/auth';
 
 // ── Field-level form state ─────────────────────────────────────────────────────
 
@@ -47,9 +47,11 @@ function validate(f: FormState): Partial<Record<keyof FormState, string>> {
 interface Props {
   /** Phone number already verified in the OTP step — passed as read-only */
   phoneNumber: string;
+  /** Where to send the user after a successful signup (defaults to dashboard). */
+  redirectTo?: string;
 }
 
-export default function SignupForm({ phoneNumber }: Props) {
+export default function SignupForm({ phoneNumber, redirectTo = '/dashboard' }: Props) {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(INITIAL);
   const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({});
@@ -98,11 +100,12 @@ export default function SignupForm({ phoneNumber }: Props) {
       });
 
       if (!res.ok) {
-        setServerError(res.message);
+        setServerError(res.error);
         return;
       }
-      // Registration complete → send to dashboard
-      router.push('/dashboard');
+      // Registration complete (session set, guest cart merged) → continue.
+      router.push(redirectTo);
+      router.refresh();
     } catch {
       setServerError('خطا در اتصال. لطفاً دوباره تلاش کنید.');
     } finally {

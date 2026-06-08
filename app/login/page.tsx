@@ -8,24 +8,30 @@
  *   2. OtpStep    — user enters the 4-digit code
  *
  * After OTP verification:
- *   • Existing user  →  /dashboard
- *   • New user       →  /signup?phone=…  (pre-fills phone on the signup form)
+ *   • Existing user  →  session is created server-side  →  `?redirect=` or /dashboard
+ *   • New user       →  /signup?phone=…  (carries `?redirect=` through)
  *
- * All API calls go through src/lib/authApi.ts.
- * This component only manages UI flow state.
+ * Backend calls go through the real Server Actions in `actions/auth.ts`
+ * (`requestOtp` / `verifyOtp`). In development the OTP isn't texted — the action
+ * returns it as `devCode` and we surface it here so the flow is testable.
+ *
+ * Wrapped in <Suspense> because it reads `useSearchParams()` (the `redirect`
+ * destination set when a guest is bounced here from checkout).
  */
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AuthCard from '@/src/components/auth/AuthCard';
 import PhoneStep from '@/src/components/auth/PhoneStep';
 import OtpStep from '@/src/components/auth/OtpStep';
-import { sendOtp, verifyOtp } from '@/src/lib/authApi';
+import { requestOtp, verifyOtp } from '@/actions/auth';
 
 type Step = 'phone' | 'otp';
 
-export default function LoginPage() {
+function LoginFlow() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') ?? '/dashboard';
 
   // ── Flow state ───────────────────────────────────────────────────────────────
   const [step, setStep] = useState<Step>('phone');
@@ -49,47 +55,65 @@ export default function LoginPage() {
     };
   }
 
+  /** Dev convenience: show the OTP the server generated (no real SMS in dev). */
+  function showDevCode(devCode?: string) {
+    if (devCode) {
+      alert(
+        `📱 پیامک ارسال شد (حالت توسعه)\n\nکد تأیید: ${devCode}\n\n` +
+          `⚠️ در محیط واقعی این کد از طریق پیامک ارسال می‌شود.`,
+      );
+    }
+  }
+
   // ── Step handlers ────────────────────────────────────────────────────────────
 
-  /**
-   * STEP 1 — Send OTP
-   * On success, advance to the OTP entry step.
-   */
+  /** STEP 1 — Send OTP, then advance to the code-entry step. */
   async function handleSendOtp(phone: string) {
     await withLoading(async () => {
-      const res = await sendOtp(phone);
-      if (!res.ok) { setError(res.message); return; }
+      const res = await requestOtp(phone);
+      if (!res.ok) {
+        setError(res.error);
+        return;
+      }
+      showDevCode(res.data.devCode);
       setPhoneNumber(phone);
       setStep('otp');
     })();
   }
 
   /**
-   * STEP 2a — Verify OTP
-   * Existing user  → /dashboard
-   * New user       → /signup?phone=…
+   * STEP 2a — Verify OTP.
+   * Existing user (session now set) → `redirect` or /dashboard.
+   * New user                       → /signup, carrying phone + redirect.
    */
   async function handleVerifyOtp(code: string) {
     await withLoading(async () => {
       const res = await verifyOtp(phoneNumber, code);
-      if (!res.ok) { setError(res.message); return; }
+      if (!res.ok) {
+        setError(res.error);
+        return;
+      }
 
-      if (res.userExists) {
-        router.push('/dashboard');
+      if (res.data.userExists) {
+        router.push(redirectTo);
+        router.refresh(); // reflect the new session (header, cart merge)
       } else {
-        router.push(`/signup?phone=${encodeURIComponent(phoneNumber)}`);
+        const params = new URLSearchParams({ phone: phoneNumber });
+        if (redirectTo !== '/dashboard') params.set('redirect', redirectTo);
+        router.push(`/signup?${params.toString()}`);
       }
     })();
   }
 
-  /**
-   * STEP 2b — Resend OTP (triggered from within OtpStep)
-   * Resets the code by calling sendOtp again; OtpStep resets its own timer.
-   */
+  /** STEP 2b — Resend OTP (triggered from within OtpStep). */
   async function handleResend() {
     await withLoading(async () => {
-      const res = await sendOtp(phoneNumber);
-      if (!res.ok) setError(res.message);
+      const res = await requestOtp(phoneNumber);
+      if (!res.ok) {
+        setError(res.error);
+        return;
+      }
+      showDevCode(res.data.devCode);
     })();
   }
 
@@ -98,26 +122,39 @@ export default function LoginPage() {
   const cardProps =
     step === 'phone'
       ? { title: 'ورود به حساب کاربری', subtitle: 'شماره موبایل خود را وارد کنید.' }
-      : { title: 'تأیید شماره موبایل',   subtitle: 'کد ارسال‌شده را وارد کنید.' };
+      : { title: 'تأیید شماره موبایل', subtitle: 'کد ارسال‌شده را وارد کنید.' };
 
   return (
     <AuthCard {...cardProps}>
       {step === 'phone' ? (
-        <PhoneStep
-          onSubmit={handleSendOtp}
-          loading={loading}
-          error={error}
-        />
+        <PhoneStep onSubmit={handleSendOtp} loading={loading} error={error} />
       ) : (
         <OtpStep
           phoneNumber={phoneNumber}
           onVerify={handleVerifyOtp}
           onResend={handleResend}
-          onBack={() => { setStep('phone'); setError(''); }}
+          onBack={() => {
+            setStep('phone');
+            setError('');
+          }}
           loading={loading}
           error={error}
         />
       )}
     </AuthCard>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <AuthCard title="ورود به حساب کاربری" subtitle="شماره موبایل خود را وارد کنید.">
+          <div className="h-40" />
+        </AuthCard>
+      }
+    >
+      <LoginFlow />
+    </Suspense>
   );
 }

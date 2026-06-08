@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { navLinks } from "@/src/data/mockData";
+import type { NavLinkVM } from "@/src/lib/serializers";
+import { getCartCount } from "@/actions/cart";
+import { useCartUI } from "@/src/store/cart-ui";
 
 function PhoneIcon() {
   return (
@@ -41,12 +43,13 @@ function CartIcon() {
   );
 }
 
-function UserIcon() {
+/** Cart item-count bubble — hidden when empty. */
+function CartBadge({ count }: { count: number }) {
+  if (count <= 0) return null;
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
-      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
+    <span className="absolute -top-1.5 -end-1.5 min-w-5 h-5 px-1 flex items-center justify-center bg-charcoal text-white text-[10px] font-bold rounded-full tabular-nums">
+      {count.toLocaleString("fa-IR")}
+    </span>
   );
 }
 
@@ -69,9 +72,32 @@ function CloseIcon() {
   );
 }
 
-export default function Header() {
+export default function Header({
+  navLinks,
+  account,
+}: {
+  navLinks: NavLinkVM[];
+  /** Server-rendered account slot (login button or user menu) — see <AccountMenu>.
+   *  Auth state is owned server-side so it can't drift from access control. */
+  account: React.ReactNode;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Cart badge count lives in the shared store so add-to-cart anywhere updates
+  // it instantly. Seed it from the server on mount — done client-side so the
+  // root layout stays a static shell. (Auth state is NOT seeded here anymore;
+  // it's resolved server-side per request via the `account` slot.)
+  const cartCount = useCartUI((s) => s.count);
+  const setCount = useCartUI((s) => s.setCount);
+
+  useEffect(() => {
+    let active = true;
+    getCartCount().then((n) => active && setCount(n));
+    return () => {
+      active = false;
+    };
+  }, [setCount]);
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-md">
@@ -142,27 +168,21 @@ export default function Header() {
           {/* Actions */}
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* Cart */}
-            <button className="relative flex items-center gap-1.5 bg-accent hover:bg-accent-dark text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors hidden sm:flex">
+            <Link href="/cart" className="relative flex items-center gap-1.5 bg-accent hover:bg-accent-dark text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors hidden sm:flex">
               <CartIcon />
               <span className="hidden md:inline">سبد خرید</span>
-              <span className="absolute -top-1.5 -start-1.5 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                ۳
-              </span>
-            </button>
+              <CartBadge count={cartCount} />
+            </Link>
 
             {/* Cart (mobile) */}
-            <button className="relative sm:hidden text-charcoal p-2">
+            <Link href="/cart" className="relative sm:hidden text-charcoal p-2">
               <CartIcon />
-              <span className="absolute -top-1 -start-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                ۳
-              </span>
-            </button>
+              <CartBadge count={cartCount} />
+            </Link>
 
-            {/* User */}
-            <button className="flex items-center gap-1.5 border-2 border-silver hover:border-accent text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors hidden sm:flex">
-              <UserIcon />
-              <span className="hidden md:inline">ورود / ثبت‌نام</span>
-            </button>
+            {/* User — signed-in menu or login button, resolved server-side from
+                the session cookie (single source of truth). See <AccountMenu>. */}
+            {account}
           </div>
         </div>
       </div>
