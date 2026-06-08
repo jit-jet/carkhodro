@@ -20,6 +20,7 @@
  * dedicated list pages.
  */
 
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
@@ -83,6 +84,7 @@ export async function addToWishlist(
       create: { userId: user.id, productId },
       update: {},
     });
+    revalidatePath('/wishlist');
     return ok({ inWishlist: true });
   });
 }
@@ -95,6 +97,7 @@ export async function removeFromWishlist(
     if (!user) return fail(LOGIN_REQUIRED);
 
     await prisma.wishlistItem.deleteMany({ where: { userId: user.id, productId } });
+    revalidatePath('/wishlist');
     return ok({ inWishlist: false });
   });
 }
@@ -130,6 +133,7 @@ export async function addToCompare(
     }
 
     await prisma.compareItem.create({ data: { userId: user.id, productId } });
+    revalidatePath('/compare');
     return ok({ inCompare: true, count: count + 1 });
   });
 }
@@ -143,6 +147,7 @@ export async function removeFromCompare(
 
     await prisma.compareItem.deleteMany({ where: { userId: user.id, productId } });
     const count = await prisma.compareItem.count({ where: { userId: user.id } });
+    revalidatePath('/compare');
     return ok({ inCompare: false, count });
   });
 }

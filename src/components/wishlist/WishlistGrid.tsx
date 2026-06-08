@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import type { ProductVM } from '@/src/lib/serializers';
 import ProductCard from '@/src/components/ui/ProductCard';
 import { useListsUI, ensureListsHydrated } from '@/src/store/lists-ui';
+import { getWishlist } from '@/actions/lists';
 
 interface Props {
   initial: ProductVM[];
@@ -12,21 +13,34 @@ interface Props {
 
 export default function WishlistGrid({ initial }: Props) {
   const [products, setProducts] = useState(initial);
-  const wishlist = useListsUI((s) => s.wishlist);
-  const hydrated = useListsUI((s) => s.hydrated);
 
-  useEffect(() => {
-    ensureListsHydrated();
-  }, []);
+  // Ref so the sync effect can read the current list without being a dependency
+  // (adding `products` to deps would cause unnecessary re-runs on every filter).
+  const productsRef = useRef(products);
+  productsRef.current = products;
 
-  // Mirror the store: when the user removes an item via its WishlistButton the
-  // store updates optimistically and this effect drops the card from the grid
-  // immediately. If the server action fails the button rolls back the store,
-  // which re-adds the id and brings the card back.
+  const wishlist  = useListsUI((s) => s.wishlist);
+  const hydrated  = useListsUI((s) => s.hydrated);
+
+  useEffect(() => { ensureListsHydrated(); }, []);
+
   useEffect(() => {
     if (!hydrated) return;
-    setProducts((prev) => prev.filter((p) => wishlist.has(p.id)));
-  }, [wishlist, hydrated]);
+
+    // If the store holds IDs not present in the current display list (e.g. the
+    // user added an item from another page and the router cache served a stale
+    // shell), we have full product data on the server but not client-side.
+    // Re-fetch the full list so the new cards appear without a manual F5.
+    const currentIds = new Set(productsRef.current.map((p) => p.id));
+    const hasNew = [...wishlist].some((id) => !currentIds.has(id));
+
+    if (hasNew) {
+      getWishlist().then(setProducts).catch(() => {});
+    } else {
+      // All additions are accounted for — just drop any cards the user removed.
+      setProducts((prev) => prev.filter((p) => wishlist.has(p.id)));
+    }
+  }, [wishlist, hydrated]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (products.length === 0) {
     return (

@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { removeFromCompare } from '@/actions/lists';
+import { removeFromCompare, getCompareList } from '@/actions/lists';
 import { addToCart } from '@/actions/cart';
-import { useListsUI } from '@/src/store/lists-ui';
+import { useListsUI, ensureListsHydrated } from '@/src/store/lists-ui';
 import { useCartUI, announceAddedToCart } from '@/src/store/cart-ui';
 import type { ProductVM } from '@/src/lib/serializers';
 
@@ -109,8 +109,28 @@ const compareIcon = (
 export default function CompareView({ initial, loggedIn }: Props) {
   const [products, setProducts] = useState(initial);
   const [removing, setRemoving] = useState<string | null>(null);
+
+  const productsRef = useRef(products);
+  productsRef.current = products;
+
+  const compare   = useListsUI((s) => s.compare);
+  const hydrated  = useListsUI((s) => s.hydrated);
   const setCompare = useListsUI((s) => s.setCompare);
   const notify = useCartUI((s) => s.notify);
+
+  useEffect(() => { ensureListsHydrated(); }, []);
+
+  // Re-fetch full product data when the store contains IDs not yet displayed
+  // (happens when the user added items from another page and the rendered shell
+  // is stale). Removals are handled synchronously by handleRemove below.
+  useEffect(() => {
+    if (!hydrated) return;
+    const currentIds = new Set(productsRef.current.map((p) => p.id));
+    const hasNew = [...compare].some((id) => !currentIds.has(id));
+    if (hasNew) {
+      getCompareList().then(setProducts).catch(() => {});
+    }
+  }, [compare, hydrated]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleRemove(productId: string) {
     setRemoving(productId);
