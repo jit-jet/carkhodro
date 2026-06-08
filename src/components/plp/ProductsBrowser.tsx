@@ -105,9 +105,6 @@ interface Props {
   allBrands: string[];
   allCarTypes: string[];
   allCategories: { key: string; label: string }[];
-  initialBrand?: string;
-  initialCategory?: string;
-  initialCar?: string;
 }
 
 export default function ProductsBrowser({

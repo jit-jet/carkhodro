@@ -141,6 +141,16 @@ export interface OrderSummaryVM {
   createdDate: string;
 }
 
+/** Order detail shown on the payment result page (success/fail landing). */
+export interface OrderConfirmationVM {
+  id: string;
+  status: OrderStatus;
+  paymentMethod: PaymentMethod;
+  totalAmount: number;
+  itemCount: number;
+  createdDate: string;
+}
+
 /**
  * Contact + delivery details collected on the checkout page. Persisted to the
  * user's profile / default address at order time (see `submitCheckout`), so a

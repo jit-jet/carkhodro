@@ -16,7 +16,12 @@ import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/r
 import { getCurrentUser } from '@/src/lib/session';
 import { tags } from '@/actions/cache-tags';
 import type { OrderStatus, Prisma } from '@/generated/prisma_client';
-import type { OrderSummaryVM, CheckoutInput, CheckoutContact } from '@/src/lib/serializers';
+import type {
+  OrderSummaryVM,
+  OrderConfirmationVM,
+  CheckoutInput,
+  CheckoutContact,
+} from '@/src/lib/serializers';
 
 /**
  * VAT / tax rate applied to the order subtotal at checkout. Kept at 0 so totals
@@ -43,6 +48,34 @@ export async function getUserOrders(): Promise<OrderSummaryVM[]> {
       createdDate: o.createdAt.toISOString().slice(0, 10),
     }));
   }, []);
+}
+
+/**
+ * Fetch a single order for the payment result page. Scoped to the current user
+ * so a guessed/forged id can't leak someone else's order. Returns null when the
+ * order is missing or not owned by the caller.
+ */
+export async function getOrderConfirmation(
+  id: string,
+): Promise<OrderConfirmationVM | null> {
+  const user = await getCurrentUser();
+  if (!user) return null;
+
+  return safeQuery(`getOrderConfirmation:${id}`, async () => {
+    const order = await prisma.order.findFirst({
+      where: { id, userId: user.id },
+      include: { items: { select: { quantity: true } } },
+    });
+    if (!order) return null;
+    return {
+      id: order.id,
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      totalAmount: Number(order.totalAmount),
+      itemCount: order.items.reduce((s, i) => s + i.quantity, 0),
+      createdDate: order.createdAt.toISOString().slice(0, 10),
+    };
+  }, null);
 }
 
 /**

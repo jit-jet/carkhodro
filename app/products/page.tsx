@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import ProductsBrowser from '@/src/components/plp/ProductsBrowser';
 import { getProducts, getProductFilters } from '@/actions/products';
 
@@ -18,7 +19,7 @@ export default async function ProductsPage({ searchParams }: Props) {
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <nav className="flex items-center gap-2 text-sm text-gray-500" aria-label="breadcrumb">
-            <a href="/" className="hover:text-accent transition-colors">خانه</a>
+            <Link href="/" className="hover:text-accent transition-colors">خانه</Link>
             <span className="text-gray-300">/</span>
             <span className="text-charcoal font-medium">قطعات خودرو</span>
           </nav>

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { NavLinkVM } from "@/src/lib/serializers";
+import { useRouter } from "next/navigation";
+import type { NavLinkVM, ProductVM } from "@/src/lib/serializers";
 import { getCartCount } from "@/actions/cart";
+import { searchProducts } from "@/actions/search";
 import { useCartUI } from "@/src/store/cart-ui";
 import { useListsUI, ensureListsHydrated } from "@/src/store/lists-ui";
 
@@ -106,19 +108,26 @@ function CloseIcon() {
 export default function Header({
   navLinks,
   account,
+  mobileMenuAccount,
 }: {
   navLinks: NavLinkVM[];
   /** Server-rendered account slot (login button or user menu) — see <AccountMenu>.
    *  Auth state is owned server-side so it can't drift from access control. */
   account: React.ReactNode;
+  /** Server-rendered slot for the hamburger panel: shows logout (signed-in) or
+   *  nothing (guests, who already see the login button in the main header). */
+  mobileMenuAccount?: React.ReactNode;
 }) {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Cart badge count lives in the shared store so add-to-cart anywhere updates
-  // it instantly. Seed it from the server on mount — done client-side so the
-  // root layout stays a static shell. (Auth state is NOT seeded here anymore;
-  // it's resolved server-side per request via the `account` slot.)
+  // Live search state for the autocomplete dropdown
+  const [results, setResults] = useState<ProductVM[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
   const cartCount      = useCartUI((s) => s.count);
   const setCount       = useCartUI((s) => s.setCount);
   const wishlistCount  = useListsUI((s) => s.wishlist.size);
@@ -132,6 +141,56 @@ export default function Header({
       active = false;
     };
   }, [setCount]);
+
+  // Debounced live search — fires 300ms after the user stops typing.
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (q.length < 2) {
+      setResults([]);
+      setSearching(false);
+      return;
+    }
+
+    setSearching(true);
+    let active = true;
+    const timer = setTimeout(async () => {
+      const found = await searchProducts(q);
+      if (!active) return;
+      setResults(found);
+      setSearching(false);
+    }, 300);
+
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [searchQuery]);
+
+  // Close the dropdown when clicking outside the search box.
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) {
+      setSearchOpen(false);
+      router.push(`/products?q=${encodeURIComponent(q)}`);
+    }
+  }
+
+  function goToProduct(id: string) {
+    setSearchOpen(false);
+    setSearchQuery("");
+    router.push(`/products/${id}`);
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-md">
@@ -162,14 +221,17 @@ export default function Header({
           {/* Mobile menu toggle */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden text-charcoal flex-shrink-0"
-            aria-label="منو"
+            className="lg:hidden text-charcoal shrink-0"
+            aria-label={menuOpen ? 'بستن منو' : 'باز کردن منو'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-haspopup="dialog"
           >
             {menuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
+          <Link href="/" className="shrink-0">
             <div className="relative w-36 h-12 sm:w-44 sm:h-14">
               <Image
                 src="/logo.png"
@@ -183,64 +245,118 @@ export default function Header({
           </Link>
 
           {/* Search bar */}
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="جستجوی قطعه، برند یا مدل خودرو..."
-              className="w-full border-2 border-silver rounded-xl px-4 py-2.5 text-sm text-charcoal placeholder-gray-400 focus:border-accent focus:outline-none transition-colors pe-12"
-            />
-            <button
-              className="absolute end-0 top-0 h-full px-3.5 text-gray-400 hover:text-accent transition-colors"
-              aria-label="جستجو"
-            >
-              <SearchIcon />
-            </button>
+          <div ref={searchRef} className="flex-1 relative">
+            <form onSubmit={handleSearch}>
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setSearchOpen(true)}
+                placeholder="جستجوی قطعه، برند یا مدل خودرو..."
+                className="w-full border-2 border-silver rounded-xl px-4 py-2.5 text-sm text-charcoal placeholder-gray-400 focus:border-accent focus:outline-none transition-colors pe-12"
+                role="combobox"
+                aria-expanded={searchOpen && searchQuery.trim().length >= 2}
+                aria-autocomplete="list"
+              />
+              <button
+                type="submit"
+                className="absolute inset-e-0 top-0 h-full px-3.5 text-gray-400 hover:text-accent transition-colors"
+                aria-label="جستجو"
+              >
+                <SearchIcon />
+              </button>
+            </form>
+
+            {/* Live results dropdown */}
+            {searchOpen && searchQuery.trim().length >= 2 && (
+              <div className="absolute top-full inset-x-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-lg overflow-hidden z-50">
+                {searching ? (
+                  <div className="px-4 py-6 text-center text-sm text-gray-400">
+                    در حال جستجو...
+                  </div>
+                ) : results.length > 0 ? (
+                  <>
+                    <ul className="max-h-96 overflow-y-auto py-1">
+                      {results.map((p) => (
+                        <li key={p.id}>
+                          <button
+                            type="button"
+                            onClick={() => goToProduct(p.id)}
+                            className="w-full flex items-center gap-3 px-3 py-2.5 text-start hover:bg-silver-light transition-colors"
+                          >
+                            <span className="relative w-12 h-12 shrink-0 rounded-lg overflow-hidden bg-silver-light">
+                              <Image src={p.mainImage} alt={p.name} fill sizes="48px" className="object-contain" />
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-sm text-charcoal truncate">{p.name}</span>
+                              <span className="block text-xs text-gray-400 truncate">{p.brand}</span>
+                            </span>
+                            <span className="shrink-0 text-sm font-semibold text-charcoal whitespace-nowrap">
+                              {p.price.toLocaleString("fa-IR")} تومان
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      onClick={handleSearch}
+                      className="w-full px-4 py-2.5 text-center text-sm font-medium text-accent-dark hover:bg-silver-light border-t border-gray-100 transition-colors"
+                    >
+                      مشاهده همه نتایج
+                    </button>
+                  </>
+                ) : (
+                  <div className="px-4 py-6 text-center text-sm text-gray-400">
+                    نتیجه‌ای یافت نشد
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Actions */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
 
-            {/* Wishlist */}
+            {/* Wishlist — desktop only; mobile users find it in the hamburger menu */}
             <Link
               href="/wishlist"
               aria-label="علاقه‌مندی‌ها"
               title="علاقه‌مندی‌ها"
-              className="relative flex items-center gap-1.5 text-gray-500 hover:text-red-500 hover:bg-red-50 p-2 sm:px-2.5 sm:py-2 rounded-xl transition-colors"
+              className="hidden lg:flex relative items-center gap-1.5 text-gray-500 hover:text-red-500 hover:bg-red-50 px-2.5 py-2 rounded-xl transition-colors"
             >
               <HeartOutlineIcon />
-              <span className="hidden lg:inline text-sm font-medium text-charcoal hover:text-red-500">
+              <span className="text-sm font-medium text-charcoal hover:text-red-500">
                 علاقه‌مندی‌ها
               </span>
               <NavBadge count={wishlistCount} color="red" />
             </Link>
 
-            {/* Compare */}
+            {/* Compare — desktop only */}
             <Link
               href="/compare"
               aria-label="لیست مقایسه"
               title="لیست مقایسه"
-              className="relative flex items-center gap-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 p-2 sm:px-2.5 sm:py-2 rounded-xl transition-colors"
+              className="hidden lg:flex relative items-center gap-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 px-2.5 py-2 rounded-xl transition-colors"
             >
               <CompareBarIcon />
-              <span className="hidden lg:inline text-sm font-medium text-charcoal hover:text-blue-600">
+              <span className="text-sm font-medium text-charcoal hover:text-blue-600">
                 مقایسه
               </span>
               <NavBadge count={compareCount} color="blue" />
             </Link>
 
-            {/* Divider */}
-            <span className="hidden sm:block w-px h-7 bg-gray-200 mx-1" />
+            {/* Divider — only visible when wishlist/compare are shown */}
+            <span className="hidden lg:block w-px h-7 bg-gray-200 mx-1" />
 
-            {/* Cart */}
-            <Link href="/cart" className="relative flex items-center gap-1.5 bg-accent hover:bg-accent-dark text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors hidden sm:flex">
+            {/* Cart — sm+ */}
+            <Link href="/cart" className="hidden sm:flex relative items-center gap-1.5 bg-accent hover:bg-accent-dark text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-colors">
               <CartIcon />
               <span className="hidden md:inline">سبد خرید</span>
               <CartBadge count={cartCount} />
             </Link>
 
-            {/* Cart (mobile) */}
+            {/* Cart — xs only */}
             <Link href="/cart" className="relative sm:hidden text-charcoal p-2">
               <CartIcon />
               <CartBadge count={cartCount} />
@@ -274,17 +390,24 @@ export default function Header({
       {/* Mobile menu overlay */}
       {menuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 flex" onClick={() => setMenuOpen(false)}>
-          {/* Backdrop */}
-          <div className="flex-1 bg-black/50" />
-
-          {/* Side panel — slides in from the right (start) in RTL */}
+          {/* Side panel — first child in RTL flex = RIGHT side of screen.
+              In dir="rtl" flex-row, items are ordered right→left, so putting the
+              panel first keeps it pinned to the right edge as expected for Persian UIs. */}
           <div
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="منوی اصلی"
             className="w-72 bg-white h-full shadow-xl overflow-y-auto flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-accent">
               <span className="font-bold text-charcoal">منوی اصلی</span>
-              <button onClick={() => setMenuOpen(false)} className="text-charcoal">
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="text-charcoal"
+                aria-label="بستن منو"
+              >
                 <CloseIcon />
               </button>
             </div>
@@ -300,6 +423,35 @@ export default function Header({
                   {link.label}
                 </Link>
               ))}
+
+              {/* Account actions (logout) — streamed in from the server; guests see nothing */}
+              {mobileMenuAccount}
+
+              {/* Wishlist & Compare — only in hamburger on mobile */}
+              <div className="border-t border-gray-100 mt-1 pt-1">
+                <Link
+                  href="/wishlist"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-3 px-5 py-3.5 text-charcoal font-medium text-sm hover:bg-silver-light hover:text-accent-dark border-b border-gray-50 transition-colors"
+                >
+                  <span className="relative shrink-0">
+                    <HeartOutlineIcon />
+                    <NavBadge count={wishlistCount} color="red" />
+                  </span>
+                  علاقه‌مندی‌ها
+                </Link>
+                <Link
+                  href="/compare"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-3 px-5 py-3.5 text-charcoal font-medium text-sm hover:bg-silver-light hover:text-accent-dark border-b border-gray-50 transition-colors"
+                >
+                  <span className="relative shrink-0">
+                    <CompareBarIcon />
+                    <NavBadge count={compareCount} color="blue" />
+                  </span>
+                  لیست مقایسه
+                </Link>
+              </div>
             </nav>
 
             <div className="p-4 bg-charcoal text-white text-sm space-y-2">
@@ -313,6 +465,9 @@ export default function Header({
               </div>
             </div>
           </div>
+
+          {/* Backdrop — remaining space (LEFT in RTL) */}
+          <div className="flex-1 bg-black/50" />
         </div>
       )}
     </header>

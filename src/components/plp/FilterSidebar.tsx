@@ -67,11 +67,16 @@ function CheckItem({
   onChange: () => void;
 }) {
   return (
-    <label
-      className="flex items-center gap-2.5 cursor-pointer group select-none"
-      onClick={onChange}
-    >
+    <label className="flex items-center gap-2.5 cursor-pointer group select-none">
+      {/* Real checkbox drives keyboard/screen-reader behaviour; visually hidden */}
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        className="sr-only"
+      />
       <div
+        aria-hidden="true"
         className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
           checked
             ? 'bg-accent border-accent'
@@ -163,10 +168,10 @@ export default function FilterSidebar({
           value={searchQuery}
           onChange={e => onSearchChange(e.target.value)}
           placeholder="جستجو در محصولات..."
-          className="w-full border border-gray-200 rounded-xl py-2.5 pr-9 pl-3 text-sm text-charcoal placeholder-gray-400 focus:outline-none focus:border-accent transition-colors"
+          className="w-full border border-gray-200 rounded-xl py-2.5 ps-3 pe-9 text-sm text-charcoal placeholder-gray-400 focus:outline-none focus:border-accent transition-colors"
         />
         <svg
-          className="absolute top-1/2 -translate-y-1/2 right-3 w-4 h-4 text-gray-400 pointer-events-none"
+          className="absolute top-1/2 -translate-y-1/2 inset-e-3 w-4 h-4 text-gray-400 pointer-events-none"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

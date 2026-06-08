@@ -114,10 +114,17 @@ export default function CheckoutView({ cart, shippingOptions, profile }: Props) 
         contact: info,
       });
       if (result.ok) {
-        setPlaced(true);
         setCount(0);
         notify({ variant: 'success', title: 'سفارش شما ثبت شد', description: 'سپاس از خرید شما 🎉' });
-        router.refresh();
+        // Online payments land on the dedicated payment-result page (where a real
+        // gateway would redirect back to); COD has nothing to pay, so it shows the
+        // inline confirmation.
+        if (payment === 'online') {
+          router.push(`/payment/success?order=${result.data.id}`);
+        } else {
+          setPlaced(true);
+          router.refresh();
+        }
       } else {
         setError(result.error);
       }
