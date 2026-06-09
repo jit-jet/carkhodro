@@ -241,9 +241,7 @@ model Category {
   /// URL / filter slug, e.g. "engine", "brake"
   key          String   @unique
   name         String
-  icon         String?
-  color        String?
-  bgColor      String?  @map("bg_color")
+  image        String   @default("/logo.png")
   sortOrder    Int      @default(0) @map("sort_order")
   /// Denormalized counter — refreshed by a background job or DB trigger
   productCount Int      @default(0) @map("product_count")

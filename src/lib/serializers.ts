@@ -12,7 +12,7 @@
  * keeps rendering it as Toman.
  */
 
-import type { Prisma, OrderStatus, PaymentMethod } from '@/generated/prisma_client';
+import type { Prisma, OrderStatus, PaymentMethod, PaymentStatus } from '@/generated/prisma_client';
 
 // ── Prisma query shapes ─────────────────────────────────────────────────────
 
@@ -77,10 +77,8 @@ export interface CategoryVM {
   id: number;
   key: string;
   name: string;
-  icon: string;
+  image: string;
   count: number;
-  color: string;
-  bgColor: string;
 }
 
 export interface CarBrandVM {
@@ -149,6 +147,36 @@ export interface OrderConfirmationVM {
   totalAmount: number;
   itemCount: number;
   createdDate: string;
+}
+
+export interface OrderReceiptItemVM {
+  name: string;
+  sku: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+}
+
+/** Full transaction detail rendered on the printable receipt page. */
+export interface OrderReceiptVM {
+  id: string;
+  createdDate: string; // Persian date + time
+  status: OrderStatus;
+  paymentMethod: PaymentMethod;
+  paymentStatus: PaymentStatus;
+  customerName: string;
+  phoneNumber: string;
+  address: {
+    province: string;
+    city: string;
+    street: string;
+    postalCode: string;
+  };
+  items: OrderReceiptItemVM[];
+  subtotal: number;
+  shippingCost: number;
+  taxAmount: number;
+  totalAmount: number;
 }
 
 /**
@@ -275,19 +303,15 @@ export function toCategoryVM(c: {
   id: number;
   key: string;
   name: string;
-  icon: string | null;
+  image: string;
   productCount: number;
-  color: string | null;
-  bgColor: string | null;
 }): CategoryVM {
   return {
     id: c.id,
     key: c.key,
     name: c.name,
-    icon: c.icon ?? '🔧',
+    image: c.image || '/logo.png',
     count: c.productCount,
-    color: c.color ?? '#6b7280',
-    bgColor: c.bgColor ?? '#f3f4f6',
   };
 }
 

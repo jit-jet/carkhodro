@@ -54,7 +54,7 @@ services:
     volumes:
       - ./prisma:/app/prisma
       - ./prisma.config.ts:/app/prisma.config.ts
-    command: ["node", "node_modules/prisma/build/index.js", "db", "push"]
+    command: ["node", "node_modules/prisma/build/index.js", "db", "push", "--accept-data-loss"]
 
   # ── Prisma seed (one-shot, idempotent) ───────────────────────────────────────
   # Runs after migrate. The seed script skips itself if data already exists.

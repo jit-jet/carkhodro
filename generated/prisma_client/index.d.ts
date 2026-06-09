@@ -14673,9 +14673,7 @@ export namespace Prisma {
     id: number | null
     key: string | null
     name: string | null
-    icon: string | null
-    color: string | null
-    bgColor: string | null
+    image: string | null
     sortOrder: number | null
     productCount: number | null
     createdAt: Date | null
@@ -14686,9 +14684,7 @@ export namespace Prisma {
     id: number | null
     key: string | null
     name: string | null
-    icon: string | null
-    color: string | null
-    bgColor: string | null
+    image: string | null
     sortOrder: number | null
     productCount: number | null
     createdAt: Date | null
@@ -14699,9 +14695,7 @@ export namespace Prisma {
     id: number
     key: number
     name: number
-    icon: number
-    color: number
-    bgColor: number
+    image: number
     sortOrder: number
     productCount: number
     createdAt: number
@@ -14726,9 +14720,7 @@ export namespace Prisma {
     id?: true
     key?: true
     name?: true
-    icon?: true
-    color?: true
-    bgColor?: true
+    image?: true
     sortOrder?: true
     productCount?: true
     createdAt?: true
@@ -14739,9 +14731,7 @@ export namespace Prisma {
     id?: true
     key?: true
     name?: true
-    icon?: true
-    color?: true
-    bgColor?: true
+    image?: true
     sortOrder?: true
     productCount?: true
     createdAt?: true
@@ -14752,9 +14742,7 @@ export namespace Prisma {
     id?: true
     key?: true
     name?: true
-    icon?: true
-    color?: true
-    bgColor?: true
+    image?: true
     sortOrder?: true
     productCount?: true
     createdAt?: true
@@ -14852,9 +14840,7 @@ export namespace Prisma {
     id: number
     key: string
     name: string
-    icon: string | null
-    color: string | null
-    bgColor: string | null
+    image: string
     sortOrder: number
     productCount: number
     createdAt: Date
@@ -14884,9 +14870,7 @@ export namespace Prisma {
     id?: boolean
     key?: boolean
     name?: boolean
-    icon?: boolean
-    color?: boolean
-    bgColor?: boolean
+    image?: boolean
     sortOrder?: boolean
     productCount?: boolean
     createdAt?: boolean
@@ -14899,9 +14883,7 @@ export namespace Prisma {
     id?: boolean
     key?: boolean
     name?: boolean
-    icon?: boolean
-    color?: boolean
-    bgColor?: boolean
+    image?: boolean
     sortOrder?: boolean
     productCount?: boolean
     createdAt?: boolean
@@ -14912,9 +14894,7 @@ export namespace Prisma {
     id?: boolean
     key?: boolean
     name?: boolean
-    icon?: boolean
-    color?: boolean
-    bgColor?: boolean
+    image?: boolean
     sortOrder?: boolean
     productCount?: boolean
     createdAt?: boolean
@@ -14925,16 +14905,14 @@ export namespace Prisma {
     id?: boolean
     key?: boolean
     name?: boolean
-    icon?: boolean
-    color?: boolean
-    bgColor?: boolean
+    image?: boolean
     sortOrder?: boolean
     productCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "name" | "icon" | "color" | "bgColor" | "sortOrder" | "productCount" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "name" | "image" | "sortOrder" | "productCount" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | Category$productsArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -14954,9 +14932,7 @@ export namespace Prisma {
        */
       key: string
       name: string
-      icon: string | null
-      color: string | null
-      bgColor: string | null
+      image: string
       sortOrder: number
       /**
        * Denormalized counter — refreshed by a background job or DB trigger
@@ -15391,9 +15367,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Category", 'Int'>
     readonly key: FieldRef<"Category", 'String'>
     readonly name: FieldRef<"Category", 'String'>
-    readonly icon: FieldRef<"Category", 'String'>
-    readonly color: FieldRef<"Category", 'String'>
-    readonly bgColor: FieldRef<"Category", 'String'>
+    readonly image: FieldRef<"Category", 'String'>
     readonly sortOrder: FieldRef<"Category", 'Int'>
     readonly productCount: FieldRef<"Category", 'Int'>
     readonly createdAt: FieldRef<"Category", 'DateTime'>
@@ -28971,9 +28945,7 @@ export namespace Prisma {
     id: 'id',
     key: 'key',
     name: 'name',
-    icon: 'icon',
-    color: 'color',
-    bgColor: 'bgColor',
+    image: 'image',
     sortOrder: 'sortOrder',
     productCount: 'productCount',
     createdAt: 'createdAt',
@@ -30007,9 +29979,7 @@ export namespace Prisma {
     id?: IntFilter<"Category"> | number
     key?: StringFilter<"Category"> | string
     name?: StringFilter<"Category"> | string
-    icon?: StringNullableFilter<"Category"> | string | null
-    color?: StringNullableFilter<"Category"> | string | null
-    bgColor?: StringNullableFilter<"Category"> | string | null
+    image?: StringFilter<"Category"> | string
     sortOrder?: IntFilter<"Category"> | number
     productCount?: IntFilter<"Category"> | number
     createdAt?: DateTimeFilter<"Category"> | Date | string
@@ -30021,9 +29991,7 @@ export namespace Prisma {
     id?: SortOrder
     key?: SortOrder
     name?: SortOrder
-    icon?: SortOrderInput | SortOrder
-    color?: SortOrderInput | SortOrder
-    bgColor?: SortOrderInput | SortOrder
+    image?: SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     createdAt?: SortOrder
@@ -30038,9 +30006,7 @@ export namespace Prisma {
     OR?: CategoryWhereInput[]
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     name?: StringFilter<"Category"> | string
-    icon?: StringNullableFilter<"Category"> | string | null
-    color?: StringNullableFilter<"Category"> | string | null
-    bgColor?: StringNullableFilter<"Category"> | string | null
+    image?: StringFilter<"Category"> | string
     sortOrder?: IntFilter<"Category"> | number
     productCount?: IntFilter<"Category"> | number
     createdAt?: DateTimeFilter<"Category"> | Date | string
@@ -30052,9 +30018,7 @@ export namespace Prisma {
     id?: SortOrder
     key?: SortOrder
     name?: SortOrder
-    icon?: SortOrderInput | SortOrder
-    color?: SortOrderInput | SortOrder
-    bgColor?: SortOrderInput | SortOrder
+    image?: SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     createdAt?: SortOrder
@@ -30073,9 +30037,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Category"> | number
     key?: StringWithAggregatesFilter<"Category"> | string
     name?: StringWithAggregatesFilter<"Category"> | string
-    icon?: StringNullableWithAggregatesFilter<"Category"> | string | null
-    color?: StringNullableWithAggregatesFilter<"Category"> | string | null
-    bgColor?: StringNullableWithAggregatesFilter<"Category"> | string | null
+    image?: StringWithAggregatesFilter<"Category"> | string
     sortOrder?: IntWithAggregatesFilter<"Category"> | number
     productCount?: IntWithAggregatesFilter<"Category"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
@@ -31661,9 +31623,7 @@ export namespace Prisma {
   export type CategoryCreateInput = {
     key: string
     name: string
-    icon?: string | null
-    color?: string | null
-    bgColor?: string | null
+    image?: string
     sortOrder?: number
     productCount?: number
     createdAt?: Date | string
@@ -31675,9 +31635,7 @@ export namespace Prisma {
     id?: number
     key: string
     name: string
-    icon?: string | null
-    color?: string | null
-    bgColor?: string | null
+    image?: string
     sortOrder?: number
     productCount?: number
     createdAt?: Date | string
@@ -31688,9 +31646,7 @@ export namespace Prisma {
   export type CategoryUpdateInput = {
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    bgColor?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31702,9 +31658,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    bgColor?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31716,9 +31670,7 @@ export namespace Prisma {
     id?: number
     key: string
     name: string
-    icon?: string | null
-    color?: string | null
-    bgColor?: string | null
+    image?: string
     sortOrder?: number
     productCount?: number
     createdAt?: Date | string
@@ -31728,9 +31680,7 @@ export namespace Prisma {
   export type CategoryUpdateManyMutationInput = {
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    bgColor?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31741,9 +31691,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    bgColor?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33378,9 +33326,7 @@ export namespace Prisma {
     id?: SortOrder
     key?: SortOrder
     name?: SortOrder
-    icon?: SortOrder
-    color?: SortOrder
-    bgColor?: SortOrder
+    image?: SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     createdAt?: SortOrder
@@ -33397,9 +33343,7 @@ export namespace Prisma {
     id?: SortOrder
     key?: SortOrder
     name?: SortOrder
-    icon?: SortOrder
-    color?: SortOrder
-    bgColor?: SortOrder
+    image?: SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     createdAt?: SortOrder
@@ -33410,9 +33354,7 @@ export namespace Prisma {
     id?: SortOrder
     key?: SortOrder
     name?: SortOrder
-    icon?: SortOrder
-    color?: SortOrder
-    bgColor?: SortOrder
+    image?: SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     createdAt?: SortOrder
@@ -37207,9 +37149,7 @@ export namespace Prisma {
   export type CategoryCreateWithoutProductsInput = {
     key: string
     name: string
-    icon?: string | null
-    color?: string | null
-    bgColor?: string | null
+    image?: string
     sortOrder?: number
     productCount?: number
     createdAt?: Date | string
@@ -37220,9 +37160,7 @@ export namespace Prisma {
     id?: number
     key: string
     name: string
-    icon?: string | null
-    color?: string | null
-    bgColor?: string | null
+    image?: string
     sortOrder?: number
     productCount?: number
     createdAt?: Date | string
@@ -37446,9 +37384,7 @@ export namespace Prisma {
   export type CategoryUpdateWithoutProductsInput = {
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    bgColor?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37459,9 +37395,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    bgColor?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

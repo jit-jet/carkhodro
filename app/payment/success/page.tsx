@@ -108,6 +108,19 @@ async function OrderDetails({ searchParams }: Props) {
           </dd>
         </div>
       </dl>
+
+      <Link
+        href={`/payment/receipt?order=${order.id}`}
+        className="inline-flex items-center justify-center gap-2 border-2 border-silver hover:border-accent text-charcoal font-semibold px-8 py-3 rounded-xl transition-colors mb-8 w-full sm:w-auto"
+      >
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+        </svg>
+        دریافت رسید
+      </Link>
     </>
   );
 }

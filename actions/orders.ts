@@ -19,6 +19,7 @@ import type { OrderStatus, Prisma } from '@/generated/prisma_client';
 import type {
   OrderSummaryVM,
   OrderConfirmationVM,
+  OrderReceiptVM,
   CheckoutInput,
   CheckoutContact,
 } from '@/src/lib/serializers';
@@ -74,6 +75,57 @@ export async function getOrderConfirmation(
       totalAmount: Number(order.totalAmount),
       itemCount: order.items.reduce((s, i) => s + i.quantity, 0),
       createdDate: order.createdAt.toISOString().slice(0, 10),
+    };
+  }, null);
+}
+
+/**
+ * Full transaction detail for the printable receipt. Scoped to the current user
+ * so a forged id can't leak another customer's order. Returns null when the
+ * order is missing or not owned by the caller.
+ */
+export async function getOrderReceipt(id: string): Promise<OrderReceiptVM | null> {
+  const user = await getCurrentUser();
+  if (!user) return null;
+
+  return safeQuery(`getOrderReceipt:${id}`, async () => {
+    const order = await prisma.order.findFirst({
+      where: { id, userId: user.id },
+      include: {
+        items: true,
+        user: { select: { firstName: true, lastName: true, phoneNumber: true } },
+      },
+    });
+    if (!order) return null;
+
+    return {
+      id: order.id,
+      createdDate: order.createdAt.toLocaleString('fa-IR'),
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      paymentStatus: order.paymentStatus,
+      customerName: `${order.user.firstName ?? ''} ${order.user.lastName ?? ''}`.trim(),
+      phoneNumber: order.user.phoneNumber,
+      address: {
+        province: order.snapshotProvince,
+        city: order.snapshotCity,
+        street: order.snapshotStreet,
+        postalCode: order.snapshotPostalCode,
+      },
+      items: order.items.map((i) => {
+        const unitPrice = Number(i.priceAtPurchase);
+        return {
+          name: i.productName,
+          sku: i.productSku,
+          quantity: i.quantity,
+          unitPrice,
+          lineTotal: unitPrice * i.quantity,
+        };
+      }),
+      subtotal: Number(order.subtotal),
+      shippingCost: Number(order.shippingCost),
+      taxAmount: Number(order.taxAmount),
+      totalAmount: Number(order.totalAmount),
     };
   }, null);
 }

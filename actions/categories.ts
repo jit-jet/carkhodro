@@ -35,9 +35,7 @@ export async function getCategoryByKey(key: string): Promise<CategoryVM | null> 
 export interface CategoryInput {
   key: string;
   name: string;
-  icon?: string | null;
-  color?: string | null;
-  bgColor?: string | null;
+  image?: string | null;
   sortOrder?: number;
 }
 
@@ -53,9 +51,7 @@ export async function createCategory(
       data: {
         key: input.key.trim(),
         name: input.name.trim(),
-        icon: input.icon ?? null,
-        color: input.color ?? null,
-        bgColor: input.bgColor ?? null,
+        image: input.image ?? '/logo.png',
         sortOrder: input.sortOrder ?? 0,
       },
       select: { id: true },
@@ -76,9 +72,7 @@ export async function updateCategory(
       data: {
         ...(input.key !== undefined ? { key: input.key.trim() } : {}),
         ...(input.name !== undefined ? { name: input.name.trim() } : {}),
-        ...(input.icon !== undefined ? { icon: input.icon } : {}),
-        ...(input.color !== undefined ? { color: input.color } : {}),
-        ...(input.bgColor !== undefined ? { bgColor: input.bgColor } : {}),
+        ...(input.image !== undefined ? { image: input.image ?? '/logo.png' } : {}),
         ...(input.sortOrder !== undefined ? { sortOrder: input.sortOrder } : {}),
       },
       select: { id: true },

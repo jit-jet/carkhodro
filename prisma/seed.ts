@@ -97,14 +97,14 @@ async function main() {
 
   // ── Categories ─────────────────────────────────────────────────────────────
   const categoriesInput = [
-    { key: 'engine',      name: 'موتور و قطعات',    icon: '⚙️',  sortOrder: 1, productCount: 1284, color: '#dc2626', bgColor: '#fee2e2' },
-    { key: 'body',        name: 'بدنه و شیشه',      icon: '🚗',  sortOrder: 2, productCount: 856,  color: '#2563eb', bgColor: '#dbeafe' },
-    { key: 'electrical',  name: 'برق و روشنایی',    icon: '⚡',  sortOrder: 3, productCount: 642,  color: '#d97706', bgColor: '#fef3c7' },
-    { key: 'brake',       name: 'ترمز و تعلیق',     icon: '🔧',  sortOrder: 4, productCount: 524,  color: '#7c3aed', bgColor: '#ede9fe' },
-    { key: 'cooling',     name: 'سیستم خنک‌کننده',  icon: '🌡️', sortOrder: 5, productCount: 398,  color: '#0891b2', bgColor: '#cffafe' },
-    { key: 'oil',         name: 'روغن و مایعات',    icon: '💧',  sortOrder: 6, productCount: 312,  color: '#059669', bgColor: '#d1fae5' },
-    { key: 'accessories', name: 'لوازم جانبی',      icon: '✨',  sortOrder: 7, productCount: 756,  color: '#db2777', bgColor: '#fce7f3' },
-    { key: 'filter',      name: 'فیلترها',          icon: '🔘',  sortOrder: 8, productCount: 480,  color: '#92400e', bgColor: '#fef3c7' },
+    { key: 'engine',      name: 'موتور و قطعات',   image: '/logo.png', sortOrder: 1, productCount: 1284 },
+    { key: 'body',        name: 'بدنه و شیشه',     image: '/logo.png', sortOrder: 2, productCount: 856  },
+    { key: 'electrical',  name: 'برق و روشنایی',   image: '/logo.png', sortOrder: 3, productCount: 642  },
+    { key: 'brake',       name: 'ترمز و تعلیق',    image: '/logo.png', sortOrder: 4, productCount: 524  },
+    { key: 'cooling',     name: 'سیستم خنک‌کننده', image: '/logo.png', sortOrder: 5, productCount: 398  },
+    { key: 'oil',         name: 'روغن و مایعات',   image: '/logo.png', sortOrder: 6, productCount: 312  },
+    { key: 'accessories', name: 'لوازم جانبی',     image: '/logo.png', sortOrder: 7, productCount: 756  },
+    { key: 'filter',      name: 'فیلترها',         image: '/logo.png', sortOrder: 8, productCount: 480  },
   ];
   const categories = await prisma.$transaction(
     categoriesInput.map(c => prisma.category.create({ data: c })),
