@@ -63,7 +63,7 @@ export default function AccountMenuClient({ firstName }: { firstName: string }) 
     <div className="flex items-center gap-2">
       <Link
         href="/dashboard"
-        className="flex items-center gap-1.5 border-2 border-silver hover:border-accent text-charcoal font-semibold text-sm px-2.5 sm:px-3 py-2.5 rounded-xl transition-colors"
+        className="flex items-center gap-1.5 border-2 border-silver hover:border-accent hover:bg-amber-50 text-charcoal font-semibold text-sm px-2.5 sm:px-3 py-2.5 rounded-xl transition-all active:scale-95"
       >
         <UserIcon />
         <span className="hidden sm:inline">{firstName}</span>
