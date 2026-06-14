@@ -41,3 +41,6 @@ docker compose -f docker-compose.prod.yml up --build -d
 
 docker compose exec app npx prisma migrate dev --name your_migration_name
 
+
+# run only db with docker :
+docker compose -f docker-compose.db.yml up
