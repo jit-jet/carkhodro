@@ -101,21 +101,19 @@ export interface Category {
   id: number;
   key: string;          // URL/filter slug
   name: string;
-  icon: string;
   count: number;        // denormalized display counter (maps to productCount in real schema)
-  color: string;
-  bgColor: string;
+
 }
 
 export const categories: Category[] = [
-  { id: 1, key: 'engine',      name: 'موتور و قطعات',    icon: '⚙️',  count: 1284, color: '#dc2626', bgColor: '#fee2e2' },
-  { id: 2, key: 'body',        name: 'بدنه و شیشه',     icon: '🚗',  count: 856,  color: '#2563eb', bgColor: '#dbeafe' },
-  { id: 3, key: 'electrical',  name: 'برق و روشنایی',   icon: '⚡',  count: 642,  color: '#d97706', bgColor: '#fef3c7' },
-  { id: 4, key: 'brake',       name: 'ترمز و تعلیق',    icon: '🔧',  count: 524,  color: '#7c3aed', bgColor: '#ede9fe' },
-  { id: 5, key: 'cooling',     name: 'سیستم خنک‌کننده', icon: '🌡️', count: 398,  color: '#0891b2', bgColor: '#cffafe' },
-  { id: 6, key: 'oil',         name: 'روغن و مایعات',   icon: '💧',  count: 312,  color: '#059669', bgColor: '#d1fae5' },
-  { id: 7, key: 'accessories', name: 'لوازم جانبی',     icon: '✨',  count: 756,  color: '#db2777', bgColor: '#fce7f3' },
-  { id: 8, key: 'filter',      name: 'فیلترها',         icon: '🔘',  count: 480,  color: '#92400e', bgColor: '#fef3c7' },
+  { id: 1, key: 'engine',      name: 'موتور و قطعات',      count: 1284,  },
+  { id: 2, key: 'body',        name: 'بدنه و شیشه',       count: 856,  },
+  { id: 3, key: 'electrical',  name: 'برق و روشنایی',     count: 642,  },
+  { id: 4, key: 'brake',       name: 'ترمز و تعلیق',      count: 524,  },
+  { id: 5, key: 'cooling',     name: 'سیستم خنک‌کننده',  count: 398,  },
+  { id: 6, key: 'oil',         name: 'روغن و مایعات',     count: 312,  },
+  { id: 7, key: 'accessories', name: 'لوازم جانبی',       count: 756,  },
+  { id: 8, key: 'filter',      name: 'فیلترها',           count: 480,  },
 ];
 
 // ── TABLE: productRows ───────────────────────────────────────────────────────

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import type { NavLinkVM, ProductVM } from "@/src/lib/serializers";
 import { getCartCount } from "@/actions/cart";
 import { searchProducts } from "@/actions/search";
@@ -196,6 +196,8 @@ export default function Header({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const url = searchParams.toString()?`${pathname}?${searchParams.toString()}`:pathname ;
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<ProductVM[]>([]);
@@ -242,7 +244,7 @@ export default function Header({
   }, []);
 
   // Close mobile menu on route change
-  useEffect(() => { setMenuOpen(false); }, [pathname]);
+  useEffect(() => { setMenuOpen(false); }, [url]);
 
   function handleSearch(e?: React.FormEvent) {
     e?.preventDefault();
@@ -428,7 +430,9 @@ export default function Header({
         <div className="max-w-7xl mx-auto px-4">
           <ul className="flex items-center">
             {navLinks.map((link) => {
-              const active = pathname === link.href;
+              console.log('url',url)
+              console.log(link)
+              const active = url === link.href;
               return (
                 <li key={link.href}>
                   <Link
@@ -489,7 +493,7 @@ export default function Header({
           <nav className="flex-1 overflow-y-auto">
             <ul className="py-1">
               {navLinks.map((link) => {
-                const active = pathname === link.href;
+                const active = url === link.href;
                 return (
                   <li key={link.href}>
                     <Link

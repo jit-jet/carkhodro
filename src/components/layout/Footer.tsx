@@ -113,7 +113,7 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2.5">
               {quickLinks.map((link) => (
-                <li key={link.href}>
+                <li key={link.href+link.label}>
                   <Link href={link.href} className="text-sm text-gray-400 hover:text-accent transition-colors flex items-center gap-2">
                     <span className="text-accent">‹</span>
                     {link.label}
@@ -131,7 +131,7 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2.5">
               {categoryLinks.map((link) => (
-                <li key={link.href}>
+                <li key={link.href+link.label}>
                   <Link href={link.href} className="text-sm text-gray-400 hover:text-accent transition-colors flex items-center gap-2">
                     <span className="text-accent">‹</span>
                     {link.label}

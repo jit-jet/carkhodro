@@ -209,12 +209,10 @@ async function main() {
     data: [
       { href: '/',            label: 'خانه',         sortOrder: 1 },
       { href: '/products',    label: 'همه محصولات',  sortOrder: 2 },
-      { href: '/engine',      label: 'قطعات موتوری', sortOrder: 3 },
-      { href: '/body',        label: 'بدنه خودرو',   sortOrder: 4 },
-      { href: '/electrical',  label: 'برق خودرو',    sortOrder: 5 },
-      { href: '/accessories', label: 'لوازم جانبی',  sortOrder: 6 },
-      { href: '/brands',      label: 'برندها',       sortOrder: 7 },
-      { href: '/contact',     label: 'تماس با ما',   sortOrder: 8 },
+      { href: '/products?category=engine',      label: 'قطعات موتوری', sortOrder: 3 },
+      { href: '/products?category=body',        label: 'بدنه خودرو',   sortOrder: 4 },
+      { href: '/products?category=electrical',  label: 'برق خودرو',    sortOrder: 5 },
+      { href: '/contact',     label: 'تماس با ما',   sortOrder: 6 },
     ],
   });
 
