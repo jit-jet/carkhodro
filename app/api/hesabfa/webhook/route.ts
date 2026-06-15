@@ -19,8 +19,9 @@ import type { NextRequest } from 'next/server';
 import { syncHesabfaByIds } from '@/src/lib/hesabfa/sync';
 import type { HesabfaWebhookPayload } from '@/src/lib/hesabfa/types';
 
-// Prisma (pg adapter) needs the Node.js runtime — never the Edge runtime.
-export const runtime = 'nodejs';
+// Prisma (pg adapter) needs the Node.js runtime. The Node.js runtime is the
+// default in Next.js 16, and the `runtime` route segment config is incompatible
+// with `cacheComponents`, so we rely on the default rather than declaring it.
 
 export async function POST(request: NextRequest) {
   let payload: HesabfaWebhookPayload;

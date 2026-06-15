@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
@@ -185,6 +185,112 @@ function SearchDropdown({
   );
 }
 
+/**
+ * Renders the nav links with active-state highlighting. `activeUrl` is the
+ * current pathname (+ query), or `null` before it has streamed in. Active
+ * matching needs the query string because some nav links point at filtered
+ * views (e.g. `/products?category=engine`).
+ */
+function NavListItems({
+  navLinks,
+  variant,
+  activeUrl,
+  onNavigate,
+}: {
+  navLinks: NavLinkVM[];
+  variant: "desktop" | "mobile";
+  activeUrl: string | null;
+  onNavigate?: () => void;
+}) {
+  return (
+    <>
+      {navLinks.map((link) => {
+        const active = activeUrl === link.href;
+        if (variant === "desktop") {
+          return (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className={[
+                  "relative block px-5 py-3.5 text-charcoal font-semibold text-sm transition-colors",
+                  active ? "bg-black/10" : "hover:bg-black/5",
+                ].join(" ")}
+              >
+                {link.label}
+                {active && (
+                  <span className="absolute bottom-0 inset-x-0 h-0.5 bg-charcoal/60 rounded-t" />
+                )}
+              </Link>
+            </li>
+          );
+        }
+        return (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              onClick={onNavigate}
+              className={[
+                "flex items-center px-5 py-4 font-medium text-sm border-b border-gray-50 transition-colors",
+                active
+                  ? "bg-amber-50 text-accent-dark font-semibold"
+                  : "text-charcoal hover:bg-silver-light hover:text-accent-dark",
+              ].join(" ")}
+            >
+              {active && <span className="w-1 h-4 bg-accent-dark rounded-full me-2.5 shrink-0" />}
+              {link.label}
+            </Link>
+          </li>
+        );
+      })}
+    </>
+  );
+}
+
+/**
+ * Reads the request-time URL to highlight the active nav link. `useSearchParams`
+ * makes this dynamic, so callers MUST render it inside a <Suspense> boundary
+ * (required under Cache Components in Next.js 16); the fallback renders the same
+ * links with no active state so the nav stays in the static shell.
+ */
+function ActiveNavList({
+  navLinks,
+  variant,
+  onNavigate,
+}: {
+  navLinks: NavLinkVM[];
+  variant: "desktop" | "mobile";
+  onNavigate?: () => void;
+}) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeUrl = searchParams.toString()
+    ? `${pathname}?${searchParams.toString()}`
+    : pathname;
+  return (
+    <NavListItems
+      navLinks={navLinks}
+      variant={variant}
+      activeUrl={activeUrl}
+      onNavigate={onNavigate}
+    />
+  );
+}
+
+/**
+ * Side-effect-only helper that closes the mobile menu whenever the route
+ * changes. `usePathname()` is request-time data on dynamic routes, so this is
+ * rendered inside a <Suspense> boundary (required under Cache Components) and
+ * renders nothing. `setOpen` is a stable state setter, so the effect only runs
+ * on actual pathname changes.
+ */
+function CloseMenuOnNavigate({ setOpen }: { setOpen: (open: boolean) => void }) {
+  const pathname = usePathname();
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname, setOpen]);
+  return null;
+}
+
 export default function Header({
   navLinks,
   account,
@@ -195,9 +301,6 @@ export default function Header({
   mobileMenuAccount?: React.ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const url = searchParams.toString()?`${pathname}?${searchParams.toString()}`:pathname ;
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<ProductVM[]>([]);
@@ -243,8 +346,9 @@ export default function Header({
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => { setMenuOpen(false); }, [url]);
+  // (Mobile menu auto-close on navigation is handled by <CloseMenuOnNavigate>,
+  // which isolates the request-time `usePathname()` read under a Suspense
+  // boundary so the header stays in the static shell under Cache Components.)
 
   function handleSearch(e?: React.FormEvent) {
     e?.preventDefault();
@@ -307,6 +411,10 @@ export default function Header({
 
   return (
     <header className="sticky top-0 z-50 w-full">
+
+      <Suspense fallback={null}>
+        <CloseMenuOnNavigate setOpen={setMenuOpen} />
+      </Suspense>
 
       {/* ── Top bar ────────────────────────────────────────── */}
       <div className="bg-charcoal text-white text-xs">
@@ -429,27 +537,11 @@ export default function Header({
       <nav className="bg-accent hidden lg:block shadow-sm">
         <div className="max-w-7xl mx-auto px-4">
           <ul className="flex items-center">
-            {navLinks.map((link) => {
-              console.log('url',url)
-              console.log(link)
-              const active = url === link.href;
-              return (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={[
-                      "relative block px-5 py-3.5 text-charcoal font-semibold text-sm transition-colors",
-                      active ? "bg-black/10" : "hover:bg-black/5",
-                    ].join(" ")}
-                  >
-                    {link.label}
-                    {active && (
-                      <span className="absolute bottom-0 inset-x-0 h-0.5 bg-charcoal/60 rounded-t" />
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
+            <Suspense
+              fallback={<NavListItems navLinks={navLinks} variant="desktop" activeUrl={null} />}
+            >
+              <ActiveNavList navLinks={navLinks} variant="desktop" />
+            </Suspense>
           </ul>
         </div>
       </nav>
@@ -492,26 +584,22 @@ export default function Header({
           {/* Nav links */}
           <nav className="flex-1 overflow-y-auto">
             <ul className="py-1">
-              {navLinks.map((link) => {
-                const active = url === link.href;
-                return (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      onClick={() => setMenuOpen(false)}
-                      className={[
-                        "flex items-center px-5 py-4 font-medium text-sm border-b border-gray-50 transition-colors",
-                        active
-                          ? "bg-amber-50 text-accent-dark font-semibold"
-                          : "text-charcoal hover:bg-silver-light hover:text-accent-dark",
-                      ].join(" ")}
-                    >
-                      {active && <span className="w-1 h-4 bg-accent-dark rounded-full me-2.5 shrink-0" />}
-                      {link.label}
-                    </Link>
-                  </li>
-                );
-              })}
+              <Suspense
+                fallback={
+                  <NavListItems
+                    navLinks={navLinks}
+                    variant="mobile"
+                    activeUrl={null}
+                    onNavigate={() => setMenuOpen(false)}
+                  />
+                }
+              >
+                <ActiveNavList
+                  navLinks={navLinks}
+                  variant="mobile"
+                  onNavigate={() => setMenuOpen(false)}
+                />
+              </Suspense>
             </ul>
 
             {/* Account (logout when signed in) */}
