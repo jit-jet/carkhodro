@@ -119,6 +119,22 @@ export interface FaqVM {
   sortOrder: number;
 }
 
+export interface PostVM {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  coverImage: string;
+  author: string;
+  tags: string[];
+  readTime: number;
+  publishedAt: string; // Persian locale date
+}
+
+export interface PostDetailVM extends PostVM {
+  body: string; // HTML — admin-authored
+}
+
 export interface CartItemVM {
   id: string;
   productId: string;
@@ -389,6 +405,40 @@ export function toShippingOptionVM(s: {
     description: s.description ?? '',
     cost: Number(s.cost),
   };
+}
+
+// ── Cart ────────────────────────────────────────────────────────────────────
+
+// ── Post ────────────────────────────────────────────────────────────────────
+
+type PostRow = {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  coverImage: string;
+  author: string;
+  tags: string[];
+  readTime: number;
+  publishedAt: Date;
+};
+
+export function toPostVM(p: PostRow): PostVM {
+  return {
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    coverImage: p.coverImage,
+    author: p.author,
+    tags: p.tags,
+    readTime: p.readTime,
+    publishedAt: persianDate(p.publishedAt),
+  };
+}
+
+export function toPostDetailVM(p: PostRow & { body: string }): PostDetailVM {
+  return { ...toPostVM(p), body: p.body };
 }
 
 // ── Cart ────────────────────────────────────────────────────────────────────

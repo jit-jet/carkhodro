@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
         hostname: "cdn.imagin.studio",
         pathname: "/getImage**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
     ],
   },
 };

@@ -15,4 +15,6 @@ export const tags = {
   shipping: 'shipping-options',
   reviews: (productId: string) => `reviews:${productId}`,
   faqs: 'faqs',
+  posts: 'posts',
+  post: (slug: string) => `post:${slug}`,
 } as const;

@@ -456,6 +456,30 @@ model CompareItem {
 // FAQ
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// Blog posts — authored by admin; displayed on /blog and /blog/[slug].
+model Post {
+  id          Int      @id @default(autoincrement())
+  /// URL-safe slug, e.g. "oil-change-guide"
+  slug        String   @unique
+  title       String
+  excerpt     String   @db.Text
+  /// HTML body — admin-authored content, never direct user input.
+  body        String   @db.Text
+  coverImage  String   @map("cover_image")
+  author      String
+  tags        String[]
+  /// Estimated read time in minutes
+  readTime    Int      @map("read_time")
+  publishedAt DateTime @map("published_at")
+  isPublished Boolean  @default(true) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([publishedAt])
+  @@index([isPublished])
+  @@map("posts")
+}
+
 /// Frequently-asked questions — admin-managed; displayed on the /faq page.
 model Faq {
   id        Int      @id @default(autoincrement())
