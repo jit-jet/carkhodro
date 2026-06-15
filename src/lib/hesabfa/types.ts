@@ -43,6 +43,8 @@ export interface HesabfaItem {
   BuyPrice?: number | null;
   /** 0 = product/good, others = service etc. */
   ItemType?: number | null;
+  /** Whether the item is active/enabled in Hesabfa. */
+  Active?: boolean | null;
 }
 
 /** `Result` shape of `item/getItems` (paged list). */

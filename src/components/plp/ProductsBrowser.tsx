@@ -19,15 +19,19 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'alpha_desc',   label: 'الفبا (ی-الف)' },
 ];
 
+function stockFirst(a: Product, b: Product): number {
+  return (b.stock > 0 ? 1 : 0) - (a.stock > 0 ? 1 : 0);
+}
+
 function applySorting(products: Product[], sort: SortOption): Product[] {
   const arr = [...products];
   switch (sort) {
-    case 'newest':       return arr.sort((a, b) => b.createdDate.localeCompare(a.createdDate));
-    case 'oldest':       return arr.sort((a, b) => a.createdDate.localeCompare(b.createdDate));
-    case 'best_selling': return arr.sort((a, b) => b.salesCount - a.salesCount);
-    case 'most_viewed':  return arr.sort((a, b) => b.viewCount - a.viewCount);
-    case 'alpha_asc':    return arr.sort((a, b) => a.name.localeCompare(b.name, 'fa'));
-    case 'alpha_desc':   return arr.sort((a, b) => b.name.localeCompare(a.name, 'fa'));
+    case 'newest':       return arr.sort((a, b) => stockFirst(a, b) || b.createdDate.localeCompare(a.createdDate));
+    case 'oldest':       return arr.sort((a, b) => stockFirst(a, b) || a.createdDate.localeCompare(b.createdDate));
+    case 'best_selling': return arr.sort((a, b) => stockFirst(a, b) || b.salesCount - a.salesCount);
+    case 'most_viewed':  return arr.sort((a, b) => stockFirst(a, b) || b.viewCount - a.viewCount);
+    case 'alpha_asc':    return arr.sort((a, b) => stockFirst(a, b) || a.name.localeCompare(b.name, 'fa'));
+    case 'alpha_desc':   return arr.sort((a, b) => stockFirst(a, b) || b.name.localeCompare(a.name, 'fa'));
   }
 }
 

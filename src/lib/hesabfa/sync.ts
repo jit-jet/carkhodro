@@ -150,6 +150,7 @@ export async function syncHesabfaItems(items: HesabfaItem[]): Promise<SyncStats>
         basePrice,
         stock,
         lastSyncedAt: new Date(),
+        isActive: item.Active === true,
         // Fields Hesabfa does not provide — explicit safe defaults.
         oldPrice: null,
         isOffer: false,
@@ -157,8 +158,6 @@ export async function syncHesabfaItems(items: HesabfaItem[]): Promise<SyncStats>
         description: null,
         warranty: null,
         origin: null,
-        // Hidden until an admin adds images/category/SEO and activates it.
-        isActive: false,
       },
       select: { id: true },
     });
@@ -177,7 +176,7 @@ export async function syncHesabfaItems(items: HesabfaItem[]): Promise<SyncStats>
  * webhooks that were missed while the app was down.
  */
 export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
-  const items = await getAllItems();
+  const items = await getAllItems(); 
   const stats = await syncHesabfaItems(items);
 
   // Reconcile deletions: active, previously-synced products absent upstream.
