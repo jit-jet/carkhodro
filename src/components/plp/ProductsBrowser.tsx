@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import FilterSidebar from '@/src/components/plp/FilterSidebar';
 import ProductCard from '@/src/components/ui/ProductCard';
 import type { ProductVM as Product } from '@/src/lib/serializers';
+
+const PAGE_SIZE = 12;
 
 type SortOption = 'newest' | 'oldest' | 'best_selling' | 'most_viewed' | 'alpha_asc' | 'alpha_desc';
 
@@ -117,6 +119,8 @@ export default function ProductsBrowser({
   const pathname    = usePathname();
   const searchParams = useSearchParams();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   // All filter state is derived from URL — single source of truth
   const searchQuery        = searchParams.get('q') ?? '';
@@ -179,6 +183,35 @@ export default function ProductsBrowser({
 
     return applySorting(result, sortBy);
   }, [products, searchQuery, selectedBrands, selectedCarTypes, selectedCategories, sortBy]);
+
+  // Reset pagination whenever filters or sort change
+  const filterKey = [searchQuery, ...selectedBrands, ...selectedCarTypes, ...selectedCategories, sortBy].join('|');
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [filterKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const visibleProducts = useMemo(
+    () => filteredProducts.slice(0, visibleCount),
+    [filteredProducts, visibleCount],
+  );
+  const hasMore = visibleProducts.length < filteredProducts.length;
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount(c => c + PAGE_SIZE);
+        }
+      },
+      { rootMargin: '200px' },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, visibleCount]);
 
   const activeFilterCount =
     selectedBrands.length +
@@ -275,11 +308,27 @@ export default function ProductsBrowser({
 
           {/* Product grid */}
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filteredProducts.map(product => (
-                <ProductCard key={product.id} product={product} variant="grid" />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {visibleProducts.map(product => (
+                  <ProductCard key={product.id} product={product} variant="grid" />
+                ))}
+              </div>
+
+              {hasMore ? (
+                <div
+                  ref={sentinelRef}
+                  className="flex justify-center items-center py-10"
+                  aria-label="در حال بارگذاری محصولات"
+                >
+                  <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : (
+                <p className="text-center text-sm text-gray-400 py-8 select-none">
+                  همه محصولات نمایش داده شد
+                </p>
+              )}
+            </>
           ) : (
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm py-20 flex flex-col items-center text-center px-4">
               <span className="text-5xl mb-4 select-none">🔍</span>
