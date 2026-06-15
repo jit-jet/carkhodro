@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { PrismaClient, ShippingMethod, UserRole } from '../generated/prisma_client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
@@ -6,6 +7,46 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
+  // ── FAQs (idempotent — runs even when the rest is already seeded) ──────────
+  const faqCount = await prisma.faq.count();
+  if (faqCount === 0) {
+    await prisma.faq.createMany({
+      data: [
+        {
+          question: 'چگونه از اصالت قطعات مطمئن شوم؟',
+          answer: 'تمامی محصولات کارخودرو دارای ضمانت اصالت کالا هستند و از منابع معتبر و رسمی تأمین می‌شوند. کد پیگیری ضمانت روی بسته‌بندی هر محصول درج شده است.',
+          sortOrder: 1,
+        },
+        {
+          question: 'مدت زمان ارسال چقدر است؟',
+          answer: 'سفارشات تهران معمولاً ۲۴ ساعته و سایر شهرها ظرف ۴۸ تا ۷۲ ساعت کاری ارسال می‌شوند. پس از ثبت سفارش، کد رهگیری پستی از طریق پیامک ارسال می‌گردد.',
+          sortOrder: 2,
+        },
+        {
+          question: 'آیا امکان مرجوع کردن کالا وجود دارد؟',
+          answer: 'بله. تا ۷ روز پس از دریافت کالا، در صورت عدم استفاده و سالم بودن بسته‌بندی، امکان مرجوع و بازگشت وجه وجود دارد.',
+          sortOrder: 3,
+        },
+        {
+          question: 'چه روش‌های پرداختی پذیرفته می‌شود؟',
+          answer: 'پرداخت آنلاین از طریق درگاه بانکی، پرداخت در محل (کارت‌خوان) و پرداخت کارت به کارت برای سفارش‌های خاص امکان‌پذیر است.',
+          sortOrder: 4,
+        },
+        {
+          question: 'چطور قطعه مناسب خودرو خود را پیدا کنم؟',
+          answer: 'از فیلتر جستجو بر اساس مدل خودرو در صفحه محصولات استفاده کنید. همچنین می‌توانید از طریق شماره تلفن پشتیبانی با کارشناسان فنی ما مشورت نمایید.',
+          sortOrder: 5,
+        },
+        {
+          question: 'آیا برای محصولات گارانتی وجود دارد؟',
+          answer: 'اکثر محصولات دارای گارانتی برند سازنده هستند. مدت گارانتی روی صفحه هر محصول قید شده است.',
+          sortOrder: 6,
+        },
+      ],
+    });
+    console.log('  6 FAQs seeded.');
+  }
+
   const count = await prisma.product.count();
   if (count > 0) {
     console.log(`Already seeded (${count} products). Skipping.`);
@@ -212,7 +253,8 @@ async function main() {
       { href: '/products?category=engine',      label: 'قطعات موتوری', sortOrder: 3 },
       { href: '/products?category=body',        label: 'بدنه خودرو',   sortOrder: 4 },
       { href: '/products?category=electrical',  label: 'برق خودرو',    sortOrder: 5 },
-      { href: '/contact',     label: 'تماس با ما',   sortOrder: 6 },
+      { href: '/faq',         label: 'سوالات متداول', sortOrder: 6 },
+      { href: '/contact',     label: 'تماس با ما',   sortOrder: 7 },
     ],
   });
 

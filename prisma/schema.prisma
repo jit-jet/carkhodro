@@ -453,6 +453,21 @@ model CompareItem {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// FAQ
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Frequently-asked questions — admin-managed; displayed on the /faq page.
+model Faq {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String   @db.Text
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("faqs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // ORDERS
 // ─────────────────────────────────────────────────────────────────────────────
 

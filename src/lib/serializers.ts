@@ -112,6 +112,13 @@ export interface ShippingOptionVM {
   cost: number;
 }
 
+export interface FaqVM {
+  id: number;
+  question: string;
+  answer: string;
+  sortOrder: number;
+}
+
 export interface CartItemVM {
   id: string;
   productId: string;
@@ -357,6 +364,15 @@ export function toNavLinkVM(n: {
   sortOrder: number;
 }): NavLinkVM {
   return { id: n.id, href: n.href, label: n.label, order: n.sortOrder };
+}
+
+export function toFaqVM(f: {
+  id: number;
+  question: string;
+  answer: string;
+  sortOrder: number;
+}): FaqVM {
+  return { id: f.id, question: f.question, answer: f.answer, sortOrder: f.sortOrder };
 }
 
 export function toShippingOptionVM(s: {

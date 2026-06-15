@@ -14,4 +14,5 @@ export const tags = {
   navLinks: 'nav-links',
   shipping: 'shipping-options',
   reviews: (productId: string) => `reviews:${productId}`,
+  faqs: 'faqs',
 } as const;

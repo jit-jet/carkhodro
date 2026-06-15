@@ -308,6 +308,14 @@ exports.Prisma.CompareItemScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.FaqScalarFieldEnum = {
+  id: 'id',
+  question: 'question',
+  answer: 'answer',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ShippingOptionScalarFieldEnum = {
   id: 'id',
   method: 'method',
@@ -423,6 +431,7 @@ exports.Prisma.ModelName = {
   CartItem: 'CartItem',
   WishlistItem: 'WishlistItem',
   CompareItem: 'CompareItem',
+  Faq: 'Faq',
   ShippingOption: 'ShippingOption',
   Order: 'Order',
   OrderItem: 'OrderItem'

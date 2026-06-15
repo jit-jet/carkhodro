@@ -112,6 +112,11 @@ export type WishlistItem = $Result.DefaultSelection<Prisma.$WishlistItemPayload>
  */
 export type CompareItem = $Result.DefaultSelection<Prisma.$CompareItemPayload>
 /**
+ * Model Faq
+ * Frequently-asked questions — admin-managed; displayed on the /faq page.
+ */
+export type Faq = $Result.DefaultSelection<Prisma.$FaqPayload>
+/**
  * Model ShippingOption
  * Shipping methods and their current cost — editable by admin.
  */
@@ -511,6 +516,16 @@ export class PrismaClient<
     * ```
     */
   get compareItem(): Prisma.CompareItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.faq`: Exposes CRUD operations for the **Faq** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Faqs
+    * const faqs = await prisma.faq.findMany()
+    * ```
+    */
+  get faq(): Prisma.FaqDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.shippingOption`: Exposes CRUD operations for the **ShippingOption** model.
@@ -994,6 +1009,7 @@ export namespace Prisma {
     CartItem: 'CartItem',
     WishlistItem: 'WishlistItem',
     CompareItem: 'CompareItem',
+    Faq: 'Faq',
     ShippingOption: 'ShippingOption',
     Order: 'Order',
     OrderItem: 'OrderItem'
@@ -1012,7 +1028,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "shippingOption" | "order" | "orderItem"
+      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "faq" | "shippingOption" | "order" | "orderItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2422,6 +2438,80 @@ export namespace Prisma {
           }
         }
       }
+      Faq: {
+        payload: Prisma.$FaqPayload<ExtArgs>
+        fields: Prisma.FaqFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FaqFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FaqFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload>
+          }
+          findFirst: {
+            args: Prisma.FaqFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FaqFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload>
+          }
+          findMany: {
+            args: Prisma.FaqFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload>[]
+          }
+          create: {
+            args: Prisma.FaqCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload>
+          }
+          createMany: {
+            args: Prisma.FaqCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FaqCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload>[]
+          }
+          delete: {
+            args: Prisma.FaqDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload>
+          }
+          update: {
+            args: Prisma.FaqUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload>
+          }
+          deleteMany: {
+            args: Prisma.FaqDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FaqUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FaqUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload>[]
+          }
+          upsert: {
+            args: Prisma.FaqUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FaqPayload>
+          }
+          aggregate: {
+            args: Prisma.FaqAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFaq>
+          }
+          groupBy: {
+            args: Prisma.FaqGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FaqGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FaqCountArgs<ExtArgs>
+            result: $Utils.Optional<FaqCountAggregateOutputType> | number
+          }
+        }
+      }
       ShippingOption: {
         payload: Prisma.$ShippingOptionPayload<ExtArgs>
         fields: Prisma.ShippingOptionFieldRefs
@@ -2771,6 +2861,7 @@ export namespace Prisma {
     cartItem?: CartItemOmit
     wishlistItem?: WishlistItemOmit
     compareItem?: CompareItemOmit
+    faq?: FaqOmit
     shippingOption?: ShippingOptionOmit
     order?: OrderOmit
     orderItem?: OrderItemOmit
@@ -25112,6 +25203,1044 @@ export namespace Prisma {
 
 
   /**
+   * Model Faq
+   */
+
+  export type AggregateFaq = {
+    _count: FaqCountAggregateOutputType | null
+    _avg: FaqAvgAggregateOutputType | null
+    _sum: FaqSumAggregateOutputType | null
+    _min: FaqMinAggregateOutputType | null
+    _max: FaqMaxAggregateOutputType | null
+  }
+
+  export type FaqAvgAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type FaqSumAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type FaqMinAggregateOutputType = {
+    id: number | null
+    question: string | null
+    answer: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+  }
+
+  export type FaqMaxAggregateOutputType = {
+    id: number | null
+    question: string | null
+    answer: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+  }
+
+  export type FaqCountAggregateOutputType = {
+    id: number
+    question: number
+    answer: number
+    sortOrder: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FaqAvgAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type FaqSumAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type FaqMinAggregateInputType = {
+    id?: true
+    question?: true
+    answer?: true
+    sortOrder?: true
+    createdAt?: true
+  }
+
+  export type FaqMaxAggregateInputType = {
+    id?: true
+    question?: true
+    answer?: true
+    sortOrder?: true
+    createdAt?: true
+  }
+
+  export type FaqCountAggregateInputType = {
+    id?: true
+    question?: true
+    answer?: true
+    sortOrder?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FaqAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Faq to aggregate.
+     */
+    where?: FaqWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Faqs to fetch.
+     */
+    orderBy?: FaqOrderByWithRelationInput | FaqOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FaqWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Faqs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Faqs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Faqs
+    **/
+    _count?: true | FaqCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FaqAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FaqSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FaqMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FaqMaxAggregateInputType
+  }
+
+  export type GetFaqAggregateType<T extends FaqAggregateArgs> = {
+        [P in keyof T & keyof AggregateFaq]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFaq[P]>
+      : GetScalarType<T[P], AggregateFaq[P]>
+  }
+
+
+
+
+  export type FaqGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FaqWhereInput
+    orderBy?: FaqOrderByWithAggregationInput | FaqOrderByWithAggregationInput[]
+    by: FaqScalarFieldEnum[] | FaqScalarFieldEnum
+    having?: FaqScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FaqCountAggregateInputType | true
+    _avg?: FaqAvgAggregateInputType
+    _sum?: FaqSumAggregateInputType
+    _min?: FaqMinAggregateInputType
+    _max?: FaqMaxAggregateInputType
+  }
+
+  export type FaqGroupByOutputType = {
+    id: number
+    question: string
+    answer: string
+    sortOrder: number
+    createdAt: Date
+    _count: FaqCountAggregateOutputType | null
+    _avg: FaqAvgAggregateOutputType | null
+    _sum: FaqSumAggregateOutputType | null
+    _min: FaqMinAggregateOutputType | null
+    _max: FaqMaxAggregateOutputType | null
+  }
+
+  type GetFaqGroupByPayload<T extends FaqGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FaqGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FaqGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FaqGroupByOutputType[P]>
+            : GetScalarType<T[P], FaqGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FaqSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["faq"]>
+
+  export type FaqSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["faq"]>
+
+  export type FaqSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["faq"]>
+
+  export type FaqSelectScalar = {
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+  }
+
+  export type FaqOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "question" | "answer" | "sortOrder" | "createdAt", ExtArgs["result"]["faq"]>
+
+  export type $FaqPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Faq"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      question: string
+      answer: string
+      sortOrder: number
+      createdAt: Date
+    }, ExtArgs["result"]["faq"]>
+    composites: {}
+  }
+
+  type FaqGetPayload<S extends boolean | null | undefined | FaqDefaultArgs> = $Result.GetResult<Prisma.$FaqPayload, S>
+
+  type FaqCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FaqFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FaqCountAggregateInputType | true
+    }
+
+  export interface FaqDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Faq'], meta: { name: 'Faq' } }
+    /**
+     * Find zero or one Faq that matches the filter.
+     * @param {FaqFindUniqueArgs} args - Arguments to find a Faq
+     * @example
+     * // Get one Faq
+     * const faq = await prisma.faq.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FaqFindUniqueArgs>(args: SelectSubset<T, FaqFindUniqueArgs<ExtArgs>>): Prisma__FaqClient<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Faq that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FaqFindUniqueOrThrowArgs} args - Arguments to find a Faq
+     * @example
+     * // Get one Faq
+     * const faq = await prisma.faq.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FaqFindUniqueOrThrowArgs>(args: SelectSubset<T, FaqFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FaqClient<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Faq that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FaqFindFirstArgs} args - Arguments to find a Faq
+     * @example
+     * // Get one Faq
+     * const faq = await prisma.faq.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FaqFindFirstArgs>(args?: SelectSubset<T, FaqFindFirstArgs<ExtArgs>>): Prisma__FaqClient<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Faq that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FaqFindFirstOrThrowArgs} args - Arguments to find a Faq
+     * @example
+     * // Get one Faq
+     * const faq = await prisma.faq.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FaqFindFirstOrThrowArgs>(args?: SelectSubset<T, FaqFindFirstOrThrowArgs<ExtArgs>>): Prisma__FaqClient<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Faqs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FaqFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Faqs
+     * const faqs = await prisma.faq.findMany()
+     * 
+     * // Get first 10 Faqs
+     * const faqs = await prisma.faq.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const faqWithIdOnly = await prisma.faq.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FaqFindManyArgs>(args?: SelectSubset<T, FaqFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Faq.
+     * @param {FaqCreateArgs} args - Arguments to create a Faq.
+     * @example
+     * // Create one Faq
+     * const Faq = await prisma.faq.create({
+     *   data: {
+     *     // ... data to create a Faq
+     *   }
+     * })
+     * 
+     */
+    create<T extends FaqCreateArgs>(args: SelectSubset<T, FaqCreateArgs<ExtArgs>>): Prisma__FaqClient<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Faqs.
+     * @param {FaqCreateManyArgs} args - Arguments to create many Faqs.
+     * @example
+     * // Create many Faqs
+     * const faq = await prisma.faq.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FaqCreateManyArgs>(args?: SelectSubset<T, FaqCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Faqs and returns the data saved in the database.
+     * @param {FaqCreateManyAndReturnArgs} args - Arguments to create many Faqs.
+     * @example
+     * // Create many Faqs
+     * const faq = await prisma.faq.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Faqs and only return the `id`
+     * const faqWithIdOnly = await prisma.faq.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FaqCreateManyAndReturnArgs>(args?: SelectSubset<T, FaqCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Faq.
+     * @param {FaqDeleteArgs} args - Arguments to delete one Faq.
+     * @example
+     * // Delete one Faq
+     * const Faq = await prisma.faq.delete({
+     *   where: {
+     *     // ... filter to delete one Faq
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FaqDeleteArgs>(args: SelectSubset<T, FaqDeleteArgs<ExtArgs>>): Prisma__FaqClient<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Faq.
+     * @param {FaqUpdateArgs} args - Arguments to update one Faq.
+     * @example
+     * // Update one Faq
+     * const faq = await prisma.faq.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FaqUpdateArgs>(args: SelectSubset<T, FaqUpdateArgs<ExtArgs>>): Prisma__FaqClient<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Faqs.
+     * @param {FaqDeleteManyArgs} args - Arguments to filter Faqs to delete.
+     * @example
+     * // Delete a few Faqs
+     * const { count } = await prisma.faq.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FaqDeleteManyArgs>(args?: SelectSubset<T, FaqDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Faqs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FaqUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Faqs
+     * const faq = await prisma.faq.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FaqUpdateManyArgs>(args: SelectSubset<T, FaqUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Faqs and returns the data updated in the database.
+     * @param {FaqUpdateManyAndReturnArgs} args - Arguments to update many Faqs.
+     * @example
+     * // Update many Faqs
+     * const faq = await prisma.faq.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Faqs and only return the `id`
+     * const faqWithIdOnly = await prisma.faq.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FaqUpdateManyAndReturnArgs>(args: SelectSubset<T, FaqUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Faq.
+     * @param {FaqUpsertArgs} args - Arguments to update or create a Faq.
+     * @example
+     * // Update or create a Faq
+     * const faq = await prisma.faq.upsert({
+     *   create: {
+     *     // ... data to create a Faq
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Faq we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FaqUpsertArgs>(args: SelectSubset<T, FaqUpsertArgs<ExtArgs>>): Prisma__FaqClient<$Result.GetResult<Prisma.$FaqPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Faqs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FaqCountArgs} args - Arguments to filter Faqs to count.
+     * @example
+     * // Count the number of Faqs
+     * const count = await prisma.faq.count({
+     *   where: {
+     *     // ... the filter for the Faqs we want to count
+     *   }
+     * })
+    **/
+    count<T extends FaqCountArgs>(
+      args?: Subset<T, FaqCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FaqCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Faq.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FaqAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FaqAggregateArgs>(args: Subset<T, FaqAggregateArgs>): Prisma.PrismaPromise<GetFaqAggregateType<T>>
+
+    /**
+     * Group by Faq.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FaqGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FaqGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FaqGroupByArgs['orderBy'] }
+        : { orderBy?: FaqGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FaqGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFaqGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Faq model
+   */
+  readonly fields: FaqFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Faq.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FaqClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Faq model
+   */
+  interface FaqFieldRefs {
+    readonly id: FieldRef<"Faq", 'Int'>
+    readonly question: FieldRef<"Faq", 'String'>
+    readonly answer: FieldRef<"Faq", 'String'>
+    readonly sortOrder: FieldRef<"Faq", 'Int'>
+    readonly createdAt: FieldRef<"Faq", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Faq findUnique
+   */
+  export type FaqFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * Filter, which Faq to fetch.
+     */
+    where: FaqWhereUniqueInput
+  }
+
+  /**
+   * Faq findUniqueOrThrow
+   */
+  export type FaqFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * Filter, which Faq to fetch.
+     */
+    where: FaqWhereUniqueInput
+  }
+
+  /**
+   * Faq findFirst
+   */
+  export type FaqFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * Filter, which Faq to fetch.
+     */
+    where?: FaqWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Faqs to fetch.
+     */
+    orderBy?: FaqOrderByWithRelationInput | FaqOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Faqs.
+     */
+    cursor?: FaqWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Faqs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Faqs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Faqs.
+     */
+    distinct?: FaqScalarFieldEnum | FaqScalarFieldEnum[]
+  }
+
+  /**
+   * Faq findFirstOrThrow
+   */
+  export type FaqFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * Filter, which Faq to fetch.
+     */
+    where?: FaqWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Faqs to fetch.
+     */
+    orderBy?: FaqOrderByWithRelationInput | FaqOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Faqs.
+     */
+    cursor?: FaqWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Faqs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Faqs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Faqs.
+     */
+    distinct?: FaqScalarFieldEnum | FaqScalarFieldEnum[]
+  }
+
+  /**
+   * Faq findMany
+   */
+  export type FaqFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * Filter, which Faqs to fetch.
+     */
+    where?: FaqWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Faqs to fetch.
+     */
+    orderBy?: FaqOrderByWithRelationInput | FaqOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Faqs.
+     */
+    cursor?: FaqWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Faqs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Faqs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Faqs.
+     */
+    distinct?: FaqScalarFieldEnum | FaqScalarFieldEnum[]
+  }
+
+  /**
+   * Faq create
+   */
+  export type FaqCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Faq.
+     */
+    data: XOR<FaqCreateInput, FaqUncheckedCreateInput>
+  }
+
+  /**
+   * Faq createMany
+   */
+  export type FaqCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Faqs.
+     */
+    data: FaqCreateManyInput | FaqCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Faq createManyAndReturn
+   */
+  export type FaqCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * The data used to create many Faqs.
+     */
+    data: FaqCreateManyInput | FaqCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Faq update
+   */
+  export type FaqUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Faq.
+     */
+    data: XOR<FaqUpdateInput, FaqUncheckedUpdateInput>
+    /**
+     * Choose, which Faq to update.
+     */
+    where: FaqWhereUniqueInput
+  }
+
+  /**
+   * Faq updateMany
+   */
+  export type FaqUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Faqs.
+     */
+    data: XOR<FaqUpdateManyMutationInput, FaqUncheckedUpdateManyInput>
+    /**
+     * Filter which Faqs to update
+     */
+    where?: FaqWhereInput
+    /**
+     * Limit how many Faqs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Faq updateManyAndReturn
+   */
+  export type FaqUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * The data used to update Faqs.
+     */
+    data: XOR<FaqUpdateManyMutationInput, FaqUncheckedUpdateManyInput>
+    /**
+     * Filter which Faqs to update
+     */
+    where?: FaqWhereInput
+    /**
+     * Limit how many Faqs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Faq upsert
+   */
+  export type FaqUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Faq to update in case it exists.
+     */
+    where: FaqWhereUniqueInput
+    /**
+     * In case the Faq found by the `where` argument doesn't exist, create a new Faq with this data.
+     */
+    create: XOR<FaqCreateInput, FaqUncheckedCreateInput>
+    /**
+     * In case the Faq was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FaqUpdateInput, FaqUncheckedUpdateInput>
+  }
+
+  /**
+   * Faq delete
+   */
+  export type FaqDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+    /**
+     * Filter which Faq to delete.
+     */
+    where: FaqWhereUniqueInput
+  }
+
+  /**
+   * Faq deleteMany
+   */
+  export type FaqDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Faqs to delete
+     */
+    where?: FaqWhereInput
+    /**
+     * Limit how many Faqs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Faq without action
+   */
+  export type FaqDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Faq
+     */
+    select?: FaqSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Faq
+     */
+    omit?: FaqOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model ShippingOption
    */
 
@@ -29062,6 +30191,17 @@ export namespace Prisma {
   export type CompareItemScalarFieldEnum = (typeof CompareItemScalarFieldEnum)[keyof typeof CompareItemScalarFieldEnum]
 
 
+  export const FaqScalarFieldEnum: {
+    id: 'id',
+    question: 'question',
+    answer: 'answer',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt'
+  };
+
+  export type FaqScalarFieldEnum = (typeof FaqScalarFieldEnum)[keyof typeof FaqScalarFieldEnum]
+
+
   export const ShippingOptionScalarFieldEnum: {
     id: 'id',
     method: 'method',
@@ -30633,6 +31773,60 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"CompareItem"> | string
     productId?: StringWithAggregatesFilter<"CompareItem"> | string
     createdAt?: DateTimeWithAggregatesFilter<"CompareItem"> | Date | string
+  }
+
+  export type FaqWhereInput = {
+    AND?: FaqWhereInput | FaqWhereInput[]
+    OR?: FaqWhereInput[]
+    NOT?: FaqWhereInput | FaqWhereInput[]
+    id?: IntFilter<"Faq"> | number
+    question?: StringFilter<"Faq"> | string
+    answer?: StringFilter<"Faq"> | string
+    sortOrder?: IntFilter<"Faq"> | number
+    createdAt?: DateTimeFilter<"Faq"> | Date | string
+  }
+
+  export type FaqOrderByWithRelationInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FaqWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: FaqWhereInput | FaqWhereInput[]
+    OR?: FaqWhereInput[]
+    NOT?: FaqWhereInput | FaqWhereInput[]
+    question?: StringFilter<"Faq"> | string
+    answer?: StringFilter<"Faq"> | string
+    sortOrder?: IntFilter<"Faq"> | number
+    createdAt?: DateTimeFilter<"Faq"> | Date | string
+  }, "id">
+
+  export type FaqOrderByWithAggregationInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    _count?: FaqCountOrderByAggregateInput
+    _avg?: FaqAvgOrderByAggregateInput
+    _max?: FaqMaxOrderByAggregateInput
+    _min?: FaqMinOrderByAggregateInput
+    _sum?: FaqSumOrderByAggregateInput
+  }
+
+  export type FaqScalarWhereWithAggregatesInput = {
+    AND?: FaqScalarWhereWithAggregatesInput | FaqScalarWhereWithAggregatesInput[]
+    OR?: FaqScalarWhereWithAggregatesInput[]
+    NOT?: FaqScalarWhereWithAggregatesInput | FaqScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Faq"> | number
+    question?: StringWithAggregatesFilter<"Faq"> | string
+    answer?: StringWithAggregatesFilter<"Faq"> | string
+    sortOrder?: IntWithAggregatesFilter<"Faq"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Faq"> | Date | string
   }
 
   export type ShippingOptionWhereInput = {
@@ -32297,6 +33491,59 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FaqCreateInput = {
+    question: string
+    answer: string
+    sortOrder?: number
+    createdAt?: Date | string
+  }
+
+  export type FaqUncheckedCreateInput = {
+    id?: number
+    question: string
+    answer: string
+    sortOrder?: number
+    createdAt?: Date | string
+  }
+
+  export type FaqUpdateInput = {
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FaqUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FaqCreateManyInput = {
+    id?: number
+    question: string
+    answer: string
+    sortOrder?: number
+    createdAt?: Date | string
+  }
+
+  export type FaqUpdateManyMutationInput = {
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FaqUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ShippingOptionCreateInput = {
     id?: string
     method: $Enums.ShippingMethod
@@ -33837,6 +35084,40 @@ export namespace Prisma {
     userId?: SortOrder
     productId?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type FaqCountOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FaqAvgOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type FaqMaxOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FaqMinOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FaqSumOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type EnumShippingMethodFilter<$PrismaModel = never> = {
