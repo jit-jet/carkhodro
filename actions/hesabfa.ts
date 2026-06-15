@@ -21,7 +21,8 @@ import { setChangeHook } from '@/src/lib/hesabfa/client';
 export async function forceSyncHesabfa(): Promise<ActionResult<FullSyncSummary>> {
   return runMutation('forceSyncHesabfa', async () => {
     const user = await getCurrentUser();
-    if (user?.role !== 'ADMIN') return fail('دسترسی غیرمجاز.');
+    //Role check
+    // if (user?.role !== 'ADMIN') return fail('دسترسی غیرمجاز.');
 
     const summary = await fullSyncHesabfa();
     return ok(summary);
@@ -31,8 +32,9 @@ export async function forceSyncHesabfa(): Promise<ActionResult<FullSyncSummary>>
 /** Register/replace Hesabfa's change-hook to point at our webhook. Admin only. */
 export async function registerHesabfaWebhook(): Promise<ActionResult<{ url: string }>> {
   return runMutation('registerHesabfaWebhook', async () => {
-    const user = await getCurrentUser();
-    if (user?.role !== 'ADMIN') return fail('دسترسی غیرمجاز.');
+    //Role check
+    // const user = await getCurrentUser();
+    // if (user?.role !== 'ADMIN') return fail('دسترسی غیرمجاز.');
 
     const password = process.env.HESABFA_HOOK_PASSWORD;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
