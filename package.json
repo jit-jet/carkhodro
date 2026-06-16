@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "npm ci && next build",
+    "cbuild": "npm ci && npx prisma migrate deploy && npx prisma generate && npm run db:seed && next build",
     "start": "next start",
     "lint": "eslint",
     "db:seed": "tsx prisma/seed.ts"
