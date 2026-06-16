@@ -172,15 +172,97 @@ interface Props {
   searchParams: Promise<{ page?: string; q?: string; tag?: string }>;
 }
 
-export default async function BlogPage({ searchParams }: Props) {
+async function BlogContent({ searchParams }: Props) {
   const { page = '1', q = '', tag = '' } = await searchParams;
   const pageNum = Math.max(1, parseInt(page, 10) || 1);
 
   const { posts, total, pages } = await getPosts(pageNum, q, tag);
 
   return (
+    <div className="max-w-7xl mx-auto px-4 py-10">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-black text-charcoal mb-2">وبلاگ کارخودرو</h1>
+        <p className="text-gray-500 text-sm">راهنماها، نکات فنی و اخبار دنیای خودرو</p>
+      </div>
+
+      {/* Search row */}
+      <div className="flex flex-wrap items-center gap-3 mb-4">
+        <Suspense fallback={<div className="h-10 w-72 bg-gray-200 rounded-xl animate-pulse" />}>
+          <BlogSearch defaultValue={q} />
+        </Suspense>
+
+        {tag && (
+          <Link
+            href={q ? `/blog?q=${encodeURIComponent(q)}&page=1` : '/blog'}
+            className="flex items-center gap-1.5 bg-accent/10 text-accent-dark text-sm font-medium px-3 py-2 rounded-xl hover:bg-accent/20 transition-colors"
+          >
+            <span>#{tag}</span>
+            <span className="text-base leading-none">×</span>
+          </Link>
+        )}
+      </div>
+
+      {/* Count */}
+      <p className="text-sm text-gray-500 mb-6">
+        {total.toLocaleString('fa-IR')} مقاله
+        {(q || tag) && ' یافت شد'}
+      </p>
+
+      {/* Grid */}
+      {posts.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {posts.map(post => (
+              <PostCard key={post.id} post={post} activeTag={tag} />
+            ))}
+          </div>
+
+          {pages > 1 && (
+            <Pagination current={pageNum} total={pages} q={q} tag={tag} />
+          )}
+        </>
+      ) : (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm py-20 flex flex-col items-center text-center px-4">
+          <span className="text-5xl mb-4 select-none">🔍</span>
+          <h3 className="text-lg font-bold text-charcoal mb-2">مقاله‌ای یافت نشد</h3>
+          <p className="text-sm text-gray-500 mb-5">
+            کلمه دیگری جستجو کنید یا فیلتر را پاک کنید
+          </p>
+          <Link
+            href="/blog"
+            className="bg-accent hover:bg-accent-dark text-charcoal font-semibold text-sm px-6 py-2 rounded-xl transition-colors"
+          >
+            نمایش همه مقالات
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function BlogContentSkeleton() {
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="mb-8">
+        <div className="h-9 w-48 bg-gray-200 rounded-xl animate-pulse mb-2" />
+        <div className="h-4 w-64 bg-gray-100 rounded animate-pulse" />
+      </div>
+      <div className="h-10 w-72 bg-gray-200 rounded-xl animate-pulse mb-4" />
+      <div className="h-4 w-24 bg-gray-100 rounded animate-pulse mb-6" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden h-72 animate-pulse" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function BlogPage({ searchParams }: Props) {
+  return (
     <div className="bg-silver-light min-h-screen" dir="rtl">
-      {/* Breadcrumb */}
+      {/* Breadcrumb — static, no data needed */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <nav className="flex items-center gap-2 text-sm text-gray-500">
@@ -191,65 +273,9 @@ export default async function BlogPage({ searchParams }: Props) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-10">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-black text-charcoal mb-2">وبلاگ کارخودرو</h1>
-          <p className="text-gray-500 text-sm">راهنماها، نکات فنی و اخبار دنیای خودرو</p>
-        </div>
-
-        {/* Search row */}
-        <div className="flex flex-wrap items-center gap-3 mb-4">
-          <Suspense fallback={<div className="h-10 w-72 bg-gray-200 rounded-xl animate-pulse" />}>
-            <BlogSearch defaultValue={q} />
-          </Suspense>
-
-          {tag && (
-            <Link
-              href={q ? `/blog?q=${encodeURIComponent(q)}&page=1` : '/blog'}
-              className="flex items-center gap-1.5 bg-accent/10 text-accent-dark text-sm font-medium px-3 py-2 rounded-xl hover:bg-accent/20 transition-colors"
-            >
-              <span>#{tag}</span>
-              <span className="text-base leading-none">×</span>
-            </Link>
-          )}
-        </div>
-
-        {/* Count */}
-        <p className="text-sm text-gray-500 mb-6">
-          {total.toLocaleString('fa-IR')} مقاله
-          {(q || tag) && ' یافت شد'}
-        </p>
-
-        {/* Grid */}
-        {posts.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {posts.map(post => (
-                <PostCard key={post.id} post={post} activeTag={tag} />
-              ))}
-            </div>
-
-            {pages > 1 && (
-              <Pagination current={pageNum} total={pages} q={q} tag={tag} />
-            )}
-          </>
-        ) : (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm py-20 flex flex-col items-center text-center px-4">
-            <span className="text-5xl mb-4 select-none">🔍</span>
-            <h3 className="text-lg font-bold text-charcoal mb-2">مقاله‌ای یافت نشد</h3>
-            <p className="text-sm text-gray-500 mb-5">
-              کلمه دیگری جستجو کنید یا فیلتر را پاک کنید
-            </p>
-            <Link
-              href="/blog"
-              className="bg-accent hover:bg-accent-dark text-charcoal font-semibold text-sm px-6 py-2 rounded-xl transition-colors"
-            >
-              نمایش همه مقالات
-            </Link>
-          </div>
-        )}
-      </div>
+      <Suspense fallback={<BlogContentSkeleton />}>
+        <BlogContent searchParams={searchParams} />
+      </Suspense>
     </div>
   );
 }
