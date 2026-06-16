@@ -422,12 +422,14 @@ async function main() {
   ];
   const provinces = await prisma.$transaction(
     provinceNames.map(name => prisma.province.create({ data: { name } })),
+    { timeout: 30000 },
   );
   const provinceId = new Map(provinces.map(p => [p.name, p.id]));
 
   // ── Cities (one representative city per province) ──────────────────────────
   const cities = await prisma.$transaction(
     provinces.map(p => prisma.city.create({ data: { name: p.name, provinceId: p.id } })),
+    { timeout: 30000 },
   );
   const cityId = new Map(cities.map(c => [c.name, c.id]));
 
@@ -448,6 +450,7 @@ async function main() {
   ];
   const carBrands = await prisma.$transaction(
     carBrandsInput.map(b => prisma.carBrand.create({ data: b })),
+    { timeout: 30000 },
   );
   // keyed by 1-based position matching mock carBrandId
   const cbId = (mockId: number) => carBrands[mockId - 1].id;
@@ -475,6 +478,7 @@ async function main() {
   ];
   const carModels = await prisma.$transaction(
     carModelsInput.map(m => prisma.carModel.create({ data: m })),
+    { timeout: 30000 },
   );
   const cmId = (mockId: number) => carModels[mockId - 1].id;
 
@@ -491,6 +495,7 @@ async function main() {
   ];
   const partsBrands = await prisma.$transaction(
     partsBrandsInput.map(b => prisma.partsBrand.create({ data: b })),
+    { timeout: 30000 },
   );
   const pbId = (mockId: number) => partsBrands[mockId - 1].id;
 
@@ -507,6 +512,7 @@ async function main() {
   ];
   const categories = await prisma.$transaction(
     categoriesInput.map(c => prisma.category.create({ data: c })),
+    { timeout: 30000 },
   );
   const catId = (mockId: number) => categories[mockId - 1].id;
 
@@ -593,6 +599,7 @@ async function main() {
         },
       }),
     ),
+    { timeout: 30000 },
   );
 
   // ── Product Compatibilities ────────────────────────────────────────────────
