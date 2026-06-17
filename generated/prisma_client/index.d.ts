@@ -16051,6 +16051,7 @@ export namespace Prisma {
     isOriginal: boolean | null
     mainImage: string | null
     description: string | null
+    searchText: string | null
     viewCount: number | null
     saleCount: number | null
     ratingAvg: Decimal | null
@@ -16080,6 +16081,7 @@ export namespace Prisma {
     isOriginal: boolean | null
     mainImage: string | null
     description: string | null
+    searchText: string | null
     viewCount: number | null
     saleCount: number | null
     ratingAvg: Decimal | null
@@ -16109,6 +16111,7 @@ export namespace Prisma {
     isOriginal: number
     mainImage: number
     description: number
+    searchText: number
     viewCount: number
     saleCount: number
     ratingAvg: number
@@ -16170,6 +16173,7 @@ export namespace Prisma {
     isOriginal?: true
     mainImage?: true
     description?: true
+    searchText?: true
     viewCount?: true
     saleCount?: true
     ratingAvg?: true
@@ -16199,6 +16203,7 @@ export namespace Prisma {
     isOriginal?: true
     mainImage?: true
     description?: true
+    searchText?: true
     viewCount?: true
     saleCount?: true
     ratingAvg?: true
@@ -16228,6 +16233,7 @@ export namespace Prisma {
     isOriginal?: true
     mainImage?: true
     description?: true
+    searchText?: true
     viewCount?: true
     saleCount?: true
     ratingAvg?: true
@@ -16344,6 +16350,7 @@ export namespace Prisma {
     isOriginal: boolean
     mainImage: string | null
     description: string | null
+    searchText: string | null
     viewCount: number
     saleCount: number
     ratingAvg: Decimal
@@ -16392,6 +16399,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
+    searchText?: boolean
     viewCount?: boolean
     saleCount?: boolean
     ratingAvg?: boolean
@@ -16431,6 +16439,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
+    searchText?: boolean
     viewCount?: boolean
     saleCount?: boolean
     ratingAvg?: boolean
@@ -16462,6 +16471,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
+    searchText?: boolean
     viewCount?: boolean
     saleCount?: boolean
     ratingAvg?: boolean
@@ -16493,6 +16503,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
+    searchText?: boolean
     viewCount?: boolean
     saleCount?: boolean
     ratingAvg?: boolean
@@ -16502,7 +16513,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "basePrice" | "wholesaleDiscountPct" | "oldPrice" | "isOffer" | "accountancyId" | "lastSyncedAt" | "stock" | "warranty" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "basePrice" | "wholesaleDiscountPct" | "oldPrice" | "isOffer" | "accountancyId" | "lastSyncedAt" | "stock" | "warranty" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -16589,6 +16600,12 @@ export namespace Prisma {
       isOriginal: boolean
       mainImage: string | null
       description: string | null
+      /**
+       * Denormalized, normalized search document (name + sku + origin + parts-brand
+       * + category + compatible car models). DB-maintained via triggers — never
+       * written from application code. Queried with pg_trgm for typo-tolerant search.
+       */
+      searchText: string | null
       viewCount: number
       saleCount: number
       /**
@@ -17050,6 +17067,7 @@ export namespace Prisma {
     readonly isOriginal: FieldRef<"Product", 'Boolean'>
     readonly mainImage: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
+    readonly searchText: FieldRef<"Product", 'String'>
     readonly viewCount: FieldRef<"Product", 'Int'>
     readonly saleCount: FieldRef<"Product", 'Int'>
     readonly ratingAvg: FieldRef<"Product", 'Decimal'>
@@ -31342,6 +31360,7 @@ export namespace Prisma {
     isOriginal: 'isOriginal',
     mainImage: 'mainImage',
     description: 'description',
+    searchText: 'searchText',
     viewCount: 'viewCount',
     saleCount: 'saleCount',
     ratingAvg: 'ratingAvg',
@@ -32464,6 +32483,7 @@ export namespace Prisma {
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
+    searchText?: StringNullableFilter<"Product"> | string | null
     viewCount?: IntFilter<"Product"> | number
     saleCount?: IntFilter<"Product"> | number
     ratingAvg?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
@@ -32502,6 +32522,7 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    searchText?: SortOrderInput | SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
     ratingAvg?: SortOrder
@@ -32543,6 +32564,7 @@ export namespace Prisma {
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
+    searchText?: StringNullableFilter<"Product"> | string | null
     viewCount?: IntFilter<"Product"> | number
     saleCount?: IntFilter<"Product"> | number
     ratingAvg?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
@@ -32581,6 +32603,7 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    searchText?: SortOrderInput | SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
     ratingAvg?: SortOrder
@@ -32618,6 +32641,7 @@ export namespace Prisma {
     isOriginal?: BoolWithAggregatesFilter<"Product"> | boolean
     mainImage?: StringNullableWithAggregatesFilter<"Product"> | string | null
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    searchText?: StringNullableWithAggregatesFilter<"Product"> | string | null
     viewCount?: IntWithAggregatesFilter<"Product"> | number
     saleCount?: IntWithAggregatesFilter<"Product"> | number
     ratingAvg?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
@@ -34261,6 +34285,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -34299,6 +34324,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -34333,6 +34359,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -34371,6 +34398,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -34407,6 +34435,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -34434,6 +34463,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -34463,6 +34493,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -36167,6 +36198,7 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
+    searchText?: SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
     ratingAvg?: SortOrder
@@ -36211,6 +36243,7 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
+    searchText?: SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
     ratingAvg?: SortOrder
@@ -36240,6 +36273,7 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
+    searchText?: SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
     ratingAvg?: SortOrder
@@ -39734,6 +39768,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -39770,6 +39805,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -39835,6 +39871,7 @@ export namespace Prisma {
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
+    searchText?: StringNullableFilter<"Product"> | string | null
     viewCount?: IntFilter<"Product"> | number
     saleCount?: IntFilter<"Product"> | number
     ratingAvg?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
@@ -39862,6 +39899,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -39898,6 +39936,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -40382,6 +40421,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -40419,6 +40459,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -40468,6 +40509,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -40505,6 +40547,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -40538,6 +40581,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -40575,6 +40619,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -40650,6 +40695,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -40687,6 +40733,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -40752,6 +40799,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -40789,6 +40837,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -40883,6 +40932,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -40920,6 +40970,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -41159,6 +41210,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -41196,6 +41248,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -41270,6 +41323,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -41307,6 +41361,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -41385,6 +41440,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -41422,6 +41478,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -41522,6 +41579,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -41559,6 +41617,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -41637,6 +41696,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -41674,6 +41734,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -41774,6 +41835,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -41811,6 +41873,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -42237,6 +42300,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -42274,6 +42338,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -42384,6 +42449,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -42421,6 +42487,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -42937,6 +43004,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -42964,6 +43032,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -43000,6 +43069,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -43035,6 +43105,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -43063,6 +43134,7 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    searchText?: string | null
     viewCount?: number
     saleCount?: number
     ratingAvg?: Decimal | DecimalJsLike | number | string
@@ -43090,6 +43162,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -43126,6 +43199,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -43161,6 +43235,7 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
     ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string

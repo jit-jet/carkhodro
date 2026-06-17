@@ -245,6 +245,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   isOriginal: 'isOriginal',
   mainImage: 'mainImage',
   description: 'description',
+  searchText: 'searchText',
   viewCount: 'viewCount',
   saleCount: 'saleCount',
   ratingAvg: 'ratingAvg',

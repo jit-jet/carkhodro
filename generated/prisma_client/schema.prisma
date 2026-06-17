@@ -300,6 +300,12 @@ model Product {
   mainImage   String? @map("main_image")
   description String? @db.Text
 
+  // ── Fuzzy full-text search ────────────────────────────────────────────────
+  /// Denormalized, normalized search document (name + sku + origin + parts-brand
+  /// + category + compatible car models). DB-maintained via triggers — never
+  /// written from application code. Queried with pg_trgm for typo-tolerant search.
+  searchText String? @map("search_text")
+
   // ── Analytics ──────────────────────────────────────────────────────────────
   viewCount   Int     @default(0) @map("view_count")
   saleCount   Int     @default(0) @map("sale_count")
@@ -328,6 +334,7 @@ model Product {
   @@index([isActive, isOffer])
   @@index([saleCount])
   @@index([viewCount])
+  @@index([searchText(ops: raw("gin_trgm_ops"))], type: Gin, map: "products_search_text_trgm_idx")
   @@map("products")
 }
 
