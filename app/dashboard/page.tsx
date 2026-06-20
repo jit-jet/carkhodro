@@ -1,159 +1,282 @@
 /**
- * Dashboard — placeholder page
- * ─────────────────────────────
- * Both successful login (existing user) and successful signup redirect here.
- * Replace the contents of this file with your real dashboard UI.
+ * Dashboard home — «داشبورد».
+ * ────────────────────────────
+ * Live stat cards pulled from the signed-in partner's data: ledger balance,
+ * completed / in-progress orders, cart size, backorders, favorites, recent
+ * orders, last invoice, profile (avatar state) and a back-to-site card. Each
+ * card links to the matching page. The cards read the session cookie, so they
+ * stream inside <Suspense> while the static shell ships.
  */
 
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getCurrentUser } from '@/src/lib/session';
-import { getUserOrders } from '@/actions/orders';
-import HesabfaSyncButton from '@/src/components/dashboard/HesabfaSyncButton';
+import { getDashboardStats } from '@/actions/dashboard';
+import { formatRial, formatNumberFa } from '@/src/lib/format';
+import Avatar from '@/src/components/dashboard/Avatar';
+import type { DashboardStatsVM } from '@/src/lib/dashboard-types';
 
 export const metadata: Metadata = {
-  title: 'داشبورد | کارخودرو',
+  title: 'داشبورد | پنل همکاران اسکار',
 };
 
-function formatPrice(n: number) {
-  return n.toLocaleString('fa-IR') + ' تومان';
-}
-
-const ORDER_STATUS_FA: Record<string, string> = {
-  PENDING: 'در انتظار پرداخت',
-  CONFIRMED: 'تأیید شده',
-  PROCESSING: 'در حال آماده‌سازی',
-  SHIPPED: 'ارسال شده',
-  DELIVERED: 'تحویل شده',
-  CANCELLED: 'لغو شده',
-  REFUNDED: 'مرجوع شده',
-};
-
-// The account view depends on the session cookie → request-time (dynamic) data.
-// Under Cache Components that must stream inside a <Suspense> boundary, so the
-// page ships a static shell and the user-specific panel streams in.
-export default function DashboardPage() {
+export default function DashboardHomePage() {
   return (
-    <Suspense fallback={<DashboardSkeleton />}>
-      <DashboardContent />
+    <Suspense fallback={<StatsSkeleton />}>
+      <StatsGrid />
     </Suspense>
   );
 }
 
-// The `proxy` redirects signed-out visitors before they get here, but we
-// re-check at the data source (defense in depth) and read the real
-// authenticated user — no more mock store.
-async function DashboardContent() {
-  const user = await getCurrentUser();
-  if (!user) redirect('/login?redirect=/dashboard');
-
-  const orders = await getUserOrders();
+async function StatsGrid() {
+  const stats = await getDashboardStats();
+  if (!stats) redirect('/login?redirect=/dashboard');
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16 flex flex-col items-center text-center">
-      {/* Success badge */}
-      <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-6">
-        <svg
-          className="w-10 h-10 text-green-500"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M20 6L9 17l-5-5" />
-        </svg>
-      </div>
-
-      <h1 className="text-3xl font-extrabold text-charcoal mb-3">
-        خوش آمدید، {user.firstName} {user.lastName}!
-      </h1>
-      <p className="text-gray-500 text-base leading-7 mb-10 max-w-md">
-        شما با شماره{' '}
-        <span dir="ltr" className="font-mono font-semibold text-charcoal">
-          {user.phoneNumber}
-        </span>{' '}
-        وارد شده‌اید.
-      </p>
-
-      {/* Quick links */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full mb-10">
-        {[
-          { href: '/products', label: 'مشاهده محصولات', icon: '🛒' },
-          { href: '/cart',     label: 'سبد خرید',        icon: '🛍️' },
-          { href: '/',         label: 'صفحه اصلی',        icon: '🏠' },
-        ].map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="bg-white border-2 border-silver-light hover:border-accent rounded-2xl px-4 py-5 flex flex-col items-center gap-2 text-sm font-semibold text-charcoal transition-all hover:shadow-md"
-          >
-            <span className="text-2xl">{item.icon}</span>
-            {item.label}
-          </Link>
-        ))}
-      </div>
-
-      {/* Admin tools — Hesabfa sync (only rendered for ADMIN accounts) */}
-      {/* {user.role === 'ADMIN' && ( */}
-        <section className="w-full mb-10">
-          <h2 className="text-lg font-bold text-charcoal mb-4 text-right">ابزار مدیریت</h2>
-          <HesabfaSyncButton />
-        </section>
-      {/* )} */}
-
-      {/* Order history */}
-      <section className="w-full text-right">
-        <h2 className="text-lg font-bold text-charcoal mb-4">سفارش‌های من</h2>
-        {orders.length === 0 ? (
-          <div className="bg-silver-light rounded-2xl px-5 py-8 text-center text-sm text-gray-500">
-            هنوز سفارشی ثبت نکرده‌اید.
-          </div>
-        ) : (
-          <ul className="space-y-3">
-            {orders.map((o) => (
-              <li
-                key={o.id}
-                className="bg-white border border-gray-100 rounded-2xl px-5 py-4 flex items-center justify-between gap-4 shadow-sm"
-              >
-                <div>
-                  <p className="text-sm font-semibold text-charcoal">
-                    {o.itemCount.toLocaleString('fa-IR')} قلم کالا
-                  </p>
-                  <p className="text-xs text-gray-400 mt-0.5">{o.createdDate}</p>
-                </div>
-                <div className="text-left">
-                  <p className="text-sm font-bold text-accent-dark">
-                    {formatPrice(o.totalAmount)}
-                  </p>
-                  <span className="text-xs text-gray-500">
-                    {ORDER_STATUS_FA[o.status] ?? o.status}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <StatCard
+        href="/dashboard/orders"
+        icon="wallet"
+        title="مانده حساب"
+        value={formatRial(stats.accountBalanceToman)}
+        subtitle="مانده حساب از قبل"
+        tone="accent"
+      />
+      <StatCard
+        href="/dashboard/orders?status=COMPLETED"
+        icon="check"
+        title="سفارش تکمیل شده"
+        value={`${formatNumberFa(stats.completedOrders)} عدد`}
+        subtitle="سفارشات تکمیل شده"
+      />
+      <StatCard
+        href="/dashboard/orders"
+        icon="progress"
+        title="سفارش در حال انجام"
+        value={stats.inProgressOrders > 0 ? `${formatNumberFa(stats.inProgressOrders)} عدد` : 'خالی'}
+        subtitle="سفارشات در حال پردازش"
+      />
+      <StatCard
+        href="/dashboard/cart"
+        icon="cart"
+        title="سبد خرید"
+        value={`${formatNumberFa(stats.cartItemCount)} قلم`}
+        subtitle="مشاهده و تکمیل فاکتور"
+      />
+      <StatCard
+        href="/dashboard/backorders"
+        icon="clock"
+        title="پیش‌خریدها"
+        value={`${formatNumberFa(stats.backorderCount)} درخواست`}
+        subtitle="درخواست‌های شما در زمان نبود محصول"
+      />
+      <StatCard
+        href="/dashboard/favorites"
+        icon="heart"
+        title="علاقه‌مندی‌ها"
+        value={`${formatNumberFa(stats.favoritesCount)} مورد`}
+        subtitle="محصولات نشان‌شده"
+      />
+      <StatCard
+        href="/dashboard/orders"
+        icon="orders"
+        title="سفارشات اخیر"
+        value={`${formatNumberFa(stats.totalOrders)} سفارش`}
+        subtitle="لیست همه سفارشات ثبت‌شده"
+      />
+      <LastInvoiceCard lastInvoice={stats.lastInvoice} />
+      <ProfileCard stats={stats} />
+      <StatCard
+        href="/"
+        icon="back"
+        title="سایت"
+        value="بازگشت به سایت"
+        subtitle="رفتن به فروشگاه اصلی"
+      />
     </div>
   );
 }
 
-function DashboardSkeleton() {
+function LastInvoiceCard({ lastInvoice }: { lastInvoice: DashboardStatsVM['lastInvoice'] }) {
+  if (!lastInvoice) {
+    return (
+      <StatCard
+        href="/dashboard/cart"
+        icon="invoice"
+        title="آخرین فاکتور"
+        value="—"
+        subtitle="هنوز فاکتوری ثبت نشده"
+      />
+    );
+  }
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16 flex flex-col items-center animate-pulse">
-      <div className="w-20 h-20 rounded-full bg-gray-100 mb-6" />
-      <div className="h-8 w-64 bg-gray-100 rounded mb-3" />
-      <div className="h-4 w-80 bg-gray-100 rounded mb-10" />
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full mb-10">
-        <div className="h-24 bg-gray-100 rounded-2xl" />
-        <div className="h-24 bg-gray-100 rounded-2xl" />
-        <div className="h-24 bg-gray-100 rounded-2xl" />
+    <StatCard
+      href={`/dashboard/orders/${lastInvoice.id}`}
+      icon="invoice"
+      title="آخرین فاکتور"
+      value={`#${formatNumberFa(lastInvoice.orderNumber)}`}
+      subtitle={`ثبت‌شده در ${lastInvoice.date}`}
+    />
+  );
+}
+
+function ProfileCard({ stats }: { stats: DashboardStatsVM }) {
+  return (
+    <Link
+      href="/dashboard/profile"
+      className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4 hover:border-accent hover:shadow-md transition-all"
+    >
+      <Avatar src={stats.profileImage} size={56} alt={stats.fullName} />
+      <div className="min-w-0">
+        <p className="text-xs text-gray-400 mb-0.5">پروفایل من</p>
+        <p className="text-base font-extrabold text-charcoal truncate">
+          {stats.hasAvatar ? 'دارای عکس پروفایل' : 'فاقد عکس'}
+        </p>
+        <p className="text-xs text-gray-400 mt-0.5">ویرایش مشخصات کاربری</p>
       </div>
-      <div className="h-40 w-full bg-gray-100 rounded-2xl" />
+    </Link>
+  );
+}
+
+// ── Card primitives ───────────────────────────────────────────────────────────
+
+type CardIcon =
+  | 'wallet'
+  | 'check'
+  | 'progress'
+  | 'cart'
+  | 'clock'
+  | 'heart'
+  | 'orders'
+  | 'invoice'
+  | 'back';
+
+function StatCard({
+  href,
+  icon,
+  title,
+  value,
+  subtitle,
+  tone = 'default',
+}: {
+  href: string;
+  icon: CardIcon;
+  title: string;
+  value: string;
+  subtitle: string;
+  tone?: 'default' | 'accent';
+}) {
+  return (
+    <Link
+      href={href}
+      className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-start justify-between gap-3 hover:border-accent hover:shadow-md transition-all"
+    >
+      <div className="min-w-0">
+        <p className="text-xs text-gray-400 mb-1">{title}</p>
+        <p
+          className={[
+            'text-xl font-extrabold truncate',
+            tone === 'accent' ? 'text-accent-dark' : 'text-charcoal',
+          ].join(' ')}
+        >
+          {value}
+        </p>
+        <p className="text-xs text-gray-400 mt-1.5 leading-5">{subtitle}</p>
+      </div>
+      <span className="flex items-center justify-center w-11 h-11 rounded-xl bg-silver-light text-gray-400 group-hover:bg-amber-50 group-hover:text-accent-dark transition-colors shrink-0">
+        <CardIconSvg icon={icon} />
+      </span>
+    </Link>
+  );
+}
+
+function CardIconSvg({ icon }: { icon: CardIcon }) {
+  const common = {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 2,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    className: 'w-5 h-5',
+  };
+  switch (icon) {
+    case 'wallet':
+      return (
+        <svg {...common}>
+          <path d="M21 12V7H5a2 2 0 010-4h14v4" />
+          <path d="M3 5v14a2 2 0 002 2h16v-5" />
+          <path d="M18 12a2 2 0 000 4h4v-4z" />
+        </svg>
+      );
+    case 'check':
+      return (
+        <svg {...common}>
+          <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+      );
+    case 'progress':
+      return (
+        <svg {...common}>
+          <path d="M21 12a9 9 0 11-6.219-8.56" />
+        </svg>
+      );
+    case 'cart':
+      return (
+        <svg {...common}>
+          <circle cx="9" cy="21" r="1" />
+          <circle cx="20" cy="21" r="1" />
+          <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+        </svg>
+      );
+    case 'clock':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      );
+    case 'heart':
+      return (
+        <svg {...common}>
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z" />
+        </svg>
+      );
+    case 'orders':
+      return (
+        <svg {...common}>
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <path d="M3.27 6.96 12 12.01l8.73-5.05" />
+          <path d="M12 22.08V12" />
+        </svg>
+      );
+    case 'invoice':
+      return (
+        <svg {...common}>
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+        </svg>
+      );
+    case 'back':
+      return (
+        <svg {...common}>
+          <line x1="19" y1="12" x2="5" y2="12" />
+          <polyline points="12 19 5 12 12 5" />
+        </svg>
+      );
+  }
+}
+
+function StatsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      {Array.from({ length: 9 }).map((_, i) => (
+        <div key={i} className="h-28 bg-white rounded-2xl border border-gray-100 shadow-sm animate-pulse" />
+      ))}
     </div>
   );
 }

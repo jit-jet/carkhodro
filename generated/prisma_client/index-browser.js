@@ -153,6 +153,10 @@ exports.Prisma.UserScalarFieldEnum = {
   shopName: 'shopName',
   birthDate: 'birthDate',
   profileImage: 'profileImage',
+  accountBalance: 'accountBalance',
+  referredBy: 'referredBy',
+  activityField: 'activityField',
+  partnerCode: 'partnerCode',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -346,12 +350,14 @@ exports.Prisma.ShippingOptionScalarFieldEnum = {
 
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
+  orderNumber: 'orderNumber',
   userId: 'userId',
   addressId: 'addressId',
   shippingOptionId: 'shippingOptionId',
   status: 'status',
   paymentMethod: 'paymentMethod',
   paymentStatus: 'paymentStatus',
+  paymentTerms: 'paymentTerms',
   snapshotProvince: 'snapshotProvince',
   snapshotCity: 'snapshotCity',
   snapshotStreet: 'snapshotStreet',
@@ -376,8 +382,51 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   productName: 'productName',
   productSku: 'productSku',
   priceAtPurchase: 'priceAtPurchase',
+  discountPct: 'discountPct',
   taxAmount: 'taxAmount',
   quantity: 'quantity'
+};
+
+exports.Prisma.SupportMessageScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  direction: 'direction',
+  subject: 'subject',
+  body: 'body',
+  isRead: 'isRead',
+  isDeleted: 'isDeleted',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.OrderSurveyScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  userId: 'userId',
+  rating: 'rating',
+  positivePoints: 'positivePoints',
+  negativePoints: 'negativePoints',
+  note: 'note',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PriceListRequestScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  titles: 'titles',
+  partsBrandIds: 'partsBrandIds',
+  carModelIds: 'carModelIds',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+};
+
+exports.Prisma.BackorderScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  productId: 'productId',
+  quantity: 'quantity',
+  status: 'status',
+  note: 'note',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -407,13 +456,15 @@ exports.ShippingMethod = exports.$Enums.ShippingMethod = {
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {
-  PENDING: 'PENDING',
-  CONFIRMED: 'CONFIRMED',
-  PROCESSING: 'PROCESSING',
+  NEW: 'NEW',
+  AWAITING_CONFIRMATION: 'AWAITING_CONFIRMATION',
+  CONFIRMED_AWAITING_PAYMENT: 'CONFIRMED_AWAITING_PAYMENT',
+  PAID: 'PAID',
   SHIPPED: 'SHIPPED',
-  DELIVERED: 'DELIVERED',
-  CANCELLED: 'CANCELLED',
-  REFUNDED: 'REFUNDED'
+  COMPLETED: 'COMPLETED',
+  CANCELLED_BY_CUSTOMER: 'CANCELLED_BY_CUSTOMER',
+  CANCELLED_BY_MANAGER: 'CANCELLED_BY_MANAGER',
+  ARCHIVED: 'ARCHIVED'
 };
 
 exports.PaymentMethod = exports.$Enums.PaymentMethod = {
@@ -426,6 +477,18 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
   PAID: 'PAID',
   FAILED: 'FAILED',
   REFUNDED: 'REFUNDED'
+};
+
+exports.MessageDirection = exports.$Enums.MessageDirection = {
+  INBOUND: 'INBOUND',
+  OUTBOUND: 'OUTBOUND'
+};
+
+exports.BackorderStatus = exports.$Enums.BackorderStatus = {
+  PENDING: 'PENDING',
+  NOTIFIED: 'NOTIFIED',
+  FULFILLED: 'FULFILLED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.Prisma.ModelName = {
@@ -452,7 +515,11 @@ exports.Prisma.ModelName = {
   Faq: 'Faq',
   ShippingOption: 'ShippingOption',
   Order: 'Order',
-  OrderItem: 'OrderItem'
+  OrderItem: 'OrderItem',
+  SupportMessage: 'SupportMessage',
+  OrderSurvey: 'OrderSurvey',
+  PriceListRequest: 'PriceListRequest',
+  Backorder: 'Backorder'
 };
 
 /**

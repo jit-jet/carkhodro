@@ -23,14 +23,33 @@ enum UserRole {
   SUPPORT // read-only order/customer access
 }
 
+/// Wholesale-order lifecycle, surfaced in the partner dashboard's order list and
+/// status filter. Ordered roughly by progression; cancellation/archive are
+/// terminal side-states. Persian labels live in `src/lib/order-labels.ts`.
 enum OrderStatus {
-  PENDING // awaiting payment / confirmation
-  CONFIRMED // payment received, pending warehouse pick
-  PROCESSING // warehouse is packing the order
-  SHIPPED // handed to carrier
-  DELIVERED // confirmed delivery
+  NEW // سفارش جدید — just submitted
+  AWAITING_CONFIRMATION // در انتظار تایید — pending shop review
+  CONFIRMED_AWAITING_PAYMENT // تایید شده و در انتظار پرداخت
+  PAID // پرداخت شده توسط مشتری
+  SHIPPED // ارسال سفارش — handed to carrier
+  COMPLETED // اتمام فاکتور — invoice closed
+  CANCELLED_BY_CUSTOMER // لغو شده توسط مشتری
+  CANCELLED_BY_MANAGER // لغو توسط مدیرفروشگاه
+  ARCHIVED // آرشیو
+}
+
+/// Direction of a support message relative to the partner (who owns the thread).
+enum MessageDirection {
+  INBOUND // received by the partner (sent by the support desk)
+  OUTBOUND // sent by the partner to support
+}
+
+/// Lifecycle of a pre-order / backorder request placed against an out-of-stock part.
+enum BackorderStatus {
+  PENDING // waiting for the part to be restocked
+  NOTIFIED // back in stock — partner has been alerted
+  FULFILLED // converted into an order
   CANCELLED
-  REFUNDED
 }
 
 enum PaymentMethod {
@@ -98,28 +117,41 @@ model NavLink {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model User {
-  id           String    @id @default(cuid())
+  id             String    @id @default(cuid())
   /// Iranian mobile format: 09XXXXXXXXX (11 digits)
-  phoneNumber  String    @unique @map("phone_number")
-  firstName    String    @map("first_name")
-  lastName     String    @map("last_name")
-  role         UserRole  @default(RETAIL)
+  phoneNumber    String    @unique @map("phone_number")
+  firstName      String    @map("first_name")
+  lastName       String    @map("last_name")
+  role           UserRole  @default(RETAIL)
   /// Set to true after the first successful OTP verification
-  isVerified   Boolean   @default(false) @map("is_verified")
+  isVerified     Boolean   @default(false) @map("is_verified")
   /// Wholesale customers must supply a shop/business name
-  shopName     String?   @map("shop_name")
-  birthDate    DateTime? @map("birth_date")
-  profileImage String?   @map("profile_image")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  shopName       String?   @map("shop_name")
+  birthDate      DateTime? @map("birth_date")
+  profileImage   String?   @map("profile_image")
+  /// Partner's running ledger balance with the shop, in the same magnitude as
+  /// product prices (Toman). Shown as «مانده حساب» on the dashboard.
+  accountBalance BigInt    @default(0) @map("account_balance")
+  /// Who referred this partner («معرف») — free text captured on the profile.
+  referredBy     String?   @map("referred_by")
+  /// The partner's line of business («زمینه فعالیت») — free text.
+  activityField  String?   @map("activity_field")
+  /// Short, unique partner/affiliate code («کد اختصاصی») — null for retail users.
+  partnerCode    String?   @unique @map("partner_code")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
 
-  addresses    Address[]
-  sessions     Session[]
-  orders       Order[]
-  reviews      Review[]
-  cart         Cart?
-  wishlist     WishlistItem[]
-  compareItems CompareItem[]
+  addresses         Address[]
+  sessions          Session[]
+  orders            Order[]
+  reviews           Review[]
+  cart              Cart?
+  wishlist          WishlistItem[]
+  compareItems      CompareItem[]
+  supportMessages   SupportMessage[]
+  orderSurveys      OrderSurvey[]
+  priceListRequests PriceListRequest[]
+  backorders        Backorder[]
 
   @@index([phoneNumber])
   @@map("users")
@@ -326,6 +358,7 @@ model Product {
   orderItems      OrderItem[]
   wishlistedBy    WishlistItem[]
   comparedBy      CompareItem[]
+  backorders      Backorder[]
 
   @@index([sku])
   @@index([accountancyId])
@@ -520,13 +553,19 @@ model ShippingOption {
 
 model Order {
   id               String        @id @default(cuid())
+  /// Human-facing, sequential invoice number («شماره فاکتور») shown on the
+  /// partner's orders list and printable invoice — distinct from the cuid `id`.
+  orderNumber      Int           @unique @default(autoincrement()) @map("order_number")
   userId           String        @map("user_id")
   /// FK kept for history; address data also snapshotted below.
   addressId        String        @map("address_id")
   shippingOptionId String        @map("shipping_option_id")
-  status           OrderStatus   @default(PENDING)
+  status           OrderStatus   @default(NEW)
   paymentMethod    PaymentMethod @map("payment_method")
   paymentStatus    PaymentStatus @default(PENDING) @map("payment_status")
+  /// Free-text settlement terms chosen on the partner invoice (e.g. «چکی», «نقدی»,
+  /// «اعتباری»). Complements the coarse `paymentMethod` enum used by retail checkout.
+  paymentTerms     String?       @map("payment_terms")
 
   // ── Snapshotted delivery address ──────────────────────────────────────────
   // Copied at checkout so later edits to the address row don't affect history.
@@ -556,6 +595,7 @@ model Order {
   address        Address        @relation(fields: [addressId], references: [id])
   shippingOption ShippingOption @relation(fields: [shippingOptionId], references: [id])
   items          OrderItem[]
+  survey         OrderSurvey?
 
   @@index([userId])
   @@index([status])
@@ -570,13 +610,16 @@ model OrderItem {
   productId String @map("product_id")
 
   // ── Immutable purchase snapshot ───────────────────────────────────────────
-  productName     String @map("product_name")
-  productSku      String @map("product_sku")
-  /// Exact price charged to this customer — frozen at checkout.
-  /// Reflects the role-based price (retail vs. wholesale) active at that moment.
-  priceAtPurchase BigInt @map("price_at_purchase")
+  productName     String  @map("product_name")
+  productSku      String  @map("product_sku")
+  /// Unit list price frozen at order time, before any line discount.
+  priceAtPurchase BigInt  @map("price_at_purchase")
+  /// Percentage discount applied to this line (0–100) — e.g. the wholesale /
+  /// cash discount on a partner invoice. 0 for plain retail lines. The net unit
+  /// price is priceAtPurchase × (1 − discountPct / 100).
+  discountPct     Decimal @default(0) @map("discount_pct") @db.Decimal(5, 2)
   /// Tax portion of this line item (e.g. VAT on priceAtPurchase × quantity)
-  taxAmount       BigInt @default(0) @map("tax_amount")
+  taxAmount       BigInt  @default(0) @map("tax_amount")
   quantity        Int
 
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -585,4 +628,88 @@ model OrderItem {
   @@index([orderId])
   @@index([productId])
   @@map("order_items")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PARTNER DASHBOARD
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Two-way support thread between a partner and the shop's support desk. A flat
+/// message log (not threaded): the dashboard groups it into Inbox (INBOUND),
+/// Sent (OUTBOUND) and Deleted (isDeleted) folders, with an unread badge on the
+/// inbox. Soft-deleted messages move to the Deleted folder and can be restored.
+model SupportMessage {
+  id        String           @id @default(cuid())
+  userId    String           @map("user_id")
+  direction MessageDirection
+  subject   String
+  body      String           @db.Text
+  isRead    Boolean          @default(false) @map("is_read")
+  isDeleted Boolean          @default(false) @map("is_deleted")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, direction, isDeleted])
+  @@map("support_messages")
+}
+
+/// Post-purchase satisfaction survey — at most one per order («نظر سنجی»). The
+/// positive/negative points are stored as the selected option keys (the fixed
+/// option lists live in `src/lib/survey-options.ts`).
+model OrderSurvey {
+  id             String   @id @default(cuid())
+  orderId        String   @unique @map("order_id")
+  userId         String   @map("user_id")
+  /// 1–5 stars.
+  rating         Int
+  positivePoints String[] @map("positive_points")
+  negativePoints String[] @map("negative_points")
+  note           String?  @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("order_surveys")
+}
+
+/// A saved, filtered price-list request the partner can download as a printable
+/// PDF («دریافت لیست قیمت»). The filter is snapshotted and the link is valid for
+/// ~24h (expiresAt); after that the partner regenerates it. Empty filter arrays
+/// mean "all" (all titles / brands / car models).
+model PriceListRequest {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  /// Free-text product-name filters; matched against the product name. Empty = all.
+  titles        String[]
+  partsBrandIds Int[]    @map("parts_brand_ids")
+  carModelIds   Int[]    @map("car_model_ids")
+  createdAt     DateTime @default(now()) @map("created_at")
+  expiresAt     DateTime @map("expires_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("price_list_requests")
+}
+
+/// Pre-order / backorder placed against an out-of-stock part — the partner is
+/// notified when it returns. Powers the «پیش‌خرید» dashboard stat.
+model Backorder {
+  id        String          @id @default(cuid())
+  userId    String          @map("user_id")
+  productId String          @map("product_id")
+  quantity  Int             @default(1)
+  status    BackorderStatus @default(PENDING)
+  note      String?
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([productId])
+  @@map("backorders")
 }

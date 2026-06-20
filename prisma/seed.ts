@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { PrismaClient, ShippingMethod, UserRole } from '../generated/prisma_client';
+import type { OrderStatus } from '../generated/prisma_client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 const prisma = new PrismaClient({
@@ -407,9 +408,8 @@ async function main() {
 
   const count = await prisma.product.count();
   if (count > 0) {
-    console.log(`Already seeded (${count} products). Skipping.`);
-    return;
-  }
+    console.log(`Already seeded (${count} products). Skipping catalogue.`);
+  } else {
 
   // ── Provinces ──────────────────────────────────────────────────────────────
   const provinceNames = [
@@ -717,6 +717,282 @@ async function main() {
   console.log(`  ${products.length} products`);
   console.log(`  9 nav links, 2 shipping options`);
   console.log(`  2 users, 2 carts (6 cart items), 16 reviews`);
+  }
+
+  // ── Partner dashboard data (idempotent — runs in both branches) ─────────────
+  await seedPartnerDashboard();
+}
+
+/**
+ * Seeds a realistic wholesale partner («همکار») so every dashboard page has data
+ * to render: profile + ledger, a 1-item cart, a dozen orders across the order
+ * lifecycle (with line discounts), surveys, support messages, backorders,
+ * favorites and a price-list request. Idempotent — keyed on the partner user id.
+ */
+async function seedPartnerDashboard() {
+  const PARTNER_ID = 'usr_partner';
+  const STREET = 'امام رضا (ع) ۴۸، چهارراه چهارم، نبش سیدتی ۱۹';
+  const POSTAL = '9133456719';
+
+  if (await prisma.user.findUnique({ where: { id: PARTNER_ID } })) {
+    console.log('  Partner dashboard already seeded. Skipping.');
+    return;
+  }
+
+  const province = await prisma.province.findUnique({ where: { name: 'خراسان رضوی' } });
+  const shipping = await prisma.shippingOption.findFirst({ where: { method: ShippingMethod.STANDARD } });
+  if (!province || !shipping) {
+    console.warn('  Skipping partner seed — provinces/shipping not seeded yet.');
+    return;
+  }
+  const mashhad = await prisma.city.upsert({
+    where: { provinceId_name: { provinceId: province.id, name: 'مشهد' } },
+    create: { provinceId: province.id, name: 'مشهد' },
+    update: {},
+  });
+
+  // Give a handful of parts a wholesale/cash discount so invoices show one.
+  const DISCOUNTED = [
+    'VAR-ENG-PRA-003', 'BSH-BRK-405-009', 'NGK-ELC-206-014',
+    'BSH-OIL-206-023', 'ISC-CLN-PRA-019', 'BSH-FLT-DNA-031',
+  ];
+  await prisma.product.updateMany({
+    where: { sku: { in: DISCOUNTED } },
+    data: { wholesaleDiscountPct: 5 },
+  });
+
+  const partner = await prisma.user.create({
+    data: {
+      id: PARTNER_ID,
+      phoneNumber: '09152461676',
+      firstName: 'محسن',
+      lastName: 'شاه گل زاده',
+      role: UserRole.WHOLESALE,
+      isVerified: true,
+      shopName: 'فروشگاه قطعات شاه‌گل‌زاده',
+      referredBy: 'واحد فروش اسکار',
+      activityField: 'فروش و پخش قطعات یدکی خودروهای ایرانی',
+      partnerCode: '16',
+      accountBalance: BigInt(0),
+      birthDate: new Date('1991-02-14T00:00:00.000Z'), // ۱۳۶۹/۱۱/۲۵
+      createdAt: new Date('2024-03-01T08:00:00.000Z'),
+    },
+  });
+
+  const address = await prisma.address.create({
+    data: {
+      userId: partner.id,
+      cityId: mashhad.id,
+      street: STREET,
+      postalCode: POSTAL,
+      isDefault: true,
+    },
+  });
+
+  // Look up every part the partner data references, keyed by SKU.
+  const SKUS = [
+    'MPK-ENG-206-005', 'BSH-ENG-206-001', 'BSH-BRK-405-009', 'NGK-ELC-206-014',
+    'BSH-OIL-206-023', 'VAR-ENG-PRA-003', 'ISC-CLN-PRA-019', 'BSH-FLT-DNA-031',
+    'KYN-ENG-TBA-006', 'TKN-ELC-DNA-017', 'ISC-ENG-405-002', 'BSH-ENG-SMD-004',
+    'ISC-ENG-PRA-008', 'FDK-BDY-TBA-030',
+  ];
+  const products = await prisma.product.findMany({
+    where: { sku: { in: SKUS } },
+    select: { id: true, sku: true, name: true, basePrice: true },
+  });
+  const bySku = new Map(products.map((p) => [p.sku, p]));
+
+  type LineSpec = { sku: string; qty: number; discountPct: number };
+  function buildLines(specs: LineSpec[]) {
+    return specs.flatMap((s) => {
+      const p = bySku.get(s.sku);
+      if (!p) return [];
+      return [{
+        productId: p.id,
+        productName: p.name,
+        productSku: p.sku,
+        priceAtPurchase: p.basePrice,
+        discountPct: s.discountPct,
+        quantity: s.qty,
+      }];
+    });
+  }
+  function netSubtotal(lines: ReturnType<typeof buildLines>) {
+    return lines.reduce(
+      (sum, l) =>
+        sum +
+        (l.priceAtPurchase * BigInt(l.quantity) * BigInt(Math.round((100 - l.discountPct) * 100))) /
+          BigInt(10000),
+      BigInt(0),
+    );
+  }
+
+  // ── Cart (1 item — matches the «سبد خرید عدد ۱» stat) ──────────────────────
+  const cartProduct = bySku.get('MPK-ENG-206-005');
+  if (cartProduct) {
+    await prisma.cart.create({
+      data: { userId: partner.id, items: { create: [{ productId: cartProduct.id, quantity: 1 }] } },
+    });
+  }
+
+  // ── Orders across the lifecycle ────────────────────────────────────────────
+  const DAY = 24 * 60 * 60 * 1000;
+  const orderSpecs: {
+    orderNumber: number;
+    status: OrderStatus;
+    daysAgo: number;
+    paymentTerms: string;
+    notes?: string;
+    items: LineSpec[];
+  }[] = [
+    { orderNumber: 405000423, status: 'SHIPPED', daysAgo: 2, paymentTerms: 'چکی', notes: 'امیرعلی',
+      items: [{ sku: 'NGK-ELC-206-014', qty: 1, discountPct: 5 }] },
+    { orderNumber: 405000283, status: 'COMPLETED', daysAgo: 30, paymentTerms: 'نقدی',
+      items: [{ sku: 'BSH-OIL-206-023', qty: 2, discountPct: 5 }, { sku: 'BSH-ENG-206-001', qty: 3, discountPct: 0 }] },
+    { orderNumber: 405000223, status: 'COMPLETED', daysAgo: 48, paymentTerms: 'نقدی',
+      items: [{ sku: 'BSH-BRK-405-009', qty: 4, discountPct: 5 }] },
+    { orderNumber: 405000205, status: 'PAID', daysAgo: 60, paymentTerms: 'اعتباری',
+      items: [{ sku: 'ISC-CLN-PRA-019', qty: 1, discountPct: 5 }, { sku: 'TKN-ELC-DNA-017', qty: 1, discountPct: 0 }] },
+    { orderNumber: 405000196, status: 'SHIPPED', daysAgo: 70, paymentTerms: 'چکی',
+      items: [{ sku: 'KYN-ENG-TBA-006', qty: 10, discountPct: 0 }] },
+    { orderNumber: 404000870, status: 'COMPLETED', daysAgo: 95, paymentTerms: 'نقدی',
+      items: [{ sku: 'BSH-FLT-DNA-031', qty: 6, discountPct: 5 }, { sku: 'NGK-ELC-206-014', qty: 2, discountPct: 5 }, { sku: 'BSH-ENG-206-001', qty: 4, discountPct: 0 }] },
+    { orderNumber: 404000845, status: 'COMPLETED', daysAgo: 110, paymentTerms: 'نقدی',
+      items: [{ sku: 'VAR-ENG-PRA-003', qty: 1, discountPct: 5 }] },
+    { orderNumber: 404000834, status: 'CONFIRMED_AWAITING_PAYMENT', daysAgo: 120, paymentTerms: 'چکی',
+      items: [{ sku: 'ISC-ENG-405-002', qty: 2, discountPct: 0 }, { sku: 'BSH-ENG-SMD-004', qty: 2, discountPct: 0 }] },
+    { orderNumber: 404000828, status: 'COMPLETED', daysAgo: 130, paymentTerms: 'اعتباری',
+      items: [{ sku: 'BSH-OIL-206-023', qty: 3, discountPct: 5 }] },
+    { orderNumber: 404000803, status: 'NEW', daysAgo: 150, paymentTerms: 'نقدی',
+      items: [{ sku: 'BSH-ENG-206-001', qty: 5, discountPct: 0 }] },
+    { orderNumber: 404000799, status: 'CANCELLED_BY_MANAGER', daysAgo: 170, paymentTerms: 'چکی',
+      items: [{ sku: 'TKN-ELC-DNA-017', qty: 1, discountPct: 0 }] },
+    { orderNumber: 404000760, status: 'ARCHIVED', daysAgo: 220, paymentTerms: 'نقدی',
+      items: [{ sku: 'BSH-BRK-405-009', qty: 2, discountPct: 5 }, { sku: 'KYN-ENG-TBA-006', qty: 4, discountPct: 0 }] },
+  ];
+
+  const orderIdByNumber = new Map<number, string>();
+  for (const spec of orderSpecs) {
+    const lines = buildLines(spec.items);
+    if (lines.length === 0) continue;
+    const subtotal = netSubtotal(lines);
+    const paid = spec.status === 'PAID' || spec.status === 'SHIPPED' || spec.status === 'COMPLETED';
+    const createdAt = new Date(Date.now() - spec.daysAgo * DAY);
+    const order = await prisma.order.create({
+      data: {
+        orderNumber: spec.orderNumber,
+        userId: partner.id,
+        addressId: address.id,
+        shippingOptionId: shipping.id,
+        status: spec.status,
+        paymentMethod: 'COD',
+        paymentStatus: paid ? 'PAID' : 'PENDING',
+        paymentTerms: spec.paymentTerms,
+        snapshotProvince: province.name,
+        snapshotCity: mashhad.name,
+        snapshotStreet: STREET,
+        snapshotPostalCode: POSTAL,
+        subtotal,
+        shippingCost: BigInt(0),
+        taxAmount: BigInt(0),
+        totalAmount: subtotal,
+        notes: spec.notes ?? null,
+        paidAt: paid ? createdAt : null,
+        shippedAt: spec.status === 'SHIPPED' || spec.status === 'COMPLETED' ? createdAt : null,
+        deliveredAt: spec.status === 'COMPLETED' ? createdAt : null,
+        createdAt,
+        items: { create: lines },
+      },
+      select: { id: true, orderNumber: true },
+    });
+    orderIdByNumber.set(order.orderNumber, order.id);
+  }
+
+  // Advance the invoice-number sequence past the explicitly seeded numbers so
+  // new partner invoices keep climbing without colliding.
+  await prisma.$executeRawUnsafe(
+    `SELECT setval('orders_order_number_seq', 405000500, true)`,
+  );
+
+  // ── Surveys for a few completed orders ─────────────────────────────────────
+  const surveySpecs: {
+    orderNumber: number;
+    rating: number;
+    positive: string[];
+    negative: string[];
+    note?: string;
+  }[] = [
+    { orderNumber: 405000283, rating: 5, positive: ['stock-reliability', 'fast-fulfilment', 'careful-packaging'], negative: [], note: 'همکاری عالی، ارسال به‌موقع.' },
+    { orderNumber: 404000870, rating: 4, positive: ['fair-wholesale-pricing', 'transparent-invoicing'], negative: ['price-volatility'] },
+    { orderNumber: 404000828, rating: 5, positive: ['overall-satisfaction', 'fast-sales-support'], negative: [] },
+  ];
+  for (const s of surveySpecs) {
+    const orderId = orderIdByNumber.get(s.orderNumber);
+    if (!orderId) continue;
+    await prisma.orderSurvey.create({
+      data: {
+        orderId,
+        userId: partner.id,
+        rating: s.rating,
+        positivePoints: s.positive,
+        negativePoints: s.negative,
+        note: s.note ?? null,
+      },
+    });
+  }
+
+  // ── Support messages (2 unread inbound → badge of ۲) ───────────────────────
+  await prisma.supportMessage.createMany({
+    data: [
+      { userId: partner.id, direction: 'INBOUND', subject: 'به پنل همکاران اسکار خوش آمدید',
+        body: 'همکار گرامی، به پنل اختصاصی همکاران اسکار خوش آمدید. برای هرگونه سوال فنی یا سفارش عمده می‌توانید از همین بخش با ما در ارتباط باشید.',
+        isRead: false, createdAt: new Date(Date.now() - 40 * DAY) },
+      { userId: partner.id, direction: 'OUTBOUND', subject: 'درخواست افزایش سقف اعتبار خرید',
+        body: 'با سلام، خواهشمندم سقف اعتبار خرید چکی حساب من بررسی و افزایش یابد. با تشکر.',
+        isRead: true, createdAt: new Date(Date.now() - 12 * DAY) },
+      { userId: partner.id, direction: 'INBOUND', subject: 'پاسخ: درخواست افزایش سقف اعتبار خرید',
+        body: 'درخواست شما به واحد مالی ارجاع داده شد و نتیجه طی ۴۸ ساعت کاری از همین بخش به اطلاع شما می‌رسد.',
+        isRead: false, createdAt: new Date(Date.now() - 11 * DAY) },
+    ],
+  });
+
+  // ── Backorders against out-of-stock parts (پیش‌خرید ۲ درخواست) ─────────────
+  const backorderData = [
+    { sku: 'ISC-ENG-PRA-008', qty: 2 },
+    { sku: 'FDK-BDY-TBA-030', qty: 1 },
+  ]
+    .map((b) => {
+      const p = bySku.get(b.sku);
+      return p ? { userId: partner.id, productId: p.id, quantity: b.qty } : null;
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null);
+  if (backorderData.length > 0) {
+    await prisma.backorder.createMany({ data: backorderData });
+  }
+
+  // ── Favorites (علاقه‌مندی‌ها تعداد ۲) ──────────────────────────────────────
+  const favouriteData = ['BSH-OIL-206-023', 'NGK-ELC-206-014']
+    .map((sku) => {
+      const p = bySku.get(sku);
+      return p ? { userId: partner.id, productId: p.id } : null;
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null);
+  if (favouriteData.length > 0) {
+    await prisma.wishlistItem.createMany({ data: favouriteData });
+  }
+
+  // ── A saved price-list request (still valid ~24h) ──────────────────────────
+  await prisma.priceListRequest.create({
+    data: {
+      userId: partner.id,
+      titles: ['فیلتر'],
+      partsBrandIds: [],
+      carModelIds: [],
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    },
+  });
+
+  console.log('  Partner dashboard seeded: 1 partner, 1 cart item, 12 orders, 3 surveys, 3 messages, 2 backorders, 2 favorites, 1 price-list request.');
 }
 
 main()

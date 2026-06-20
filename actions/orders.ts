@@ -316,8 +316,9 @@ export async function updateOrderStatus(
       where: { id: orderId },
       data: {
         status,
+        ...(status === 'PAID' ? { paidAt: now } : {}),
         ...(status === 'SHIPPED' ? { shippedAt: now } : {}),
-        ...(status === 'DELIVERED' ? { deliveredAt: now } : {}),
+        ...(status === 'COMPLETED' ? { deliveredAt: now } : {}),
       },
     });
     revalidatePath('/dashboard');
