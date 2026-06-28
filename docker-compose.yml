@@ -48,10 +48,12 @@ services:
 
   # # ── Next.js dev server (hot-reload) ──────────────────────────────────────────
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     container_name: carkhodro_app
+    image: ghcr.io/jit-jet/carkhodro:sha-4af500e
     restart: unless-stopped
     ports:
       - "80:3000"
