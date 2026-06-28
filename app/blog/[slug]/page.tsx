@@ -38,7 +38,7 @@ function tagClass(t: string) {
 
 // ── Inner component (suspendable) ───────────────────────────────────────────
 
-async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
+export async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post: PostDetailVM | null = await getPostBySlug(slug);
   if (!post) notFound();
@@ -174,7 +174,3 @@ export default function BlogPostPage({
   );
 }
 
-export async function generateStaticParams() {
-  const slugs = await getAllPostSlugs();
-  return slugs.map(slug => ({ slug }));
-}

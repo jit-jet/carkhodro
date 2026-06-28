@@ -37,7 +37,20 @@ services:
         condition: service_healthy
     networks:
       - backend
-
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    container_name: carkhodro_seed
+    restart: "no"
+    environment:
+      DATABASE_URL: >-
+        postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-carkhodro}?schema=public
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    command: ["node_modules/.bin/tsx", "prisma/seed.ts"]
   # ── Next.js production server ─────────────────────────────────────────────────
   app:
     build:
