@@ -76,18 +76,3 @@ export async function getPostBySlug(slug: string): Promise<PostDetailVM | null> 
     return row ? toPostDetailVM(row) : null;
   }, null);
 }
-
-/** All published slugs — used by generateStaticParams to prerender detail pages. */
-export async function getAllPostSlugs(): Promise<string[]> {
-  'use cache';
-  cacheLife('hours');
-  cacheTag(tags.posts);
-
-  return safeQuery('getAllPostSlugs', async () => {
-    const rows = await prisma.post.findMany({
-      where: { isPublished: true },
-      select: { slug: true },
-    });
-    return rows.map(r => r.slug);
-  }, []);
-}

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getAllPostSlugs } from '@/actions/posts';
+import { getPostBySlug } from '@/actions/posts';
 import type { PostDetailVM } from '@/src/lib/serializers';
 
 const TAG_COLORS: Record<string, string> = {
@@ -172,9 +172,4 @@ export default function BlogPostPage({
       <PostContent params={params} />
     </Suspense>
   );
-}
-
-export async function generateStaticParams() {
-  const slugs = await getAllPostSlugs();
-  return slugs.map(slug => ({ slug }));
 }
