@@ -38,6 +38,7 @@ import {
 } from '@/src/lib/otp';
 import { signToken, verifyToken } from '@/src/lib/auth-tokens';
 import { mergeGuestCartIntoUser } from '@/src/lib/guest-cart';
+import { resolveLocation } from '@/src/lib/resolve-location';
 
 const PHONE_RE = /^09\d{9}$/;
 const VERIFIED_PHONE_COOKIE = 'verified_phone';
@@ -61,8 +62,8 @@ export interface RegisterInput {
   phoneNumber: string;
   firstName: string;
   lastName: string;
-  province: string;
-  city: string;
+  provinceId: number | null;
+  cityId: number | null;
   address: string;
   postalCode: string;
 }
@@ -212,13 +213,12 @@ export async function registerUser(
     // Server-side validation (mirrors the client form).
     const firstName = input.firstName.trim();
     const lastName = input.lastName.trim();
-    const cityName = input.city.trim();
     const street = input.address.trim();
     const postalCode = input.postalCode.trim();
     if (!firstName) return fail('نام الزامی است.');
     if (!lastName) return fail('نام خانوادگی الزامی است.');
-    if (!input.province) return fail('استان الزامی است.');
-    if (!cityName) return fail('شهر الزامی است.');
+    if (!input.provinceId) return fail('استان الزامی است.');
+    if (!input.cityId) return fail('شهر الزامی است.');
     if (!street) return fail('آدرس الزامی است.');
     if (!/^\d{10}$/.test(postalCode)) return fail('کد پستی باید دقیقاً ۱۰ رقم باشد.');
 
@@ -231,16 +231,9 @@ export async function registerUser(
       return ok({ id: existing.id });
     }
 
-    // Resolve the province (seeded reference data) and find-or-create the city.
-    const province = await prisma.province.findUnique({ where: { name: input.province } });
-    if (!province) return fail('استان انتخاب‌شده معتبر نیست.');
-
-    const city = await prisma.city.upsert({
-      where: { provinceId_name: { provinceId: province.id, name: cityName } },
-      create: { provinceId: province.id, name: cityName },
-      update: {},
-      select: { id: true },
-    });
+    const resolved = await resolveLocation(input.provinceId, input.cityId);
+    if (!resolved.ok) return fail(resolved.error);
+    const city = resolved.city;
 
     // Create the user + their default delivery address atomically.
     const user = await prisma.$transaction(async (tx) => {

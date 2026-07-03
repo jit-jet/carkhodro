@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import type { ProductVM as Product } from '@/src/lib/serializers';
+import Link from 'next/link';
 
 interface Props {
   products: Product[];
@@ -17,7 +18,7 @@ export default function RelatedProducts({ products }: Props) {
       <h2 className="text-lg font-bold text-charcoal mb-4">محصولات مرتبط</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {products.map(p => (
-          <a
+          <Link
             key={p.id}
             href={`/products/${p.id}`}
             className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 overflow-hidden group flex flex-col"
@@ -55,7 +56,7 @@ export default function RelatedProducts({ products }: Props) {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </section>

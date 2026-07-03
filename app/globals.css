@@ -82,6 +82,23 @@ html {
   }
 }
 
+/* ── Print: isolate the partner invoice from the site/dashboard chrome ── */
+@media print {
+  header,
+  footer,
+  aside,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+  }
+  .print-area {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
 /* ── Blog body prose ───────────────────────────────────── */
 .blog-body {
   line-height: 1.9;

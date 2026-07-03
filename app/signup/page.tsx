@@ -12,25 +12,30 @@
 import { Suspense } from 'react';
 import AuthCard from '@/src/components/auth/AuthCard';
 import SignupForm from '@/src/components/auth/SignupForm';
+import { getProvinces } from '@/actions/locations';
 
 interface Props {
   searchParams: Promise<{ phone?: string; redirect?: string }>;
 }
 
-export default function SignupPage({ searchParams }: Props) {
+export default async function SignupPage({ searchParams }: Props) {
+  const provinces = await getProvinces();
   return (
     <AuthCard
       title="تکمیل اطلاعات"
       subtitle="برای تکمیل ثبت‌نام، لطفاً اطلاعات زیر را وارد کنید."
     >
-      <Suspense fallback={<SignupForm phoneNumber="" redirectTo="/dashboard" />}>
-        <SignupFormWithPhone searchParams={searchParams} />
+      <Suspense fallback={<SignupForm phoneNumber="" redirectTo="/dashboard" provinces={provinces} />}>
+        <SignupFormWithPhone searchParams={searchParams} provinces={provinces} />
       </Suspense>
     </AuthCard>
   );
 }
 
-async function SignupFormWithPhone({ searchParams }: Props) {
+async function SignupFormWithPhone({
+  searchParams,
+  provinces,
+}: Props & { provinces: Awaited<ReturnType<typeof getProvinces>> }) {
   const { phone = '', redirect = '/dashboard' } = await searchParams;
-  return <SignupForm phoneNumber={phone} redirectTo={redirect} />;
+  return <SignupForm phoneNumber={phone} redirectTo={redirect} provinces={provinces} />;
 }

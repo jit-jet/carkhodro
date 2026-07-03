@@ -14,8 +14,7 @@
  * values; this component is presentational + reports edits via `onChange`.
  */
 
-import { IRANIAN_PROVINCES } from '@/src/data/mockUsers';
-import type { CheckoutContact } from '@/src/lib/serializers';
+import type { CheckoutContact, ProvinceVM } from '@/src/lib/serializers';
 
 type FieldErrors = Partial<Record<keyof CheckoutContact, string>>;
 
@@ -26,6 +25,7 @@ interface Props {
   editing: boolean;
   onEdit: () => void;
   errors: FieldErrors;
+  provinces: ProvinceVM[];
 }
 
 export default function CheckoutInfoForm({
@@ -35,6 +35,7 @@ export default function CheckoutInfoForm({
   editing,
   onEdit,
   errors,
+  provinces,
 }: Props) {
   return (
     <section className="bg-white rounded-2xl border border-gray-100 shadow-sm">
@@ -63,9 +64,9 @@ export default function CheckoutInfoForm({
 
       <div className="p-5">
         {editing ? (
-          <EditForm value={value} onChange={onChange} phoneNumber={phoneNumber} errors={errors} />
+          <EditForm value={value} onChange={onChange} phoneNumber={phoneNumber} errors={errors} provinces={provinces} />
         ) : (
-          <SavedView value={value} phoneNumber={phoneNumber} />
+          <SavedView value={value} phoneNumber={phoneNumber} provinces={provinces} />
         )}
       </div>
     </section>
@@ -74,12 +75,22 @@ export default function CheckoutInfoForm({
 
 // ── Saved (read-only) view ──────────────────────────────────────────────────
 
-function SavedView({ value, phoneNumber }: { value: CheckoutContact; phoneNumber: string }) {
+function SavedView({
+  value,
+  phoneNumber,
+  provinces,
+}: {
+  value: CheckoutContact;
+  phoneNumber: string;
+  provinces: ProvinceVM[];
+}) {
+  const province = provinces.find((p) => p.id === value.provinceId);
+  const city = province?.cities.find((c) => c.id === value.cityId);
   return (
     <div className="space-y-3 text-sm">
       <Detail label="نام و نام خانوادگی" value={`${value.firstName} ${value.lastName}`} />
       <Detail label="شماره موبایل" value={phoneNumber} ltr />
-      <Detail label="استان / شهر" value={`${value.province}، ${value.city}`} />
+      <Detail label="استان / شهر" value={`${province?.name ?? ''}، ${city?.name ?? ''}`} />
       <Detail label="آدرس" value={value.street} />
       <Detail label="کد پستی" value={value.postalCode} ltr />
     </div>
@@ -107,12 +118,15 @@ function EditForm({
   onChange,
   phoneNumber,
   errors,
+  provinces,
 }: {
   value: CheckoutContact;
   onChange: (patch: Partial<CheckoutContact>) => void;
   phoneNumber: string;
   errors: FieldErrors;
+  provinces: ProvinceVM[];
 }) {
+  const cities = provinces.find((p) => p.id === value.provinceId)?.cities ?? [];
   return (
     <div className="space-y-4">
       {/* Verified phone — read-only */}
@@ -154,28 +168,47 @@ function EditForm({
         </label>
         <select
           id="province"
-          value={value.province}
-          onChange={(e) => onChange({ province: e.target.value })}
-          className={inputCls(!!errors.province)}
+          value={value.provinceId ?? ''}
+          onChange={(e) =>
+            onChange({
+              provinceId: e.target.value ? Number(e.target.value) : null,
+              // Reset the city whenever the province changes.
+              cityId: null,
+            })
+          }
+          className={inputCls(!!errors.provinceId)}
         >
           <option value="">انتخاب استان…</option>
-          {IRANIAN_PROVINCES.map((p) => (
-            <option key={p} value={p}>
-              {p}
+          {provinces.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
             </option>
           ))}
         </select>
-        {errors.province && <FieldError msg={errors.province} />}
+        {errors.provinceId && <FieldError msg={errors.provinceId} />}
       </div>
 
-      <Field
-        id="city"
-        label="شهر"
-        value={value.city}
-        onChange={(v) => onChange({ city: v })}
-        placeholder="مثال: تهران"
-        error={errors.city}
-      />
+      {/* City — cascading off the chosen province */}
+      <div>
+        <label htmlFor="city" className="block text-sm font-semibold text-charcoal mb-1.5">
+          شهر
+        </label>
+        <select
+          id="city"
+          value={value.cityId ?? ''}
+          onChange={(e) => onChange({ cityId: e.target.value ? Number(e.target.value) : null })}
+          disabled={!value.provinceId}
+          className={inputCls(!!errors.cityId)}
+        >
+          <option value="">انتخاب شهر…</option>
+          {cities.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        {errors.cityId && <FieldError msg={errors.cityId} />}
+      </div>
 
       {/* Street — textarea */}
       <div>

@@ -4,9 +4,12 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import FilterSidebar from '@/src/components/plp/FilterSidebar';
 import ProductCard from '@/src/components/ui/ProductCard';
+import { searchProducts } from '@/actions/search';
 import type { ProductVM as Product } from '@/src/lib/serializers';
 
 const PAGE_SIZE = 12;
+/** Upper bound on fuzzy-search results pulled for the results page. */
+const SEARCH_RESULT_CAP = 200;
 
 type SortOption = 'newest' | 'oldest' | 'best_selling' | 'most_viewed' | 'alpha_asc' | 'alpha_desc';
 
@@ -126,6 +129,12 @@ export default function ProductsBrowser({
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
+  // Typo-tolerant text search runs server-side (pg_trgm); the facet filters and
+  // sorting below still run client-side over the matched set. `searchResults` is
+  // null while idle (no query) and an array once results stream in.
+  const [searchResults, setSearchResults] = useState<Product[] | null>(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+
   // All filter state is derived from URL — single source of truth
   const searchQuery        = searchParams.get('q') ?? '';
   const selectedBrands     = searchParams.getAll('brand');
@@ -168,25 +177,33 @@ export default function ProductsBrowser({
 
   function clearAll() { push(pathname); }
 
-  const filteredProducts = useMemo(() => {
-    let result = products;
+  // Debounced fuzzy search. When `q` is set, the matched set comes from the
+  // server (typo-tolerant pg_trgm); otherwise we browse the full catalogue.
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (!q) { setSearchResults(null); setSearchLoading(false); return; }
+    setSearchLoading(true);
+    let active = true;
+    const timer = setTimeout(async () => {
+      const found = await searchProducts(q, SEARCH_RESULT_CAP);
+      if (!active) return;
+      setSearchResults(found);
+      setSearchLoading(false);
+    }, 300);
+    return () => { active = false; clearTimeout(timer); };
+  }, [searchQuery]);
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.trim().toLowerCase();
-      result = result.filter(
-        p =>
-          p.name.toLowerCase().includes(q) ||
-          p.brand.toLowerCase().includes(q) ||
-          p.carType.toLowerCase().includes(q) ||
-          p.sku.toLowerCase().includes(q),
-      );
-    }
+  const filteredProducts = useMemo(() => {
+    // Base set: fuzzy matches when searching (empty until they arrive), else the
+    // full catalogue passed from the server.
+    let result = searchQuery.trim() ? (searchResults ?? []) : products;
+
     if (selectedBrands.length)     result = result.filter(p => selectedBrands.includes(p.brand));
     if (selectedCarTypes.length)   result = result.filter(p => selectedCarTypes.includes(p.carType));
     if (selectedCategories.length) result = result.filter(p => selectedCategories.includes(p.category));
 
     return applySorting(result, sortBy);
-  }, [products, searchQuery, selectedBrands, selectedCarTypes, selectedCategories, sortBy]);
+  }, [products, searchQuery, searchResults, selectedBrands, selectedCarTypes, selectedCategories, sortBy]);
 
   // Reset pagination whenever filters or sort change
   const filterKey = [searchQuery, ...selectedBrands, ...selectedCarTypes, ...selectedCategories, sortBy].join('|');
@@ -311,7 +328,16 @@ export default function ProductsBrowser({
           </div>
 
           {/* Product grid */}
-          {filteredProducts.length > 0 ? (
+          {searchLoading && searchResults === null ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-72 rounded-2xl border border-gray-100 bg-white shadow-sm animate-pulse"
+                />
+              ))}
+            </div>
+          ) : filteredProducts.length > 0 ? (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                 {visibleProducts.map(product => (

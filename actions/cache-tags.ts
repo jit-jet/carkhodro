@@ -11,6 +11,7 @@ export const tags = {
   carBrands: 'car-brands',
   carModels: 'car-models',
   partsBrands: 'parts-brands',
+  provinces: 'provinces',
   navLinks: 'nav-links',
   shipping: 'shipping-options',
   reviews: (productId: string) => `reviews:${productId}`,

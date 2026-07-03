@@ -39,8 +39,8 @@ export async function getCheckoutProfile(): Promise<CheckoutProfileVM | null> {
       const contact = {
         firstName: user.firstName ?? '',
         lastName: user.lastName ?? '',
-        province: address?.city.province.name ?? '',
-        city: address?.city.name ?? '',
+        provinceId: address?.city.provinceId ?? null,
+        cityId: address?.city.id ?? null,
         street: address?.street ?? '',
         postalCode: address?.postalCode ?? '',
       };
@@ -48,8 +48,8 @@ export async function getCheckoutProfile(): Promise<CheckoutProfileVM | null> {
       const isComplete = Boolean(
         contact.firstName &&
           contact.lastName &&
-          contact.province &&
-          contact.city &&
+          contact.provinceId &&
+          contact.cityId &&
           contact.street &&
           /^\d{10}$/.test(contact.postalCode),
       );
@@ -65,8 +65,8 @@ export async function getCheckoutProfile(): Promise<CheckoutProfileVM | null> {
     {
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
-      province: '',
-      city: '',
+      provinceId: null,
+      cityId: null,
       street: '',
       postalCode: '',
       phoneNumber: user.phoneNumber,

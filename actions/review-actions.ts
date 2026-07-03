@@ -48,7 +48,7 @@ export async function createReview(
       const purchased = await prisma.orderItem.findFirst({
         where: {
           productId: input.productId,
-          order: { userId: user.id, status: 'DELIVERED' },
+          order: { userId: user.id, status: 'COMPLETED' },
         },
         select: { id: true },
       });

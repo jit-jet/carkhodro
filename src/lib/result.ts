@@ -34,7 +34,11 @@ export async function safeQuery<T>(
   try {
     return await fn();
   } catch (err) {
-    console.error(`[query:${label}]`, err);
+    const isConnRefused =
+      err instanceof Error && (err as NodeJS.ErrnoException).code === 'ECONNREFUSED';
+    if (!isConnRefused) {
+      console.error(`[query:${label}]`, err);
+    }
     return fallback;
   }
 }

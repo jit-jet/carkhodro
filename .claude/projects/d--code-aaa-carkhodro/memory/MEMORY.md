@@ -1,3 +1,3 @@
 # Memory Index
 
-- [Mock data must use relational DB structure](feedback_mock_data_structure.md) — Always model mock data as normalized tables with FKs; used to design real DB schema
+- [Stack versions](stack-versions.md) — Next.js 16.2.6 + Prisma 7.8.0 pinned; match generated code to these, not older training-data conventions

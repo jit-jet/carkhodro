@@ -8,9 +8,9 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB:       ${POSTGRES_DB:-carkhodro}
     ports:
-      - "5432:5432" # این خط پورت را برای سیستم لوکال شما باز می‌کند
+      - "5432:5432" 
     volumes:
-      - postgres_dev_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-carkhodro}"]
       interval: 5s
@@ -19,4 +19,4 @@ services:
       start_period: 10s
 
 volumes:
-  postgres_dev_data:
+  postgres_data:
