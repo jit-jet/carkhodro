@@ -52,3 +52,29 @@ npx prisma db seed
 
 # prisma studio
 npx prisma studio
+
+
+# start project on server
+pm2 start npm --name my-app -- start -- -p 80
+
+# pm2 commands
+# List processes
+pm2 list
+
+# View logs
+pm2 logs my-app
+
+# Restart app
+pm2 restart my-app
+
+# Stop app
+pm2 stop my-app
+
+# Delete app from PM2
+pm2 delete my-app
+
+# Save current processes
+pm2 save
+
+# Configure PM2 to start on server boot
+pm2 startup
