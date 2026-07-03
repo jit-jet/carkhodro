@@ -14,6 +14,7 @@ import { revalidatePath, updateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
+import { resolveLocation } from '@/src/lib/resolve-location';
 import { tags } from '@/actions/cache-tags';
 import type { OrderStatus, Prisma } from '@/generated/prisma_client';
 import type {
@@ -141,15 +142,15 @@ function validateContact(
   const value: CheckoutContact = {
     firstName: contact.firstName.trim(),
     lastName: contact.lastName.trim(),
-    province: contact.province.trim(),
-    city: contact.city.trim(),
+    provinceId: contact.provinceId,
+    cityId: contact.cityId,
     street: contact.street.trim(),
     postalCode: contact.postalCode.trim(),
   };
   if (!value.firstName) return { ok: false, error: 'نام الزامی است.' };
   if (!value.lastName) return { ok: false, error: 'نام خانوادگی الزامی است.' };
-  if (!value.province) return { ok: false, error: 'استان الزامی است.' };
-  if (!value.city) return { ok: false, error: 'شهر الزامی است.' };
+  if (!value.provinceId) return { ok: false, error: 'استان الزامی است.' };
+  if (!value.cityId) return { ok: false, error: 'شهر الزامی است.' };
   if (!value.street) return { ok: false, error: 'آدرس الزامی است.' };
   if (!/^\d{10}$/.test(value.postalCode)) {
     return { ok: false, error: 'کد پستی باید دقیقاً ۱۰ رقم باشد.' };
@@ -194,17 +195,9 @@ export async function submitCheckout(
       }
     }
 
-    // Resolve the province (seeded reference data) and find-or-create the city.
-    const province = await prisma.province.findUnique({
-      where: { name: contact.province },
-    });
-    if (!province) return fail('استان انتخاب‌شده معتبر نیست.');
-    const city = await prisma.city.upsert({
-      where: { provinceId_name: { provinceId: province.id, name: contact.city } },
-      create: { provinceId: province.id, name: contact.city },
-      update: {},
-      select: { id: true },
-    });
+    const resolved = await resolveLocation(contact.provinceId!, contact.cityId!);
+    if (!resolved.ok) return fail(resolved.error);
+    const { province, city } = resolved;
 
     const isWholesale = user.role === 'WHOLESALE';
     const lineItems = cart.items.map((item) => {
@@ -268,7 +261,7 @@ export async function submitCheckout(
           shippingOptionId: shipping.id,
           paymentMethod: input.paymentMethod,
           snapshotProvince: province.name,
-          snapshotCity: contact.city,
+          snapshotCity: city.name,
           snapshotStreet: contact.street,
           snapshotPostalCode: contact.postalCode,
           subtotal,

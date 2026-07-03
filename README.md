@@ -42,5 +42,13 @@ docker compose -f docker-compose.prod.yml up --build -d
 docker compose exec app npx prisma migrate dev --name your_migration_name
 
 
-# run only db with docker :
+## run only db with docker :
 docker compose -f docker-compose.db.yml up
+
+# then run this in terminal
+npx prisma migrate dev --name init   # CREATE DB TABLES AND SQL
+npx prisma generate             # CREATE  PRISMA CLIENT
+npx prisma db seed
+
+# prisma studio
+npx prisma studio

@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getProfile } from '@/actions/partner-profile';
+import { getProvinces } from '@/actions/locations';
 import ProfileForm from '@/src/components/dashboard/ProfileForm';
 
 export const metadata: Metadata = {
@@ -23,9 +24,9 @@ export default function ProfilePage() {
 }
 
 async function ProfileContent() {
-  const profile = await getProfile();
+  const [profile, provinces] = await Promise.all([getProfile(), getProvinces()]);
   if (!profile) redirect('/login?redirect=/dashboard/profile');
-  return <ProfileForm profile={profile} />;
+  return <ProfileForm profile={profile} provinces={provinces} />;
 }
 
 function ProfileSkeleton() {

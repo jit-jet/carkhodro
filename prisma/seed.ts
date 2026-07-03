@@ -2,6 +2,8 @@ import 'dotenv/config';
 import { PrismaClient, ShippingMethod, UserRole } from '../generated/prisma_client';
 import type { OrderStatus } from '../generated/prisma_client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { normalizePersianText } from '../src/lib/persian';
+import provincesCitiesData from '../src/assets/provinces_cities.json';
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg(process.env.DATABASE_URL!),
@@ -411,27 +413,53 @@ async function main() {
     console.log(`Already seeded (${count} products). Skipping catalogue.`);
   } else {
 
-  // ── Provinces ──────────────────────────────────────────────────────────────
-  const provinceNames = [
-    'آذربایجان شرقی', 'آذربایجان غربی', 'اردبیل', 'اصفهان', 'البرز',
-    'ایلام', 'بوشهر', 'تهران', 'چهارمحال و بختیاری', 'خراسان جنوبی',
-    'خراسان رضوی', 'خراسان شمالی', 'خوزستان', 'زنجان', 'سمنان',
-    'سیستان و بلوچستان', 'فارس', 'قزوین', 'قم', 'کردستان',
-    'کرمان', 'کرمانشاه', 'کهگیلویه و بویراحمد', 'گلستان', 'گیلان',
-    'لرستان', 'مازندران', 'مرکزی', 'هرمزگان', 'همدان', 'یزد',
-  ];
+  // ── Provinces & cities (seeded from the official list) ──────────────────────
+  // Normalize Arabic-script variants (ي/ك etc.) in the source data so seeded
+  // names match the Persian forms used everywhere else in the app.
+  //
+  // Three provinces are written in the JSON with the conjunction «و» glued to the
+  // next word ("سیستان وبلوچستان"); the conventional spaced form ("سیستان و
+  // بلوچستان") is used everywhere else. `normalizePersianText` collapses runs of
+  // whitespace but never inserts one, and a generic "split و" rule is unsafe (it
+  // would wrongly break city names that legitimately start with «و», e.g.
+  // «ورامین»), so the fix is an explicit map for just these three names.
+  const PROVINCE_NAME_FIXUPS: Record<string, string> = {
+    'چهارمحال وبختیاری': 'چهارمحال و بختیاری',
+    'سیستان وبلوچستان': 'سیستان و بلوچستان',
+    'کهگیلویه وبویراحمد': 'کهگیلویه و بویراحمد',
+  };
+  const canonicalProvince = (name: string) => PROVINCE_NAME_FIXUPS[name] ?? name;
+
+  const provinceCityMap = new Map<string, Set<string>>();
+  for (const row of provincesCitiesData as { provinceName: string; cityName: string }[]) {
+    const provinceName = canonicalProvince(normalizePersianText(row.provinceName));
+    const cityName = normalizePersianText(row.cityName);
+    if (!provinceCityMap.has(provinceName)) provinceCityMap.set(provinceName, new Set());
+    provinceCityMap.get(provinceName)!.add(cityName);
+  }
+  const provinceNames = [...provinceCityMap.keys()];
+
   const provinces = await prisma.$transaction(
     provinceNames.map(name => prisma.province.create({ data: { name } })),
     { timeout: 30000 },
   );
   const provinceId = new Map(provinces.map(p => [p.name, p.id]));
 
-  // ── Cities (one representative city per province) ──────────────────────────
-  const cities = await prisma.$transaction(
-    provinces.map(p => prisma.city.create({ data: { name: p.name, provinceId: p.id } })),
-    { timeout: 30000 },
+  const cityRowsInput = provinceNames.flatMap(provinceName =>
+    [...provinceCityMap.get(provinceName)!].map(cityName => ({
+      provinceName,
+      cityName,
+      provinceId: provinceId.get(provinceName)!,
+    })),
   );
-  const cityId = new Map(cities.map(c => [c.name, c.id]));
+  const cities = await prisma.$transaction(
+    cityRowsInput.map(c => prisma.city.create({ data: { name: c.cityName, provinceId: c.provinceId } })),
+    { timeout: 60000 },
+  );
+  // Keyed by `province__city` — city names repeat across provinces.
+  const cityId = new Map(
+    cities.map((c, i) => [`${cityRowsInput[i].provinceName}__${cityRowsInput[i].cityName}`, c.id]),
+  );
 
   // ── Car Brands ─────────────────────────────────────────────────────────────
   const carBrandsInput = [
@@ -640,7 +668,7 @@ async function main() {
       role: UserRole.RETAIL, isVerified: true,
       createdAt: new Date('2024-01-15T10:00:00.000Z'),
       addresses: {
-        create: { cityId: cityId.get('تهران')!, street: 'خیابان ولیعصر، پلاک ۱۲۴، واحد ۳', postalCode: '1411873563', isDefault: true },
+        create: { cityId: cityId.get('تهران__تهران')!, street: 'خیابان ولیعصر، پلاک ۱۲۴، واحد ۳', postalCode: '1411873563', isDefault: true },
       },
     },
   });
@@ -651,7 +679,7 @@ async function main() {
       role: UserRole.RETAIL, isVerified: true,
       createdAt: new Date('2024-02-20T12:30:00.000Z'),
       addresses: {
-        create: { cityId: cityId.get('اصفهان')!, street: 'خیابان چهارباغ، کوچه رضوی، پلاک ۷', postalCode: '8174793651', isDefault: true },
+        create: { cityId: cityId.get('اصفهان__اصفهان')!, street: 'خیابان چهارباغ، کوچه رضوی، پلاک ۷', postalCode: '8174793651', isDefault: true },
       },
     },
   });
@@ -745,10 +773,8 @@ async function seedPartnerDashboard() {
     console.warn('  Skipping partner seed — provinces/shipping not seeded yet.');
     return;
   }
-  const mashhad = await prisma.city.upsert({
+  const mashhad = await prisma.city.findUniqueOrThrow({
     where: { provinceId_name: { provinceId: province.id, name: 'مشهد' } },
-    create: { provinceId: province.id, name: 'مشهد' },
-    update: {},
   });
 
   // Give a handful of parts a wholesale/cash discount so invoices show one.

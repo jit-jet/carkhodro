@@ -39,7 +39,12 @@
       "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('d:/code/aaa/carkhodro/node_modules/prisma/build/index.js','utf8'\\); const m=s.match\\(/prisma\\\\.config\\\\.\\(ts|js|mjs|cjs\\)/g\\); console.log\\([...new Set\\(m\\)].slice\\(0,10\\)\\)\")",
       "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('d:/code/aaa/carkhodro/node_modules/prisma/build/index.js','utf8'\\); const i=s.indexOf\\('prisma.config.ts'\\); console.log\\(s.slice\\(Math.max\\(0,i-200\\),i+300\\)\\)\")",
       "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('d:/code/aaa/carkhodro/node_modules/prisma/build/index.js','utf8'\\); const i=s.indexOf\\('loadConfigFromFile'\\); const chunk=s.slice\\(i,i+500\\); console.log\\(chunk\\)\")",
-      "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('d:/code/aaa/carkhodro/node_modules/prisma/build/index.js','utf8'\\); const m=s.match\\(/jiti|tsx|ts-node|register.*\\\\.ts/g\\); console.log\\([...new Set\\(m||[]\\)].slice\\(0,15\\)\\)\")"
+      "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('d:/code/aaa/carkhodro/node_modules/prisma/build/index.js','utf8'\\); const m=s.match\\(/jiti|tsx|ts-node|register.*\\\\.ts/g\\); console.log\\([...new Set\\(m||[]\\)].slice\\(0,15\\)\\)\")",
+      "Bash(npx eslint *)",
+      "Bash(node -e ' *)",
+      "Bash(rm -f ./_devlog.txt)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 60 http://localhost:3000/signup)",
+      "Bash(curl -s --max-time 60 http://localhost:3000/signup)"
     ],
     "additionalDirectories": [
       "d:\\code\\aaa\\carkhodro\\app\\products"

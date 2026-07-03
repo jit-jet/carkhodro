@@ -162,8 +162,8 @@ export interface ProfileVM {
   birthYear: string;
   birthMonth: string;
   birthDay: string;
-  province: string;
-  city: string;
+  provinceId: number | null;
+  cityId: number | null;
   street: string;
   postalCode: string;
   profileImage: string | null;

@@ -28,6 +28,7 @@ import type {
   CartVM,
   CheckoutContact,
   CheckoutProfileVM,
+  ProvinceVM,
   ShippingOptionVM,
 } from '@/src/lib/serializers';
 import type { PaymentMethod } from '@/src/data/cartMockData';
@@ -36,6 +37,7 @@ interface Props {
   cart: CartVM;
   shippingOptions: ShippingOptionVM[];
   profile: CheckoutProfileVM;
+  provinces: ProvinceVM[];
 }
 
 type FieldErrors = Partial<Record<keyof CheckoutContact, string>>;
@@ -48,14 +50,14 @@ function validate(c: CheckoutContact): FieldErrors {
   const errors: FieldErrors = {};
   if (!c.firstName.trim()) errors.firstName = 'نام الزامی است.';
   if (!c.lastName.trim()) errors.lastName = 'نام خانوادگی الزامی است.';
-  if (!c.province) errors.province = 'لطفاً استان را انتخاب کنید.';
-  if (!c.city.trim()) errors.city = 'شهر الزامی است.';
+  if (!c.provinceId) errors.provinceId = 'لطفاً استان را انتخاب کنید.';
+  if (!c.cityId) errors.cityId = 'لطفاً شهر را انتخاب کنید.';
   if (!c.street.trim()) errors.street = 'آدرس الزامی است.';
   if (!/^\d{10}$/.test(c.postalCode)) errors.postalCode = 'کد پستی باید دقیقاً ۱۰ رقم باشد.';
   return errors;
 }
 
-export default function CheckoutView({ cart, shippingOptions, profile }: Props) {
+export default function CheckoutView({ cart, shippingOptions, profile, provinces }: Props) {
   const router = useRouter();
   const setCount = useCartUI((s) => s.setCount);
   const notify = useCartUI((s) => s.notify);
@@ -63,8 +65,8 @@ export default function CheckoutView({ cart, shippingOptions, profile }: Props) 
   const [info, setInfo] = useState<CheckoutContact>({
     firstName: profile.firstName,
     lastName: profile.lastName,
-    province: profile.province,
-    city: profile.city,
+    provinceId: profile.provinceId,
+    cityId: profile.cityId,
     street: profile.street,
     postalCode: profile.postalCode,
   });
@@ -180,6 +182,7 @@ export default function CheckoutView({ cart, shippingOptions, profile }: Props) 
           editing={editing}
           onEdit={() => setEditing(true)}
           errors={errors}
+          provinces={provinces}
         />
 
         <ShippingSelector options={shippingOptions} selected={shippingId} onChange={setShippingId} />

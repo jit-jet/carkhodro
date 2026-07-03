@@ -6,6 +6,7 @@ import CheckoutView from '@/src/components/checkout/CheckoutView';
 import { getCart } from '@/src/lib/cart-data';
 import { getShippingOptions } from '@/actions/navigation';
 import { getCheckoutProfile } from '@/actions/profile';
+import { getProvinces } from '@/actions/locations';
 import { getCurrentUser } from '@/src/lib/session';
 
 export const metadata: Metadata = {
@@ -46,10 +47,11 @@ async function CheckoutContent() {
   const user = await getCurrentUser();
   if (!user) redirect('/login?redirect=/checkout');
 
-  const [cart, shippingOptions, profile] = await Promise.all([
+  const [cart, shippingOptions, profile, provinces] = await Promise.all([
     getCart(),
     getShippingOptions(),
     getCheckoutProfile(),
+    getProvinces(),
   ]);
 
   // Nothing to check out → bounce back to the cart.
@@ -57,7 +59,9 @@ async function CheckoutContent() {
   // `profile` is non-null because the user is authenticated (guarded above).
   if (!profile) redirect('/login?redirect=/checkout');
 
-  return <CheckoutView cart={cart} shippingOptions={shippingOptions} profile={profile} />;
+  return (
+    <CheckoutView cart={cart} shippingOptions={shippingOptions} profile={profile} provinces={provinces} />
+  );
 }
 
 function CheckoutSkeleton() {

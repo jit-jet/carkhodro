@@ -95,7 +95,7 @@ async function OrdersContent({ searchParams }: Props) {
                       {formatNumberFa((data.page - 1) * data.perPage + index + 1)}
                     </td>
                     <td className="py-3 px-3 text-right font-mono font-semibold">
-                      {formatNumberFa(order.orderNumber)}
+                      {order.orderNumber}
                     </td>
                     <td className="py-3 px-3 text-center">
                       <span

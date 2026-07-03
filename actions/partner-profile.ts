@@ -16,6 +16,7 @@ import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/r
 import { getCurrentUser } from '@/src/lib/session';
 import { USER_ROLE_FA } from '@/src/lib/user-labels';
 import { dateToJalaliParts, jalaliPartsToDate } from '@/src/lib/jalali-convert';
+import { resolveLocation } from '@/src/lib/resolve-location';
 import type { ProfileVM } from '@/src/lib/dashboard-types';
 
 const PROFILE_PATH = '/dashboard/profile';
@@ -47,8 +48,8 @@ export async function getProfile(): Promise<ProfileVM | null> {
         birthYear: birth ? String(birth.jy) : '',
         birthMonth: birth ? String(birth.jm) : '',
         birthDay: birth ? String(birth.jd) : '',
-        province: address?.city.province.name ?? '',
-        city: address?.city.name ?? '',
+        provinceId: address?.city.provinceId ?? null,
+        cityId: address?.city.id ?? null,
         street: address?.street ?? '',
         postalCode: address?.postalCode ?? '',
         profileImage: user.profileImage,
@@ -69,8 +70,8 @@ export interface ProfileUpdateInput {
   birthYear: string;
   birthMonth: string;
   birthDay: string;
-  province: string;
-  city: string;
+  provinceId: number | null;
+  cityId: number | null;
   street: string;
   postalCode: string;
 }
@@ -97,21 +98,19 @@ export async function updateProfile(input: ProfileUpdateInput): Promise<ActionRe
 
     // Address is optional, but if the partner starts filling it in they must
     // complete it (province + city + street + a 10-digit postal code).
-    const province = input.province.trim();
-    const city = input.city.trim();
     const street = input.street.trim();
     const postalCode = input.postalCode.trim();
-    const anyAddress = province || city || street || postalCode;
-    const fullAddress = province && city && street && /^\d{10}$/.test(postalCode);
+    const anyAddress = input.provinceId || input.cityId || street || postalCode;
+    const fullAddress = input.provinceId && input.cityId && street && /^\d{10}$/.test(postalCode);
     if (anyAddress && !fullAddress) {
       return fail('برای ذخیره آدرس، استان، شهر، آدرس و کد پستی ۱۰ رقمی را کامل کنید.');
     }
 
-    let provinceId: number | null = null;
+    let cityId: number | null = null;
     if (fullAddress) {
-      const provinceRow = await prisma.province.findUnique({ where: { name: province } });
-      if (!provinceRow) return fail('استان انتخاب‌شده معتبر نیست.');
-      provinceId = provinceRow.id;
+      const resolved = await resolveLocation(input.provinceId!, input.cityId!);
+      if (!resolved.ok) return fail(resolved.error);
+      cityId = resolved.city.id;
     }
 
     await prisma.$transaction(async (tx) => {
@@ -127,13 +126,7 @@ export async function updateProfile(input: ProfileUpdateInput): Promise<ActionRe
         },
       });
 
-      if (fullAddress && provinceId !== null) {
-        const cityRow = await tx.city.upsert({
-          where: { provinceId_name: { provinceId, name: city } },
-          create: { provinceId, name: city },
-          update: {},
-          select: { id: true },
-        });
+      if (fullAddress && cityId !== null) {
         const existing = await tx.address.findFirst({
           where: { userId: user.id },
           orderBy: { isDefault: 'desc' },
@@ -142,11 +135,11 @@ export async function updateProfile(input: ProfileUpdateInput): Promise<ActionRe
         if (existing) {
           await tx.address.update({
             where: { id: existing.id },
-            data: { cityId: cityRow.id, street, postalCode, isDefault: true },
+            data: { cityId, street, postalCode, isDefault: true },
           });
         } else {
           await tx.address.create({
-            data: { userId: user.id, cityId: cityRow.id, street, postalCode, isDefault: true },
+            data: { userId: user.id, cityId, street, postalCode, isDefault: true },
           });
         }
       }

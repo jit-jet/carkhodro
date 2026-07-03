@@ -202,6 +202,19 @@ export interface OrderReceiptVM {
   totalAmount: number;
 }
 
+/** A city option nested under its province, for the cascading address selects. */
+export interface CityOptionVM {
+  id: number;
+  name: string;
+}
+
+/** Seeded reference data backing the province/city dropdowns. */
+export interface ProvinceVM {
+  id: number;
+  name: string;
+  cities: CityOptionVM[];
+}
+
 /**
  * Contact + delivery details collected on the checkout page. Persisted to the
  * user's profile / default address at order time (see `submitCheckout`), so a
@@ -210,8 +223,8 @@ export interface OrderReceiptVM {
 export interface CheckoutContact {
   firstName: string;
   lastName: string;
-  province: string;
-  city: string;
+  provinceId: number | null;
+  cityId: number | null;
   street: string;
   postalCode: string;
 }

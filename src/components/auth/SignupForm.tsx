@@ -3,16 +3,16 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { IRANIAN_PROVINCES } from '@/src/data/mockUsers';
 import { registerUser } from '@/actions/auth';
+import type { ProvinceVM } from '@/src/lib/serializers';
 
 // ── Field-level form state ─────────────────────────────────────────────────────
 
 interface FormState {
   firstName: string;
   lastName: string;
-  province: string;
-  city: string;
+  provinceId: number | '';
+  cityId: number | '';
   address: string;
   postalCode: string;
   acceptedRules: boolean;
@@ -21,8 +21,8 @@ interface FormState {
 const INITIAL: FormState = {
   firstName: '',
   lastName: '',
-  province: '',
-  city: '',
+  provinceId: '',
+  cityId: '',
   address: '',
   postalCode: '',
   acceptedRules: false,
@@ -34,8 +34,8 @@ function validate(f: FormState): Partial<Record<keyof FormState, string>> {
   return {
     firstName:     !f.firstName.trim()                   ? 'نام الزامی است.'                     : '',
     lastName:      !f.lastName.trim()                    ? 'نام خانوادگی الزامی است.'             : '',
-    province:      !f.province                           ? 'لطفاً استان را انتخاب کنید.'         : '',
-    city:          !f.city.trim()                        ? 'شهر الزامی است.'                    : '',
+    provinceId:    !f.provinceId                          ? 'لطفاً استان را انتخاب کنید.'         : '',
+    cityId:        !f.cityId                              ? 'لطفاً شهر را انتخاب کنید.'           : '',
     address:       !f.address.trim()                     ? 'آدرس الزامی است.'                   : '',
     postalCode:    !/^\d{10}$/.test(f.postalCode)        ? 'کد پستی باید دقیقاً ۱۰ رقم باشد.'   : '',
     acceptedRules: !f.acceptedRules                      ? 'پذیرش قوانین الزامی است.'           : '',
@@ -49,9 +49,11 @@ interface Props {
   phoneNumber: string;
   /** Where to send the user after a successful signup (defaults to dashboard). */
   redirectTo?: string;
+  /** Seeded province/city reference data for the cascading address selects. */
+  provinces: ProvinceVM[];
 }
 
-export default function SignupForm({ phoneNumber, redirectTo = '/dashboard' }: Props) {
+export default function SignupForm({ phoneNumber, redirectTo = '/dashboard', provinces }: Props) {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(INITIAL);
   const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({});
@@ -93,8 +95,8 @@ export default function SignupForm({ phoneNumber, redirectTo = '/dashboard' }: P
         phoneNumber,
         firstName:  form.firstName.trim(),
         lastName:   form.lastName.trim(),
-        province:   form.province,
-        city:       form.city.trim(),
+        provinceId: form.provinceId || null,
+        cityId:     form.cityId || null,
         address:    form.address.trim(),
         postalCode: form.postalCode,
       });
@@ -160,31 +162,46 @@ export default function SignupForm({ phoneNumber, redirectTo = '/dashboard' }: P
         </label>
         <select
           id="province"
-          value={form.province}
-          onChange={(e) => set('province', e.target.value)}
-          onBlur={() => touch('province')}
-          className={inputCls(!!fieldError('province'))}
+          value={form.provinceId}
+          onChange={(e) => {
+            const provinceId = e.target.value ? Number(e.target.value) : '';
+            setForm((prev) => ({ ...prev, provinceId, cityId: '' }));
+          }}
+          onBlur={() => touch('provinceId')}
+          className={inputCls(!!fieldError('provinceId'))}
         >
           <option value="">انتخاب استان…</option>
-          {IRANIAN_PROVINCES.map((p) => (
-            <option key={p} value={p}>
-              {p}
+          {provinces.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
             </option>
           ))}
         </select>
-        {fieldError('province') && <FieldError msg={fieldError('province')} />}
+        {fieldError('provinceId') && <FieldError msg={fieldError('provinceId')} />}
       </div>
 
       {/* City */}
-      <Field
-        id="city"
-        label="شهر"
-        value={form.city}
-        onChange={(v) => set('city', v)}
-        onBlur={() => touch('city')}
-        placeholder="مثال: تهران"
-        error={fieldError('city')}
-      />
+      <div>
+        <label htmlFor="city" className="block text-sm font-semibold text-charcoal mb-1.5">
+          شهر
+        </label>
+        <select
+          id="city"
+          value={form.cityId}
+          onChange={(e) => set('cityId', e.target.value ? Number(e.target.value) : '')}
+          onBlur={() => touch('cityId')}
+          disabled={!form.provinceId}
+          className={inputCls(!!fieldError('cityId'))}
+        >
+          <option value="">انتخاب شهر…</option>
+          {(provinces.find((p) => p.id === form.provinceId)?.cities ?? []).map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        {fieldError('cityId') && <FieldError msg={fieldError('cityId')} />}
+      </div>
 
       {/* Address — textarea */}
       <div>

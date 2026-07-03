@@ -12,6 +12,7 @@ import { Prisma } from '@/generated/prisma_client';
 import { prisma } from '@/src/lib/prisma';
 import { productInclude, toProductVM, type ProductVM } from '@/src/lib/serializers';
 import { safeQuery } from '@/src/lib/result';
+import { normalizePersianText } from '@/src/lib/persian';
 
 /**
  * Trigram word-similarity threshold used by the `%>` operator (default 0.6).
@@ -21,24 +22,6 @@ const WORD_SIMILARITY_THRESHOLD = 0.3;
 
 /** Hard cap on candidate rows scored by the DB before view-model hydration. */
 const MAX_RESULTS = 200;
-
-/**
- * Mirror of the SQL `fts_normalize()` (see the product_fuzzy_search migration):
- * unify Arabic/Persian Yeh + Kaf, fold Arabic/Persian digits to Latin, strip
- * ZWNJ + tatweel, lowercase and collapse whitespace. Keeping the two in sync is
- * what lets the query trigrams line up with the indexed `search_text`.
- */
-function normalizeQuery(input: string): string {
-  return input
-    .toLowerCase()
-    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)) // ٠-٩
-    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0)) // ۰-۹
-    .replace(/ي/g, 'ی') // ي → ی
-    .replace(/ك/g, 'ک') // ك → ک
-    .replace(/[‌ـ]/g, '') // ZWNJ, tatweel
-    .replace(/\s+/g, ' ')
-    .trim();
-}
 
 /**
  * Typo-tolerant fuzzy search over the denormalized `search_text` document
@@ -56,7 +39,7 @@ function normalizeQuery(input: string): string {
  * pollute the cache. The `limit`/MAX_RESULTS caps keep each lookup cheap.
  */
 export async function searchProducts(query: string, limit = 8): Promise<ProductVM[]> {
-  const normalized = normalizeQuery(query);
+  const normalized = normalizePersianText(query);
   if (normalized.length < 2) return [];
 
   const tokens = normalized.split(' ').filter(Boolean);

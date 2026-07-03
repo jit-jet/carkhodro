@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Partner profile form.
@@ -9,48 +9,62 @@
  * actions for instant feedback; the rest saves through `updateProfile`.
  */
 
-import { useState, useRef, useTransition } from 'react';
-import Avatar from '@/src/components/dashboard/Avatar';
-import { updateProfile, updateAvatar, removeAvatar } from '@/actions/partner-profile';
-import { IRANIAN_PROVINCES } from '@/src/data/mockUsers';
-import { JALALI_MONTHS } from '@/src/lib/jalali-convert';
-import type { ProfileVM } from '@/src/lib/dashboard-types';
+import { useState, useRef, useTransition } from "react";
+import Avatar from "@/src/components/dashboard/Avatar";
+import {
+  updateProfile,
+  updateAvatar,
+  removeAvatar,
+} from "@/actions/partner-profile";
+import { JALALI_MONTHS } from "@/src/lib/jalali-convert";
+import type { ProfileVM } from "@/src/lib/dashboard-types";
+import type { ProvinceVM } from "@/src/lib/serializers";
 
 const YEARS = Array.from({ length: 90 }, (_, i) => 1404 - i); // 1404 … 1315
 const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 
-export default function ProfileForm({ profile }: { profile: ProfileVM }) {
+export default function ProfileForm({
+  profile,
+  provinces,
+}: {
+  profile: ProfileVM;
+  provinces: ProvinceVM[];
+}) {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [avatar, setAvatar] = useState<string | null>(profile.profileImage);
-  const [fullName, setFullName] = useState(`${profile.firstName} ${profile.lastName}`.trim());
+  const [fullName, setFullName] = useState(
+    `${profile.firstName} ${profile.lastName}`.trim(),
+  );
   const [shopName, setShopName] = useState(profile.shopName);
   const [referredBy, setReferredBy] = useState(profile.referredBy);
   const [activityField, setActivityField] = useState(profile.activityField);
   const [birthYear, setBirthYear] = useState(profile.birthYear);
   const [birthMonth, setBirthMonth] = useState(profile.birthMonth);
   const [birthDay, setBirthDay] = useState(profile.birthDay);
-  const [province, setProvince] = useState(profile.province);
-  const [city, setCity] = useState(profile.city);
+  const [provinceId, setProvinceId] = useState<number | "">(
+    profile.provinceId ?? "",
+  );
+  const [cityId, setCityId] = useState<number | "">(profile.cityId ?? "");
   const [street, setStreet] = useState(profile.street);
   const [postalCode, setPostalCode] = useState(profile.postalCode);
 
-  const [error, setError] = useState('');
-  const [avatarError, setAvatarError] = useState('');
+  const [error, setError] = useState("");
+  const [avatarError, setAvatarError] = useState("");
   const [saved, setSaved] = useState(false);
   const [pending, startTransition] = useTransition();
   const [avatarPending, startAvatar] = useTransition();
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setAvatarError('');
+    setAvatarError("");
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.type !== 'image/jpeg') {
-      setAvatarError('تصویر باید با پسوند jpg باشد.');
+    if (file.type !== "image/jpeg") {
+      setAvatarError("تصویر باید با پسوند jpg باشد.");
       return;
     }
     const form = new FormData();
-    form.set('avatar', file);
+    form.set("avatar", file);
     startAvatar(async () => {
       const result = await updateAvatar(form);
       if (!result.ok) {
@@ -62,7 +76,7 @@ export default function ProfileForm({ profile }: { profile: ProfileVM }) {
       reader.onload = () => setAvatar(reader.result as string);
       reader.readAsDataURL(file);
     });
-    if (fileRef.current) fileRef.current.value = '';
+    if (fileRef.current) fileRef.current.value = "";
   }
 
   function handleRemoveAvatar() {
@@ -75,26 +89,26 @@ export default function ProfileForm({ profile }: { profile: ProfileVM }) {
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    setError('');
+    setError("");
     setSaved(false);
     const trimmed = fullName.trim();
     if (!trimmed) {
-      setError('نام کامل را وارد کنید.');
+      setError("نام کامل را وارد کنید.");
       return;
     }
     const [firstName, ...rest] = trimmed.split(/\s+/);
     startTransition(async () => {
       const result = await updateProfile({
         firstName,
-        lastName: rest.join(' '),
+        lastName: rest.join(" "),
         shopName,
         referredBy,
         activityField,
         birthYear,
         birthMonth,
         birthDay,
-        province,
-        city,
+        provinceId: provinceId || null,
+        cityId: cityId || null,
         street,
         postalCode,
       });
@@ -108,7 +122,10 @@ export default function ProfileForm({ profile }: { profile: ProfileVM }) {
   }
 
   return (
-    <form onSubmit={submit} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-7">
+    <form
+      onSubmit={submit}
+      className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-7"
+    >
       <h1 className="text-lg font-extrabold text-charcoal mb-6">پروفایل من</h1>
 
       <div className="grid lg:grid-cols-[220px_1fr] gap-8">
@@ -143,14 +160,22 @@ export default function ProfileForm({ profile }: { profile: ProfileVM }) {
               </button>
             )}
           </div>
-          <p className="text-[11px] text-gray-400 text-center">تصویر باید با پسوند jpg باشد</p>
-          {avatarError && <p className="text-[11px] text-red-500 text-center">{avatarError}</p>}
+          <p className="text-[11px] text-gray-400 text-center">
+            تصویر باید با پسوند jpg باشد
+          </p>
+          {avatarError && (
+            <p className="text-[11px] text-red-500 text-center">
+              {avatarError}
+            </p>
+          )}
         </div>
 
         {/* Fields column */}
         <div className="space-y-4">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">{error}</div>
+            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">
+              {error}
+            </div>
           )}
           {saved && (
             <div className="bg-green-50 border border-green-200 text-green-700 text-sm font-semibold rounded-xl px-4 py-3">
@@ -162,34 +187,71 @@ export default function ProfileForm({ profile }: { profile: ProfileVM }) {
           <div className="grid sm:grid-cols-2 gap-3">
             <ReadOnly label="نام کاربری" value={profile.phoneNumber} ltr />
             <ReadOnly label="موبایل" value={profile.phoneNumber} ltr />
-            <ReadOnly label="کد اختصاصی" value={profile.partnerCode ?? '—'} />
+            <ReadOnly label="کد اختصاصی" value={profile.partnerCode ?? "—"} />
             <ReadOnly label="نوع کاربر" value={profile.userType} />
           </div>
 
-          <Field label="نام کامل" value={fullName} onChange={setFullName} placeholder="مثال: محسن محمدی" />
-          <Field label="نام فروشگاه" value={shopName} onChange={setShopName} placeholder="نام فروشگاه خود را وارد کنید…" />
-          <Field label="معرف" value={referredBy} onChange={setReferredBy} placeholder="کسی که اسکار را معرفی کرده…" />
+          <Field
+            label="نام کامل"
+            value={fullName}
+            onChange={setFullName}
+            placeholder="مثال: محسن محمدی"
+          />
+          <Field
+            label="نام فروشگاه"
+            value={shopName}
+            onChange={setShopName}
+            placeholder="نام فروشگاه خود را وارد کنید…"
+          />
+          <Field
+            label="معرف"
+            value={referredBy}
+            onChange={setReferredBy}
+            placeholder="کسی که اسکار را معرفی کرده…"
+          />
 
           {/* Birth date */}
           <div>
-            <label className="block text-sm font-semibold text-charcoal mb-1.5">تاریخ تولد</label>
+            <label className="block text-sm font-semibold text-charcoal mb-1.5">
+              تاریخ تولد
+            </label>
             <div className="grid grid-cols-3 gap-2">
-              <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className={selectCls}>
+              <select
+                value={birthDay}
+                onChange={(e) => setBirthDay(e.target.value)}
+                className={selectCls}
+              >
                 <option value="">روز</option>
                 {DAYS.map((d) => (
-                  <option key={d} value={d}>{d.toLocaleString('fa-IR')}</option>
+                  <option key={d} value={d}>
+                    {d.toLocaleString("fa-IR")}
+                  </option>
                 ))}
               </select>
-              <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className={selectCls}>
+              <select
+                value={birthMonth}
+                onChange={(e) => setBirthMonth(e.target.value)}
+                className={selectCls}
+              >
                 <option value="">ماه</option>
                 {JALALI_MONTHS.slice(1).map((m, i) => (
-                  <option key={m} value={i + 1}>{m}</option>
+                  <option key={m} value={i + 1}>
+                    {m}
+                  </option>
                 ))}
               </select>
-              <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className={selectCls}>
+              <select
+                value={birthYear}
+                onChange={(e) => setBirthYear(e.target.value)}
+                className={selectCls}
+              >
                 <option value="">سال</option>
                 {YEARS.map((y) => (
-                  <option key={y} value={y}>{y.toLocaleString('fa-IR')}</option>
+                  <option key={y} value={y}>
+                    {y.toLocaleString("fa-IR", {
+                      useGrouping: false,
+                    })}
+                  </option>
                 ))}
               </select>
             </div>
@@ -207,18 +269,52 @@ export default function ProfileForm({ profile }: { profile: ProfileVM }) {
             <p className="text-sm font-bold text-charcoal mb-3 mt-3">آدرس</p>
             <div className="grid sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-semibold text-charcoal mb-1.5">استان</label>
-                <select value={province} onChange={(e) => setProvince(e.target.value)} className={selectCls}>
+                <label className="block text-sm font-semibold text-charcoal mb-1.5">
+                  استان
+                </label>
+                <select
+                  value={provinceId}
+                  onChange={(e) => {
+                    setProvinceId(e.target.value ? Number(e.target.value) : "");
+                    setCityId(""); // reset city when province changes
+                  }}
+                  className={selectCls}
+                >
                   <option value="">انتخاب استان…</option>
-                  {IRANIAN_PROVINCES.map((p) => (
-                    <option key={p} value={p}>{p}</option>
+                  {provinces.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
                   ))}
                 </select>
               </div>
-              <Field label="شهر" value={city} onChange={setCity} placeholder="مثال: مشهد" />
+              <div>
+                <label className="block text-sm font-semibold text-charcoal mb-1.5">
+                  شهر
+                </label>
+                <select
+                  value={cityId}
+                  onChange={(e) =>
+                    setCityId(e.target.value ? Number(e.target.value) : "")
+                  }
+                  disabled={!provinceId}
+                  className={selectCls}
+                >
+                  <option value="">انتخاب شهر…</option>
+                  {(
+                    provinces.find((p) => p.id === provinceId)?.cities ?? []
+                  ).map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="mt-3">
-              <label className="block text-sm font-semibold text-charcoal mb-1.5">آدرس تفصیلی</label>
+              <label className="block text-sm font-semibold text-charcoal mb-1.5">
+                آدرس تفصیلی
+              </label>
               <textarea
                 value={street}
                 onChange={(e) => setStreet(e.target.value)}
@@ -231,7 +327,9 @@ export default function ProfileForm({ profile }: { profile: ProfileVM }) {
               <Field
                 label="کد پستی"
                 value={postalCode}
-                onChange={(v) => setPostalCode(v.replace(/\D/g, '').slice(0, 10))}
+                onChange={(v) =>
+                  setPostalCode(v.replace(/\D/g, "").slice(0, 10))
+                }
                 placeholder="۱۰ رقم"
                 dir="ltr"
                 inputMode="numeric"
@@ -244,7 +342,7 @@ export default function ProfileForm({ profile }: { profile: ProfileVM }) {
             disabled={pending}
             className="bg-accent hover:bg-accent-dark text-charcoal font-bold text-sm px-8 py-3 rounded-xl transition-colors disabled:opacity-60"
           >
-            {pending ? 'در حال ذخیره…' : 'ذخیره اطلاعات'}
+            {pending ? "در حال ذخیره…" : "ذخیره اطلاعات"}
           </button>
         </div>
       </div>
@@ -253,7 +351,7 @@ export default function ProfileForm({ profile }: { profile: ProfileVM }) {
 }
 
 const selectCls =
-  'w-full border-2 border-silver focus:border-accent rounded-xl px-4 py-2.5 text-sm outline-none transition-colors bg-white';
+  "w-full border-2 border-silver focus:border-accent rounded-xl px-4 py-2.5 text-sm outline-none transition-colors bg-white";
 
 function Field({
   label,
@@ -268,11 +366,13 @@ function Field({
   onChange: (v: string) => void;
   placeholder?: string;
   dir?: string;
-  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
 }) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-charcoal mb-1.5">{label}</label>
+      <label className="block text-sm font-semibold text-charcoal mb-1.5">
+        {label}
+      </label>
       <input
         type="text"
         value={value}
@@ -286,16 +386,26 @@ function Field({
   );
 }
 
-function ReadOnly({ label, value, ltr = false }: { label: string; value: string; ltr?: boolean }) {
+function ReadOnly({
+  label,
+  value,
+  ltr = false,
+}: {
+  label: string;
+  value: string;
+  ltr?: boolean;
+}) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-charcoal mb-1.5">{label}</label>
+      <label className="block text-sm font-semibold text-charcoal mb-1.5">
+        {label}
+      </label>
       <div
-        dir={ltr ? 'ltr' : undefined}
+        dir={ltr ? "ltr" : undefined}
         className={[
-          'w-full border border-gray-100 rounded-xl px-4 py-2.5 text-sm bg-gray-50 text-gray-500',
-          ltr ? 'text-right' : '',
-        ].join(' ')}
+          "w-full border border-gray-100 rounded-xl px-4 py-2.5 text-sm bg-gray-50 text-gray-500",
+          ltr ? "text-right" : "",
+        ].join(" ")}
       >
         {value}
       </div>
