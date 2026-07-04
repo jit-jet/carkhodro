@@ -10,7 +10,7 @@ import { getSupportInbox } from '@/actions/support';
 import SupportPanel from '@/src/components/dashboard/SupportPanel';
 
 export const metadata: Metadata = {
-  title: 'پشتیبانی | پنل همکاران اسکار',
+  title: 'پشتیبانی | پنل همکاران کارخودرو',
 };
 
 export default function SupportPage() {

@@ -60,7 +60,7 @@ export async function writeGuestCart(lines: GuestCartLine[]): Promise<void> {
   }
   store.set(GUEST_CART_COOKIE, JSON.stringify(lines), {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    // secure: process.env.NODE_ENV === 'production',  // uncomment later
     sameSite: 'lax',
     expires: new Date(Date.now() + GUEST_CART_TTL_MS),
     path: '/',

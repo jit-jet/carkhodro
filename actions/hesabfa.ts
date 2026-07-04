@@ -21,7 +21,7 @@ import { setChangeHook } from '@/src/lib/hesabfa/client';
 export async function forceSyncHesabfa(): Promise<ActionResult<FullSyncSummary>> {
   return runMutation('forceSyncHesabfa', async () => {
     const user = await getCurrentUser();
-    //Role check
+    //Role check uncomment later
     // if (user?.role !== 'ADMIN') return fail('دسترسی غیرمجاز.');
 
     const summary = await fullSyncHesabfa();

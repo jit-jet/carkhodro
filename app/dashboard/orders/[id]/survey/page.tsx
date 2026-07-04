@@ -11,7 +11,7 @@ import { getSurvey } from '@/actions/surveys';
 import SurveyForm from '@/src/components/dashboard/SurveyForm';
 
 export const metadata: Metadata = {
-  title: 'نظرسنجی | پنل همکاران اسکار',
+  title: 'نظرسنجی | پنل همکاران کارخودرو',
 };
 
 export default function SurveyPage({ params }: { params: Promise<{ id: string }> }) {

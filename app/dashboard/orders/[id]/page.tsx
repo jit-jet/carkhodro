@@ -17,7 +17,7 @@ import { formatRial, formatNumberFa, tomanInWords } from '@/src/lib/format';
 import PrintButton from '@/src/components/dashboard/PrintButton';
 
 export const metadata: Metadata = {
-  title: 'فاکتور | پنل همکاران اسکار',
+  title: 'فاکتور | پنل همکاران کارخودرو',
 };
 
 export default function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
@@ -72,7 +72,7 @@ async function InvoiceContent({ params }: { params: Promise<{ id: string }> }) {
             </p>
           </div>
           <div className="order-1 sm:order-2 flex flex-col items-center">
-            <Image src="/logo.png" alt="اسکار" width={120} height={40} className="object-contain" />
+            <Image src="/logo.png" alt="کارخودرو" width={120} height={40} className="object-contain" />
             <p className="text-sm font-bold text-charcoal mt-2">فاکتور فروش</p>
           </div>
           <div className="order-3 text-xs space-y-1 text-charcoal sm:text-left">

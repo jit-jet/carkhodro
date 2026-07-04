@@ -9,7 +9,7 @@ import { getBackorders } from '@/actions/backorders';
 import BackordersList from '@/src/components/dashboard/BackordersList';
 
 export const metadata: Metadata = {
-  title: 'پیش‌خریدها | پنل همکاران اسکار',
+  title: 'پیش‌خریدها | پنل همکاران کارخودرو',
 };
 
 export default function BackordersPage() {

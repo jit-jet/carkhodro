@@ -10,7 +10,7 @@ import { getCarModels } from '@/actions/brands';
 import PriceListForm from '@/src/components/dashboard/PriceListForm';
 
 export const metadata: Metadata = {
-  title: 'دریافت لیست قیمت | پنل همکاران اسکار',
+  title: 'دریافت لیست قیمت | پنل همکاران کارخودرو',
 };
 
 export default async function PriceListPage() {
