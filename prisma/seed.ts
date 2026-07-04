@@ -796,7 +796,7 @@ async function seedPartnerDashboard() {
       role: UserRole.WHOLESALE,
       isVerified: true,
       shopName: 'فروشگاه قطعات شاه‌گل‌زاده',
-      referredBy: 'واحد فروش اسکار',
+      referredBy: 'واحد فروش کارخودرو',
       activityField: 'فروش و پخش قطعات یدکی خودروهای ایرانی',
       partnerCode: '16',
       accountBalance: BigInt(0),
@@ -970,8 +970,8 @@ async function seedPartnerDashboard() {
   // ── Support messages (2 unread inbound → badge of ۲) ───────────────────────
   await prisma.supportMessage.createMany({
     data: [
-      { userId: partner.id, direction: 'INBOUND', subject: 'به پنل همکاران اسکار خوش آمدید',
-        body: 'همکار گرامی، به پنل اختصاصی همکاران اسکار خوش آمدید. برای هرگونه سوال فنی یا سفارش عمده می‌توانید از همین بخش با ما در ارتباط باشید.',
+      { userId: partner.id, direction: 'INBOUND', subject: 'به پنل همکاران کارخودرو خوش آمدید',
+        body: 'همکار گرامی، به پنل اختصاصی همکاران کارخودرو خوش آمدید. برای هرگونه سوال فنی یا سفارش عمده می‌توانید از همین بخش با ما در ارتباط باشید.',
         isRead: false, createdAt: new Date(Date.now() - 40 * DAY) },
       { userId: partner.id, direction: 'OUTBOUND', subject: 'درخواست افزایش سقف اعتبار خرید',
         body: 'با سلام، خواهشمندم سقف اعتبار خرید چکی حساب من بررسی و افزایش یابد. با تشکر.',

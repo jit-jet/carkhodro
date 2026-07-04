@@ -12,7 +12,7 @@ import { PAYMENT_TERMS } from '@/src/lib/partner-options';
 import PartnerCartView from '@/src/components/dashboard/PartnerCartView';
 
 export const metadata: Metadata = {
-  title: 'سبد خرید | پنل همکاران اسکار',
+  title: 'سبد خرید | پنل همکاران کارخودرو',
 };
 
 export default function PartnerCartPage() {

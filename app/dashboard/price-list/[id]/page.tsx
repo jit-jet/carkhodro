@@ -14,7 +14,7 @@ import { formatRial, formatNumberFa } from '@/src/lib/format';
 import PrintButton from '@/src/components/dashboard/PrintButton';
 
 export const metadata: Metadata = {
-  title: 'لیست قیمت | پنل همکاران اسکار',
+  title: 'لیست قیمت | پنل همکاران کارخودرو',
 };
 
 export default function GeneratedPriceListPage({
@@ -58,9 +58,9 @@ async function ListContent({ params }: { params: Promise<{ id: string }> }) {
       <div className="print-area bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-8">
         <div className="flex items-center justify-between gap-4 pb-5 border-b border-gray-100 flex-wrap">
           <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="اسکار" width={110} height={36} className="object-contain" />
+            <Image src="/logo.png" alt="کارخودرو" width={110} height={36} className="object-contain" />
             <div>
-              <p className="text-sm font-bold text-charcoal">لیست قیمت قطعات اسکار</p>
+              <p className="text-sm font-bold text-charcoal">لیست قیمت قطعات کارخودرو</p>
               <p className="text-xs text-gray-400 mt-0.5">تاریخ صدور: {list.createdAt}</p>
             </div>
           </div>

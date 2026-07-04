@@ -16,7 +16,7 @@ import OrdersFilterBar from '@/src/components/dashboard/OrdersFilterBar';
 import type { OrderStatus } from '@/generated/prisma_client';
 
 export const metadata: Metadata = {
-  title: 'سفارشات | پنل همکاران اسکار',
+  title: 'سفارشات | پنل همکاران کارخودرو',
 };
 
 interface Props {
@@ -63,7 +63,7 @@ async function OrdersContent({ searchParams }: Props) {
             <circle cx="20" cy="21" r="1" />
             <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
           </svg>
-          لیست سفارشات اسکار
+          لیست سفارشات کارخودرو
         </h1>
         <OrdersFilterBar status={status} perPage={data.perPage} orderNumber={orderNumber} />
       </div>

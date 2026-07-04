@@ -44,7 +44,9 @@ const PHONE_RE = /^09\d{9}$/;
 const VERIFIED_PHONE_COOKIE = 'verified_phone';
 const VERIFIED_PHONE_TTL_MS = 15 * 60 * 1000; // window to finish the signup form
 
-const isDev = process.env.NODE_ENV !== 'production';
+// const isDev = process.env.NODE_ENV !== 'production';    //uncomment later
+const isDev = true;   
+
 
 // ── Result payload types (mirror the old authApi shapes the UI expects) ──────
 
@@ -186,7 +188,7 @@ export async function verifyOtp(
       signToken(phone, VERIFIED_PHONE_TTL_MS),
       {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        // secure: process.env.NODE_ENV === 'production', //uncomment later
         sameSite: 'lax',
         maxAge: VERIFIED_PHONE_TTL_MS / 1000,
         path: '/',

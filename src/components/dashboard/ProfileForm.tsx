@@ -207,7 +207,7 @@ export default function ProfileForm({
             label="معرف"
             value={referredBy}
             onChange={setReferredBy}
-            placeholder="کسی که اسکار را معرفی کرده…"
+            placeholder="کسی که کارخودرو را معرفی کرده…"
           />
 
           {/* Birth date */}

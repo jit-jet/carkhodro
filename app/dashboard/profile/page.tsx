@@ -12,7 +12,7 @@ import { getProvinces } from '@/actions/locations';
 import ProfileForm from '@/src/components/dashboard/ProfileForm';
 
 export const metadata: Metadata = {
-  title: 'پروفایل من | پنل همکاران اسکار',
+  title: 'پروفایل من | پنل همکاران کارخودرو',
 };
 
 export default function ProfilePage() {
