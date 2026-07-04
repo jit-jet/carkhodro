@@ -447,12 +447,12 @@ export default function Header({
         <div className="max-w-7xl mx-auto px-4">
 
           {/* Icon row */}
-          <div className="flex items-center gap-2 sm:gap-4 h-16">
+          <div className="flex items-center lg:justify-start justify-between gap-2 sm:gap-4 h-16 relative">
 
             {/* Hamburger */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-charcoal hover:bg-silver-light active:scale-95 transition-all shrink-0"
+              className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-charcoal hover:bg-silver-light active:scale-95 transition-all shrink-0 z-10"
               aria-label={menuOpen ? "بستن منو" : "باز کردن منو"}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
@@ -464,9 +464,12 @@ export default function Header({
             </button>
 
             {/* Logo */}
-            <Link href="/" className="shrink-0">
-              <div className="relative w-32 h-10 sm:w-40 sm:h-12">
-                <Image src="/logo.png" alt="کارخودرو" fill className="object-contain" priority />
+            <Link 
+              href="/" 
+              className="shrink-0 lg:static absolute left-1/2 -translate-x-1/2 lg:translate-x-0 z-10"
+            >
+              <div className="flex items-center justify-center relative w-32 h-10 sm:w-40 sm:h-12">
+                <Image src="/logo.png" alt="کارخودرو" height={30} width={80} className="object-contain h-11 sm:h-12" priority />
               </div>
             </Link>
 
@@ -476,11 +479,8 @@ export default function Header({
               <SearchDropdown {...dropdownProps} />
             </div>
 
-            {/* Spacer (mobile only) */}
-            <div className="flex-1 lg:hidden" />
-
             {/* Actions */}
-            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 z-10">
 
               {/* Wishlist — lg+ */}
               <Link
@@ -570,7 +570,7 @@ export default function Header({
           {/* Panel header */}
           <div className="flex items-center justify-between px-4 py-3 bg-accent shrink-0">
             <div className="relative w-28 h-9">
-              <Image src="/logo.png" alt="کارخودرو" fill className="object-contain" />
+              <Image src="/logo.png" alt="کارخودرو" fill  className="object-contain h-11 sm:h-12" />
             </div>
             <button
               onClick={() => setMenuOpen(false)}
