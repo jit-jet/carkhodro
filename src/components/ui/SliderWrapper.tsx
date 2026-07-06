@@ -146,7 +146,7 @@ export default function SliderWrapper({ children, className = "" }: SliderWrappe
       <button
         onClick={() => scroll("prev")}
         aria-label="قبلی"
-        className={`${BTN} inset-s-0 -ms-5`}
+        className={`${BTN} inset-s-0 -ms-5 max-md:hidden`}
       >
         <ChevronRightIcon />
       </button>
@@ -165,7 +165,7 @@ export default function SliderWrapper({ children, className = "" }: SliderWrappe
       <button
         onClick={() => scroll("next")}
         aria-label="بعدی"
-        className={`${BTN} inset-e-0 -me-5`}
+        className={`${BTN} inset-e-0 -me-5 max-md:hidden`}
       >
         <ChevronLeftIcon />
       </button>
