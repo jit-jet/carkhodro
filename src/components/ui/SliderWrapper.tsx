@@ -19,7 +19,7 @@ function ChevronLeftIcon() {
 }
 
 const BTN =
-  "absolute top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all duration-200 hover:bg-accent hover:text-charcoal active:scale-90 text-gray-600";
+  "absolute top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-all duration-200 hover:bg-accent hover:text-charcoal active:scale-90 text-gray-600 max-md:hidden";
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -146,7 +146,7 @@ export default function SliderWrapper({ children, className = "" }: SliderWrappe
       <button
         onClick={() => scroll("prev")}
         aria-label="قبلی"
-        className={`${BTN} inset-s-0 -ms-5 max-md:hidden`}
+        className={`${BTN} inset-s-0 -ms-5`}
       >
         <ChevronRightIcon />
       </button>
@@ -165,7 +165,7 @@ export default function SliderWrapper({ children, className = "" }: SliderWrappe
       <button
         onClick={() => scroll("next")}
         aria-label="بعدی"
-        className={`${BTN} inset-e-0 -me-5 max-md:hidden`}
+        className={`${BTN} inset-e-0 -me-5`}
       >
         <ChevronLeftIcon />
       </button>
