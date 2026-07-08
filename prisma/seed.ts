@@ -357,6 +357,106 @@ const POSTS = [
   },
 ];
 
+type ProvinceCityRow = {
+  provinceId: string;
+  provinceName: string;
+  cityId: string;
+  cityName: string;
+};
+
+type SeedProvincesAndCitiesResult = {
+  provinceCount: number;
+  cityCount: number;
+  /**
+   * Keyed by `province__city` — city names repeat across provinces.
+   * Used by address seeding below.
+   */
+  cityId: Map<string, number>;
+};
+
+async function seedProvincesAndCitiesFromJson(
+  options: { buildCityIdMap?: boolean } = {},
+): Promise<SeedProvincesAndCitiesResult> {
+  const { buildCityIdMap = true } = options;
+  // Normalize Arabic-script variants (ي/ك etc.) in the source data so seeded
+  // names match the Persian forms used everywhere else in the app.
+  //
+  // Three provinces are written in the JSON with the conjunction «و» glued to the
+  // next word ("سیستان وبلوچستان"); the conventional spaced form ("سیستان و
+  // بلوچستان") is used everywhere else. `normalizePersianText` collapses runs of
+  // whitespace but never inserts one, so the fix is an explicit map for just
+  // these three names.
+  const PROVINCE_NAME_FIXUPS: Record<string, string> = {
+    'چهارمحال وبختیاری': 'چهارمحال و بختیاری',
+    'سیستان وبلوچستان': 'سیستان و بلوچستان',
+    'کهگیلویه وبویراحمد': 'کهگیلویه و بویراحمد',
+  };
+  const canonicalProvince = (name: string) => PROVINCE_NAME_FIXUPS[name] ?? name;
+
+  const provinceCityMap = new Map<string, Set<string>>();
+  for (const row of provincesCitiesData as ProvinceCityRow[]) {
+    const provinceName = canonicalProvince(normalizePersianText(row.provinceName));
+    const cityName = normalizePersianText(row.cityName);
+
+    if (!provinceCityMap.has(provinceName)) provinceCityMap.set(provinceName, new Set());
+    provinceCityMap.get(provinceName)!.add(cityName);
+  }
+
+  const provinceNames = [...provinceCityMap.keys()];
+
+  // Provinces
+  await prisma.province.createMany({
+    data: provinceNames.map(name => ({ name })),
+    skipDuplicates: true,
+  });
+
+  const provinces = await prisma.province.findMany({
+    where: { name: { in: provinceNames } },
+    select: { id: true, name: true },
+  });
+
+  const provinceIdByName = new Map(provinces.map(p => [p.name, p.id]));
+  const missingProvinceNames = provinceNames.filter(name => !provinceIdByName.has(name));
+  if (missingProvinceNames.length > 0) {
+    throw new Error(`Failed to resolve province ids for: ${missingProvinceNames.join(', ')}`);
+  }
+
+  // Cities (FK: city.provinceId → province.id)
+  const cityRowsInput = provinceNames.flatMap(provinceName =>
+    [...provinceCityMap.get(provinceName)!].map(cityName => ({
+      provinceId: provinceIdByName.get(provinceName)!,
+      name: cityName,
+    })),
+  );
+
+  await prisma.city.createMany({
+    data: cityRowsInput,
+    skipDuplicates: true,
+  });
+
+  const cityId = new Map<string, number>();
+  if (buildCityIdMap) {
+    const provinceIds = provinces.map(p => p.id);
+    const cities = await prisma.city.findMany({
+      where: { provinceId: { in: provinceIds } },
+      select: { id: true, name: true, provinceId: true },
+    });
+
+    const provinceNameById = new Map(provinces.map(p => [p.id, p.name]));
+    for (const c of cities) {
+      const provinceName = provinceNameById.get(c.provinceId);
+      if (!provinceName) continue;
+      cityId.set(`${provinceName}__${c.name}`, c.id);
+    }
+  }
+
+  return {
+    provinceCount: provinceNames.length,
+    cityCount: cityRowsInput.length,
+    cityId,
+  };
+}
+
 async function main() {
   // ── Posts (idempotent) ─────────────────────────────────────────────────────
   const postCount = await prisma.post.count();
@@ -408,58 +508,26 @@ async function main() {
     console.log('  6 FAQs seeded.');
   }
 
-  const count = await prisma.product.count();
-  if (count > 0) {
-    console.log(`Already seeded (${count} products). Skipping catalogue.`);
+  const productCount = await prisma.product.count();
+
+  // Keep Province/City reference data in sync with `provinces_cities.json`.
+  // `buildCityIdMap` is only required when we seed user addresses (i.e.
+  // only in the catalogue seeding branch).
+  const seedResult = await seedProvincesAndCitiesFromJson({
+    buildCityIdMap: productCount === 0,
+  });
+
+  const seededProvinceCount = seedResult.provinceCount;
+  const seededCityCount = seedResult.cityCount;
+  const cityId: Map<string, number> | null = productCount === 0 ? seedResult.cityId : null;
+
+  if (productCount > 0) {
+    console.log(`Already seeded (${productCount} products). Skipping catalogue.`);
   } else {
+    if (!cityId) throw new Error('seedProvincesAndCitiesFromJson() did not populate cityId');
 
-  // ── Provinces & cities (seeded from the official list) ──────────────────────
-  // Normalize Arabic-script variants (ي/ك etc.) in the source data so seeded
-  // names match the Persian forms used everywhere else in the app.
-  //
-  // Three provinces are written in the JSON with the conjunction «و» glued to the
-  // next word ("سیستان وبلوچستان"); the conventional spaced form ("سیستان و
-  // بلوچستان") is used everywhere else. `normalizePersianText` collapses runs of
-  // whitespace but never inserts one, and a generic "split و" rule is unsafe (it
-  // would wrongly break city names that legitimately start with «و», e.g.
-  // «ورامین»), so the fix is an explicit map for just these three names.
-  const PROVINCE_NAME_FIXUPS: Record<string, string> = {
-    'چهارمحال وبختیاری': 'چهارمحال و بختیاری',
-    'سیستان وبلوچستان': 'سیستان و بلوچستان',
-    'کهگیلویه وبویراحمد': 'کهگیلویه و بویراحمد',
-  };
-  const canonicalProvince = (name: string) => PROVINCE_NAME_FIXUPS[name] ?? name;
-
-  const provinceCityMap = new Map<string, Set<string>>();
-  for (const row of provincesCitiesData as { provinceName: string; cityName: string }[]) {
-    const provinceName = canonicalProvince(normalizePersianText(row.provinceName));
-    const cityName = normalizePersianText(row.cityName);
-    if (!provinceCityMap.has(provinceName)) provinceCityMap.set(provinceName, new Set());
-    provinceCityMap.get(provinceName)!.add(cityName);
-  }
-  const provinceNames = [...provinceCityMap.keys()];
-
-  const provinces = await prisma.$transaction(
-    provinceNames.map(name => prisma.province.create({ data: { name } })),
-    { timeout: 30000 },
-  );
-  const provinceId = new Map(provinces.map(p => [p.name, p.id]));
-
-  const cityRowsInput = provinceNames.flatMap(provinceName =>
-    [...provinceCityMap.get(provinceName)!].map(cityName => ({
-      provinceName,
-      cityName,
-      provinceId: provinceId.get(provinceName)!,
-    })),
-  );
-  const cities = await prisma.$transaction(
-    cityRowsInput.map(c => prisma.city.create({ data: { name: c.cityName, provinceId: c.provinceId } })),
-    { timeout: 60000 },
-  );
-  // Keyed by `province__city` — city names repeat across provinces.
-  const cityId = new Map(
-    cities.map((c, i) => [`${cityRowsInput[i].provinceName}__${cityRowsInput[i].cityName}`, c.id]),
-  );
+  // ── Provinces & cities seeded from `provinces_cities.json` ────────────────
+  // (done before entering the catalogue seeding branch)
 
   // ── Car Brands ─────────────────────────────────────────────────────────────
   const carBrandsInput = [
@@ -739,7 +807,7 @@ async function main() {
   });
 
   console.log('Seed complete:');
-  console.log(`  ${provinces.length} provinces, ${cities.length} cities`);
+  console.log(`  ${seededProvinceCount} provinces, ${seededCityCount} cities`);
   console.log(`  ${carBrands.length} car brands, ${carModels.length} car models`);
   console.log(`  ${partsBrands.length} parts brands, ${categories.length} categories`);
   console.log(`  ${products.length} products`);
