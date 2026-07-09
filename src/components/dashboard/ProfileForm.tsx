@@ -15,7 +15,7 @@ import {
   updateProfile,
   updateAvatar,
   removeAvatar,
-} from "@/actions/partner-profile";
+} from "@/actions/dashboard-profile";
 import { JALALI_MONTHS } from "@/src/lib/jalali-convert";
 import type { ProfileVM } from "@/src/lib/dashboard-types";
 import type { ProvinceVM } from "@/src/lib/serializers";

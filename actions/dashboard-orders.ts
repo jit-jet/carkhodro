@@ -17,7 +17,7 @@ import {
   formatJalaliWithWeekday,
   formatTimeFa,
 } from '@/src/lib/format';
-import { PER_PAGE_OPTIONS, DEFAULT_PER_PAGE } from '@/src/lib/partner-options';
+import { PER_PAGE_OPTIONS, DEFAULT_PER_PAGE } from '@/src/lib/dashboard-options';
 import type { OrderStatus, Prisma } from '@/generated/prisma_client';
 import type {
   OrdersPageVM,
@@ -41,7 +41,7 @@ const EMPTY_PAGE: OrdersPageVM = {
   pageCount: 0,
 };
 
-export async function getPartnerOrders(query: OrdersQuery = {}): Promise<OrdersPageVM> {
+export async function getOrdersPage(query: OrdersQuery = {}): Promise<OrdersPageVM> {
   const user = await getCurrentUser();
   if (!user) return EMPTY_PAGE;
 
@@ -56,7 +56,7 @@ export async function getPartnerOrders(query: OrdersQuery = {}): Promise<OrdersP
   if (Number.isFinite(parsedNumber) && parsedNumber > 0) where.orderNumber = parsedNumber;
 
   return safeQuery(
-    'getPartnerOrders',
+    'getOrdersPage',
     async () => {
       const total = await prisma.order.count({ where });
       const pageCount = Math.max(1, Math.ceil(total / perPage));

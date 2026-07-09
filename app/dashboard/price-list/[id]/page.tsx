@@ -14,7 +14,7 @@ import { formatRial, formatNumberFa } from '@/src/lib/format';
 import PrintButton from '@/src/components/dashboard/PrintButton';
 
 export const metadata: Metadata = {
-  title: 'لیست قیمت | پنل همکاران کارخودرو',
+  title: 'لیست قیمت | پنل کاربری کارخودرو',
 };
 
 export default function GeneratedPriceListPage({

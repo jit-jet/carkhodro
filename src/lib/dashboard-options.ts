@@ -1,5 +1,5 @@
 /**
- * Shared partner-dashboard option constants.
+ * Shared dashboard option constants.
  * ───────────────────────────────────────────
  * Lives in a directive-free module (not a `'use server'` action file, which may
  * only export async functions) so both the actions and the Client Components can

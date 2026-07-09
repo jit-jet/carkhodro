@@ -1,12 +1,12 @@
 'use client';
 
 /**
- * Partner cart / invoice builder.
+ * Cart / invoice builder.
  * ───────────────────────────────
  * Editable line items (qty steppers, per-row select + bulk remove), a fuzzy
  * search-&-add modal and an "add from previous purchases" modal, payment terms +
  * notes, and «ثبت فاکتور» which creates the order. Mutations return the fresh
- * `PartnerCartVM` which is reconciled into local state; the header cart badge is
+ * `DashboardCartVM` which is reconciled into local state; the header cart badge is
  * kept in sync via the shared cart-UI store.
  */
 
@@ -17,24 +17,24 @@ import {
   setInvoiceLineQty,
   removeInvoiceLines,
   submitInvoice,
-} from '@/actions/partner-cart';
+} from '@/actions/dashboard-cart';
 import { useCartUI } from '@/src/store/cart-ui';
 import { formatRial, tomanInWords, formatNumberFa } from '@/src/lib/format';
 import InvoiceProductModal from '@/src/components/dashboard/InvoiceProductModal';
-import type { PartnerCartVM, InvoiceSearchResultVM } from '@/src/lib/dashboard-types';
+import type { DashboardCartVM, InvoiceSearchResultVM } from '@/src/lib/dashboard-types';
 
 interface Props {
-  initialCart: PartnerCartVM;
+  initialCart: DashboardCartVM;
   previousPurchases: InvoiceSearchResultVM[];
   paymentTerms: string[];
 }
 
-export default function PartnerCartView({ initialCart, previousPurchases, paymentTerms }: Props) {
+export default function CartView({ initialCart, previousPurchases, paymentTerms }: Props) {
   const router = useRouter();
   const setCount = useCartUI((s) => s.setCount);
   const notify = useCartUI((s) => s.notify);
 
-  const [cart, setCart] = useState<PartnerCartVM>(initialCart);
+  const [cart, setCart] = useState<DashboardCartVM>(initialCart);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [terms, setTerms] = useState(paymentTerms[0] ?? '');
   const [notes, setNotes] = useState('');
@@ -43,7 +43,7 @@ export default function PartnerCartView({ initialCart, previousPurchases, paymen
   const [submitting, startSubmit] = useTransition();
   const [error, setError] = useState('');
 
-  function apply(next: PartnerCartVM) {
+  function apply(next: DashboardCartVM) {
     setCart(next);
     setCount(next.totalItems);
   }

@@ -7,12 +7,12 @@
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getProfile } from '@/actions/partner-profile';
+import { getProfile } from '@/actions/dashboard-profile';
 import { getProvinces } from '@/actions/locations';
 import ProfileForm from '@/src/components/dashboard/ProfileForm';
 
 export const metadata: Metadata = {
-  title: 'پروفایل من | پنل همکاران کارخودرو',
+  title: 'پروفایل من | پنل کاربری کارخودرو',
 };
 
 export default function ProfilePage() {

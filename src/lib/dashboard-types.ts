@@ -32,9 +32,9 @@ export interface DashboardStatsVM {
   lastInvoice: { id: string; orderNumber: number; date: string } | null;
 }
 
-// ── Partner cart / invoice builder ───────────────────────────────────────────
+// ── Dashboard cart / invoice builder ─────────────────────────────────────────
 
-export interface PartnerCartLineVM {
+export interface DashboardCartLineVM {
   id: string; // cart item id
   productId: string;
   sku: string;
@@ -46,9 +46,9 @@ export interface PartnerCartLineVM {
   lineTotalToman: number; // unit × qty after discount
 }
 
-export interface PartnerCartVM {
+export interface DashboardCartVM {
   id: string;
-  lines: PartnerCartLineVM[];
+  lines: DashboardCartLineVM[];
   subtotalToman: number; // sum of line totals (after discounts)
   totalItems: number;
 }

@@ -21,15 +21,15 @@ import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
 import { searchProducts } from '@/actions/search';
-import { PAYMENT_TERMS } from '@/src/lib/partner-options';
+import { PAYMENT_TERMS } from '@/src/lib/dashboard-options';
 import type { Prisma, UserRole } from '@/generated/prisma_client';
 import type {
-  PartnerCartVM,
-  PartnerCartLineVM,
+  DashboardCartVM,
+  DashboardCartLineVM,
   InvoiceSearchResultVM,
 } from '@/src/lib/dashboard-types';
 
-const EMPTY_CART: PartnerCartVM = { id: '', lines: [], subtotalToman: 0, totalItems: 0 };
+const EMPTY_CART: DashboardCartVM = { id: '', lines: [], subtotalToman: 0, totalItems: 0 };
 
 /** Discount a role gets on a given product (only wholesale partners get one). */
 function discountPctFor(role: UserRole, wholesaleDiscountPct: Prisma.Decimal): number {
@@ -61,11 +61,11 @@ const cartArgs = {
   },
 } satisfies Prisma.CartDefaultArgs;
 
-async function loadPartnerCart(userId: string, role: UserRole): Promise<PartnerCartVM> {
+async function loadDashboardCart(userId: string, role: UserRole): Promise<DashboardCartVM> {
   const cart = await prisma.cart.findUnique({ where: { userId }, ...cartArgs });
   if (!cart) return EMPTY_CART;
 
-  const lines: PartnerCartLineVM[] = cart.items.map((item) => {
+  const lines: DashboardCartLineVM[] = cart.items.map((item) => {
     const listToman = Number(item.product.basePrice);
     const discountPct = discountPctFor(role, item.product.wholesaleDiscountPct);
     return {
@@ -89,16 +89,16 @@ async function loadPartnerCart(userId: string, role: UserRole): Promise<PartnerC
   };
 }
 
-export async function getPartnerCart(): Promise<PartnerCartVM> {
+export async function getDashboardCart(): Promise<DashboardCartVM> {
   const user = await getCurrentUser();
   if (!user) return EMPTY_CART;
-  return safeQuery('getPartnerCart', () => loadPartnerCart(user.id, user.role), EMPTY_CART);
+  return safeQuery('getDashboardCart', () => loadDashboardCart(user.id, user.role), EMPTY_CART);
 }
 
 export async function addToInvoice(
   productId: string,
   quantity = 1,
-): Promise<ActionResult<PartnerCartVM>> {
+): Promise<ActionResult<DashboardCartVM>> {
   return runMutation('addToInvoice', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('برای افزودن به فاکتور وارد شوید.');
@@ -130,14 +130,14 @@ export async function addToInvoice(
 
     revalidatePath('/dashboard/cart');
     revalidatePath('/dashboard');
-    return ok(await loadPartnerCart(user.id, user.role));
+    return ok(await loadDashboardCart(user.id, user.role));
   });
 }
 
 export async function setInvoiceLineQty(
   itemId: string,
   quantity: number,
-): Promise<ActionResult<PartnerCartVM>> {
+): Promise<ActionResult<DashboardCartVM>> {
   return runMutation('setInvoiceLineQty', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('ابتدا وارد شوید.');
@@ -152,17 +152,17 @@ export async function setInvoiceLineQty(
     await prisma.cartItem.update({ where: { id: itemId }, data: { quantity: qty } });
 
     revalidatePath('/dashboard/cart');
-    return ok(await loadPartnerCart(user.id, user.role));
+    return ok(await loadDashboardCart(user.id, user.role));
   });
 }
 
 export async function removeInvoiceLines(
   itemIds: string[],
-): Promise<ActionResult<PartnerCartVM>> {
+): Promise<ActionResult<DashboardCartVM>> {
   return runMutation('removeInvoiceLines', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('ابتدا وارد شوید.');
-    if (itemIds.length === 0) return ok(await loadPartnerCart(user.id, user.role));
+    if (itemIds.length === 0) return ok(await loadDashboardCart(user.id, user.role));
 
     await prisma.cartItem.deleteMany({
       where: { id: { in: itemIds }, cart: { userId: user.id } },
@@ -170,7 +170,7 @@ export async function removeInvoiceLines(
 
     revalidatePath('/dashboard/cart');
     revalidatePath('/dashboard');
-    return ok(await loadPartnerCart(user.id, user.role));
+    return ok(await loadDashboardCart(user.id, user.role));
   });
 }
 

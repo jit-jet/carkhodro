@@ -11,13 +11,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getInvoice } from '@/actions/partner-orders';
+import { getInvoice } from '@/actions/dashboard-orders';
 import { ORDER_STATUS_STYLE } from '@/src/lib/order-labels';
 import { formatRial, formatNumberFa, tomanInWords } from '@/src/lib/format';
 import PrintButton from '@/src/components/dashboard/PrintButton';
 
 export const metadata: Metadata = {
-  title: 'فاکتور | پنل همکاران کارخودرو',
+  title: 'فاکتور | پنل کاربری کارخودرو',
 };
 
 export default function InvoicePage({ params }: { params: Promise<{ id: string }> }) {

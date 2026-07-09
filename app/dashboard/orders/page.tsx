@@ -9,14 +9,14 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { getPartnerOrders } from '@/actions/partner-orders';
+import { getOrdersPage } from '@/actions/dashboard-orders';
 import { ORDER_STATUS_FA, ORDER_STATUS_STYLE } from '@/src/lib/order-labels';
 import { formatNumberFa, formatRial, noFormatNumberFa } from '@/src/lib/format';
 import OrdersFilterBar from '@/src/components/dashboard/OrdersFilterBar';
 import type { OrderStatus } from '@/generated/prisma_client';
 
 export const metadata: Metadata = {
-  title: 'سفارشات | پنل همکاران کارخودرو',
+  title: 'سفارشات | پنل کاربری کارخودرو',
 };
 
 interface Props {
@@ -47,7 +47,7 @@ async function OrdersContent({ searchParams }: Props) {
   const orderNumber = pickString(sp.q);
   const page = Number(pickString(sp.page)) || 1;
 
-  const data = await getPartnerOrders({
+  const data = await getOrdersPage({
     status: status || undefined,
     perPage,
     page,

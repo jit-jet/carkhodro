@@ -18,7 +18,7 @@ import Avatar from '@/src/components/dashboard/Avatar';
 import type { DashboardStatsVM } from '@/src/lib/dashboard-types';
 
 export const metadata: Metadata = {
-  title: 'داشبورد | پنل همکاران کارخودرو',
+  title: 'داشبورد | پنل کاربری کارخودرو',
 };
 
 export default function DashboardHomePage() {

@@ -10,7 +10,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { ORDER_STATUS_FA, ORDER_STATUS_ORDER } from '@/src/lib/order-labels';
-import { PER_PAGE_OPTIONS } from '@/src/lib/partner-options';
+import { PER_PAGE_OPTIONS } from '@/src/lib/dashboard-options';
 import type { OrderStatus } from '@/generated/prisma_client';
 
 interface Props {

@@ -12,7 +12,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { searchInvoiceProducts } from '@/actions/partner-cart';
+import { searchInvoiceProducts } from '@/actions/dashboard-cart';
 import { formatRial } from '@/src/lib/format';
 import type { InvoiceSearchResultVM } from '@/src/lib/dashboard-types';
 

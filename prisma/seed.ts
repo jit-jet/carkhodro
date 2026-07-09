@@ -815,8 +815,8 @@ async function main() {
   console.log(`  2 users, 2 carts (6 cart items), 16 reviews`);
   }
 
-  // ── Partner dashboard data (idempotent — runs in both branches) ─────────────
-  await seedPartnerDashboard();
+  // ── Dashboard data (idempotent — runs in both branches) ─────────────────────
+  await seedDashboard();
 }
 
 /**
@@ -825,13 +825,13 @@ async function main() {
  * lifecycle (with line discounts), surveys, support messages, backorders,
  * favorites and a price-list request. Idempotent — keyed on the partner user id.
  */
-async function seedPartnerDashboard() {
+async function seedDashboard() {
   const PARTNER_ID = 'usr_partner';
   const STREET = 'امام رضا (ع) ۴۸، چهارراه چهارم، نبش سیدتی ۱۹';
   const POSTAL = '9133456719';
 
   if (await prisma.user.findUnique({ where: { id: PARTNER_ID } })) {
-    console.log('  Partner dashboard already seeded. Skipping.');
+    console.log('  Dashboard already seeded. Skipping.');
     return;
   }
 
@@ -1038,7 +1038,7 @@ async function seedPartnerDashboard() {
   // ── Support messages (2 unread inbound → badge of ۲) ───────────────────────
   await prisma.supportMessage.createMany({
     data: [
-      { userId: partner.id, direction: 'INBOUND', subject: 'به پنل همکاران کارخودرو خوش آمدید',
+      { userId: partner.id, direction: 'INBOUND', subject: 'به پنل کاربری کارخودرو خوش آمدید',
         body: 'همکار گرامی، به پنل اختصاصی همکاران کارخودرو خوش آمدید. برای هرگونه سوال فنی یا سفارش عمده می‌توانید از همین بخش با ما در ارتباط باشید.',
         isRead: false, createdAt: new Date(Date.now() - 40 * DAY) },
       { userId: partner.id, direction: 'OUTBOUND', subject: 'درخواست افزایش سقف اعتبار خرید',

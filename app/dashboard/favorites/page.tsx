@@ -12,7 +12,7 @@ import { formatNumberFa } from '@/src/lib/format';
 import WishlistGrid from '@/src/components/wishlist/WishlistGrid';
 
 export const metadata: Metadata = {
-  title: 'علاقه‌مندی‌ها | پنل همکاران کارخودرو',
+  title: 'علاقه‌مندی‌ها | پنل کاربری کارخودرو',
 };
 
 export default function FavoritesPage() {
