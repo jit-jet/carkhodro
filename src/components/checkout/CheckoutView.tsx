@@ -79,7 +79,6 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
 
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState('');
-  const [placed, setPlaced] = useState(false);
 
   const subtotal = cart.subtotal;
   const shippingCost = shippingOptions.find((s) => s.id === shippingId)?.cost ?? 0;
@@ -116,24 +115,23 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
         contact: info,
       });
       if (result.ok) {
+        if (result.data.gatewayUrl) {
+          notify({
+            variant: 'success',
+            title: 'در حال انتقال به درگاه پرداخت',
+            description: 'لطفاً چند لحظه صبر کنید…',
+          });
+          window.location.href = result.data.gatewayUrl;
+          return;
+        }
         setCount(0);
         notify({ variant: 'success', title: 'سفارش شما ثبت شد', description: 'سپاس از خرید شما 🎉' });
-        // Online payments land on the dedicated payment-result page (where a real
-        // gateway would redirect back to); COD has nothing to pay, so it shows the
-        // inline confirmation.
-        if (payment === 'online') {
-          router.push(`/payment/success?order=${result.data.id}`);
-        } else {
-          setPlaced(true);
-          router.refresh();
-        }
+        router.push(`/payment/success?order=${result.data.id}`);
       } else {
         setError(result.error);
       }
     });
   }
-
-  if (placed) return <CheckoutSuccess paymentOnline={payment === 'online'} />;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -206,38 +204,6 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
             <p className="text-center text-xs text-gray-400 mt-3">در حال ثبت سفارش…</p>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function CheckoutSuccess({ paymentOnline }: { paymentOnline: boolean }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="w-16 h-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-5">
-        <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M20 6L9 17l-5-5" />
-        </svg>
-      </div>
-      <h2 className="text-xl font-bold text-charcoal mb-2">سفارش شما با موفقیت ثبت شد</h2>
-      <p className="text-sm text-gray-400 mb-8">
-        {paymentOnline
-          ? 'پرداخت با موفقیت انجام شد. جزئیات سفارش در داشبورد شما در دسترس است. 🎉'
-          : 'سفارش شما ثبت شد و هنگام تحویل پرداخت می‌شود. 🎉'}
-      </p>
-      <div className="flex items-center gap-3">
-        <Link
-          href="/dashboard"
-          className="bg-accent hover:bg-accent-dark text-charcoal font-semibold px-8 py-3 rounded-xl transition-colors shadow hover:shadow-md"
-        >
-          مشاهده سفارش‌ها
-        </Link>
-        <Link
-          href="/products"
-          className="border-2 border-silver hover:border-accent text-charcoal font-semibold px-8 py-3 rounded-xl transition-colors"
-        >
-          ادامه خرید
-        </Link>
       </div>
     </div>
   );

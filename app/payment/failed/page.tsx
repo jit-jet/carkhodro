@@ -3,8 +3,8 @@
  * ────────────────────
  * Landing page when an online payment is cancelled or rejected by the gateway.
  * The gateway callback redirects here, optionally with `?reason=<message>` (and
- * `?order=<id>` for reference). No order is created/charged on failure, so this
- * page only needs to explain what happened and offer a retry.
+ * `?order=<id>` for reference). Failed online orders are cancelled and stock
+ * is restored automatically.
  *
  * `searchParams` is request-time data under Cache Components, so the part that
  * reads it streams inside <Suspense> while the static shell ships.

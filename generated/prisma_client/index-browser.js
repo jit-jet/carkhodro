@@ -368,6 +368,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   totalAmount: 'totalAmount',
   notes: 'notes',
   trackingCode: 'trackingCode',
+  paymentTrackId: 'paymentTrackId',
+  paymentRefNumber: 'paymentRefNumber',
   paidAt: 'paidAt',
   shippedAt: 'shippedAt',
   deliveredAt: 'deliveredAt',

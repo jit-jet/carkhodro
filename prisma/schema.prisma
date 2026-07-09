@@ -585,6 +585,11 @@ model Order {
   notes        String?
   trackingCode String?   @map("tracking_code")
 
+  /// Zibal IPG session id — set when an online payment is initiated.
+  paymentTrackId   BigInt?  @map("payment_track_id")
+  /// Bank reference number returned by Zibal after a successful verify.
+  paymentRefNumber String?  @map("payment_ref_number")
+
   paidAt      DateTime? @map("paid_at")
   shippedAt   DateTime? @map("shipped_at")
   deliveredAt DateTime? @map("delivered_at")

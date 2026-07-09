@@ -15,6 +15,10 @@ import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
 import { resolveLocation } from '@/src/lib/resolve-location';
+import { RIAL_PER_TOMAN } from '@/src/lib/format';
+import { clearUserCart } from '@/src/lib/clear-user-cart';
+import { zibalRequestPayment, zibalStartUrl } from '@/src/lib/zibal/client';
+import { ZIBAL_RESULT_OK } from '@/src/lib/zibal/types';
 import { tags } from '@/actions/cache-tags';
 import type { OrderStatus, Prisma } from '@/generated/prisma_client';
 import type {
@@ -168,7 +172,7 @@ function validateContact(
  */
 export async function submitCheckout(
   input: CheckoutInput,
-): Promise<ActionResult<{ id: string }>> {
+): Promise<ActionResult<{ id: string; gatewayUrl?: string }>> {
   return runMutation('submitCheckout', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('برای ثبت سفارش وارد شوید.');
@@ -254,12 +258,15 @@ export async function submitCheckout(
         : await tx.address.create({ data: addressData });
 
       // 2. Create the order with a snapshot of the (just-saved) address.
+      const isOnline = input.paymentMethod === 'ONLINE';
       const created = await tx.order.create({
         data: {
           userId: user.id,
           addressId: address.id,
           shippingOptionId: shipping.id,
           paymentMethod: input.paymentMethod,
+          paymentStatus: 'PENDING',
+          status: isOnline ? 'CONFIRMED_AWAITING_PAYMENT' : 'NEW',
           snapshotProvince: province.name,
           snapshotCity: city.name,
           snapshotStreet: contact.street,
@@ -271,7 +278,7 @@ export async function submitCheckout(
           notes: input.notes ?? null,
           items: { create: lineItems },
         },
-        select: { id: true },
+        select: { id: true, totalAmount: true },
       });
 
       for (const item of cart.items) {
@@ -284,7 +291,6 @@ export async function submitCheckout(
         });
       }
 
-      await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
       return created;
     });
 
@@ -295,7 +301,57 @@ export async function submitCheckout(
     revalidatePath('/checkout');
     revalidatePath('/dashboard');
 
-    return ok(order);
+    if (input.paymentMethod === 'ONLINE') {
+      const amountRial = Number(order.totalAmount) * RIAL_PER_TOMAN;
+      if (amountRial < 1000) {
+        return fail('مبلغ سفارش برای پرداخت آنلاین کافی نیست.');
+      }
+
+      const payment = await zibalRequestPayment({
+        amount: amountRial,
+        orderId: order.id,
+        description: `سفارش کارخودرو`,
+        mobile: user.phoneNumber,
+      });
+
+      if (payment.result !== ZIBAL_RESULT_OK || payment.trackId == null) {
+        await prisma.$transaction(async (tx) => {
+          const pending = await tx.order.findUnique({
+            where: { id: order.id },
+            include: { items: true },
+          });
+          if (!pending || pending.paymentStatus !== 'PENDING') return;
+          for (const item of pending.items) {
+            await tx.product.update({
+              where: { id: item.productId },
+              data: {
+                stock: { increment: item.quantity },
+                saleCount: { decrement: item.quantity },
+              },
+            });
+          }
+          await tx.order.update({
+            where: { id: order.id },
+            data: {
+              paymentStatus: 'FAILED',
+              status: 'CANCELLED_BY_CUSTOMER',
+            },
+          });
+        });
+        updateTag(tags.products);
+        return fail(payment.message || 'اتصال به درگاه پرداخت برقرار نشد. لطفاً دوباره تلاش کنید.');
+      }
+
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { paymentTrackId: BigInt(payment.trackId) },
+      });
+
+      return ok({ id: order.id, gatewayUrl: zibalStartUrl(payment.trackId) });
+    }
+
+    await clearUserCart(user.id);
+    return ok({ id: order.id });
   });
 }
 

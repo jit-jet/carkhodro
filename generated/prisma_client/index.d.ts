@@ -29347,6 +29347,7 @@ export namespace Prisma {
     shippingCost: number | null
     taxAmount: number | null
     totalAmount: number | null
+    paymentTrackId: number | null
   }
 
   export type OrderSumAggregateOutputType = {
@@ -29355,6 +29356,7 @@ export namespace Prisma {
     shippingCost: bigint | null
     taxAmount: bigint | null
     totalAmount: bigint | null
+    paymentTrackId: bigint | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -29377,6 +29379,8 @@ export namespace Prisma {
     totalAmount: bigint | null
     notes: string | null
     trackingCode: string | null
+    paymentTrackId: bigint | null
+    paymentRefNumber: string | null
     paidAt: Date | null
     shippedAt: Date | null
     deliveredAt: Date | null
@@ -29404,6 +29408,8 @@ export namespace Prisma {
     totalAmount: bigint | null
     notes: string | null
     trackingCode: string | null
+    paymentTrackId: bigint | null
+    paymentRefNumber: string | null
     paidAt: Date | null
     shippedAt: Date | null
     deliveredAt: Date | null
@@ -29431,6 +29437,8 @@ export namespace Prisma {
     totalAmount: number
     notes: number
     trackingCode: number
+    paymentTrackId: number
+    paymentRefNumber: number
     paidAt: number
     shippedAt: number
     deliveredAt: number
@@ -29446,6 +29454,7 @@ export namespace Prisma {
     shippingCost?: true
     taxAmount?: true
     totalAmount?: true
+    paymentTrackId?: true
   }
 
   export type OrderSumAggregateInputType = {
@@ -29454,6 +29463,7 @@ export namespace Prisma {
     shippingCost?: true
     taxAmount?: true
     totalAmount?: true
+    paymentTrackId?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -29476,6 +29486,8 @@ export namespace Prisma {
     totalAmount?: true
     notes?: true
     trackingCode?: true
+    paymentTrackId?: true
+    paymentRefNumber?: true
     paidAt?: true
     shippedAt?: true
     deliveredAt?: true
@@ -29503,6 +29515,8 @@ export namespace Prisma {
     totalAmount?: true
     notes?: true
     trackingCode?: true
+    paymentTrackId?: true
+    paymentRefNumber?: true
     paidAt?: true
     shippedAt?: true
     deliveredAt?: true
@@ -29530,6 +29544,8 @@ export namespace Prisma {
     totalAmount?: true
     notes?: true
     trackingCode?: true
+    paymentTrackId?: true
+    paymentRefNumber?: true
     paidAt?: true
     shippedAt?: true
     deliveredAt?: true
@@ -29644,6 +29660,8 @@ export namespace Prisma {
     totalAmount: bigint
     notes: string | null
     trackingCode: string | null
+    paymentTrackId: bigint | null
+    paymentRefNumber: string | null
     paidAt: Date | null
     shippedAt: Date | null
     deliveredAt: Date | null
@@ -29690,6 +29708,8 @@ export namespace Prisma {
     totalAmount?: boolean
     notes?: boolean
     trackingCode?: boolean
+    paymentTrackId?: boolean
+    paymentRefNumber?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -29723,6 +29743,8 @@ export namespace Prisma {
     totalAmount?: boolean
     notes?: boolean
     trackingCode?: boolean
+    paymentTrackId?: boolean
+    paymentRefNumber?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -29753,6 +29775,8 @@ export namespace Prisma {
     totalAmount?: boolean
     notes?: boolean
     trackingCode?: boolean
+    paymentTrackId?: boolean
+    paymentRefNumber?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -29783,6 +29807,8 @@ export namespace Prisma {
     totalAmount?: boolean
     notes?: boolean
     trackingCode?: boolean
+    paymentTrackId?: boolean
+    paymentRefNumber?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -29790,7 +29816,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "totalAmount" | "notes" | "trackingCode" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "totalAmount" | "notes" | "trackingCode" | "paymentTrackId" | "paymentRefNumber" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     address?: boolean | AddressDefaultArgs<ExtArgs>
@@ -29856,6 +29882,14 @@ export namespace Prisma {
       totalAmount: bigint
       notes: string | null
       trackingCode: string | null
+      /**
+       * Zibal IPG session id — set when an online payment is initiated.
+       */
+      paymentTrackId: bigint | null
+      /**
+       * Bank reference number returned by Zibal after a successful verify.
+       */
+      paymentRefNumber: string | null
       paidAt: Date | null
       shippedAt: Date | null
       deliveredAt: Date | null
@@ -30308,6 +30342,8 @@ export namespace Prisma {
     readonly totalAmount: FieldRef<"Order", 'BigInt'>
     readonly notes: FieldRef<"Order", 'String'>
     readonly trackingCode: FieldRef<"Order", 'String'>
+    readonly paymentTrackId: FieldRef<"Order", 'BigInt'>
+    readonly paymentRefNumber: FieldRef<"Order", 'String'>
     readonly paidAt: FieldRef<"Order", 'DateTime'>
     readonly shippedAt: FieldRef<"Order", 'DateTime'>
     readonly deliveredAt: FieldRef<"Order", 'DateTime'>
@@ -36773,6 +36809,8 @@ export namespace Prisma {
     totalAmount: 'totalAmount',
     notes: 'notes',
     trackingCode: 'trackingCode',
+    paymentTrackId: 'paymentTrackId',
+    paymentRefNumber: 'paymentRefNumber',
     paidAt: 'paidAt',
     shippedAt: 'shippedAt',
     deliveredAt: 'deliveredAt',
@@ -38682,6 +38720,8 @@ export namespace Prisma {
     totalAmount?: BigIntFilter<"Order"> | bigint | number
     notes?: StringNullableFilter<"Order"> | string | null
     trackingCode?: StringNullableFilter<"Order"> | string | null
+    paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
+    paymentRefNumber?: StringNullableFilter<"Order"> | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -38714,6 +38754,8 @@ export namespace Prisma {
     totalAmount?: SortOrder
     notes?: SortOrderInput | SortOrder
     trackingCode?: SortOrderInput | SortOrder
+    paymentTrackId?: SortOrderInput | SortOrder
+    paymentRefNumber?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     shippedAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
@@ -38749,6 +38791,8 @@ export namespace Prisma {
     totalAmount?: BigIntFilter<"Order"> | bigint | number
     notes?: StringNullableFilter<"Order"> | string | null
     trackingCode?: StringNullableFilter<"Order"> | string | null
+    paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
+    paymentRefNumber?: StringNullableFilter<"Order"> | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -38781,6 +38825,8 @@ export namespace Prisma {
     totalAmount?: SortOrder
     notes?: SortOrderInput | SortOrder
     trackingCode?: SortOrderInput | SortOrder
+    paymentTrackId?: SortOrderInput | SortOrder
+    paymentRefNumber?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     shippedAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
@@ -38816,6 +38862,8 @@ export namespace Prisma {
     totalAmount?: BigIntWithAggregatesFilter<"Order"> | bigint | number
     notes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     trackingCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    paymentTrackId?: BigIntNullableWithAggregatesFilter<"Order"> | bigint | number | null
+    paymentRefNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
     paidAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
@@ -40864,6 +40912,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -40896,6 +40946,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -40921,6 +40973,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -40953,6 +41007,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -40982,6 +41038,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -41005,6 +41063,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -41032,6 +41092,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -42894,6 +42956,8 @@ export namespace Prisma {
     totalAmount?: SortOrder
     notes?: SortOrder
     trackingCode?: SortOrder
+    paymentTrackId?: SortOrder
+    paymentRefNumber?: SortOrder
     paidAt?: SortOrder
     shippedAt?: SortOrder
     deliveredAt?: SortOrder
@@ -42907,6 +42971,7 @@ export namespace Prisma {
     shippingCost?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    paymentTrackId?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -42929,6 +42994,8 @@ export namespace Prisma {
     totalAmount?: SortOrder
     notes?: SortOrder
     trackingCode?: SortOrder
+    paymentTrackId?: SortOrder
+    paymentRefNumber?: SortOrder
     paidAt?: SortOrder
     shippedAt?: SortOrder
     deliveredAt?: SortOrder
@@ -42956,6 +43023,8 @@ export namespace Prisma {
     totalAmount?: SortOrder
     notes?: SortOrder
     trackingCode?: SortOrder
+    paymentTrackId?: SortOrder
+    paymentRefNumber?: SortOrder
     paidAt?: SortOrder
     shippedAt?: SortOrder
     deliveredAt?: SortOrder
@@ -42969,6 +43038,7 @@ export namespace Prisma {
     shippingCost?: SortOrder
     taxAmount?: SortOrder
     totalAmount?: SortOrder
+    paymentTrackId?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -45667,6 +45737,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -45697,6 +45769,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -46007,6 +46081,8 @@ export namespace Prisma {
     totalAmount?: BigIntFilter<"Order"> | bigint | number
     notes?: StringNullableFilter<"Order"> | string | null
     trackingCode?: StringNullableFilter<"Order"> | string | null
+    paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
+    paymentRefNumber?: StringNullableFilter<"Order"> | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -46463,6 +46539,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -46493,6 +46571,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -49138,6 +49218,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -49168,6 +49250,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -49572,6 +49656,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -49603,6 +49689,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -49722,6 +49810,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49753,6 +49843,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49991,6 +50083,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -50022,6 +50116,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -50123,6 +50219,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50154,6 +50252,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50752,6 +50852,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -50888,6 +50990,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50918,6 +51022,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50946,6 +51052,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51152,6 +51260,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -51175,6 +51285,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51205,6 +51317,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51233,6 +51347,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51856,6 +51972,8 @@ export namespace Prisma {
     totalAmount: bigint | number
     notes?: string | null
     trackingCode?: string | null
+    paymentTrackId?: bigint | number | null
+    paymentRefNumber?: string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -51879,6 +51997,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51909,6 +52029,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51937,6 +52059,8 @@ export namespace Prisma {
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

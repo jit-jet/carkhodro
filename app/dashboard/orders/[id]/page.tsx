@@ -60,7 +60,7 @@ async function InvoiceContent({ params }: { params: Promise<{ id: string }> }) {
         <div className="grid sm:grid-cols-3 gap-4 items-start pb-6 border-b border-gray-100">
           <div className="order-2 sm:order-1 text-xs space-y-1 text-charcoal">
             <p>
-              شماره: <span className="font-mono font-bold">{formatNumberFa(invoice.orderNumber)}</span>
+               فاکتورشماره: <span className="font-mono font-bold">{invoice.orderNumber}</span>
             </p>
             <p>تاریخ: {invoice.date}</p>
             <p>زمان: {invoice.time}</p>

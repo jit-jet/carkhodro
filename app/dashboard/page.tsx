@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getDashboardStats } from '@/actions/dashboard';
-import { formatRial, formatNumberFa } from '@/src/lib/format';
+import { formatRial, formatNumberFa, noFormatNumberFa } from '@/src/lib/format';
 import Avatar from '@/src/components/dashboard/Avatar';
 import type { DashboardStatsVM } from '@/src/lib/dashboard-types';
 
@@ -114,8 +114,8 @@ function LastInvoiceCard({ lastInvoice }: { lastInvoice: DashboardStatsVM['lastI
     <StatCard
       href={`/dashboard/orders/${lastInvoice.id}`}
       icon="invoice"
-      title="آخرین فاکتور"
-      value={`#${formatNumberFa(lastInvoice.orderNumber)}`}
+      title="آخرین شماره فاکتور"
+      value={`${noFormatNumberFa(lastInvoice.orderNumber)}`}
       subtitle={`ثبت‌شده در ${lastInvoice.date}`}
     />
   );

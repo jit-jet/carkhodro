@@ -20,6 +20,10 @@ export function formatNumberFa(n: number): string {
   return Math.round(n).toLocaleString('fa-IR');
 }
 
+export function noFormatNumberFa(n: number): string {
+  return Math.round(n).toLocaleString('fa-IR',{useGrouping: false,});
+}
+
 /** A Toman amount rendered in Rial, e.g. `«۸٬۳۰۰٬۰۰۰ ریال»`. */
 export function formatRial(toman: number): string {
   return `${formatNumberFa(toman * RIAL_PER_TOMAN)} ریال`;

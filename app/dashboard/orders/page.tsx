@@ -11,7 +11,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getPartnerOrders } from '@/actions/partner-orders';
 import { ORDER_STATUS_FA, ORDER_STATUS_STYLE } from '@/src/lib/order-labels';
-import { formatNumberFa, formatRial } from '@/src/lib/format';
+import { formatNumberFa, formatRial, noFormatNumberFa } from '@/src/lib/format';
 import OrdersFilterBar from '@/src/components/dashboard/OrdersFilterBar';
 import type { OrderStatus } from '@/generated/prisma_client';
 
@@ -91,11 +91,11 @@ async function OrdersContent({ searchParams }: Props) {
               <tbody className="divide-y divide-gray-50">
                 {data.items.map((order, index) => (
                   <tr key={order.id} className="text-charcoal hover:bg-silver-light/50 transition-colors">
-                    <td className="py-3 px-3 text-center text-red-500 font-bold">
-                      {formatNumberFa((data.page - 1) * data.perPage + index + 1)}
+                    <td className="py-3 px-3 text-center text-gray-400 font-bold">
+                      {noFormatNumberFa((data.page - 1) * data.perPage + index + 1)}
                     </td>
                     <td className="py-3 px-3 text-right font-mono font-semibold">
-                      {order.orderNumber}
+                      {noFormatNumberFa(order.orderNumber)}
                     </td>
                     <td className="py-3 px-3 text-center">
                       <span
