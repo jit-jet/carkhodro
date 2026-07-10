@@ -221,7 +221,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
         <div className="grid lg:grid-cols-2 gap-4">
           {/* Settlement + notes */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
-            <div>
+            {/* <div>
               <label className="block text-sm font-semibold text-accent-dark mb-2">
                 روش پرداخت را انتخاب کنید:
               </label>
@@ -236,7 +236,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
             <div>
               <label className="block text-sm font-semibold text-charcoal mb-2">توضیحات</label>
               <textarea

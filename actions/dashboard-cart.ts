@@ -20,6 +20,7 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
+import { clearCart } from '@/actions/cart';
 import { searchProducts } from '@/actions/search';
 import { PAYMENT_TERMS } from '@/src/lib/dashboard-options';
 import type { Prisma, UserRole } from '@/generated/prisma_client';
@@ -368,9 +369,13 @@ export async function submitInvoice(input: {
           },
         });
       }
-      await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
       return created;
     });
+
+    const cleared = await clearCart();
+    if (!cleared.ok) {
+      console.error('[submitInvoice] clearCart failed after order creation:', cleared.error);
+    }
 
     revalidatePath('/dashboard/cart');
     revalidatePath('/dashboard/orders');
