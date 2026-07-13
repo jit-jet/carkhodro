@@ -95,7 +95,7 @@ export async function buildGuestCartVM(lines: GuestCartLine[]): Promise<CartVM> 
       if (!product || product.stock < 1) return null;
       const quantity = Math.min(product.stock, line.quantity);
       // Reuse the shared serializer; item id === productId for guests.
-      return toCartItemVM({ id: product.id, productId: product.id, quantity, product });
+      return toCartItemVM({ id: product.id, productId: product.id, quantity, product }, null);
     })
     .filter((i): i is NonNullable<typeof i> => i !== null);
 

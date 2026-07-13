@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { getProductById, getRelatedProducts } from '@/actions/products';
+import { getProductById, getRelatedProducts, withViewerPricing, withViewerProduct } from '@/actions/products';
 import { getProductReviews } from '@/actions/reviews';
 import ImageGallery    from '@/src/components/pdp/ImageGallery';
 import CartActions     from '@/src/components/pdp/CartActions';
@@ -61,11 +61,12 @@ export default function ProductPage({
 
 async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = await getProductById(id);
-  if (!product) notFound();
+  const rawProduct = await getProductById(id);
+  if (!rawProduct) notFound();
+  const product = (await withViewerProduct(rawProduct))!;
 
   const [relatedProducts, comments] = await Promise.all([
-    getRelatedProducts(product.id, product.categoryId),
+    withViewerPricing(await getRelatedProducts(product.id, product.categoryId)),
     getProductReviews(product.id),
   ]);
   const flag = ORIGIN_FLAGS[product.origin] ?? '🏭';

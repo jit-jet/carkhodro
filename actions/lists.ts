@@ -25,6 +25,7 @@ import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
 import { productInclude, toProductVM, type ProductVM } from '@/src/lib/serializers';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
 import { COMPARE_LIMIT } from '@/src/lib/lists';
 
 const LOGIN_REQUIRED = 'برای استفاده از این قابلیت ابتدا وارد شوید.';
@@ -166,7 +167,7 @@ export async function getWishlist(): Promise<ProductVM[]> {
         orderBy: { createdAt: 'desc' },
         include: { product: { include: productInclude } },
       });
-      return rows.map((r) => toProductVM(r.product));
+      return rows.map((r) => toProductVM(r.product, pricingRoleFromUser(user.role)));
     },
     [],
   );
@@ -184,7 +185,7 @@ export async function getCompareList(): Promise<ProductVM[]> {
         orderBy: { createdAt: 'desc' },
         include: { product: { include: productInclude } },
       });
-      return rows.map((r) => toProductVM(r.product));
+      return rows.map((r) => toProductVM(r.product, pricingRoleFromUser(user.role)));
     },
     [],
   );

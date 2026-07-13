@@ -7,12 +7,14 @@
  * JSON-safe view-models whose field names match what the existing UI components
  * already consume (see `src/data/mockDatabase.ts`).
  *
- * Pricing note: the seed stores the same numeric magnitude the UI was built
- * around (e.g. 85_000), so we expose `Number(basePrice)` directly and the UI
- * keeps rendering it as Toman.
+ * Pricing: products store wholesale + retail tier fields; `toProductVM` embeds
+ * the raw fields and defaults display to retail. Call `applyRoleToProduct` at
+ * request time when the viewer's role is known (wholesale partners, cart, etc.).
  */
 
 import type { Prisma, OrderStatus, PaymentMethod, PaymentStatus } from '@/generated/prisma_client';
+import { resolveProductPrice, type ProductPriceFields } from '@/src/lib/pricing';
+import type { PricingRole } from '@/src/lib/user-role';
 
 // ── Prisma query shapes ─────────────────────────────────────────────────────
 
@@ -35,9 +37,17 @@ export interface ProductVM {
   partsBrandId: number;
   carModelId: number;
   categoryId: number;
+  /** Payable unit price for the viewer's role. */
   price: number;
+  /** List price before discount — shown struck-through when discount > 0. */
   oldPrice?: number;
+  /** Active discount percent for the viewer's role. */
   discount?: number;
+  /** Raw pricing fields — used to re-resolve when role is known after cache. */
+  wholesalePrice: number;
+  wholesaleDiscountPct: number;
+  retailPriceDiffPct: number;
+  retailDiscountPct: number;
   mainImage: string;
   images: string[];
   isOffer: boolean;
@@ -263,11 +273,46 @@ function persianDate(d: Date): string {
 
 const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
 
-export function toProductVM(p: ProductWithRelations): ProductVM {
-  const price = Number(p.basePrice);
-  const oldPrice = p.oldPrice != null ? Number(p.oldPrice) : undefined;
-  const discount =
-    oldPrice && oldPrice > price ? Math.round((1 - price / oldPrice) * 100) : undefined;
+export function pricingFieldsFromProduct(p: {
+  wholesalePrice: bigint;
+  wholesaleDiscountPct: Prisma.Decimal;
+  retailPriceDiffPct: Prisma.Decimal;
+  retailDiscountPct: Prisma.Decimal;
+}): ProductPriceFields {
+  return {
+    wholesalePrice: p.wholesalePrice,
+    wholesaleDiscountPct: p.wholesaleDiscountPct,
+    retailPriceDiffPct: p.retailPriceDiffPct,
+    retailDiscountPct: p.retailDiscountPct,
+  };
+}
+
+/** Apply role-specific list / final / discount onto an existing ProductVM. */
+export function applyRoleToProduct(vm: ProductVM, role: PricingRole): ProductVM {
+  const resolved = resolveProductPrice(
+    {
+      wholesalePrice: vm.wholesalePrice,
+      wholesaleDiscountPct: vm.wholesaleDiscountPct,
+      retailPriceDiffPct: vm.retailPriceDiffPct,
+      retailDiscountPct: vm.retailDiscountPct,
+    },
+    role,
+  );
+  return {
+    ...vm,
+    price: resolved.finalPrice,
+    oldPrice: resolved.discountPct > 0 ? resolved.basePrice : undefined,
+    discount: resolved.discountPct > 0 ? Math.round(resolved.discountPct) : undefined,
+  };
+}
+
+export function applyRoleToProducts(vms: ProductVM[], role: PricingRole): ProductVM[] {
+  return vms.map((vm) => applyRoleToProduct(vm, role));
+}
+
+export function toProductVM(p: ProductWithRelations, role: PricingRole = null): ProductVM {
+  const fields = pricingFieldsFromProduct(p);
+  const resolved = resolveProductPrice(fields, role);
 
   const firstModel = p.compatibilities[0]?.carModel;
   const gallery = [...p.images]
@@ -280,9 +325,13 @@ export function toProductVM(p: ProductWithRelations): ProductVM {
     partsBrandId: p.partsBrandId,
     carModelId: firstModel?.id ?? 0,
     categoryId: p.categoryId,
-    price,
-    oldPrice,
-    discount,
+    price: resolved.finalPrice,
+    oldPrice: resolved.discountPct > 0 ? resolved.basePrice : undefined,
+    discount: resolved.discountPct > 0 ? Math.round(resolved.discountPct) : undefined,
+    wholesalePrice: Number(p.wholesalePrice),
+    wholesaleDiscountPct: Number(p.wholesaleDiscountPct),
+    retailPriceDiffPct: Number(p.retailPriceDiffPct),
+    retailDiscountPct: Number(p.retailDiscountPct),
     mainImage: p.mainImage ?? FALLBACK_IMAGE,
     images: gallery.length > 0 ? gallery : [p.mainImage ?? FALLBACK_IMAGE],
     isOffer: p.isOffer,
@@ -303,9 +352,9 @@ export function toProductVM(p: ProductWithRelations): ProductVM {
   };
 }
 
-export function toPDPProductVM(p: ProductWithRelations): PDPProductVM {
+export function toPDPProductVM(p: ProductWithRelations, role: PricingRole = null): PDPProductVM {
   return {
-    ...toProductVM(p),
+    ...toProductVM(p, role),
     packQuantity: p.packQuantity,
     cartonQuantity: p.cartonQuantity,
     isOriginal: p.isOriginal,
@@ -456,13 +505,16 @@ export function toPostDetailVM(p: PostRow & { body: string }): PostDetailVM {
 
 // ── Cart ────────────────────────────────────────────────────────────────────
 
-export function toCartItemVM(item: {
-  id: string;
-  productId: string;
-  quantity: number;
-  product: ProductWithRelations;
-}): CartItemVM {
-  const p = toProductVM(item.product);
+export function toCartItemVM(
+  item: {
+    id: string;
+    productId: string;
+    quantity: number;
+    product: ProductWithRelations;
+  },
+  role: PricingRole = null,
+): CartItemVM {
+  const p = toProductVM(item.product, role);
   return {
     id: item.id,
     productId: item.productId,

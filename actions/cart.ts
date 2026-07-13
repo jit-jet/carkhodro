@@ -24,6 +24,7 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { loadCartByUserId } from '@/src/lib/cart-data';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
 import {
   readGuestCart,
   writeGuestCart,
@@ -82,7 +83,7 @@ export async function addToCart(
     });
 
     revalidatePath('/cart');
-    return ok(await loadCartByUserId(user.id));
+    return ok(await loadCartByUserId(user.id, pricingRoleFromUser(user.role)));
   });
 }
 
@@ -122,7 +123,7 @@ export async function updateCartItemQuantity(
     await prisma.cartItem.update({ where: { id: itemId }, data: { quantity: qty } });
 
     revalidatePath('/cart');
-    return ok(await loadCartByUserId(user.id));
+    return ok(await loadCartByUserId(user.id, pricingRoleFromUser(user.role)));
   });
 }
 
@@ -147,7 +148,7 @@ export async function removeCartItem(itemId: string): Promise<ActionResult<CartV
 
     await prisma.cartItem.delete({ where: { id: itemId } });
     revalidatePath('/cart');
-    return ok(await loadCartByUserId(user.id));
+    return ok(await loadCartByUserId(user.id, pricingRoleFromUser(user.role)));
   });
 }
 

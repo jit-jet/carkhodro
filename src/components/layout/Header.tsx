@@ -293,11 +293,11 @@ function CloseMenuOnNavigate({ setOpen }: { setOpen: (open: boolean) => void }) 
 
 export default function Header({
   navLinks,
-  account,
+  children,
   mobileMenuAccount,
 }: {
   navLinks: NavLinkVM[];
-  account: React.ReactNode;
+  children: React.ReactNode;
   mobileMenuAccount?: React.ReactNode;
 }) {
   const router = useRouter();
@@ -520,7 +520,7 @@ export default function Header({
               </Link>
 
               {/* Account */}
-              {account}
+              {children}
             </div>
           </div>
 

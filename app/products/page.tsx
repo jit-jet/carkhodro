@@ -1,17 +1,14 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import ProductsBrowser from '@/src/components/plp/ProductsBrowser';
-import { getProducts, getProductFilters } from '@/actions/products';
+import { getProducts, getProductFilters, withViewerPricing } from '@/actions/products';
 
 interface Props {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export default async function ProductsPage({ searchParams }: Props) {
-  const [products, filters] = await Promise.all([
-    getProducts(),
-    getProductFilters(),
-  ]);
+  const filters = await getProductFilters();
 
   return (
     <div className="bg-silver-light min-h-screen">
@@ -30,7 +27,7 @@ export default async function ProductsPage({ searchParams }: Props) {
           Suspense. The fallback must be static (no `useSearchParams`), so it is a
           skeleton rather than <ProductsBrowser>, which reads request-time data. */}
       <Suspense fallback={<ProductsBrowserSkeleton />}>
-        <FilteredBrowser products={products} filters={filters} searchParams={searchParams} />
+        <FilteredBrowser filters={filters} searchParams={searchParams} />
       </Suspense>
 
       <div className="max-w-7xl mx-auto px-4 pb-6">
@@ -78,15 +75,14 @@ export default async function ProductsPage({ searchParams }: Props) {
 type Filters = { brands: string[]; carTypes: string[]; categories: { key: string; label: string }[] };
 
 async function FilteredBrowser({
-  products,
   filters,
   searchParams,
 }: {
-  products: Parameters<typeof ProductsBrowser>[0]['products'];
   filters: Filters;
   searchParams: Props['searchParams'];
 }) {
-  await searchParams; // unwrap the Promise so this component suspends correctly
+  await searchParams;
+  const products = await withViewerPricing(await getProducts());
   return (
     <ProductsBrowser
       products={products}

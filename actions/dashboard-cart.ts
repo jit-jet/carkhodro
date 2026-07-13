@@ -23,7 +23,14 @@ import { getCurrentUser } from '@/src/lib/session';
 import { clearCart } from '@/actions/cart';
 import { searchProducts } from '@/actions/search';
 import { PAYMENT_TERMS } from '@/src/lib/dashboard-options';
-import type { Prisma, UserRole } from '@/generated/prisma_client';
+import {
+  resolveProductPrice,
+  netLineTotal,
+  netLineTotalBigInt,
+} from '@/src/lib/pricing';
+import { pricingFieldsFromProduct } from '@/src/lib/serializers';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
+import type { UserRole, Prisma } from '@/generated/prisma_client';
 import type {
   DashboardCartVM,
   DashboardCartLineVM,
@@ -31,16 +38,6 @@ import type {
 } from '@/src/lib/dashboard-types';
 
 const EMPTY_CART: DashboardCartVM = { id: '', lines: [], subtotalToman: 0, totalItems: 0 };
-
-/** Discount a role gets on a given product (only wholesale partners get one). */
-function discountPctFor(role: UserRole, wholesaleDiscountPct: Prisma.Decimal): number {
-  return role === 'WHOLESALE' ? Number(wholesaleDiscountPct) : 0;
-}
-
-/** Net unit price (Toman) after applying a percentage discount, rounded. */
-function netUnit(listToman: number, discountPct: number): number {
-  return Math.round((listToman * (100 - discountPct)) / 100);
-}
 
 const cartArgs = {
   include: {
@@ -52,8 +49,10 @@ const cartArgs = {
             id: true,
             sku: true,
             name: true,
-            basePrice: true,
+            wholesalePrice: true,
             wholesaleDiscountPct: true,
+            retailPriceDiffPct: true,
+            retailDiscountPct: true,
             stock: true,
           },
         },
@@ -66,19 +65,20 @@ async function loadDashboardCart(userId: string, role: UserRole): Promise<Dashbo
   const cart = await prisma.cart.findUnique({ where: { userId }, ...cartArgs });
   if (!cart) return EMPTY_CART;
 
+  const pricingRole = pricingRoleFromUser(role);
   const lines: DashboardCartLineVM[] = cart.items.map((item) => {
-    const listToman = Number(item.product.basePrice);
-    const discountPct = discountPctFor(role, item.product.wholesaleDiscountPct);
+    const fields = pricingFieldsFromProduct(item.product);
+    const resolved = resolveProductPrice(fields, pricingRole);
     return {
       id: item.id,
       productId: item.productId,
       sku: item.product.sku,
       name: item.product.name,
-      unitPriceToman: listToman,
-      discountPct,
+      unitPriceToman: resolved.basePrice,
+      discountPct: resolved.discountPct,
       quantity: item.quantity,
       stock: item.product.stock,
-      lineTotalToman: netUnit(listToman, discountPct) * item.quantity,
+      lineTotalToman: netLineTotal(resolved.basePrice, item.quantity, resolved.discountPct),
     };
   });
 
@@ -181,32 +181,40 @@ function toSearchResult(
     id: string;
     sku: string;
     name: string;
-    basePrice: bigint;
+    wholesalePrice: bigint;
     wholesaleDiscountPct: Prisma.Decimal;
+    retailPriceDiffPct: Prisma.Decimal;
+    retailDiscountPct: Prisma.Decimal;
     packQuantity: number;
     cartonQuantity: number;
     stock: number;
   }[],
   role: UserRole,
 ): InvoiceSearchResultVM[] {
-  return rows.map((r) => ({
-    id: r.id,
-    sku: r.sku,
-    name: r.name,
-    priceToman: Number(r.basePrice),
-    discountPct: discountPctFor(role, r.wholesaleDiscountPct),
-    packQuantity: r.packQuantity,
-    cartonQuantity: r.cartonQuantity,
-    stock: r.stock,
-  }));
+  const pricingRole = pricingRoleFromUser(role);
+  return rows.map((r) => {
+    const resolved = resolveProductPrice(pricingFieldsFromProduct(r), pricingRole);
+    return {
+      id: r.id,
+      sku: r.sku,
+      name: r.name,
+      priceToman: resolved.finalPrice,
+      discountPct: resolved.discountPct,
+      packQuantity: r.packQuantity,
+      cartonQuantity: r.cartonQuantity,
+      stock: r.stock,
+    };
+  });
 }
 
 const searchSelect = {
   id: true,
   sku: true,
   name: true,
-  basePrice: true,
+  wholesalePrice: true,
   wholesaleDiscountPct: true,
+  retailPriceDiffPct: true,
+  retailDiscountPct: true,
   packQuantity: true,
   cartonQuantity: true,
   stock: true,
@@ -317,25 +325,31 @@ export async function submitInvoice(input: {
       }
     }
 
-    const isWholesale = user.role === 'WHOLESALE';
+    const pricingRole = pricingRoleFromUser(user.role);
     const lineItems = cart.items.map((item) => {
-      const pct = isWholesale ? Number(item.product.wholesaleDiscountPct) : 0;
+      const pricing = resolveProductPrice(
+        {
+          wholesalePrice: item.product.wholesalePrice,
+          wholesaleDiscountPct: item.product.wholesaleDiscountPct,
+          retailPriceDiffPct: item.product.retailPriceDiffPct,
+          retailDiscountPct: item.product.retailDiscountPct,
+        },
+        pricingRole,
+      );
       return {
         productId: item.productId,
         productName: item.product.name,
         productSku: item.product.sku,
-        priceAtPurchase: item.product.basePrice, // gross list price
-        discountPct: pct,
+        priceAtPurchase: BigInt(pricing.basePrice),
+        discountPct: pricing.discountPct,
         quantity: item.quantity,
       };
     });
 
-    // Net subtotal = Σ gross × (1 − discount%). BigInt math keeps Rial exact.
-    const subtotal = lineItems.reduce((sum, l) => {
-      const gross = l.priceAtPurchase * BigInt(l.quantity);
-      const net = (gross * BigInt(Math.round((100 - l.discountPct) * 100))) / BigInt(10000);
-      return sum + net;
-    }, BigInt(0));
+    const subtotal = lineItems.reduce(
+      (sum, l) => sum + netLineTotalBigInt(l.priceAtPurchase, l.quantity, l.discountPct),
+      BigInt(0),
+    );
 
     const order = await prisma.$transaction(async (tx) => {
       const created = await tx.order.create({

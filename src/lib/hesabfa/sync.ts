@@ -107,7 +107,7 @@ export async function syncHesabfaItems(items: HesabfaItem[]): Promise<SyncStats>
       continue;
     }
 
-    const basePrice = toPrice(item.SellPrice);
+    const wholesalePrice = toPrice(item.SellPrice);
     const stock = toStock(item.Stock);
 
     // Match by accounting code first, then by SKU (locally-seeded, unlinked).
@@ -125,7 +125,7 @@ export async function syncHesabfaItems(items: HesabfaItem[]): Promise<SyncStats>
       await prisma.product.update({
         where: { id: existing.id },
         // Only the Hesabfa-owned fields; local content is preserved.
-        data: { name, basePrice, stock, accountancyId: code, lastSyncedAt: new Date() },
+        data: { name, wholesalePrice, stock, accountancyId: code, lastSyncedAt: new Date() },
       });
       stats.updated++;
       stats.touchedIds.push(existing.id);
@@ -147,12 +147,11 @@ export async function syncHesabfaItems(items: HesabfaItem[]): Promise<SyncStats>
         accountancyId: code,
         categoryId: fallbackCategoryId,
         partsBrandId: fallbackBrandId,
-        basePrice,
+        wholesalePrice,
         stock,
         lastSyncedAt: new Date(),
         isActive: item.Active === true,
         // Fields Hesabfa does not provide — explicit safe defaults.
-        oldPrice: null,
         isOffer: false,
         mainImage: null,
         description: null,

@@ -298,13 +298,17 @@ model Product {
   categoryId   Int    @map("category_id")
 
   // ── Pricing ────────────────────────────────────────────────────────────────
-  /// Live retail price in Iranian Rial — synced from accountancy API
-  basePrice            BigInt   @map("base_price")
-  /// Percentage deducted for WHOLESALE role users (0–100).
-  /// Wholesale price = basePrice × (1 − wholesaleDiscountPct / 100)
+  /// Base wholesale price in Toman — synced from Hesabfa (SellPrice).
+  wholesalePrice       BigInt   @map("wholesale_price")
+  /// Percentage deducted for WHOLESALE users (0–100).
+  /// wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100)
   wholesaleDiscountPct Decimal  @default(0) @map("wholesale_discount_pct") @db.Decimal(5, 2)
-  /// Crossed-out "was" price shown in the UI — synced from accountancy API
-  oldPrice             BigInt?  @map("old_price")
+  /// Percentage added to wholesalePrice to derive the retail list price (1–100).
+  /// retailPrice = wholesalePrice × (1 + retailPriceDiffPct / 100)
+  retailPriceDiffPct   Decimal  @default(25) @map("retail_price_diff_pct") @db.Decimal(5, 2)
+  /// Percentage deducted from retailPrice for RETAIL users (0–100).
+  /// retailFinal = retailPrice × (1 − retailDiscountPct / 100)
+  retailDiscountPct    Decimal  @default(0) @map("retail_discount_pct") @db.Decimal(5, 2)
   isOffer              Boolean  @default(false) @map("is_offer")
 
   // ── External accounting / ERP sync ────────────────────────────────────────

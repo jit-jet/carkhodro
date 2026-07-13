@@ -14,13 +14,29 @@ import {
   productInclude,
   toProductVM,
   toPDPProductVM,
+  applyRoleToProduct,
+  applyRoleToProducts,
   type ProductVM,
   type PDPProductVM,
 } from '@/src/lib/serializers';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
+import { getCurrentUser } from '@/src/lib/session';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
 
-// ── Reads ───────────────────────────────────────────────────────────────────
+/** Re-resolve cached product VMs for the current viewer's role. */
+export async function withViewerPricing(products: ProductVM[]): Promise<ProductVM[]> {
+  const user = await getCurrentUser();
+  return applyRoleToProducts(products, pricingRoleFromUser(user?.role));
+}
+
+export async function withViewerProduct(
+  product: PDPProductVM | null,
+): Promise<PDPProductVM | null> {
+  if (!product) return null;
+  const user = await getCurrentUser();
+  return applyRoleToProduct(product, pricingRoleFromUser(user?.role)) as PDPProductVM;
+}
 
 /** All active products — consumed by the PLP, which filters/sorts client-side. */
 export async function getProducts(): Promise<ProductVM[]> {
@@ -34,7 +50,7 @@ export async function getProducts(): Promise<ProductVM[]> {
       include: productInclude,
       orderBy: { createdAt: 'desc' },
     });
-    return rows.map(toProductVM);
+    return rows.map((p) => toProductVM(p));
   }, []);
 }
 
@@ -51,7 +67,7 @@ export async function getNewArrivals(limit = 10): Promise<ProductVM[]> {
       orderBy: { createdAt: 'desc' },
       take: limit,
     });
-    return rows.map(toProductVM);
+    return rows.map((p) => toProductVM(p));
   }, []);
 }
 
@@ -68,7 +84,7 @@ export async function getSpecialOffers(limit = 12): Promise<ProductVM[]> {
       orderBy: { saleCount: 'desc' },
       take: limit,
     });
-    return rows.map(toProductVM);
+    return rows.map((p) => toProductVM(p));
   }, []);
 }
 
@@ -107,7 +123,7 @@ export async function getRelatedProducts(
       orderBy: { saleCount: 'desc' },
       take: limit,
     });
-    return rows.map(toProductVM);
+    return rows.map((p) => toProductVM(p));
   }, []);
 }
 
@@ -170,8 +186,10 @@ export interface ProductInput {
   name: string;
   partsBrandId: number;
   categoryId: number;
-  basePrice: number;
-  oldPrice?: number | null;
+  wholesalePrice: number;
+  wholesaleDiscountPct?: number;
+  retailPriceDiffPct?: number;
+  retailDiscountPct?: number;
   isOffer?: boolean;
   stock?: number;
   warranty?: string | null;
@@ -194,8 +212,10 @@ export async function createProduct(
         name: input.name.trim(),
         partsBrandId: input.partsBrandId,
         categoryId: input.categoryId,
-        basePrice: BigInt(Math.round(input.basePrice)),
-        oldPrice: input.oldPrice != null ? BigInt(Math.round(input.oldPrice)) : null,
+        wholesalePrice: BigInt(Math.round(input.wholesalePrice)),
+        wholesaleDiscountPct: input.wholesaleDiscountPct ?? 0,
+        retailPriceDiffPct: input.retailPriceDiffPct ?? 25,
+        retailDiscountPct: input.retailDiscountPct ?? 0,
         isOffer: input.isOffer ?? false,
         stock: input.stock ?? 0,
         warranty: input.warranty ?? null,
@@ -223,11 +243,17 @@ export async function updateProduct(
         ...(input.name !== undefined ? { name: input.name.trim() } : {}),
         ...(input.partsBrandId !== undefined ? { partsBrandId: input.partsBrandId } : {}),
         ...(input.categoryId !== undefined ? { categoryId: input.categoryId } : {}),
-        ...(input.basePrice !== undefined
-          ? { basePrice: BigInt(Math.round(input.basePrice)) }
+        ...(input.wholesalePrice !== undefined
+          ? { wholesalePrice: BigInt(Math.round(input.wholesalePrice)) }
           : {}),
-        ...(input.oldPrice !== undefined
-          ? { oldPrice: input.oldPrice != null ? BigInt(Math.round(input.oldPrice)) : null }
+        ...(input.wholesaleDiscountPct !== undefined
+          ? { wholesaleDiscountPct: input.wholesaleDiscountPct }
+          : {}),
+        ...(input.retailPriceDiffPct !== undefined
+          ? { retailPriceDiffPct: input.retailPriceDiffPct }
+          : {}),
+        ...(input.retailDiscountPct !== undefined
+          ? { retailDiscountPct: input.retailDiscountPct }
           : {}),
         ...(input.isOffer !== undefined ? { isOffer: input.isOffer } : {}),
         ...(input.stock !== undefined ? { stock: input.stock } : {}),

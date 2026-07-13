@@ -20,6 +20,8 @@ import { clearUserCart } from '@/src/lib/clear-user-cart';
 import { zibalRequestPayment, zibalStartUrl } from '@/src/lib/zibal/client';
 import { ZIBAL_RESULT_OK } from '@/src/lib/zibal/types';
 import { tags } from '@/actions/cache-tags';
+import { resolveProductPriceBigInt, netLineTotalBigInt } from '@/src/lib/pricing';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
 import type { OrderStatus, Prisma } from '@/generated/prisma_client';
 import type {
   OrderSummaryVM,
@@ -118,13 +120,15 @@ export async function getOrderReceipt(id: string): Promise<OrderReceiptVM | null
         postalCode: order.snapshotPostalCode,
       },
       items: order.items.map((i) => {
-        const unitPrice = Number(i.priceAtPurchase);
+        const unitList = Number(i.priceAtPurchase);
+        const discountPct = Number(i.discountPct);
+        const unitNet = Math.round((unitList * (100 - discountPct)) / 100);
         return {
           name: i.productName,
           sku: i.productSku,
           quantity: i.quantity,
-          unitPrice,
-          lineTotal: unitPrice * i.quantity,
+          unitPrice: unitNet,
+          lineTotal: unitNet * i.quantity,
         };
       }),
       subtotal: Number(order.subtotal),
@@ -203,25 +207,29 @@ export async function submitCheckout(
     if (!resolved.ok) return fail(resolved.error);
     const { province, city } = resolved;
 
-    const isWholesale = user.role === 'WHOLESALE';
+    const role = pricingRoleFromUser(user.role);
     const lineItems = cart.items.map((item) => {
-      const base = item.product.basePrice;
-      const discountPct = Number(item.product.wholesaleDiscountPct);
-      const unit =
-        isWholesale && discountPct > 0
-          ? (base * BigInt(Math.round((100 - discountPct) * 100))) / BigInt(10000)
-          : base;
+      const pricing = resolveProductPriceBigInt(
+        {
+          wholesalePrice: item.product.wholesalePrice,
+          wholesaleDiscountPct: item.product.wholesaleDiscountPct,
+          retailPriceDiffPct: item.product.retailPriceDiffPct,
+          retailDiscountPct: item.product.retailDiscountPct,
+        },
+        role,
+      );
       return {
         productId: item.productId,
         productName: item.product.name,
         productSku: item.product.sku,
-        priceAtPurchase: unit,
+        priceAtPurchase: pricing.basePrice,
+        discountPct: pricing.discountPct,
         quantity: item.quantity,
       };
     });
 
     const subtotal = lineItems.reduce(
-      (sum, l) => sum + l.priceAtPurchase * BigInt(l.quantity),
+      (sum, l) => sum + netLineTotalBigInt(l.priceAtPurchase, l.quantity, l.discountPct),
       BigInt(0),
     );
     const shippingCost = shipping.cost;

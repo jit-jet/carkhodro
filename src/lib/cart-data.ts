@@ -9,6 +9,7 @@
 import { prisma } from '@/src/lib/prisma';
 import { productInclude, toCartItemVM, type CartVM } from '@/src/lib/serializers';
 import { getCurrentUser } from '@/src/lib/session';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
 import { readGuestCart, buildGuestCartVM } from '@/src/lib/guest-cart';
 import type { Prisma } from '@/generated/prisma_client';
 
@@ -23,8 +24,8 @@ const cartArgs = {
 
 type CartRow = Prisma.CartGetPayload<typeof cartArgs>;
 
-export function buildCartVM(cart: CartRow): CartVM {
-  const items = cart.items.map(toCartItemVM);
+export function buildCartVM(cart: CartRow, role = pricingRoleFromUser(null)): CartVM {
+  const items = cart.items.map((item) => toCartItemVM(item, role));
   return {
     id: cart.id,
     items,
@@ -34,9 +35,9 @@ export function buildCartVM(cart: CartRow): CartVM {
 }
 
 /** Load a user's cart as a view-model, or an empty cart if none exists yet. */
-export async function loadCartByUserId(userId: string): Promise<CartVM> {
+export async function loadCartByUserId(userId: string, role = pricingRoleFromUser(null)): Promise<CartVM> {
   const cart = await prisma.cart.findUnique({ where: { userId }, ...cartArgs });
-  return cart ? buildCartVM(cart) : { id: '', items: [], subtotal: 0, totalItems: 0 };
+  return cart ? buildCartVM(cart, role) : { id: '', items: [], subtotal: 0, totalItems: 0 };
 }
 
 /**
@@ -54,7 +55,7 @@ export async function getCart(): Promise<CartVM> {
 
   if (user) {
     try {
-      return await loadCartByUserId(user.id);
+      return await loadCartByUserId(user.id, pricingRoleFromUser(user.role));
     } catch (err) {
       console.error('[cart:getCart:user]', err);
       return emptyCart();

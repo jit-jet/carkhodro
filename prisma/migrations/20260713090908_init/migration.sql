@@ -1,8 +1,17 @@
+-- Required for typo-tolerant product search (GIN trigram index on search_text).
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('RETAIL', 'WHOLESALE', 'ADMIN', 'SUPPORT');
 
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'REFUNDED');
+CREATE TYPE "OrderStatus" AS ENUM ('NEW', 'AWAITING_CONFIRMATION', 'CONFIRMED_AWAITING_PAYMENT', 'PAID', 'SHIPPED', 'COMPLETED', 'CANCELLED_BY_CUSTOMER', 'CANCELLED_BY_MANAGER', 'ARCHIVED');
+
+-- CreateEnum
+CREATE TYPE "MessageDirection" AS ENUM ('INBOUND', 'OUTBOUND');
+
+-- CreateEnum
+CREATE TYPE "BackorderStatus" AS ENUM ('PENDING', 'NOTIFIED', 'FULFILLED', 'CANCELLED');
 
 -- CreateEnum
 CREATE TYPE "PaymentMethod" AS ENUM ('ONLINE', 'COD');
@@ -56,6 +65,10 @@ CREATE TABLE "users" (
     "shop_name" TEXT,
     "birth_date" TIMESTAMP(3),
     "profile_image" TEXT,
+    "account_balance" BIGINT NOT NULL DEFAULT 0,
+    "referred_by" TEXT,
+    "activity_field" TEXT,
+    "partner_code" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -158,9 +171,10 @@ CREATE TABLE "products" (
     "name" TEXT NOT NULL,
     "parts_brand_id" INTEGER NOT NULL,
     "category_id" INTEGER NOT NULL,
-    "base_price" BIGINT NOT NULL,
+    "wholesale_price" BIGINT NOT NULL,
     "wholesale_discount_pct" DECIMAL(5,2) NOT NULL DEFAULT 0,
-    "old_price" BIGINT,
+    "retail_price_diff_pct" DECIMAL(5,2) NOT NULL DEFAULT 25,
+    "retail_discount_pct" DECIMAL(5,2) NOT NULL DEFAULT 0,
     "is_offer" BOOLEAN NOT NULL DEFAULT false,
     "accountancy_id" TEXT,
     "last_synced_at" TIMESTAMP(3),
@@ -172,6 +186,7 @@ CREATE TABLE "products" (
     "is_original" BOOLEAN NOT NULL DEFAULT true,
     "main_image" TEXT,
     "description" TEXT,
+    "search_text" TEXT,
     "view_count" INTEGER NOT NULL DEFAULT 0,
     "sale_count" INTEGER NOT NULL DEFAULT 0,
     "rating_avg" DECIMAL(3,2) NOT NULL DEFAULT 0,
@@ -259,6 +274,25 @@ CREATE TABLE "compare_items" (
 );
 
 -- CreateTable
+CREATE TABLE "posts" (
+    "id" SERIAL NOT NULL,
+    "slug" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "excerpt" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "cover_image" TEXT NOT NULL,
+    "author" TEXT NOT NULL,
+    "tags" TEXT[],
+    "read_time" INTEGER NOT NULL,
+    "published_at" TIMESTAMP(3) NOT NULL,
+    "is_published" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "posts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "faqs" (
     "id" SERIAL NOT NULL,
     "question" TEXT NOT NULL,
@@ -286,12 +320,14 @@ CREATE TABLE "shipping_options" (
 -- CreateTable
 CREATE TABLE "orders" (
     "id" TEXT NOT NULL,
+    "order_number" SERIAL NOT NULL,
     "user_id" TEXT NOT NULL,
     "address_id" TEXT NOT NULL,
     "shipping_option_id" TEXT NOT NULL,
-    "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
+    "status" "OrderStatus" NOT NULL DEFAULT 'NEW',
     "payment_method" "PaymentMethod" NOT NULL,
     "payment_status" "PaymentStatus" NOT NULL DEFAULT 'PENDING',
+    "payment_terms" TEXT,
     "snapshot_province" TEXT NOT NULL,
     "snapshot_city" TEXT NOT NULL,
     "snapshot_street" TEXT NOT NULL,
@@ -302,6 +338,8 @@ CREATE TABLE "orders" (
     "total_amount" BIGINT NOT NULL,
     "notes" TEXT,
     "tracking_code" TEXT,
+    "payment_track_id" BIGINT,
+    "payment_ref_number" TEXT,
     "paid_at" TIMESTAMP(3),
     "shipped_at" TIMESTAMP(3),
     "delivered_at" TIMESTAMP(3),
@@ -319,10 +357,65 @@ CREATE TABLE "order_items" (
     "product_name" TEXT NOT NULL,
     "product_sku" TEXT NOT NULL,
     "price_at_purchase" BIGINT NOT NULL,
+    "discount_pct" DECIMAL(5,2) NOT NULL DEFAULT 0,
     "tax_amount" BIGINT NOT NULL DEFAULT 0,
     "quantity" INTEGER NOT NULL,
 
     CONSTRAINT "order_items_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "support_messages" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "direction" "MessageDirection" NOT NULL,
+    "subject" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "is_read" BOOLEAN NOT NULL DEFAULT false,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "support_messages_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "order_surveys" (
+    "id" TEXT NOT NULL,
+    "order_id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "rating" INTEGER NOT NULL,
+    "positive_points" TEXT[],
+    "negative_points" TEXT[],
+    "note" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "order_surveys_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "price_list_requests" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "titles" TEXT[],
+    "parts_brand_ids" INTEGER[],
+    "car_model_ids" INTEGER[],
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expires_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "price_list_requests_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "backorders" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "product_id" TEXT NOT NULL,
+    "quantity" INTEGER NOT NULL DEFAULT 1,
+    "status" "BackorderStatus" NOT NULL DEFAULT 'PENDING',
+    "note" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "backorders_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -339,6 +432,9 @@ CREATE UNIQUE INDEX "nav_links_href_key" ON "nav_links"("href");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_phone_number_key" ON "users"("phone_number");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_partner_code_key" ON "users"("partner_code");
 
 -- CreateIndex
 CREATE INDEX "users_phone_number_idx" ON "users"("phone_number");
@@ -407,6 +503,9 @@ CREATE INDEX "products_sale_count_idx" ON "products"("sale_count");
 CREATE INDEX "products_view_count_idx" ON "products"("view_count");
 
 -- CreateIndex
+CREATE INDEX "products_search_text_trgm_idx" ON "products" USING GIN ("search_text" gin_trgm_ops);
+
+-- CreateIndex
 CREATE INDEX "product_images_product_id_idx" ON "product_images"("product_id");
 
 -- CreateIndex
@@ -452,7 +551,19 @@ CREATE INDEX "compare_items_product_id_idx" ON "compare_items"("product_id");
 CREATE UNIQUE INDEX "compare_items_user_id_product_id_key" ON "compare_items"("user_id", "product_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "posts_slug_key" ON "posts"("slug");
+
+-- CreateIndex
+CREATE INDEX "posts_published_at_idx" ON "posts"("published_at");
+
+-- CreateIndex
+CREATE INDEX "posts_is_published_idx" ON "posts"("is_published");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "shipping_options_method_key" ON "shipping_options"("method");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "orders_order_number_key" ON "orders"("order_number");
 
 -- CreateIndex
 CREATE INDEX "orders_user_id_idx" ON "orders"("user_id");
@@ -471,6 +582,24 @@ CREATE INDEX "order_items_order_id_idx" ON "order_items"("order_id");
 
 -- CreateIndex
 CREATE INDEX "order_items_product_id_idx" ON "order_items"("product_id");
+
+-- CreateIndex
+CREATE INDEX "support_messages_user_id_direction_is_deleted_idx" ON "support_messages"("user_id", "direction", "is_deleted");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "order_surveys_order_id_key" ON "order_surveys"("order_id");
+
+-- CreateIndex
+CREATE INDEX "order_surveys_user_id_idx" ON "order_surveys"("user_id");
+
+-- CreateIndex
+CREATE INDEX "price_list_requests_user_id_idx" ON "price_list_requests"("user_id");
+
+-- CreateIndex
+CREATE INDEX "backorders_user_id_idx" ON "backorders"("user_id");
+
+-- CreateIndex
+CREATE INDEX "backorders_product_id_idx" ON "backorders"("product_id");
 
 -- AddForeignKey
 ALTER TABLE "cities" ADD CONSTRAINT "cities_province_id_fkey" FOREIGN KEY ("province_id") REFERENCES "provinces"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -543,3 +672,21 @@ ALTER TABLE "order_items" ADD CONSTRAINT "order_items_order_id_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "order_items" ADD CONSTRAINT "order_items_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "support_messages" ADD CONSTRAINT "support_messages_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "order_surveys" ADD CONSTRAINT "order_surveys_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "order_surveys" ADD CONSTRAINT "order_surveys_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "price_list_requests" ADD CONSTRAINT "price_list_requests_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "backorders" ADD CONSTRAINT "backorders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "backorders" ADD CONSTRAINT "backorders_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;

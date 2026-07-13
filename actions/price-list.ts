@@ -19,6 +19,9 @@ import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
 import { formatJalaliDateTime } from '@/src/lib/format';
+import { resolveProductPrice } from '@/src/lib/pricing';
+import { pricingFieldsFromProduct } from '@/src/lib/serializers';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
 import type { Prisma } from '@/generated/prisma_client';
 import type { PriceListRequestVM, PriceListItemVM } from '@/src/lib/dashboard-types';
 
@@ -64,7 +67,10 @@ export async function createPriceListRequest(
 const itemSelect = {
   sku: true,
   name: true,
-  basePrice: true,
+  wholesalePrice: true,
+  wholesaleDiscountPct: true,
+  retailPriceDiffPct: true,
+  retailDiscountPct: true,
   partsBrand: { select: { name: true } },
   compatibilities: {
     take: 1,
@@ -105,13 +111,17 @@ export async function getPriceListRequest(id: string): Promise<PriceListRequestV
         take: MAX_ITEMS,
       });
 
-      const items: PriceListItemVM[] = products.map((p) => ({
-        sku: p.sku,
-        name: p.name,
-        brand: p.partsBrand.name,
-        carType: p.compatibilities[0]?.carModel.name ?? '',
-        priceToman: Number(p.basePrice),
-      }));
+      const pricingRole = pricingRoleFromUser(user.role);
+      const items: PriceListItemVM[] = products.map((p) => {
+        const resolved = resolveProductPrice(pricingFieldsFromProduct(p), pricingRole);
+        return {
+          sku: p.sku,
+          name: p.name,
+          brand: p.partsBrand.name,
+          carType: p.compatibilities[0]?.carModel.name ?? '',
+          priceToman: resolved.finalPrice,
+        };
+      });
 
       return {
         id: request.id,
