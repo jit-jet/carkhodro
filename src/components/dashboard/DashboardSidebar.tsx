@@ -132,9 +132,20 @@ function NavIcon({ icon }: { icon: IconKey }) {
  * null before it has streamed in). Kept free of `usePathname` so it can render in
  * the static shell as the Suspense fallback; the active version streams in.
  */
-export function SidebarShell({ activeHref }: { activeHref: string | null }) {
+export function SidebarShell({
+  activeHref,
+  showDashboardCart = true,
+}: {
+  activeHref: string | null;
+  /** Wholesale invoice cart — hidden for retail users. */
+  showDashboardCart?: boolean;
+}) {
   const router = useRouter();
   const [loggingOut, startLogout] = useTransition();
+
+  const navItems = showDashboardCart
+    ? NAV_ITEMS
+    : NAV_ITEMS.filter((item) => item.href !== '/dashboard/cart');
 
   function isActive(href: string): boolean {
     if (activeHref === null) return false;
@@ -158,7 +169,7 @@ export function SidebarShell({ activeHref }: { activeHref: string | null }) {
         className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
       >
         <ul className="p-2">
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const active = isActive(item.href);
             return (
               <li key={item.href}>
@@ -255,7 +266,11 @@ export function SidebarShell({ activeHref }: { activeHref: string | null }) {
  * dynamic under Cache Components, so the layout renders this inside a <Suspense>
  * boundary whose fallback is <SidebarShell activeHref={null}> (no active state).
  */
-export default function DashboardSidebar() {
+export default function DashboardSidebar({
+  showDashboardCart = true,
+}: {
+  showDashboardCart?: boolean;
+}) {
   const pathname = usePathname();
-  return <SidebarShell activeHref={pathname} />;
+  return <SidebarShell activeHref={pathname} showDashboardCart={showDashboardCart} />;
 }

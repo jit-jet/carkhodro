@@ -14,6 +14,7 @@
 
 import { Suspense } from 'react';
 import { getCurrentUser } from '@/src/lib/session';
+import { canUseDashboardCart } from '@/src/lib/user-role';
 import { USER_ROLE_FA } from '@/src/lib/user-labels';
 import DashboardSidebar, { SidebarShell } from '@/src/components/dashboard/DashboardSidebar';
 
@@ -26,14 +27,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </Suspense>
 
         <div className="grid lg:grid-cols-[260px_1fr] gap-6 items-start print:block">
-          <Suspense fallback={<SidebarShell activeHref={null} />}>
-            <DashboardSidebar />
+          <Suspense fallback={<SidebarShell activeHref={null} showDashboardCart={false} />}>
+            <DashboardSidebarLoader />
           </Suspense>
           <main className="min-w-0">{children}</main>
         </div>
       </div>
     </div>
   );
+}
+
+async function DashboardSidebarLoader() {
+  const user = await getCurrentUser();
+  const showDashboardCart = canUseDashboardCart(user?.role ?? null);
+  return <DashboardSidebar showDashboardCart={showDashboardCart} />;
 }
 
 async function WelcomeBanner() {
