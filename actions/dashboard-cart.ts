@@ -29,7 +29,13 @@ import {
   netLineTotalBigInt,
 } from '@/src/lib/pricing';
 import { pricingFieldsFromProduct } from '@/src/lib/serializers';
-import { pricingRoleFromUser } from '@/src/lib/user-role';
+import {
+  pricingRoleFromUser,
+  mergeCartQuantity,
+  clampOrderQuantity,
+  canUseDashboardCart,
+  isProductInStock,
+} from '@/src/lib/user-role';
 import type { UserRole, Prisma } from '@/generated/prisma_client';
 import type {
   DashboardCartVM,
@@ -103,6 +109,9 @@ export async function addToInvoice(
   return runMutation('addToInvoice', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('برای افزودن به فاکتور وارد شوید.');
+    if (!canUseDashboardCart(user.role)) {
+      return fail('این بخش فقط برای همکاران عمده‌فروشی است.');
+    }
 
     const qty = Math.max(1, Math.round(quantity));
     const product = await prisma.product.findFirst({
@@ -110,7 +119,9 @@ export async function addToInvoice(
       select: { stock: true },
     });
     if (!product) return fail('محصول یافت نشد.');
-    if (product.stock < 1) return fail('این محصول موجود نیست.');
+    if (!isProductInStock(product.stock)) return fail('این محصول موجود نیست.');
+
+    const role = pricingRoleFromUser(user.role);
 
     const cart = await prisma.cart.upsert({
       where: { userId: user.id },
@@ -122,7 +133,7 @@ export async function addToInvoice(
       where: { cartId_productId: { cartId: cart.id, productId } },
       select: { quantity: true },
     });
-    const nextQty = Math.min(product.stock, (existing?.quantity ?? 0) + qty);
+    const nextQty = mergeCartQuantity(existing?.quantity ?? 0, qty, product.stock, role);
     await prisma.cartItem.upsert({
       where: { cartId_productId: { cartId: cart.id, productId } },
       create: { cartId: cart.id, productId, quantity: nextQty },
@@ -142,14 +153,21 @@ export async function setInvoiceLineQty(
   return runMutation('setInvoiceLineQty', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('ابتدا وارد شوید.');
+    if (!canUseDashboardCart(user.role)) {
+      return fail('این بخش فقط برای همکاران عمده‌فروشی است.');
+    }
 
     const item = await prisma.cartItem.findFirst({
       where: { id: itemId, cart: { userId: user.id } },
       include: { product: { select: { stock: true } } },
     });
     if (!item) return fail('ردیف فاکتور یافت نشد.');
+    if (!isProductInStock(item.product.stock)) {
+      return fail('این محصول ناموجود است.');
+    }
 
-    const qty = Math.max(1, Math.min(item.product.stock, Math.round(quantity)));
+    const role = pricingRoleFromUser(user.role);
+    const qty = clampOrderQuantity(Math.round(quantity), item.product.stock, role);
     await prisma.cartItem.update({ where: { id: itemId }, data: { quantity: qty } });
 
     revalidatePath('/dashboard/cart');
@@ -163,6 +181,9 @@ export async function removeInvoiceLines(
   return runMutation('removeInvoiceLines', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('ابتدا وارد شوید.');
+    if (!canUseDashboardCart(user.role)) {
+      return fail('این بخش فقط برای همکاران عمده‌فروشی است.');
+    }
     if (itemIds.length === 0) return ok(await loadDashboardCart(user.id, user.role));
 
     await prisma.cartItem.deleteMany({
@@ -292,6 +313,9 @@ export async function submitInvoice(input: {
   return runMutation('submitInvoice', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('برای ثبت فاکتور وارد شوید.');
+    if (!canUseDashboardCart(user.role)) {
+      return fail('ثبت فاکتور فقط برای همکاران عمده‌فروشی امکان‌پذیر است.');
+    }
 
     const paymentTerms = (PAYMENT_TERMS as readonly string[]).includes(input.paymentTerms)
       ? input.paymentTerms
@@ -320,8 +344,8 @@ export async function submitInvoice(input: {
     if (!shipping) return fail('روش ارسالی برای ثبت فاکتور پیدا نشد.');
 
     for (const item of cart.items) {
-      if (item.product.stock < item.quantity) {
-        return fail(`موجودی «${item.product.name}» کافی نیست.`);
+      if (!isProductInStock(item.product.stock)) {
+        return fail(`«${item.product.name}» ناموجود است.`);
       }
     }
 

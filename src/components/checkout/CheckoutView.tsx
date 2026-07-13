@@ -31,7 +31,6 @@ import type {
   ProvinceVM,
   ShippingOptionVM,
 } from '@/src/lib/serializers';
-import type { PaymentMethod } from '@/src/data/cartMockData';
 
 interface Props {
   cart: CartVM;
@@ -75,7 +74,6 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
   const [errors, setErrors] = useState<FieldErrors>({});
 
   const [shippingId, setShippingId] = useState(shippingOptions[0]?.id ?? '');
-  const [payment, setPayment] = useState<PaymentMethod>('online');
 
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState('');
@@ -111,7 +109,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
     startTransition(async () => {
       const result = await submitCheckout({
         shippingOptionId: shippingId,
-        paymentMethod: payment === 'online' ? 'ONLINE' : 'COD',
+        paymentMethod: 'ONLINE',
         contact: info,
       });
       if (result.ok) {
@@ -185,7 +183,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
 
         <ShippingSelector options={shippingOptions} selected={shippingId} onChange={setShippingId} />
 
-        <PaymentSelector selected={payment} onChange={setPayment} />
+        <PaymentSelector selected="online" onChange={() => {}} allowedMethods={['online']} />
       </div>
 
       {/* Sidebar */}
@@ -196,7 +194,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
             shippingCost={shippingCost}
             total={total}
             itemCount={cart.totalItems}
-            ctaLabel={payment === 'online' ? 'پرداخت و ثبت سفارش' : 'ثبت سفارش'}
+            ctaLabel="پرداخت و ثبت سفارش"
             onPlaceOrder={placeOrder}
             busy={pending}
           />

@@ -21,7 +21,7 @@ import { zibalRequestPayment, zibalStartUrl } from '@/src/lib/zibal/client';
 import { ZIBAL_RESULT_OK } from '@/src/lib/zibal/types';
 import { tags } from '@/actions/cache-tags';
 import { resolveProductPriceBigInt, netLineTotalBigInt } from '@/src/lib/pricing';
-import { pricingRoleFromUser } from '@/src/lib/user-role';
+import { pricingRoleFromUser, canUseRetailCheckout } from '@/src/lib/user-role';
 import type { OrderStatus, Prisma } from '@/generated/prisma_client';
 import type {
   OrderSummaryVM,
@@ -180,6 +180,12 @@ export async function submitCheckout(
   return runMutation('submitCheckout', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('برای ثبت سفارش وارد شوید.');
+    if (!canUseRetailCheckout(user.role)) {
+      return fail('سفارش عمده‌فروشی از طریق پنل کاربری ثبت می‌شود.');
+    }
+    if (input.paymentMethod !== 'ONLINE') {
+      return fail('پرداخت آنلاین برای مشتریان خرده‌فروشی الزامی است.');
+    }
 
     const validated = validateContact(input.contact);
     if (!validated.ok) return fail(validated.error);

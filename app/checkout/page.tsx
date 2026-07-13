@@ -8,6 +8,7 @@ import { getShippingOptions } from '@/actions/navigation';
 import { getCheckoutProfile } from '@/actions/profile';
 import { getProvinces } from '@/actions/locations';
 import { getCurrentUser } from '@/src/lib/session';
+import { canUseRetailCheckout } from '@/src/lib/user-role';
 
 export const metadata: Metadata = {
   title: 'تسویه حساب | کارخودرو',
@@ -46,6 +47,7 @@ async function CheckoutContent() {
   // data source and send guests to the SMS login, returning them to /checkout.
   const user = await getCurrentUser();
   if (!user) redirect('/login?redirect=/checkout');
+  if (!canUseRetailCheckout(user.role)) redirect('/dashboard/cart');
 
   const [cart, shippingOptions, profile, provinces] = await Promise.all([
     getCart(),

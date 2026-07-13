@@ -1,8 +1,10 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import CartView from '@/src/components/cart/CartView';
 import { getCart } from '@/src/lib/cart-data';
 import { getCurrentUser } from '@/src/lib/session';
+import { canUseRetailCheckout } from '@/src/lib/user-role';
 
 export default function CartPage() {
   return (
@@ -28,10 +30,9 @@ export default function CartPage() {
 }
 
 async function CartContent() {
-  // Guests can view and build a cart; checkout itself requires auth (the
-  // /checkout route is proxy-gated). `getCart()` returns the user's DB cart or
-  // the guest cookie cart. Shipping/payment selection now lives on /checkout.
   const [cart, user] = await Promise.all([getCart(), getCurrentUser()]);
+
+  if (user && !canUseRetailCheckout(user.role)) redirect('/dashboard/cart');
 
   if (cart.items.length === 0) return <EmptyCart />;
 

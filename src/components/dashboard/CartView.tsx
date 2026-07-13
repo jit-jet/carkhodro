@@ -51,7 +51,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
   function changeQty(id: string, nextQty: number) {
     const line = cart.lines.find((l) => l.id === id);
     if (!line) return;
-    const qty = Math.max(1, Math.min(line.stock, nextQty));
+    const qty = Math.max(1, nextQty);
     if (qty === line.quantity) return;
     startTransition(async () => {
       const result = await setInvoiceLineQty(id, qty);
@@ -200,7 +200,6 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
                       <td className="py-3 px-2">
                         <QtyStepper
                           value={line.quantity}
-                          max={line.stock}
                           disabled={pending}
                           onChange={(q) => changeQty(line.id, q)}
                         />
@@ -294,10 +293,11 @@ function QtyStepper({
   onChange,
 }: {
   value: number;
-  max: number;
+  max?: number;
   disabled: boolean;
   onChange: (q: number) => void;
 }) {
+  const atMax = max != null && value >= max;
   return (
     <div className="flex items-center justify-center gap-1">
       <button
@@ -313,7 +313,7 @@ function QtyStepper({
       </span>
       <button
         onClick={() => onChange(value + 1)}
-        disabled={disabled || value >= max}
+        disabled={disabled || atMax}
         className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 text-charcoal hover:bg-silver-light disabled:opacity-40 transition-colors"
         aria-label="افزایش"
       >

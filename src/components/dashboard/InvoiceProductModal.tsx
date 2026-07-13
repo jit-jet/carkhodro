@@ -172,9 +172,8 @@ function ProductRow({
             <input
               type="number"
               min={1}
-              max={product.stock}
               value={qty}
-              onChange={(e) => setQty(Math.max(1, Math.min(product.stock, Number(e.target.value) || 1)))}
+              onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
               className="w-16 border border-gray-200 rounded-lg px-2 py-1 text-sm text-center outline-none focus:border-accent"
               aria-label="تعداد"
             />

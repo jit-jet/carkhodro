@@ -63,10 +63,14 @@ const PAYMENT_DEFS: PaymentDef[] = [
 interface Props {
   selected: PaymentMethod;
   onChange: (method: PaymentMethod) => void;
+  /** When set, only these methods are shown (defaults to all). */
+  allowedMethods?: PaymentMethod[];
 }
 
-export default function PaymentSelector({ selected, onChange }: Props) {
-  const hint = PAYMENT_DEFS.find((p) => p.id === selected)!.hint;
+export default function PaymentSelector({ selected, onChange, allowedMethods }: Props) {
+  const methods = allowedMethods ?? PAYMENT_DEFS.map((p) => p.id);
+  const defs = PAYMENT_DEFS.filter((p) => methods.includes(p.id));
+  const hint = defs.find((p) => p.id === selected)?.hint ?? PAYMENT_DEFS[0].hint;
 
   return (
     <section className="bg-white rounded-2xl border border-gray-100 shadow-sm">
@@ -88,7 +92,7 @@ export default function PaymentSelector({ selected, onChange }: Props) {
       </div>
 
       <div className="p-4 space-y-3">
-        {PAYMENT_DEFS.map((def) => {
+        {defs.map((def) => {
           const isSelected = selected === def.id;
           return (
             <label

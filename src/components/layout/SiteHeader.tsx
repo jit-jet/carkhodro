@@ -11,13 +11,17 @@ import AccountMenu, {
   AccountMenuFallback,
   MobileAccountSection,
 } from '@/src/components/layout/AccountMenu';
+import { getCurrentUser } from '@/src/lib/session';
+import { cartPathForRole, pricingRoleFromUser } from '@/src/lib/user-role';
 
 export default async function SiteHeader() {
-  const navLinks = await getNavLinks();
+  const [navLinks, user] = await Promise.all([getNavLinks(), getCurrentUser()]);
+  const cartHref = cartPathForRole(pricingRoleFromUser(user?.role));
 
   return (
     <Header
       navLinks={navLinks}
+      cartHref={cartHref}
       mobileMenuAccount={
         <Suspense fallback={null}>
           <MobileAccountSection />

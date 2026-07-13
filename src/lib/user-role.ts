@@ -25,3 +25,43 @@ export function isStorefrontRetailRole(role: PricingRole): boolean {
 export function pricingRoleFromUser(role: UserRole | undefined | null): PricingRole {
   return role ?? null;
 }
+
+/** Cart page path for the given role. */
+export function cartPathForRole(role: PricingRole): '/cart' | '/dashboard/cart' {
+  return isWholesaleUser(role) ? '/dashboard/cart' : '/cart';
+}
+
+/** Retail storefront cart + checkout (guests included). */
+export function canUseRetailCheckout(role: UserRole | undefined | null): boolean {
+  return !isWholesaleUser(role ?? null);
+}
+
+/** Dashboard invoice cart — wholesale partners only. */
+export function canUseDashboardCart(role: UserRole | undefined | null): boolean {
+  return isWholesaleUser(role ?? null);
+}
+
+export function isProductInStock(stock: number): boolean {
+  return stock >= 1;
+}
+
+/** Clamp a line quantity for cart mutations. Wholesale is not capped by stock. */
+export function clampOrderQuantity(
+  quantity: number,
+  stock: number,
+  role: PricingRole,
+): number {
+  const q = Math.max(1, Math.round(quantity));
+  if (isWholesaleUser(role)) return q;
+  return Math.min(stock, q);
+}
+
+/** Merge an add-to-cart increment with existing quantity. */
+export function mergeCartQuantity(
+  existingQty: number,
+  addQty: number,
+  stock: number,
+  role: PricingRole,
+): number {
+  return clampOrderQuantity(existingQty + addQty, stock, role);
+}

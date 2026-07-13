@@ -24,7 +24,11 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { loadCartByUserId } from '@/src/lib/cart-data';
-import { pricingRoleFromUser } from '@/src/lib/user-role';
+import {
+  pricingRoleFromUser,
+  mergeCartQuantity,
+  clampOrderQuantity,
+} from '@/src/lib/user-role';
 import {
   readGuestCart,
   writeGuestCart,
@@ -50,12 +54,13 @@ export async function addToCart(
     if (product.stock < 1) return fail('این محصول موجود نیست.');
 
     const user = await getCurrentUser();
+    const role = pricingRoleFromUser(user?.role);
 
     if (!user) {
       // ── Guest path: merge into the cookie cart. ──────────────────────────
       const lines = await readGuestCart();
       const existing = lines.find((l) => l.productId === productId);
-      const nextQty = Math.min(product.stock, (existing?.quantity ?? 0) + qty);
+      const nextQty = mergeCartQuantity(existing?.quantity ?? 0, qty, product.stock, role);
       const updated = upsertLine(lines, productId, nextQty);
       await writeGuestCart(updated);
       revalidatePath('/cart');
@@ -74,7 +79,7 @@ export async function addToCart(
       where: { cartId_productId: { cartId: cart.id, productId } },
       select: { quantity: true },
     });
-    const nextQty = Math.min(product.stock, (existing?.quantity ?? 0) + qty);
+    const nextQty = mergeCartQuantity(existing?.quantity ?? 0, qty, product.stock, role);
 
     await prisma.cartItem.upsert({
       where: { cartId_productId: { cartId: cart.id, productId } },
@@ -83,7 +88,8 @@ export async function addToCart(
     });
 
     revalidatePath('/cart');
-    return ok(await loadCartByUserId(user.id, pricingRoleFromUser(user.role)));
+    revalidatePath('/dashboard/cart');
+    return ok(await loadCartByUserId(user.id, role));
   });
 }
 
@@ -105,8 +111,9 @@ export async function updateCartItemQuantity(
         select: { stock: true },
       });
       if (!product) return fail('محصول یافت نشد.');
+      if (product.stock < 1) return fail('این محصول موجود نیست.');
 
-      const qty = Math.max(1, Math.min(product.stock, Math.round(quantity)));
+      const qty = clampOrderQuantity(Math.round(quantity), product.stock, null);
       const updated = upsertLine(lines, itemId, qty);
       await writeGuestCart(updated);
       revalidatePath('/cart');
@@ -119,11 +126,13 @@ export async function updateCartItemQuantity(
     });
     if (!item) return fail('آیتم سبد خرید یافت نشد.');
 
-    const qty = Math.max(1, Math.min(item.product.stock, Math.round(quantity)));
+    const role = pricingRoleFromUser(user.role);
+    const qty = clampOrderQuantity(Math.round(quantity), item.product.stock, role);
     await prisma.cartItem.update({ where: { id: itemId }, data: { quantity: qty } });
 
     revalidatePath('/cart');
-    return ok(await loadCartByUserId(user.id, pricingRoleFromUser(user.role)));
+    revalidatePath('/dashboard/cart');
+    return ok(await loadCartByUserId(user.id, role));
   });
 }
 

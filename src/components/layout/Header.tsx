@@ -295,10 +295,12 @@ export default function Header({
   navLinks,
   children,
   mobileMenuAccount,
+  cartHref = '/cart',
 }: {
   navLinks: NavLinkVM[];
   children: React.ReactNode;
   mobileMenuAccount?: React.ReactNode;
+  cartHref?: string;
 }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -510,7 +512,7 @@ export default function Header({
 
               {/* Cart */}
               <Link
-                href="/cart"
+                href={cartHref}
                 aria-label="سبد خرید"
                 className="relative flex items-center gap-1.5 bg-accent hover:bg-accent-dark active:scale-95 text-charcoal font-semibold text-sm px-3 py-2.5 rounded-xl transition-all"
               >
