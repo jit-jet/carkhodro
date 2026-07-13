@@ -19,6 +19,7 @@
 import { cookies } from 'next/headers';
 import { prisma } from '@/src/lib/prisma';
 import { productInclude, toCartItemVM, type CartVM } from '@/src/lib/serializers';
+import { mergeCartQuantity, pricingRoleFromUser } from '@/src/lib/user-role';
 
 export const GUEST_CART_COOKIE = 'guest_cart';
 const GUEST_CART_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
@@ -129,6 +130,12 @@ export async function mergeGuestCartIntoUser(userId: string): Promise<void> {
   if (lines.length === 0) return;
 
   try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    const role = pricingRoleFromUser(user?.role ?? null);
+
     const products = await prisma.product.findMany({
       where: { id: { in: lines.map((l) => l.productId) }, isActive: true },
       select: { id: true, stock: true },
@@ -150,7 +157,12 @@ export async function mergeGuestCartIntoUser(userId: string): Promise<void> {
         where: { cartId_productId: { cartId: cart.id, productId: line.productId } },
         select: { quantity: true },
       });
-      const nextQty = Math.min(stock, (existing?.quantity ?? 0) + line.quantity);
+      const nextQty = mergeCartQuantity(
+        existing?.quantity ?? 0,
+        line.quantity,
+        stock,
+        role,
+      );
 
       await prisma.cartItem.upsert({
         where: { cartId_productId: { cartId: cart.id, productId: line.productId } },

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/actions/auth';
+import { refreshClientUI } from '@/src/store/refresh-client-ui';
 import type { ProvinceVM } from '@/src/lib/serializers';
 
 // ── Field-level form state ─────────────────────────────────────────────────────
@@ -106,6 +107,7 @@ export default function SignupForm({ phoneNumber, redirectTo = '/dashboard', pro
         return;
       }
       // Registration complete (session set, guest cart merged) → continue.
+      await refreshClientUI();
       router.push(redirectTo);
       router.refresh();
     } catch {

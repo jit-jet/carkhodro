@@ -5,10 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import type { NavLinkVM, ProductVM } from "@/src/lib/serializers";
-import { getCartCount } from "@/actions/cart";
 import { searchProducts } from "@/actions/search";
 import { useCartUI } from "@/src/store/cart-ui";
 import { useListsUI, ensureListsHydrated } from "@/src/store/lists-ui";
+import { refreshClientUI } from "@/src/store/refresh-client-ui";
 
 function PhoneIcon() {
   return (
@@ -312,16 +312,17 @@ export default function Header({
   const searchMobileRef = useRef<HTMLDivElement>(null);
 
   const cartCount = useCartUI((s) => s.count);
-  const setCount = useCartUI((s) => s.setCount);
   const wishlistCount = useListsUI((s) => s.wishlist.size);
   const compareCount = useListsUI((s) => s.compare.size);
 
   useEffect(() => {
     let active = true;
-    getCartCount().then((n) => active && setCount(n));
-    ensureListsHydrated();
+    refreshClientUI().catch(() => {
+      if (!active) return;
+      ensureListsHydrated();
+    });
     return () => { active = false; };
-  }, [setCount]);
+  }, []);
 
   useEffect(() => {
     const q = searchQuery.trim();

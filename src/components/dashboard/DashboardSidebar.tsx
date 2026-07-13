@@ -19,7 +19,7 @@ import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { logout } from '@/actions/auth';
-import { useCartUI } from '@/src/store/cart-ui';
+import { refreshClientUI } from '@/src/store/refresh-client-ui';
 
 type IconKey =
   | 'grid'
@@ -135,7 +135,6 @@ function NavIcon({ icon }: { icon: IconKey }) {
 export function SidebarShell({ activeHref }: { activeHref: string | null }) {
   const router = useRouter();
   const [loggingOut, startLogout] = useTransition();
-  const setCount = useCartUI((s) => s.setCount);
 
   function isActive(href: string): boolean {
     if (activeHref === null) return false;
@@ -146,7 +145,7 @@ export function SidebarShell({ activeHref }: { activeHref: string | null }) {
   function handleLogout() {
     startLogout(async () => {
       await logout();
-      setCount(0);
+      await refreshClientUI();
       router.push('/');
       router.refresh();
     });

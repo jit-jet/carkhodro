@@ -51,6 +51,12 @@ export const useListsUI = create<ListsUIState>((set) => ({
 
 let hydrationPromise: Promise<void> | null = null;
 
+/** Allow a future hydration pass (e.g. after logout). */
+export function invalidateListsHydration(): void {
+  hydrationPromise = null;
+  useListsUI.setState({ wishlist: new Set(), compare: new Set(), hydrated: false });
+}
+
 /**
  * Seed the store from the server once per page load. Safe to call from every
  * button's mount effect — concurrent callers share one in-flight request, and
@@ -66,4 +72,18 @@ export function ensureListsHydrated(): void {
     .catch(() => {
       hydrationPromise = null;
     });
+}
+
+/** Force a server read and replace local list membership (auth changes). */
+export async function refreshListsFromServer(): Promise<void> {
+  invalidateListsHydration();
+  hydrationPromise = getListItemIds()
+    .then(({ wishlist, compare }) => {
+      useListsUI.getState().hydrate(wishlist, compare);
+    })
+    .catch(() => {
+      hydrationPromise = null;
+      useListsUI.setState({ wishlist: new Set(), compare: new Set(), hydrated: false });
+    });
+  await hydrationPromise;
 }

@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { logout } from '@/actions/auth';
-import { useCartUI } from '@/src/store/cart-ui';
+import { refreshClientUI } from '@/src/store/refresh-client-ui';
 
 function UserIcon() {
   return (
@@ -37,12 +37,11 @@ function LogoutIcon() {
 function useLogoutHandler() {
   const router = useRouter();
   const [loggingOut, startLogout] = useTransition();
-  const setCount = useCartUI((s) => s.setCount);
 
   function handleLogout() {
     startLogout(async () => {
       await logout();
-      setCount(0);
+      await refreshClientUI();
       router.push('/');
       router.refresh();
     });

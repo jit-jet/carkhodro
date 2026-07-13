@@ -25,6 +25,7 @@ import AuthCard from '@/src/components/auth/AuthCard';
 import PhoneStep from '@/src/components/auth/PhoneStep';
 import OtpStep from '@/src/components/auth/OtpStep';
 import { requestOtp, verifyOtp } from '@/actions/auth';
+import { refreshClientUI } from '@/src/store/refresh-client-ui';
 
 type Step = 'phone' | 'otp';
 
@@ -95,6 +96,7 @@ function LoginFlow() {
       }
 
       if (res.data.userExists) {
+        await refreshClientUI();
         router.push(redirectTo);
         router.refresh(); // reflect the new session (header, cart merge)
       } else {
