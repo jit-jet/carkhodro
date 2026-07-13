@@ -202,13 +202,6 @@ export async function submitCheckout(
     if (!cart || cart.items.length === 0) return fail('سبد خرید شما خالی است.');
     if (!shipping || !shipping.isActive) return fail('روش ارسال معتبر نیست.');
 
-    // Validate stock up front.
-    for (const item of cart.items) {
-      if (item.product.stock < item.quantity) {
-        return fail(`موجودی «${item.product.name}» کافی نیست.`);
-      }
-    }
-
     const resolved = await resolveLocation(contact.provinceId!, contact.cityId!);
     if (!resolved.ok) return fail(resolved.error);
     const { province, city } = resolved;
@@ -312,6 +305,7 @@ export async function submitCheckout(
     // dashboard all re-read on next visit.
     updateTag(tags.products);
     revalidatePath('/cart');
+    revalidatePath('/dashboard/cart')
     revalidatePath('/checkout');
     revalidatePath('/dashboard');
 

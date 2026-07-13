@@ -61,7 +61,8 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: Props)
             </span>
             <button
               onClick={() => onUpdateQuantity(item.id, 1)}
-              className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light transition-colors"
+              disabled={item.quantity >= item.stock}
+              className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
               aria-label="افزایش تعداد"
             >
               +

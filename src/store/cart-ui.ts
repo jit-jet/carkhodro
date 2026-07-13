@@ -59,3 +59,31 @@ export function announceAddedToCart(name: string, quantity: number, count: numbe
     description: `${name} — ${quantity.toLocaleString('fa-IR')} عدد`,
   });
 }
+
+/** Notify retail users when they hit the in-stock limit. */
+export function notifyStockLimit(stock: number): void {
+  useCartUI.getState().notify({
+    variant: 'error',
+    title: 'محدودیت موجودی',
+    description: `امکان افزودن بیش از موجودی انبار وجود ندارد. حداکثر ${stock.toLocaleString('fa-IR')} عدد قابل سفارش است.`,
+  });
+}
+
+/** Handle add-to-cart success — shows stock warning or the usual success toast. */
+export function handleAddToCartResult(
+  productName: string,
+  requestedQty: number,
+  result: { totalItems: number; stockCapped?: boolean; maxStock?: number },
+): void {
+  useCartUI.getState().setCount(result.totalItems);
+  if (result.stockCapped && result.maxStock != null) {
+    notifyStockLimit(result.maxStock);
+    return;
+  }
+  const { notify } = useCartUI.getState();
+  notify({
+    variant: 'success',
+    title: 'به سبد خرید اضافه شد',
+    description: `${productName} — ${requestedQty.toLocaleString('fa-IR')} عدد`,
+  });
+}

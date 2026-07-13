@@ -14,6 +14,7 @@
 
 import type { Prisma, OrderStatus, PaymentMethod, PaymentStatus } from '@/generated/prisma_client';
 import { resolveProductPrice, type ProductPriceFields } from '@/src/lib/pricing';
+import { orderQuantityCapForRole } from '@/src/lib/order-quantity';
 import type { PricingRole } from '@/src/lib/user-role';
 
 // ── Prisma query shapes ─────────────────────────────────────────────────────
@@ -55,6 +56,8 @@ export interface ProductVM {
   warranty: string;
   origin: string;
   stock: number;
+  /** UI cap for add-to-cart qty; null = unlimited (wholesale). */
+  orderQuantityCap: number | null;
   salesCount: number;
   viewCount: number;
   createdDate: string; // ISO yyyy-mm-dd
@@ -162,6 +165,12 @@ export interface CartVM {
   items: CartItemVM[];
   subtotal: number;
   totalItems: number;
+}
+
+/** Cart mutation response — may include a retail stock-cap flag for client toasts. */
+export interface CartMutationVM extends CartVM {
+  stockCapped?: boolean;
+  maxStock?: number;
 }
 
 export interface OrderSummaryVM {
@@ -303,6 +312,7 @@ export function applyRoleToProduct(vm: ProductVM, role: PricingRole): ProductVM 
     price: resolved.finalPrice,
     oldPrice: resolved.discountPct > 0 ? resolved.basePrice : undefined,
     discount: resolved.discountPct > 0 ? Math.round(resolved.discountPct) : undefined,
+    orderQuantityCap: orderQuantityCapForRole(vm.stock, role),
   };
 }
 
@@ -339,6 +349,7 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     warranty: p.warranty ?? '',
     origin: p.origin ?? '',
     stock: p.stock,
+    orderQuantityCap: orderQuantityCapForRole(p.stock, role),
     salesCount: p.saleCount,
     viewCount: p.viewCount,
     createdDate: p.createdAt.toISOString().slice(0, 10),

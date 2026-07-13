@@ -4,9 +4,9 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import CartItemRow from '@/src/components/cart/CartItemRow';
 import OrderSummary from '@/src/components/cart/OrderSummary';
-import { updateCartItemQuantity, removeCartItem } from '@/actions/cart';
+import { updateCartItemQuantity, removeCartItem, validateCartStockForCheckout } from '@/actions/cart';
 import type { CartVM, CartItemVM } from '@/src/lib/serializers';
-import { useCartUI } from '@/src/store/cart-ui';
+import { useCartUI, notifyStockLimit } from '@/src/store/cart-ui';
 
 interface Props {
   initialCart: CartVM;
@@ -24,6 +24,7 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
   const router = useRouter();
   const [items, setItems] = useState<CartItemVM[]>(initialCart.items);
   const [pending, startTransition] = useTransition();
+  const [checkingOut, startCheckout] = useTransition();
   const [error, setError] = useState('');
   const setCount = useCartUI((s) => s.setCount);
 
@@ -33,7 +34,12 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
   function updateQty(id: string, delta: number) {
     const item = items.find((i) => i.id === id);
     if (!item) return;
-    const nextQty = Math.max(1, Math.min(item.stock, item.quantity + delta));
+    const requested = item.quantity + delta;
+    if (delta > 0 && requested > item.stock) {
+      notifyStockLimit(item.stock);
+      return;
+    }
+    const nextQty = Math.max(1, Math.min(item.stock, requested));
     if (nextQty === item.quantity) return;
 
     // Optimistic update, reconciled with the server's authoritative cart.
@@ -43,6 +49,9 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
       if (result.ok) {
         setItems(result.data.items);
         setCount(result.data.totalItems);
+        if (result.data.stockCapped && result.data.maxStock != null) {
+          notifyStockLimit(result.data.maxStock);
+        }
       } else setError(result.error);
     });
   }
@@ -63,9 +72,15 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
   }
 
   function proceedToCheckout() {
-    // Checkout requires authentication. Send guests to login (preserving the
-    // server-side cart) and bring them back to /checkout afterwards.
-    router.push(isAuthenticated ? '/checkout' : '/login?redirect=/checkout');
+    setError('');
+    startCheckout(async () => {
+      const result = await validateCartStockForCheckout();
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      router.push(isAuthenticated ? '/checkout' : '/login?redirect=/checkout');
+    });
   }
 
   return (
@@ -73,7 +88,7 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
       {/* Main column */}
       <div className="lg:col-span-2 space-y-4">
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">
+          <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 whitespace-pre-line">
             {error}
           </div>
         )}
@@ -113,15 +128,17 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
             itemCount={totalItems}
             ctaLabel="ادامه و تسویه حساب"
             onPlaceOrder={proceedToCheckout}
-            busy={pending}
+            busy={pending || checkingOut}
           />
           {!isAuthenticated && (
             <p className="text-center text-xs text-gray-400 mt-3 leading-5">
               برای تکمیل خرید ابتدا وارد می‌شوید؛ سبد خرید شما حفظ می‌شود.
             </p>
           )}
-          {pending && (
-            <p className="text-center text-xs text-gray-400 mt-3">در حال به‌روزرسانی…</p>
+          {(pending || checkingOut) && (
+            <p className="text-center text-xs text-gray-400 mt-3">
+              {checkingOut ? 'در حال بررسی موجودی…' : 'در حال به‌روزرسانی…'}
+            </p>
           )}
         </div>
       </div>

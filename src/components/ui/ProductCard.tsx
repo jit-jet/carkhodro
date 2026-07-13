@@ -4,8 +4,9 @@ import { useState, useTransition } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ProductVM as Product } from '@/src/lib/serializers';
+import { resolveOrderQtyUI } from '@/src/lib/order-quantity';
 import { addToCart } from '@/actions/cart';
-import { announceAddedToCart, useCartUI } from '@/src/store/cart-ui';
+import { handleAddToCartResult, notifyStockLimit, useCartUI } from '@/src/store/cart-ui';
 import WishlistButton from '@/src/components/product/WishlistButton';
 import CompareButton from '@/src/components/product/CompareButton';
 
@@ -37,19 +38,31 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
   const notify = useCartUI((s) => s.notify);
 
   const isGrid  = variant === 'grid';
-  const inStock = product.stock > 0;
+  const { inStock, stockCapped, maxQty } = resolveOrderQtyUI(product);
   const flag    = ORIGIN_FLAGS[product.origin] ?? '🏭';
-  const maxQty  = inStock ? product.stock : 0;
 
   const isNew = product.isNew;
 
   function changeQty(delta: number) {
-    setQty(q => Math.min(maxQty, Math.max(1, q + delta)));
+    setQty((q) => {
+      const next = q + delta;
+      if (stockCapped && maxQty != null && next > maxQty) {
+        notifyStockLimit(maxQty);
+        return q;
+      }
+      return Math.max(1, next);
+    });
   }
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const v = parseInt(e.target.value, 10);
-    if (!isNaN(v)) setQty(Math.min(maxQty, Math.max(1, v)));
+    if (isNaN(v)) return;
+    if (stockCapped && maxQty != null && v > maxQty) {
+      notifyStockLimit(maxQty);
+      setQty(maxQty);
+      return;
+    }
+    setQty(Math.max(1, v));
   }
 
   // Add to cart works for guests and signed-in users alike (the server action
@@ -59,7 +72,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
     startTransition(async () => {
       const res = await addToCart(product.id, qty);
       if (res.ok) {
-        announceAddedToCart(product.name, qty, res.data.totalItems);
+        handleAddToCartResult(product.name, qty, res.data);
         setAdded(true);
         setTimeout(() => setAdded(false), 1800);
       } else {
@@ -182,7 +195,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
               <input
                 type="number"
                 min={1}
-                max={maxQty}
+                {...(stockCapped && maxQty != null ? { max: maxQty } : {})}
                 value={qty}
                 onChange={handleInput}
                 className="w-0 flex-1 text-center text-sm font-semibold text-charcoal bg-transparent focus:outline-none
@@ -193,7 +206,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
               />
               <button
                 onClick={() => changeQty(1)}
-                disabled={qty >= maxQty}
+                disabled={stockCapped && maxQty != null && qty >= maxQty}
                 className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
                 aria-label="افزایش تعداد"
               >

@@ -28,6 +28,9 @@ import {
   pricingRoleFromUser,
   mergeCartQuantity,
   clampOrderQuantity,
+  wasQuantityStockCapped,
+  canUseRetailCheckout,
+  type PricingRole,
 } from '@/src/lib/user-role';
 import {
   readGuestCart,
@@ -35,14 +38,18 @@ import {
   buildGuestCartVM,
   type GuestCartLine,
 } from '@/src/lib/guest-cart';
-import type { CartVM } from '@/src/lib/serializers';
+import {
+  collectCartStockIssues,
+  formatCartStockIssues,
+} from '@/src/lib/cart-stock';
+import type { CartMutationVM, CartVM } from '@/src/lib/serializers';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
 
 export async function addToCart(
   productId: string,
   quantity = 1,
-): Promise<ActionResult<CartVM>> {
+): Promise<ActionResult<CartMutationVM>> {
   return runMutation('addToCart', async () => {
     const qty = Math.max(1, Math.round(quantity));
 
@@ -60,11 +67,14 @@ export async function addToCart(
       // ── Guest path: merge into the cookie cart. ──────────────────────────
       const lines = await readGuestCart();
       const existing = lines.find((l) => l.productId === productId);
+      const wantedTotal = (existing?.quantity ?? 0) + qty;
       const nextQty = mergeCartQuantity(existing?.quantity ?? 0, qty, product.stock, role);
       const updated = upsertLine(lines, productId, nextQty);
       await writeGuestCart(updated);
       revalidatePath('/cart');
-      return ok(await buildGuestCartVM(updated));
+      revalidatePath('/dashboard/cart');
+      const cart = await buildGuestCartVM(updated);
+      return ok(withStockCapMeta(cart, wantedTotal, nextQty, product.stock, role));
     }
 
     // ── User path: persist to the DB cart. ─────────────────────────────────
@@ -79,6 +89,7 @@ export async function addToCart(
       where: { cartId_productId: { cartId: cart.id, productId } },
       select: { quantity: true },
     });
+    const wantedTotal = (existing?.quantity ?? 0) + qty;
     const nextQty = mergeCartQuantity(existing?.quantity ?? 0, qty, product.stock, role);
 
     await prisma.cartItem.upsert({
@@ -89,14 +100,15 @@ export async function addToCart(
 
     revalidatePath('/cart');
     revalidatePath('/dashboard/cart');
-    return ok(await loadCartByUserId(user.id, role));
+    const cartVm = await loadCartByUserId(user.id, role);
+    return ok(withStockCapMeta(cartVm, wantedTotal, nextQty, product.stock, role));
   });
 }
 
 export async function updateCartItemQuantity(
   itemId: string,
   quantity: number,
-): Promise<ActionResult<CartVM>> {
+): Promise<ActionResult<CartMutationVM>> {
   return runMutation('updateCartItemQuantity', async () => {
     const user = await getCurrentUser();
 
@@ -113,11 +125,14 @@ export async function updateCartItemQuantity(
       if (!product) return fail('محصول یافت نشد.');
       if (product.stock < 1) return fail('این محصول موجود نیست.');
 
-      const qty = clampOrderQuantity(Math.round(quantity), product.stock, null);
+      const requested = Math.round(quantity);
+      const qty = clampOrderQuantity(requested, product.stock, null);
       const updated = upsertLine(lines, itemId, qty);
       await writeGuestCart(updated);
       revalidatePath('/cart');
-      return ok(await buildGuestCartVM(updated));
+      revalidatePath('/dashboard/cart');
+      const cart = await buildGuestCartVM(updated);
+      return ok(withStockCapMeta(cart, requested, qty, product.stock, null));
     }
 
     const item = await prisma.cartItem.findFirst({
@@ -127,16 +142,18 @@ export async function updateCartItemQuantity(
     if (!item) return fail('آیتم سبد خرید یافت نشد.');
 
     const role = pricingRoleFromUser(user.role);
-    const qty = clampOrderQuantity(Math.round(quantity), item.product.stock, role);
+    const requested = Math.round(quantity);
+    const qty = clampOrderQuantity(requested, item.product.stock, role);
     await prisma.cartItem.update({ where: { id: itemId }, data: { quantity: qty } });
 
     revalidatePath('/cart');
     revalidatePath('/dashboard/cart');
-    return ok(await loadCartByUserId(user.id, role));
+    const cartVm = await loadCartByUserId(user.id, role);
+    return ok(withStockCapMeta(cartVm, requested, qty, item.product.stock, role));
   });
 }
 
-export async function removeCartItem(itemId: string): Promise<ActionResult<CartVM>> {
+export async function removeCartItem(itemId: string): Promise<ActionResult<CartMutationVM>> {
   return runMutation('removeCartItem', async () => {
     const user = await getCurrentUser();
 
@@ -146,6 +163,7 @@ export async function removeCartItem(itemId: string): Promise<ActionResult<CartV
       const updated = lines.filter((l) => l.productId !== itemId);
       await writeGuestCart(updated);
       revalidatePath('/cart');
+      revalidatePath('/dashboard/cart')
       return ok(await buildGuestCartVM(updated));
     }
 
@@ -168,11 +186,57 @@ export async function clearCart(): Promise<ActionResult> {
     if (!user) {
       await writeGuestCart([]);
       revalidatePath('/cart');
+      revalidatePath('/dashboard/cart')
       return ok(undefined);
     }
 
     await prisma.cartItem.deleteMany({ where: { cart: { userId: user.id } } });
     revalidatePath('/cart');
+    revalidatePath('/dashboard/cart')
+    return ok(undefined);
+  });
+}
+
+/**
+ * Validate retail cart lines against live stock before proceeding to checkout.
+ * Returns every shortfall (with remaining qty ≥ 0) in one message.
+ */
+export async function validateCartStockForCheckout(): Promise<ActionResult> {
+  return runMutation('validateCartStockForCheckout', async () => {
+    const user = await getCurrentUser();
+    if (user && !canUseRetailCheckout(user.role)) {
+      return ok(undefined);
+    }
+
+    let lines: { name: string; quantity: number; stock: number }[];
+
+    if (!user) {
+      const cart = await buildGuestCartVM(await readGuestCart());
+      if (cart.items.length === 0) return fail('سبد خرید شما خالی است.');
+      lines = cart.items.map((i) => ({
+        name: i.name,
+        quantity: i.quantity,
+        stock: i.stock,
+      }));
+    } else {
+      const cart = await prisma.cart.findUnique({
+        where: { userId: user.id },
+        include: {
+          items: {
+            include: { product: { select: { name: true, stock: true } } },
+          },
+        },
+      });
+      if (!cart || cart.items.length === 0) return fail('سبد خرید شما خالی است.');
+      lines = cart.items.map((i) => ({
+        name: i.product.name,
+        quantity: i.quantity,
+        stock: i.product.stock,
+      }));
+    }
+
+    const issues = collectCartStockIssues(lines);
+    if (issues.length > 0) return fail(formatCartStockIssues(issues));
     return ok(undefined);
   });
 }
@@ -201,6 +265,17 @@ export async function getCartCount(): Promise<number> {
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
+
+function withStockCapMeta(
+  cart: CartVM,
+  wanted: number,
+  applied: number,
+  stock: number,
+  role: PricingRole,
+): CartMutationVM {
+  if (!wasQuantityStockCapped(wanted, applied, role)) return cart;
+  return { ...cart, stockCapped: true, maxStock: stock };
+}
 
 /** Return a new line list with `productId` set to `quantity` (insert or update). */
 function upsertLine(

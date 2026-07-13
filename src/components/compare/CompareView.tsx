@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { removeFromCompare, getCompareList } from '@/actions/lists';
 import { addToCart } from '@/actions/cart';
 import { useListsUI, ensureListsHydrated } from '@/src/store/lists-ui';
-import { useCartUI, announceAddedToCart } from '@/src/store/cart-ui';
+import { useCartUI, handleAddToCartResult } from '@/src/store/cart-ui';
 import type { ProductVM } from '@/src/lib/serializers';
 
 const ORIGIN_FLAGS: Record<string, string> = {
@@ -48,7 +48,7 @@ function AddToCartCell({ product }: { product: ProductVM }) {
     addToCart(product.id, 1).then((res) => {
       setBusy(false);
       if (res.ok) {
-        announceAddedToCart(product.name, 1, res.data.totalItems);
+        handleAddToCartResult(product.name, 1, res.data);
         setAdded(true);
         setTimeout(() => setAdded(false), 1800);
       } else {

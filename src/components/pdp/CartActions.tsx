@@ -2,12 +2,12 @@
 
 import { useState, useTransition } from 'react';
 import { addToCart } from '@/actions/cart';
-import { announceAddedToCart, useCartUI } from '@/src/store/cart-ui';
+import { handleAddToCartResult, notifyStockLimit, useCartUI } from '@/src/store/cart-ui';
+import { resolveOrderQtyUI } from '@/src/lib/order-quantity';
+import type { PDPProductVM } from '@/src/lib/serializers';
 
 interface Props {
-  // Only the fields this widget needs. The PDP passes a full PDPProductVM,
-  // which satisfies this shape (id is the DB cuid → string).
-  product: { id: string; stock: number; name: string };
+  product: Pick<PDPProductVM, 'id' | 'stock' | 'name' | 'orderQuantityCap'>;
 }
 
 function ShoppingBagIcon() {
@@ -30,8 +30,7 @@ function BellIcon() {
 }
 
 export default function CartActions({ product }: Props) {
-  const inStock = product.stock > 0;
-  const maxQty  = product.stock;
+  const { inStock, stockCapped, maxQty } = resolveOrderQtyUI(product);
 
   const [qty,         setQty]         = useState(1);
   const [added,       setAdded]       = useState(false);
@@ -41,19 +40,32 @@ export default function CartActions({ product }: Props) {
   const notify = useCartUI((s) => s.notify);
 
   function changeQty(delta: number) {
-    setQty(q => Math.min(maxQty, Math.max(1, q + delta)));
+    setQty((q) => {
+      const next = q + delta;
+      if (stockCapped && maxQty != null && next > maxQty) {
+        notifyStockLimit(maxQty);
+        return q;
+      }
+      return Math.max(1, next);
+    });
   }
 
   function handleQtyInput(e: React.ChangeEvent<HTMLInputElement>) {
     const v = parseInt(e.target.value, 10);
-    if (!isNaN(v)) setQty(Math.min(maxQty, Math.max(1, v)));
+    if (isNaN(v)) return;
+    if (stockCapped && maxQty != null && v > maxQty) {
+      notifyStockLimit(maxQty);
+      setQty(maxQty);
+      return;
+    }
+    setQty(Math.max(1, v));
   }
 
   function handleAddToCart() {
     startTransition(async () => {
       const res = await addToCart(product.id, qty);
       if (res.ok) {
-        announceAddedToCart(product.name, qty, res.data.totalItems);
+        handleAddToCartResult(product.name, qty, res.data);
         setAdded(true);
         setTimeout(() => setAdded(false), 2200);
       } else {
@@ -152,7 +164,7 @@ export default function CartActions({ product }: Props) {
           <input
             type="number"
             min={1}
-            max={maxQty}
+            {...(stockCapped && maxQty != null ? { max: maxQty } : {})}
             value={qty}
             onChange={handleQtyInput}
             className="w-12 text-center text-base font-bold text-charcoal bg-transparent focus:outline-none
@@ -163,7 +175,7 @@ export default function CartActions({ product }: Props) {
           />
           <button
             onClick={() => changeQty(1)}
-            disabled={qty >= maxQty}
+            disabled={stockCapped && maxQty != null && qty >= maxQty}
             className="px-3.5 py-3 text-charcoal font-bold text-lg leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
             aria-label="افزایش تعداد"
           >

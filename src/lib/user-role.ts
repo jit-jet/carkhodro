@@ -56,6 +56,15 @@ export function clampOrderQuantity(
   return Math.min(stock, q);
 }
 
+/** True when retail quantity was reduced because of available stock. */
+export function wasQuantityStockCapped(
+  wanted: number,
+  applied: number,
+  role: PricingRole,
+): boolean {
+  return isRetailUser(role) && applied < wanted;
+}
+
 /** Merge an add-to-cart increment with existing quantity. */
 export function mergeCartQuantity(
   existingQty: number,

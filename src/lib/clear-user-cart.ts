@@ -5,5 +5,6 @@ import { prisma } from '@/src/lib/prisma';
 export async function clearUserCart(userId: string): Promise<void> {
   await prisma.cartItem.deleteMany({ where: { cart: { userId } } });
   revalidatePath('/cart');
+  revalidatePath('/dashboard/cart')
   revalidatePath('/checkout');
 }
