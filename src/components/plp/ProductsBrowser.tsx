@@ -50,7 +50,6 @@ function openPDFWindow(products: Product[]) {
         <td>${p.carType}</td>
         <td>${p.categoryLabel}</td>
         <td>${p.origin}</td>
-        <td>${p.warranty}</td>
         <td>${p.stock > 0 ? 'موجود' : 'ناموجود'}</td>
         <td dir="ltr" style="text-align:left">${p.price.toLocaleString()} تومان</td>
       </tr>`,
@@ -88,7 +87,7 @@ function openPDFWindow(products: Product[]) {
       <tr>
         <th>#</th><th>نام محصول</th><th>کد</th><th>برند</th>
         <th>نوع خودرو</th><th>دسته‌بندی</th><th>کشور</th>
-        <th>گارانتی</th><th>موجودی</th><th>قیمت</th>
+        <th>موجودی</th><th>قیمت</th>
       </tr>
     </thead>
     <tbody>${rows}</tbody>

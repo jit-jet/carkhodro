@@ -322,7 +322,6 @@ model Product {
   stock Int @default(0)
 
   // ── Physical / logistics details (managed by local admin) ─────────────────
-  warranty       String?
   /// Country of origin, e.g. "آلمان", "ژاپن", "ایران"
   origin         String?
   /// Units per retail pack (e.g. spark plugs come in sets of 4)

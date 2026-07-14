@@ -23,7 +23,6 @@ const infoLinks = [
   { href: "/contact", label: "تماس با ما" },
   { href: "/faq", label: "سوالات متداول" },
   { href: "/return", label: "شرایط مرجوعی" },
-  { href: "/warranty", label: "ضمانت کالا" },
   { href: "/blog", label: "وبلاگ" },
 ];
 

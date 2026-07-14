@@ -80,7 +80,6 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
     ['نام ماشین',      product.carType],
     ['اصلی',           product.isOriginal ? 'بله' : 'خیر'],
     ['کشور سازنده',    `${flag} ${product.origin}`],
-    ['گارانتی',        `دارد — ${product.warranty}`],
   ];
 
   return (

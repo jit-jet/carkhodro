@@ -12,7 +12,7 @@
  *     awaiting its first link to the books). Otherwise create a new product.
  *   • Hesabfa owns price, stock and name; we copy those on every sync.
  *   • Fields Hesabfa has no concept of (images, SEO, rich description, category,
- *     parts brand, warranty, origin…) are left untouched on update and set to
+ *     parts brand, origin…) are left untouched on update and set to
  *     safe empty/default values on create. New products are created INACTIVE so
  *     they never go live with a placeholder category until an admin completes
  *     them — matching the schema's "must not go live until populated" rule.
@@ -155,7 +155,6 @@ export async function syncHesabfaItems(items: HesabfaItem[]): Promise<SyncStats>
         isOffer: false,
         mainImage: null,
         description: null,
-        warranty: null,
         origin: null,
       },
       select: { id: true },

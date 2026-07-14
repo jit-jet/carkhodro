@@ -192,7 +192,6 @@ export interface ProductInput {
   retailDiscountPct?: number;
   isOffer?: boolean;
   stock?: number;
-  warranty?: string | null;
   origin?: string | null;
   mainImage?: string | null;
   description?: string | null;
@@ -218,7 +217,6 @@ export async function createProduct(
         retailDiscountPct: input.retailDiscountPct ?? 0,
         isOffer: input.isOffer ?? false,
         stock: input.stock ?? 0,
-        warranty: input.warranty ?? null,
         origin: input.origin ?? null,
         mainImage: input.mainImage ?? null,
         description: input.description ?? null,
@@ -257,7 +255,6 @@ export async function updateProduct(
           : {}),
         ...(input.isOffer !== undefined ? { isOffer: input.isOffer } : {}),
         ...(input.stock !== undefined ? { stock: input.stock } : {}),
-        ...(input.warranty !== undefined ? { warranty: input.warranty } : {}),
         ...(input.origin !== undefined ? { origin: input.origin } : {}),
         ...(input.mainImage !== undefined ? { mainImage: input.mainImage } : {}),
         ...(input.description !== undefined ? { description: input.description } : {}),

@@ -122,11 +122,6 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
               جدید
             </span>
           ) : null}
-
-          {/* Warranty badge — start side (right in RTL) */}
-          <span className="absolute top-2 inset-s-2 bg-blue-600/85 text-white text-xs font-medium px-2 py-0.5 rounded-full shadow backdrop-blur-sm">
-            {product.warranty} گارانتی
-          </span>
         </Link>
 
       </div>

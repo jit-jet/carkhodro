@@ -32,7 +32,7 @@ export const NEGATIVE_POINTS: SurveyOption[] = [
   { key: 'loyal-partner-neglect', label: 'عدم توجه کافی به فروشندگان وفادار یا عمده‌فروشان بزرگ' },
   { key: 'wrong-delivery', label: 'اشتباه در تحویل کالا از نظر کد یا تعداد' },
   { key: 'price-volatility', label: 'نوسان زیاد قیمت‌ها یا عدم ثبات تخفیف عمده' },
-  { key: 'return-warranty-issues', label: 'مشکلات در فرایند مرجوعی یا گارانتی' },
+  { key: 'return-issues', label: 'مشکلات در فرایند مرجوعی' },
   { key: 'site-panel-issues', label: 'مشکل در کار با سایت یا پنل سفارش آنلاین' },
 ];
 

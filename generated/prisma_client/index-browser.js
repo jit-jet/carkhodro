@@ -243,7 +243,6 @@ exports.Prisma.ProductScalarFieldEnum = {
   accountancyId: 'accountancyId',
   lastSyncedAt: 'lastSyncedAt',
   stock: 'stock',
-  warranty: 'warranty',
   origin: 'origin',
   packQuantity: 'packQuantity',
   cartonQuantity: 'cartonQuantity',

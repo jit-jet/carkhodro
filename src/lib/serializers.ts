@@ -53,7 +53,6 @@ export interface ProductVM {
   images: string[];
   isOffer: boolean;
   sku: string;
-  warranty: string;
   origin: string;
   stock: number;
   /** UI cap for add-to-cart qty; null = unlimited (wholesale). */
@@ -346,7 +345,6 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     images: gallery.length > 0 ? gallery : [p.mainImage ?? FALLBACK_IMAGE],
     isOffer: p.isOffer,
     sku: p.sku,
-    warranty: p.warranty ?? '',
     origin: p.origin ?? '',
     stock: p.stock,
     orderQuantityCap: orderQuantityCapForRole(p.stock, role),

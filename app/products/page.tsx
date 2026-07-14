@@ -51,9 +51,9 @@ export default async function ProductsPage({ searchParams }: Props) {
               </p>
             </div>
             <div>
-              <h3 className="text-base font-semibold text-charcoal mb-2">گارانتی و ضمانت بازگشت</h3>
+              <h3 className="text-base font-semibold text-charcoal mb-2">شرایط بازگشت کالا</h3>
               <p>
-                تمامی محصولات کارخودرو دارای ضمانت اصالت و ۷ روز ضمانت بازگشت وجه هستند. در صورت وجود
+                تمامی محصولات کارخودرو دارای ضمانت اصالت و ۷ روز امکان بازگشت وجه هستند. در صورت وجود
                 هرگونه مشکل، تیم پشتیبانی ما ۲۴ ساعته آماده رسیدگی به درخواست‌های شما است.
               </p>
             </div>

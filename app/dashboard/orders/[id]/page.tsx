@@ -142,10 +142,9 @@ async function InvoiceContent({ params }: { params: Promise<{ id: string }> }) {
             <p className="font-semibold tabular-nums">{formatRial(invoice.previousBalanceToman)}</p>
           </div>
           <div>
-            <p className="text-gray-400 text-xs mb-1">روش پرداخت / توضیحات</p>
+            <p className="text-gray-400 text-xs mb-1">توضیحات</p>
             <p className="font-medium text-charcoal leading-6">
-              {invoice.paymentTerms || '—'}
-              {invoice.notes ? ` — ${invoice.notes}` : ''}
+              {invoice.notes ?? '_'}
             </p>
           </div>
         </div>

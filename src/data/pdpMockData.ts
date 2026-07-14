@@ -167,7 +167,7 @@ function getDefaultExtra(product: Product): PDPExtra {
     packQuantity: 1,
     cartonQuantity: product.price > 500_000 ? 4 : 12,
     isOriginal: true,
-    description: `${product.name} از برند معتبر ${product.brand} برای خودروهای ${product.carType} طراحی و تولید شده است. این محصول دارای گارانتی ${product.warranty} بوده و از کشور ${product.origin} وارد می‌شود. کیفیت ساخت بالا و تطابق دقیق با مشخصات فنی کارخانه از مزایای اصلی این محصول است.`,
+    description: `${product.name} از برند معتبر ${product.brand} برای خودروهای ${product.carType} طراحی و تولید شده است. این محصول از کشور ${product.origin} وارد می‌شود. کیفیت ساخت بالا و تطابق دقیق با مشخصات فنی کارخانه از مزایای اصلی این محصول است.`,
     comments: [
       {
         id: 1,

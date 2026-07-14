@@ -16704,7 +16704,6 @@ export namespace Prisma {
     accountancyId: string | null
     lastSyncedAt: Date | null
     stock: number | null
-    warranty: string | null
     origin: string | null
     packQuantity: number | null
     cartonQuantity: number | null
@@ -16735,7 +16734,6 @@ export namespace Prisma {
     accountancyId: string | null
     lastSyncedAt: Date | null
     stock: number | null
-    warranty: string | null
     origin: string | null
     packQuantity: number | null
     cartonQuantity: number | null
@@ -16766,7 +16764,6 @@ export namespace Prisma {
     accountancyId: number
     lastSyncedAt: number
     stock: number
-    warranty: number
     origin: number
     packQuantity: number
     cartonQuantity: number
@@ -16831,7 +16828,6 @@ export namespace Prisma {
     accountancyId?: true
     lastSyncedAt?: true
     stock?: true
-    warranty?: true
     origin?: true
     packQuantity?: true
     cartonQuantity?: true
@@ -16862,7 +16858,6 @@ export namespace Prisma {
     accountancyId?: true
     lastSyncedAt?: true
     stock?: true
-    warranty?: true
     origin?: true
     packQuantity?: true
     cartonQuantity?: true
@@ -16893,7 +16888,6 @@ export namespace Prisma {
     accountancyId?: true
     lastSyncedAt?: true
     stock?: true
-    warranty?: true
     origin?: true
     packQuantity?: true
     cartonQuantity?: true
@@ -17011,7 +17005,6 @@ export namespace Prisma {
     accountancyId: string | null
     lastSyncedAt: Date | null
     stock: number
-    warranty: string | null
     origin: string | null
     packQuantity: number
     cartonQuantity: number
@@ -17061,7 +17054,6 @@ export namespace Prisma {
     accountancyId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
-    warranty?: boolean
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
@@ -17103,7 +17095,6 @@ export namespace Prisma {
     accountancyId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
-    warranty?: boolean
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
@@ -17136,7 +17127,6 @@ export namespace Prisma {
     accountancyId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
-    warranty?: boolean
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
@@ -17169,7 +17159,6 @@ export namespace Prisma {
     accountancyId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
-    warranty?: boolean
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
@@ -17186,7 +17175,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "accountancyId" | "lastSyncedAt" | "stock" | "warranty" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "accountancyId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -17262,7 +17251,6 @@ export namespace Prisma {
        */
       lastSyncedAt: Date | null
       stock: number
-      warranty: string | null
       /**
        * Country of origin, e.g. "آلمان", "ژاپن", "ایران"
        */
@@ -17743,7 +17731,6 @@ export namespace Prisma {
     readonly accountancyId: FieldRef<"Product", 'String'>
     readonly lastSyncedAt: FieldRef<"Product", 'DateTime'>
     readonly stock: FieldRef<"Product", 'Int'>
-    readonly warranty: FieldRef<"Product", 'String'>
     readonly origin: FieldRef<"Product", 'String'>
     readonly packQuantity: FieldRef<"Product", 'Int'>
     readonly cartonQuantity: FieldRef<"Product", 'Int'>
@@ -36673,7 +36660,6 @@ export namespace Prisma {
     accountancyId: 'accountancyId',
     lastSyncedAt: 'lastSyncedAt',
     stock: 'stock',
-    warranty: 'warranty',
     origin: 'origin',
     packQuantity: 'packQuantity',
     cartonQuantity: 'cartonQuantity',
@@ -37918,7 +37904,6 @@ export namespace Prisma {
     accountancyId?: StringNullableFilter<"Product"> | string | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     stock?: IntFilter<"Product"> | number
-    warranty?: StringNullableFilter<"Product"> | string | null
     origin?: StringNullableFilter<"Product"> | string | null
     packQuantity?: IntFilter<"Product"> | number
     cartonQuantity?: IntFilter<"Product"> | number
@@ -37959,7 +37944,6 @@ export namespace Prisma {
     accountancyId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
     stock?: SortOrder
-    warranty?: SortOrderInput | SortOrder
     origin?: SortOrderInput | SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
@@ -38003,7 +37987,6 @@ export namespace Prisma {
     isOffer?: BoolFilter<"Product"> | boolean
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     stock?: IntFilter<"Product"> | number
-    warranty?: StringNullableFilter<"Product"> | string | null
     origin?: StringNullableFilter<"Product"> | string | null
     packQuantity?: IntFilter<"Product"> | number
     cartonQuantity?: IntFilter<"Product"> | number
@@ -38044,7 +38027,6 @@ export namespace Prisma {
     accountancyId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
     stock?: SortOrder
-    warranty?: SortOrderInput | SortOrder
     origin?: SortOrderInput | SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
@@ -38083,7 +38065,6 @@ export namespace Prisma {
     accountancyId?: StringNullableWithAggregatesFilter<"Product"> | string | null
     lastSyncedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
     stock?: IntWithAggregatesFilter<"Product"> | number
-    warranty?: StringNullableWithAggregatesFilter<"Product"> | string | null
     origin?: StringNullableWithAggregatesFilter<"Product"> | string | null
     packQuantity?: IntWithAggregatesFilter<"Product"> | number
     cartonQuantity?: IntWithAggregatesFilter<"Product"> | number
@@ -40082,7 +40063,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -40123,7 +40103,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -40160,7 +40139,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -40201,7 +40179,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -40240,7 +40217,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -40269,7 +40245,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -40300,7 +40275,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -42396,7 +42370,6 @@ export namespace Prisma {
     accountancyId?: SortOrder
     lastSyncedAt?: SortOrder
     stock?: SortOrder
-    warranty?: SortOrder
     origin?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
@@ -42443,7 +42416,6 @@ export namespace Prisma {
     accountancyId?: SortOrder
     lastSyncedAt?: SortOrder
     stock?: SortOrder
-    warranty?: SortOrder
     origin?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
@@ -42474,7 +42446,6 @@ export namespace Prisma {
     accountancyId?: SortOrder
     lastSyncedAt?: SortOrder
     stock?: SortOrder
-    warranty?: SortOrder
     origin?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
@@ -46911,7 +46882,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -46950,7 +46920,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -47018,7 +46987,6 @@ export namespace Prisma {
     accountancyId?: StringNullableFilter<"Product"> | string | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     stock?: IntFilter<"Product"> | number
-    warranty?: StringNullableFilter<"Product"> | string | null
     origin?: StringNullableFilter<"Product"> | string | null
     packQuantity?: IntFilter<"Product"> | number
     cartonQuantity?: IntFilter<"Product"> | number
@@ -47047,7 +47015,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -47086,7 +47053,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -47620,7 +47586,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -47660,7 +47625,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -47712,7 +47676,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -47752,7 +47715,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -47788,7 +47750,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -47828,7 +47789,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -47906,7 +47866,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -47946,7 +47905,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -48014,7 +47972,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -48054,7 +48011,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -48167,7 +48123,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -48207,7 +48162,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -48497,7 +48451,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -48537,7 +48490,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -48614,7 +48566,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -48654,7 +48605,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -48751,7 +48701,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -48791,7 +48740,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -48910,7 +48858,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -48950,7 +48897,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -49047,7 +48993,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -49087,7 +49032,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -49206,7 +49150,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -49246,7 +49189,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -49785,7 +49727,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -49825,7 +49766,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -49947,7 +49887,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -49987,7 +49926,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -50603,7 +50541,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -50643,7 +50580,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -50762,7 +50698,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -50802,7 +50737,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -51507,7 +51441,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -51536,7 +51469,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -51575,7 +51507,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -51613,7 +51544,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -51643,7 +51573,6 @@ export namespace Prisma {
     accountancyId?: string | null
     lastSyncedAt?: Date | string | null
     stock?: number
-    warranty?: string | null
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
@@ -51672,7 +51601,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -51711,7 +51639,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
@@ -51749,7 +51676,6 @@ export namespace Prisma {
     accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
-    warranty?: NullableStringFieldUpdateOperationsInput | string | null
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number

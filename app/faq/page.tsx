@@ -5,7 +5,7 @@ import FaqAccordion from '@/src/components/faq/FaqAccordion';
 
 export const metadata: Metadata = {
   title: 'سوالات متداول | کارخودرو',
-  description: 'پاسخ سوالات رایج درباره خرید قطعه خودرو، ارسال، مرجوعی و گارانتی.',
+  description: 'پاسخ سوالات رایج درباره خرید قطعه خودرو، ارسال و مرجوعی.',
 };
 
 export default async function FaqPage() {

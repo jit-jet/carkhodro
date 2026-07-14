@@ -233,11 +233,6 @@ export default function CompareView({ initial, loggedIn }: Props) {
       ),
     },
     {
-      key: 'warranty',
-      label: 'گارانتی',
-      cell: (p) => <div className="py-3 px-4 text-sm text-charcoal">{p.warranty}</div>,
-    },
-    {
       key: 'rating',
       label: 'امتیاز',
       cell: (p) => (
