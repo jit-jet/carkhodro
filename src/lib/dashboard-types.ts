@@ -101,7 +101,9 @@ export interface InvoiceVM {
   orderNumber: number;
   status: OrderStatus;
   statusLabel: string;
-  date: string; // Jalali date
+  date: string; // Jalali date (long)
+  /** Jalali numeric `۱۴۰۲/۰۳/۰۸` for the printable header. */
+  dateSlash: string;
   time: string;
   paymentTerms: string | null;
   notes: string | null;

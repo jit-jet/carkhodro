@@ -14,6 +14,7 @@ import { getCurrentUser } from '@/src/lib/session';
 import { ORDER_STATUS_FA } from '@/src/lib/order-labels';
 import {
   formatJalaliDate,
+  formatJalaliSlash,
   formatJalaliWithWeekday,
   formatTimeFa,
 } from '@/src/lib/format';
@@ -132,6 +133,7 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
         status: order.status,
         statusLabel: ORDER_STATUS_FA[order.status],
         date: formatJalaliDate(order.createdAt),
+        dateSlash: formatJalaliSlash(order.createdAt),
         time: formatTimeFa(order.createdAt),
         paymentTerms: order.paymentTerms,
         notes: order.notes,

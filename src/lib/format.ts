@@ -92,10 +92,24 @@ export function tomanInWords(toman: number): string {
   return `${numberToPersianWords(toman)} تومان`;
 }
 
+/** A Toman amount spelled out in Rial (×10), for printable invoices. */
+export function rialInWords(toman: number): string {
+  return `${numberToPersianWords(toman * RIAL_PER_TOMAN)} ریال`;
+}
+
 // ── Jalali dates ──────────────────────────────────────────────────────────────
 
 function asDate(value: Date | string | number): Date {
   return value instanceof Date ? value : new Date(value);
+}
+
+/** Jalali numeric date `«۱۴۰۲/۰۳/۰۸»`. */
+export function formatJalaliSlash(value: Date | string | number): string {
+  return asDate(value).toLocaleDateString('fa-IR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
 }
 
 /** `«۲۷ خرداد ۱۴۰۵»` */

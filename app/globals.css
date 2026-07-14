@@ -82,10 +82,211 @@ html {
   }
 }
 
-/* ── Print: isolate the partner invoice from the site/dashboard chrome ── */
+/* ── Printable sales invoice (matches paper فاکتور فروش PDF) ── */
+.inv {
+  direction: rtl;
+  color: #111;
+  font-size: 12px;
+  line-height: 1.55;
+  max-width: 210mm;
+  margin: 0 auto;
+}
+
+.inv-header {
+  display: grid;
+  grid-template-columns: 110px 1fr 110px;
+  align-items: start;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.inv-header-logo {
+  text-align: center;
+}
+
+.inv-logo {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.inv-website {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.inv-header-center {
+  text-align: center;
+  padding-top: 4px;
+}
+
+.inv-brand {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.inv-store {
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.inv-title {
+  font-size: 22px;
+  font-weight: 900;
+  margin-top: 10px;
+}
+
+.inv-header-meta {
+  text-align: left;
+  font-size: 12px;
+  padding-top: 8px;
+  line-height: 1.8;
+}
+
+.inv-header-meta span {
+  color: #444;
+}
+
+.inv-box {
+  border: 1.5px solid #111;
+  border-radius: 14px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.inv-box-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  align-items: baseline;
+}
+
+.inv-box-row-5 > span {
+  flex: 1 1 0;
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+.inv-box-row-4 > span {
+  flex: 1 1 0;
+  min-width: 110px;
+}
+
+.inv-box-row-addr {
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px solid #ddd;
+  justify-content: space-between;
+}
+
+.inv-addr {
+  flex: 1 1 auto !important;
+  white-space: normal !important;
+}
+
+.inv-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 11px;
+  table-layout: fixed;
+}
+
+.inv-table th,
+.inv-table td {
+  border: 1px solid #222;
+  padding: 6px 4px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.inv-table thead th {
+  background: #d4d4d4;
+  font-weight: 800;
+  font-size: 11px;
+}
+
+.inv-table .c-num { width: 28px; }
+.inv-table .c-desc {
+  width: auto;
+  text-align: right;
+  padding-right: 8px;
+  font-weight: 600;
+}
+.inv-table .c-qty { width: 48px; }
+.inv-table .c-unit { width: 40px; }
+.inv-table .c-price { width: 88px; }
+.inv-table .c-amt { width: 88px; }
+.inv-table .c-disc { width: 72px; }
+.inv-table .c-total { width: 88px; font-weight: 700; }
+
+.inv-summary {
+  display: grid;
+  /* RTL: col1→right (words/balance), col2→center (sign), col3→left (totals) */
+  grid-template-columns: 1fr minmax(100px, 140px) 200px;
+  gap: 12px;
+  margin-top: 10px;
+  align-items: start;
+}
+
+.inv-summary-balance {
+  font-size: 12px;
+  line-height: 1.9;
+  padding-top: 4px;
+}
+
+.inv-words {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.inv-sign {
+  color: #555;
+  font-size: 12px;
+  text-align: center;
+  padding-top: 48px;
+}
+
+.inv-totals {
+  border: 1px solid #222;
+  font-size: 11px;
+}
+
+.inv-totals-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+.inv-totals-row:last-child {
+  border-bottom: none;
+}
+
+.inv-totals-final {
+  font-weight: 800;
+  border-top: 2px solid #111;
+  border-bottom: 2px solid #111 !important;
+  background: #f3f3f3;
+}
+
+.inv-footer {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid #bbb;
+  font-size: 14px;
+  line-height: 1.85;
+  color: #222;
+}
+
 @media print {
   header,
-  footer,
+  footer:not(.inv-footer),
   aside,
   .no-print {
     display: none !important;
@@ -93,9 +294,25 @@ html {
   body {
     background: #fff !important;
   }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
   .print-area {
     box-shadow: none !important;
     border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+  .inv,
+  .inv-table thead th,
+  .inv-totals-final {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  @page {
+    size: A4;
+    margin: 10mm 9mm;
   }
 }
 
