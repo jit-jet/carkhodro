@@ -157,9 +157,6 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
           <span className="text-xs text-gray-500">
             {flag} {product.origin}
           </span>
-          <span className={`text-xs font-medium ${inStock ? 'text-green-600' : 'text-red-500'}`}>
-            {inStock ? `موجود: ${product.stock.toLocaleString('fa-IR')} عدد` : 'ناموجود'}
-          </span>
         </div>
 
         {/* Price */}

@@ -138,16 +138,6 @@ export default function CartActions({ product }: Props) {
 
   return (
     <div className="space-y-3">
-      {/* Stock indicator */}
-      <div className="flex items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 bg-green-100 text-green-700 text-sm font-semibold px-3 py-1.5 rounded-full">
-          <span className="w-2 h-2 rounded-full bg-green-500" />
-          موجود در انبار
-        </span>
-        <span className="text-sm text-gray-500">
-          {product.stock.toLocaleString('fa-IR')} عدد باقی‌مانده
-        </span>
-      </div>
 
       {/* Qty + Add to cart row */}
       <div className="flex gap-3">

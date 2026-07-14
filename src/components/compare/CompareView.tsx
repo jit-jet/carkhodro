@@ -238,29 +238,6 @@ export default function CompareView({ initial, loggedIn }: Props) {
       cell: (p) => <div className="py-3 px-4 text-sm text-charcoal">{p.warranty}</div>,
     },
     {
-      key: 'stock',
-      label: 'موجودی',
-      cell: (p) => (
-        <div className="py-3 px-4">
-          {p.stock > 0 ? (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 border border-green-100 px-2 py-1 rounded-full">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3 h-3">
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-              موجود ({p.stock.toLocaleString('fa-IR')} عدد)
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-500 bg-red-50 border border-red-100 px-2 py-1 rounded-full">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3 h-3">
-                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-              ناموجود
-            </span>
-          )}
-        </div>
-      ),
-    },
-    {
       key: 'rating',
       label: 'امتیاز',
       cell: (p) => (

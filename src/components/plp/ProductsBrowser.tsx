@@ -51,7 +51,7 @@ function openPDFWindow(products: Product[]) {
         <td>${p.categoryLabel}</td>
         <td>${p.origin}</td>
         <td>${p.warranty}</td>
-        <td>${p.stock > 0 ? p.stock + ' عدد' : 'ناموجود'}</td>
+        <td>${p.stock > 0 ? 'موجود' : 'ناموجود'}</td>
         <td dir="ltr" style="text-align:left">${p.price.toLocaleString()} تومان</td>
       </tr>`,
     )
