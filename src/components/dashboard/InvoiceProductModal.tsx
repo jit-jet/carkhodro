@@ -11,7 +11,7 @@
  * badge and a quantity input with an add button.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { searchInvoiceProducts } from '@/actions/dashboard-cart';
 import { formatRial } from '@/src/lib/format';
 import type { InvoiceSearchResultVM } from '@/src/lib/dashboard-types';
@@ -34,11 +34,20 @@ export default function InvoiceProductModal({
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<InvoiceSearchResultVM[]>([]);
   const [searching, setSearching] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const listRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    if (highlightedIndex < 0 || !listRef.current) return;
+    const item = listRef.current.children[highlightedIndex] as HTMLElement | undefined;
+    item?.scrollIntoView({ block: 'nearest' });
+  }, [highlightedIndex]);
 
   // Debounced fuzzy search (search mode only). All state updates happen inside
   // the timeout callback (never synchronously in the effect body) so a new query
   // doesn't trigger a cascading render.
   useEffect(() => {
+    setHighlightedIndex(-1);
     if (mode !== 'search') return;
     const q = query.trim();
     let active = true;
@@ -73,6 +82,20 @@ export default function InvoiceProductModal({
           )
         : previousPurchases;
 
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (list.length === 0) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev < list.length - 1 ? prev + 1 : 0));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : list.length - 1));
+    } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+      e.preventDefault();
+      onAdd(list[highlightedIndex].id, 1);
+    }
+  }
+
   const title = mode === 'search' ? 'جستجو و افزودن به فاکتور' : 'انتخاب از خریدهای قبلی';
 
   return (
@@ -105,6 +128,7 @@ export default function InvoiceProductModal({
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             autoFocus
             placeholder={mode === 'search' ? 'نام قطعه، کد یا برند…' : 'جستجو در خریدهای قبلی…'}
             className="w-full border-2 border-silver focus:border-accent rounded-xl px-4 py-2.5 text-sm outline-none transition-colors mb-4"
@@ -120,9 +144,9 @@ export default function InvoiceProductModal({
                   : 'موردی یافت نشد.'}
               </p>
             ) : (
-              <ul className="divide-y divide-gray-50">
-                {list.map((p) => (
-                  <ProductRow key={p.id} product={p} onAdd={onAdd} adding={adding} />
+              <ul ref={listRef} className="divide-y divide-gray-50">
+                {list.map((p, idx) => (
+                  <ProductRow key={p.id} product={p} onAdd={onAdd} adding={adding} highlighted={idx === highlightedIndex} />
                 ))}
               </ul>
             )}
@@ -137,16 +161,18 @@ function ProductRow({
   product,
   onAdd,
   adding,
+  highlighted,
 }: {
   product: InvoiceSearchResultVM;
   onAdd: (productId: string, quantity: number) => void;
   adding: boolean;
+  highlighted: boolean;
 }) {
   const [qty, setQty] = useState(1);
   const outOfStock = product.stock < 1;
 
   return (
-    <li className="flex items-center gap-3 py-3">
+    <li className={["flex items-center gap-3 py-3", highlighted ? "border-2 border-accent rounded-xl px-2" : ""].join(" ")}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[11px] font-mono text-gray-400">{product.sku}</span>

@@ -130,6 +130,7 @@ function SearchDropdown({
   searching,
   results,
   open,
+  highlightedIndex,
   onResultClick,
   onSeeAll,
 }: {
@@ -137,9 +138,18 @@ function SearchDropdown({
   searching: boolean;
   results: ProductVM[];
   open: boolean;
+  highlightedIndex: number;
   onResultClick: (id: string) => void;
   onSeeAll: () => void;
 }) {
+  const listRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    if (highlightedIndex < 0 || !listRef.current) return;
+    const item = listRef.current.children[highlightedIndex] as HTMLElement | undefined;
+    item?.scrollIntoView({ block: "nearest" });
+  }, [highlightedIndex]);
+
   if (!open || value.trim().length < 2) return null;
   return (
     <div className="absolute top-full inset-x-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden z-50">
@@ -147,13 +157,16 @@ function SearchDropdown({
         <p className="px-4 py-6 text-center text-sm text-gray-400">در حال جستجو...</p>
       ) : results.length > 0 ? (
         <>
-          <ul className="max-h-80 overflow-y-auto divide-y divide-gray-50">
-            {results.map((p) => (
+          <ul ref={listRef} className="max-h-80 overflow-y-auto divide-y divide-gray-50">
+            {results.map((p, idx) => (
               <li key={p.id}>
                 <button
                   type="button"
                   onClick={() => onResultClick(p.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-start hover:bg-silver-light transition-colors"
+                  className={[
+                    "w-full flex items-center gap-3 px-4 py-3 text-start hover:bg-silver-light transition-colors",
+                    idx === highlightedIndex ? "border-2 border-accent" : "",
+                  ].join(" ")}
                 >
                   <span className="relative w-11 h-11 shrink-0 rounded-xl overflow-hidden bg-silver-light">
                     <Image src={p.mainImage} alt={p.name} fill sizes="44px" className="object-contain" />
@@ -308,6 +321,7 @@ export default function Header({
   const [results, setResults] = useState<ProductVM[]>([]);
   const [searching, setSearching] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const searchDesktopRef = useRef<HTMLDivElement>(null);
   const searchMobileRef = useRef<HTMLDivElement>(null);
 
@@ -326,8 +340,9 @@ export default function Header({
 
   useEffect(() => {
     const q = searchQuery.trim();
-    if (q.length < 2) { setResults([]); setSearching(false); return; }
+    if (q.length < 2) { setResults([]); setSearching(false); setHighlightedIndex(-1); return; }
     setSearching(true);
+    setHighlightedIndex(-1);
     let active = true;
     const timer = setTimeout(async () => {
       const found = await searchProducts(q);
@@ -358,6 +373,7 @@ export default function Header({
     const q = searchQuery.trim();
     if (q) {
       setSearchOpen(false);
+      setHighlightedIndex(-1);
       router.push(`/products?q=${encodeURIComponent(q)}`);
     }
   }
@@ -365,7 +381,22 @@ export default function Header({
   function goToProduct(id: string) {
     setSearchOpen(false);
     setSearchQuery("");
+    setHighlightedIndex(-1);
     router.push(`/products/${id}`);
+  }
+
+  function handleSearchKeyDown(e: React.KeyboardEvent) {
+    if (!searchOpen || results.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev < results.length - 1 ? prev + 1 : 0));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : results.length - 1));
+    } else if (e.key === "Enter" && highlightedIndex >= 0) {
+      e.preventDefault();
+      goToProduct(results[highlightedIndex].id);
+    }
   }
 
   const dropdownProps = {
@@ -373,6 +404,7 @@ export default function Header({
     searching,
     results,
     open: searchOpen,
+    highlightedIndex,
     onResultClick: goToProduct,
     onSeeAll: () => handleSearch(),
   };
@@ -388,6 +420,7 @@ export default function Header({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setSearchOpen(true)}
+          onKeyDown={handleSearchKeyDown}
           placeholder="جستجوی قطعه، برند یا مدل خودرو..."
           className={[
             "flex-1 px-5 text-sm bg-transparent outline-none placeholder-gray-400 text-charcoal",
