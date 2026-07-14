@@ -6,6 +6,7 @@ import FilterSidebar from '@/src/components/plp/FilterSidebar';
 import ProductCard from '@/src/components/ui/ProductCard';
 import { searchProducts } from '@/actions/search';
 import type { ProductVM as Product } from '@/src/lib/serializers';
+import { formatJalaliDateTime, formatNumberFa, formatRial } from '@/src/lib/format';
 
 const PAGE_SIZE = 12;
 /** Upper bound on fuzzy-search results pulled for the results page. */
@@ -38,60 +39,94 @@ function applySorting(products: Product[], sort: SortOption): Product[] {
   }
 }
 
+const PRICE_LIST_VALID_HOURS = 24;
+
 function openPDFWindow(products: Product[]) {
+  const now = new Date();
+  const expires = new Date(now.getTime() + PRICE_LIST_VALID_HOURS * 60 * 60 * 1000);
+  const issuedAt = formatJalaliDateTime(now);
+  const expiresAt = formatJalaliDateTime(expires);
+
   const rows = products
     .map(
       (p, i) => `
-      <tr style="background:${i % 2 === 0 ? '#fff' : '#f9fafb'}">
-        <td>${i + 1}</td>
-        <td>${p.name}</td>
-        <td>${p.sku}</td>
-        <td>${p.brand}</td>
-        <td>${p.carType}</td>
-        <td>${p.categoryLabel}</td>
-        <td>${p.origin}</td>
-        <td>${p.stock > 0 ? 'موجود' : 'ناموجود'}</td>
-        <td dir="ltr" style="text-align:left">${p.price.toLocaleString()} تومان</td>
+      <tr>
+        <td class="center muted">${formatNumberFa(i + 1)}</td>
+        <td class="mono muted">${escapeHtml(p.sku)}</td>
+        <td class="name">${escapeHtml(p.name)}</td>
+        <td class="muted">${escapeHtml(p.brand)}</td>
+        <td class="muted">${escapeHtml(p.carType || '—')}</td>
+        <td class="center price">${formatRial(p.price)}</td>
       </tr>`,
     )
     .join('');
 
+  const origin = window.location.origin;
   const html = `<!DOCTYPE html>
 <html dir="rtl" lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>لیست محصولات - کارخودرو</title>
+  <title>لیست قیمت قطعات کارخودرو</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Tahoma,Arial,sans-serif;direction:rtl;color:#1f2937;padding:24px;font-size:12px}
-    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:3px solid #F4C232}
-    .header h1{font-size:18px;font-weight:bold}
-    .meta{font-size:11px;color:#6b7280;text-align:left;line-height:1.6}
-    table{width:100%;border-collapse:collapse}
-    thead tr{background:#F4C232}
-    th,td{padding:7px 9px;text-align:right;border-bottom:1px solid #e5e7eb}
-    th{font-weight:bold}
-    @media print{body{padding:0}}
+    body{font-family:Tahoma,Arial,sans-serif;direction:rtl;color:#1A1A1A;background:#fff;padding:28px;font-size:13px}
+    .sheet{max-width:900px;margin:0 auto}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid #e5e7eb;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{width:110px;height:36px;object-fit:contain}
+    .brand h1{font-size:14px;font-weight:700;color:#1A1A1A}
+    .brand .sub{font-size:11px;color:#9ca3af;margin-top:2px}
+    .meta{font-size:11px;color:#9ca3af;text-align:left;line-height:1.7}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    thead tr{background:#F3F4F6}
+    th{padding:10px 8px;font-size:12px;font-weight:600;color:#1A1A1A;text-align:right}
+    th.center,td.center{text-align:center}
+    td{padding:10px 8px;border-bottom:1px solid #f9fafb;vertical-align:middle}
+    td.name{font-weight:600;text-align:right}
+    td.mono{font-family:ui-monospace,Consolas,monospace;font-size:11px;text-align:right}
+    td.muted{color:#6b7280;text-align:right}
+    td.price{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+    .empty{text-align:center;color:#9ca3af;padding:64px 0;font-size:13px}
+    @media print{
+      body{padding:0}
+      thead tr{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+      @page{size:A4;margin:12mm 10mm}
+    }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>لیست محصولات - کارخودرو</h1>
-    <div class="meta">
-      <div>تعداد: ${products.length} محصول</div>
-      <div>${new Date().toLocaleDateString('fa-IR')}</div>
+  <div class="sheet">
+    <div class="header">
+      <div class="brand">
+        <img src="${origin}/logo.png" alt="کارخودرو" />
+        <div>
+          <h1>لیست قیمت قطعات کارخودرو</h1>
+          <p class="sub">تاریخ صدور: ${issuedAt}</p>
+        </div>
+      </div>
+      <div class="meta">
+        <p>اعتبار تا: ${expiresAt}</p>
+        <p>تعداد اقلام: ${formatNumberFa(products.length)}</p>
+      </div>
     </div>
+    ${
+      products.length === 0
+        ? `<p class="empty">موردی مطابق با فیلترهای انتخابی یافت نشد.</p>`
+        : `<table>
+      <thead>
+        <tr>
+          <th class="center">ردیف</th>
+          <th>کد</th>
+          <th>نام قطعه</th>
+          <th>برند</th>
+          <th>خودرو</th>
+          <th class="center">قیمت (ریال)</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`
+    }
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th>#</th><th>نام محصول</th><th>کد</th><th>برند</th>
-        <th>نوع خودرو</th><th>دسته‌بندی</th><th>کشور</th>
-        <th>موجودی</th><th>قیمت</th>
-      </tr>
-    </thead>
-    <tbody>${rows}</tbody>
-  </table>
 </body>
 </html>`;
 
@@ -102,6 +137,14 @@ function openPDFWindow(products: Product[]) {
     w.focus();
     setTimeout(() => w.print(), 400);
   }
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function toggleValue(arr: string[], value: string): string[] {
