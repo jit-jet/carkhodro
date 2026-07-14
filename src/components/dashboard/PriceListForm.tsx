@@ -56,9 +56,12 @@ export default function PriceListForm({
 
   function submit() {
     setError('');
+    const pendingTitle = titleDraft.trim();
+    const submittedTitles =
+      pendingTitle && !titles.includes(pendingTitle) ? [...titles, pendingTitle] : titles;
     startTransition(async () => {
       const result = await createPriceListRequest({
-        titles,
+        titles: submittedTitles,
         partsBrandIds: [...brandIds],
         carModelIds: [...carIds],
       });

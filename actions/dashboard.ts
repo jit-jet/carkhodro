@@ -64,6 +64,7 @@ export async function getDashboardStats(): Promise<DashboardStatsVM | null> {
         fullName: `${user.firstName} ${user.lastName}`.trim(),
         shopName: user.shopName ?? '',
         userType: USER_ROLE_FA[user.role],
+        isRetail: user.role === 'RETAIL',
         partnerCode: user.partnerCode,
         profileImage: user.profileImage,
         hasAvatar: Boolean(user.profileImage),

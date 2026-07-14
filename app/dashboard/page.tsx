@@ -35,14 +35,16 @@ async function StatsGrid() {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-      <StatCard
-        href="/dashboard/orders"
-        icon="wallet"
-        title="مانده حساب"
-        value={formatRial(stats.accountBalanceToman)}
-        subtitle="مانده حساب از قبل"
-        tone="accent"
-      />
+      {!stats.isRetail && (
+        <StatCard
+          href="/dashboard/orders"
+          icon="wallet"
+          title="مانده حساب"
+          value={formatRial(stats.accountBalanceToman)}
+          subtitle="مانده حساب از قبل"
+          tone="accent"
+        />
+      )}
       <StatCard
         href="/dashboard/orders?status=COMPLETED"
         icon="check"

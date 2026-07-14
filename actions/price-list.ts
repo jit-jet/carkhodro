@@ -8,9 +8,8 @@
  * resolve it to a concrete, printable list of parts + prices (downloaded as PDF
  * via the browser's print dialog on the request page).
  *
- * The title filter is a plain catalogue substring filter (it must return *every*
- * matching part for a complete list), distinct from the storefront's ranked
- * typo-tolerant search box — so it intentionally does not call `searchProducts`.
+ * The title filter uses the same normalized pg_trgm document as storefront
+ * search, but returns a complete alphabetic list instead of a small ranked set.
  *
  * Per-user / dynamic — never cached.
  */
@@ -22,13 +21,16 @@ import { formatJalaliDateTime } from '@/src/lib/format';
 import { resolveProductPrice } from '@/src/lib/pricing';
 import { pricingFieldsFromProduct } from '@/src/lib/serializers';
 import { pricingRoleFromUser } from '@/src/lib/user-role';
-import type { Prisma } from '@/generated/prisma_client';
+import { normalizePersianText } from '@/src/lib/persian';
+import { Prisma } from '@/generated/prisma_client';
 import type { PriceListRequestVM, PriceListItemVM } from '@/src/lib/dashboard-types';
 
 /** Hours a generated price list stays valid before it must be regenerated. */
 const VALID_HOURS = 24;
 /** Cap on rows in one list — keeps the printable file small, as the UI notes. */
 const MAX_ITEMS = 1000;
+/** Recall-oriented threshold: low enough for common one-letter Persian typos. */
+const WORD_SIMILARITY_THRESHOLD = 0.3;
 
 export interface PriceListFilterInput {
   titles: string[];
@@ -99,9 +101,62 @@ export async function getPriceListRequest(id: string): Promise<PriceListRequestV
         where.compatibilities = { some: { carModelId: { in: request.carModelIds } } };
       }
       if (request.titles.length > 0) {
-        where.OR = request.titles.map((t) => ({
-          name: { contains: t, mode: 'insensitive' as const },
-        }));
+        const titles = request.titles.map(normalizePersianText).filter(Boolean);
+        if (titles.length === 0) {
+          where.id = { in: [] };
+        } else {
+          const titleConditions = Prisma.join(
+            titles.map((title) => {
+              const compact = title.replaceAll(' ', '');
+              const tokens = title.split(' ').filter(Boolean);
+              const fuzzyTokens = Prisma.join(
+                tokens.map((token) => Prisma.sql`p.search_text %> ${token}`),
+                ' AND ',
+              );
+              const alternatives = [
+                Prisma.sql`p.search_text LIKE ${`%${title}%`}`,
+                Prisma.sql`p.search_text LIKE ${`%${compact}%`}`,
+                Prisma.sql`(${fuzzyTokens})`,
+              ];
+              return Prisma.sql`(${Prisma.join(alternatives, ' OR ')})`;
+            }),
+            ' OR ',
+          );
+
+          const rawFilters: Prisma.Sql[] = [
+            Prisma.sql`p.is_active = true`,
+            Prisma.sql`(${titleConditions})`,
+          ];
+          if (request.partsBrandIds.length > 0) {
+            rawFilters.push(
+              Prisma.sql`p.parts_brand_id IN (${Prisma.join(request.partsBrandIds)})`,
+            );
+          }
+          if (request.carModelIds.length > 0) {
+            rawFilters.push(Prisma.sql`
+              EXISTS (
+                SELECT 1
+                FROM product_compatibilities pc
+                WHERE pc.product_id = p.id
+                  AND pc.car_model_id IN (${Prisma.join(request.carModelIds)})
+              )
+            `);
+          }
+
+          const matches = await prisma.$transaction(async (tx) => {
+            await tx.$executeRawUnsafe(
+              `SET LOCAL pg_trgm.word_similarity_threshold = ${WORD_SIMILARITY_THRESHOLD}`,
+            );
+            return tx.$queryRaw<{ id: string }[]>(Prisma.sql`
+              SELECT p.id
+              FROM products p
+              WHERE ${Prisma.join(rawFilters, ' AND ')}
+              ORDER BY p.name ASC
+              LIMIT ${MAX_ITEMS}
+            `);
+          });
+          where.id = { in: matches.map((match) => match.id) };
+        }
       }
 
       const products = await prisma.product.findMany({

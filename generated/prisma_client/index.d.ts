@@ -34502,7 +34502,7 @@ export namespace Prisma {
       id: string
       userId: string
       /**
-       * Free-text product-name filters; matched against the product name. Empty = all.
+       * Free-text product filters; fuzzy-matched against normalized name/SKU metadata. Empty = all.
        */
       titles: string[]
       partsBrandIds: number[]

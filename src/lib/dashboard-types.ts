@@ -19,6 +19,7 @@ export interface DashboardStatsVM {
   fullName: string;
   shopName: string;
   userType: string; // Persian role label
+  isRetail: boolean;
   partnerCode: string | null;
   profileImage: string | null;
   hasAvatar: boolean;
@@ -116,6 +117,7 @@ export interface InvoiceVM {
   discountToman: number;
   payableToman: number; // net
   previousBalanceToman: number;
+  isRetail: boolean;
   hasSurvey: boolean;
 }
 

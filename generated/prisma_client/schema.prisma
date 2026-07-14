@@ -690,7 +690,7 @@ model OrderSurvey {
 model PriceListRequest {
   id            String   @id @default(cuid())
   userId        String   @map("user_id")
-  /// Free-text product-name filters; matched against the product name. Empty = all.
+  /// Free-text product filters; fuzzy-matched against normalized name/SKU metadata. Empty = all.
   titles        String[]
   partsBrandIds Int[]    @map("parts_brand_ids")
   carModelIds   Int[]    @map("car_model_ids")

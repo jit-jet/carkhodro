@@ -151,6 +151,7 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
         discountToman: subtotalToman - Number(order.subtotal),
         payableToman,
         previousBalanceToman: Number(user.accountBalance),
+        isRetail: user.role === 'RETAIL',
         hasSurvey: order.survey !== null,
       } satisfies InvoiceVM;
     },
