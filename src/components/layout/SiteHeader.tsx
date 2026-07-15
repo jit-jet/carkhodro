@@ -17,7 +17,6 @@ import { cartPathForRole, pricingRoleFromUser ,isWholesaleUser} from '@/src/lib/
 export default async function SiteHeader() {
   const [navLinks, user] = await Promise.all([getNavLinks(), getCurrentUser()]);
   const cartHref = cartPathForRole(pricingRoleFromUser(user?.role));
-  console.log("first",navLinks)
   if(isWholesaleUser(pricingRoleFromUser(user?.role))){
     navLinks.push({
       id: 100,
