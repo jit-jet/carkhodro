@@ -28,7 +28,6 @@ export interface DashboardStatsVM {
   inProgressOrders: number;
   totalOrders: number;
   cartItemCount: number;
-  backorderCount: number;
   favoritesCount: number;
   lastInvoice: { id: string; orderNumber: number; date: string } | null;
 }
@@ -196,16 +195,11 @@ export interface PriceListRequestVM {
   items: PriceListItemVM[];
 }
 
-// ── Backorders / pre-orders ──────────────────────────────────────────────────
+// ── Product suggestions ──────────────────────────────────────────────────────
 
-export interface BackorderVM {
+export interface ProductSuggestionVM {
   id: string;
-  productId: string;
-  productName: string;
-  sku: string;
-  quantity: number;
-  status: 'PENDING' | 'NOTIFIED' | 'FULFILLED' | 'CANCELLED';
-  statusLabel: string;
-  inStock: boolean;
-  date: string;
+  body: string;
+  date: string; // Jalali datetime
 }
+

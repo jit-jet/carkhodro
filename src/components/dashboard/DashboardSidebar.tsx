@@ -27,7 +27,7 @@ type IconKey =
   | 'cart'
   | 'orders'
   | 'pricelist'
-  | 'backorder'
+  | 'suggest'
   | 'heart'
   | 'user';
 
@@ -35,15 +35,22 @@ interface NavItem {
   href: string;
   label: string;
   icon: IconKey;
+  /** When true, only shown to wholesale partners. */
+  wholesaleOnly?: boolean;
 }
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard', label: 'داشبورد', icon: 'grid' },
   { href: '/dashboard/support', label: 'پشتیبانی', icon: 'support' },
-  { href: '/dashboard/cart', label: 'سبد خرید', icon: 'cart' },
+  { href: '/dashboard/cart', label: 'سبد خرید', icon: 'cart', wholesaleOnly: true },
   { href: '/dashboard/orders', label: 'سفارشات', icon: 'orders' },
   { href: '/dashboard/price-list', label: 'دریافت لیست قیمت', icon: 'pricelist' },
-  { href: '/dashboard/backorders', label: 'پیش‌خریدها', icon: 'backorder' },
+  {
+    href: '/dashboard/suggest-product',
+    label: 'پیشنهاد محصول',
+    icon: 'suggest',
+    wholesaleOnly: true,
+  },
   { href: '/dashboard/favorites', label: 'علاقه‌مندی‌ها', icon: 'heart' },
   { href: '/dashboard/profile', label: 'پروفایل من', icon: 'user' },
 ];
@@ -102,13 +109,11 @@ function NavIcon({ icon }: { icon: IconKey }) {
           <line x1="10" y1="9" x2="8" y2="9" />
         </svg>
       );
-    case 'backorder':
+    case 'suggest':
       return (
         <svg {...common}>
-          <path d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
-          <circle cx="10" cy="20" r="1" />
-          <circle cx="18" cy="20" r="1" />
-          <path d="M16 8v-4M14 6h4" />
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+          <circle cx="12" cy="12" r="3" />
         </svg>
       );
     case 'heart':
@@ -134,18 +139,18 @@ function NavIcon({ icon }: { icon: IconKey }) {
  */
 export function SidebarShell({
   activeHref,
-  showDashboardCart = true,
+  showWholesaleNav = true,
 }: {
   activeHref: string | null;
-  /** Wholesale invoice cart — hidden for retail users. */
-  showDashboardCart?: boolean;
+  /** Wholesale-only items (cart, product suggestions) — hidden for retail. */
+  showWholesaleNav?: boolean;
 }) {
   const router = useRouter();
   const [loggingOut, startLogout] = useTransition();
 
-  const navItems = showDashboardCart
+  const navItems = showWholesaleNav
     ? NAV_ITEMS
-    : NAV_ITEMS.filter((item) => item.href !== '/dashboard/cart');
+    : NAV_ITEMS.filter((item) => !item.wholesaleOnly);
 
   function isActive(href: string): boolean {
     if (activeHref === null) return false;
@@ -267,10 +272,10 @@ export function SidebarShell({
  * boundary whose fallback is <SidebarShell activeHref={null}> (no active state).
  */
 export default function DashboardSidebar({
-  showDashboardCart = true,
+  showWholesaleNav = true,
 }: {
-  showDashboardCart?: boolean;
+  showWholesaleNav?: boolean;
 }) {
   const pathname = usePathname();
-  return <SidebarShell activeHref={pathname} showDashboardCart={showDashboardCart} />;
+  return <SidebarShell activeHref={pathname} showWholesaleNav={showWholesaleNav} />;
 }

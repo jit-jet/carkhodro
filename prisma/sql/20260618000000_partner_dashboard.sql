@@ -9,9 +9,9 @@
 --   npx prisma db execute --file prisma/sql/20260618000000_partner_dashboard.sql
 --   npx prisma generate
 --
--- Covers: the expanded OrderStatus lifecycle, two new enums, partner profile +
--- ledger columns on users, partner settlement terms on orders, and four new
--- tables (support_messages, order_surveys, price_list_requests, backorders).
+-- Covers: the expanded OrderStatus lifecycle, new enums, partner profile +
+-- ledger columns on users, partner settlement terms on orders, and three new
+-- tables (support_messages, order_surveys, price_list_requests).
 -- ─────────────────────────────────────────────────────────────────────────────
 
 -- ── OrderStatus: replace the retail lifecycle with the wholesale one ──────────
@@ -62,9 +62,6 @@ DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'MessageDirection') THEN
     CREATE TYPE "MessageDirection" AS ENUM ('INBOUND', 'OUTBOUND');
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'BackorderStatus') THEN
-    CREATE TYPE "BackorderStatus" AS ENUM ('PENDING', 'NOTIFIED', 'FULFILLED', 'CANCELLED');
   END IF;
 END $$;
 
@@ -152,20 +149,3 @@ CREATE TABLE IF NOT EXISTS "price_list_requests" (
 );
 CREATE INDEX IF NOT EXISTS "price_list_requests_user_id_idx" ON "price_list_requests" ("user_id");
 
--- ── backorders ──────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS "backorders" (
-  "id"         TEXT NOT NULL,
-  "user_id"    TEXT NOT NULL,
-  "product_id" TEXT NOT NULL,
-  "quantity"   INTEGER NOT NULL DEFAULT 1,
-  "status"     "BackorderStatus" NOT NULL DEFAULT 'PENDING',
-  "note"       TEXT,
-  "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT "backorders_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "backorders_user_id_fkey" FOREIGN KEY ("user_id")
-    REFERENCES "users" ("id") ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT "backorders_product_id_fkey" FOREIGN KEY ("product_id")
-    REFERENCES "products" ("id") ON UPDATE CASCADE ON DELETE CASCADE
-);
-CREATE INDEX IF NOT EXISTS "backorders_user_id_idx" ON "backorders" ("user_id");
-CREATE INDEX IF NOT EXISTS "backorders_product_id_idx" ON "backorders" ("product_id");

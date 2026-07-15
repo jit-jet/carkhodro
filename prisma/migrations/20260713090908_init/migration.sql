@@ -11,9 +11,6 @@ CREATE TYPE "OrderStatus" AS ENUM ('NEW', 'AWAITING_CONFIRMATION', 'CONFIRMED_AW
 CREATE TYPE "MessageDirection" AS ENUM ('INBOUND', 'OUTBOUND');
 
 -- CreateEnum
-CREATE TYPE "BackorderStatus" AS ENUM ('PENDING', 'NOTIFIED', 'FULFILLED', 'CANCELLED');
-
--- CreateEnum
 CREATE TYPE "PaymentMethod" AS ENUM ('ONLINE', 'COD');
 
 -- CreateEnum
@@ -405,19 +402,6 @@ CREATE TABLE "price_list_requests" (
     CONSTRAINT "price_list_requests_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "backorders" (
-    "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
-    "product_id" TEXT NOT NULL,
-    "quantity" INTEGER NOT NULL DEFAULT 1,
-    "status" "BackorderStatus" NOT NULL DEFAULT 'PENDING',
-    "note" TEXT,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "backorders_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "provinces_name_key" ON "provinces"("name");
 
@@ -595,12 +579,6 @@ CREATE INDEX "order_surveys_user_id_idx" ON "order_surveys"("user_id");
 -- CreateIndex
 CREATE INDEX "price_list_requests_user_id_idx" ON "price_list_requests"("user_id");
 
--- CreateIndex
-CREATE INDEX "backorders_user_id_idx" ON "backorders"("user_id");
-
--- CreateIndex
-CREATE INDEX "backorders_product_id_idx" ON "backorders"("product_id");
-
 -- AddForeignKey
 ALTER TABLE "cities" ADD CONSTRAINT "cities_province_id_fkey" FOREIGN KEY ("province_id") REFERENCES "provinces"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -685,8 +663,3 @@ ALTER TABLE "order_surveys" ADD CONSTRAINT "order_surveys_user_id_fkey" FOREIGN 
 -- AddForeignKey
 ALTER TABLE "price_list_requests" ADD CONSTRAINT "price_list_requests_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- AddForeignKey
-ALTER TABLE "backorders" ADD CONSTRAINT "backorders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "backorders" ADD CONSTRAINT "backorders_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;

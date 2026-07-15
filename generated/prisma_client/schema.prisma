@@ -44,14 +44,6 @@ enum MessageDirection {
   OUTBOUND // sent by the partner to support
 }
 
-/// Lifecycle of a pre-order / backorder request placed against an out-of-stock part.
-enum BackorderStatus {
-  PENDING // waiting for the part to be restocked
-  NOTIFIED // back in stock — partner has been alerted
-  FULFILLED // converted into an order
-  CANCELLED
-}
-
 enum PaymentMethod {
   ONLINE // IPG redirect
   COD // cash on delivery
@@ -141,17 +133,17 @@ model User {
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
 
-  addresses         Address[]
-  sessions          Session[]
-  orders            Order[]
-  reviews           Review[]
-  cart              Cart?
-  wishlist          WishlistItem[]
-  compareItems      CompareItem[]
-  supportMessages   SupportMessage[]
-  orderSurveys      OrderSurvey[]
-  priceListRequests PriceListRequest[]
-  backorders        Backorder[]
+  addresses          Address[]
+  sessions           Session[]
+  orders             Order[]
+  reviews            Review[]
+  cart               Cart?
+  wishlist           WishlistItem[]
+  compareItems       CompareItem[]
+  supportMessages    SupportMessage[]
+  orderSurveys       OrderSurvey[]
+  priceListRequests  PriceListRequest[]
+  productSuggestions ProductSuggestion[]
 
   @@index([phoneNumber])
   @@map("users")
@@ -361,7 +353,6 @@ model Product {
   orderItems      OrderItem[]
   wishlistedBy    WishlistItem[]
   comparedBy      CompareItem[]
-  backorders      Backorder[]
 
   @@index([sku])
   @@index([accountancyId])
@@ -703,21 +694,18 @@ model PriceListRequest {
   @@map("price_list_requests")
 }
 
-/// Pre-order / backorder placed against an out-of-stock part — the partner is
-/// notified when it returns. Powers the «پیش‌خرید» dashboard stat.
-model Backorder {
-  id        String          @id @default(cuid())
-  userId    String          @map("user_id")
-  productId String          @map("product_id")
-  quantity  Int             @default(1)
-  status    BackorderStatus @default(PENDING)
-  note      String?
-  createdAt DateTime        @default(now()) @map("created_at")
+/// Wholesale partner suggestion to add a product to the shop catalogue
+/// («پیشنهاد محصول»). Admin review comes later; for now this is append-only
+/// storage keyed to the submitting user.
+model ProductSuggestion {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  /// Free-text description of the product the partner wants stocked.
+  body      String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@index([productId])
-  @@map("backorders")
+  @@map("product_suggestions")
 }

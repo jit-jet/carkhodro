@@ -821,7 +821,7 @@ async function main() {
 /**
  * Seeds a realistic wholesale partner («همکار») so every dashboard page has data
  * to render: profile + ledger, a 1-item cart, a dozen orders across the order
- * lifecycle (with line discounts), surveys, support messages, backorders,
+ * lifecycle (with line discounts), surveys, support messages,
  * favorites and a price-list request. Idempotent — keyed on the partner user id.
  */
 async function seedDashboard() {
@@ -1049,20 +1049,6 @@ async function seedDashboard() {
     ],
   });
 
-  // ── Backorders against out-of-stock parts (پیش‌خرید ۲ درخواست) ─────────────
-  const backorderData = [
-    { sku: 'ISC-ENG-PRA-008', qty: 2 },
-    { sku: 'FDK-BDY-TBA-030', qty: 1 },
-  ]
-    .map((b) => {
-      const p = bySku.get(b.sku);
-      return p ? { userId: partner.id, productId: p.id, quantity: b.qty } : null;
-    })
-    .filter((x): x is NonNullable<typeof x> => x !== null);
-  if (backorderData.length > 0) {
-    await prisma.backorder.createMany({ data: backorderData });
-  }
-
   // ── Favorites (علاقه‌مندی‌ها تعداد ۲) ──────────────────────────────────────
   const favouriteData = ['BSH-OIL-206-023', 'NGK-ELC-206-014']
     .map((sku) => {
@@ -1085,7 +1071,7 @@ async function seedDashboard() {
     },
   });
 
-  console.log('  Partner dashboard seeded: 1 partner, 1 cart item, 12 orders, 3 surveys, 3 messages, 2 backorders, 2 favorites, 1 price-list request.');
+  console.log('  Partner dashboard seeded: 1 partner, 1 cart item, 12 orders, 3 surveys, 3 messages, 2 favorites, 1 price-list request.');
 }
 
 main()

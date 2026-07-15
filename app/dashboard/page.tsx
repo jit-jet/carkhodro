@@ -2,7 +2,7 @@
  * Dashboard home — «داشبورد».
  * ────────────────────────────
  * Live stat cards pulled from the signed-in partner's data: ledger balance,
- * completed / in-progress orders, cart size, backorders, favorites, recent
+ * completed / in-progress orders, cart size, favorites, recent
  * orders, last invoice, profile (avatar state) and a back-to-site card. Each
  * card links to the matching page. The cards read the session cookie, so they
  * stream inside <Suspense> while the static shell ships.
@@ -65,13 +65,6 @@ async function StatsGrid() {
         title="سبد خرید"
         value={`${formatNumberFa(stats.cartItemCount)} قلم`}
         subtitle="مشاهده و تکمیل فاکتور"
-      />
-      <StatCard
-        href="/dashboard/backorders"
-        icon="clock"
-        title="پیش‌خریدها"
-        value={`${formatNumberFa(stats.backorderCount)} درخواست`}
-        subtitle="درخواست‌های شما در زمان نبود محصول"
       />
       <StatCard
         href="/dashboard/favorites"

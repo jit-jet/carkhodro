@@ -160,11 +160,12 @@ export type OrderSurvey = $Result.DefaultSelection<Prisma.$OrderSurveyPayload>
  */
 export type PriceListRequest = $Result.DefaultSelection<Prisma.$PriceListRequestPayload>
 /**
- * Model Backorder
- * Pre-order / backorder placed against an out-of-stock part — the partner is
- * notified when it returns. Powers the «پیش‌خرید» dashboard stat.
+ * Model ProductSuggestion
+ * Wholesale partner suggestion to add a product to the shop catalogue
+ * («پیشنهاد محصول»). Admin review comes later; for now this is append-only
+ * storage keyed to the submitting user.
  */
-export type Backorder = $Result.DefaultSelection<Prisma.$BackorderPayload>
+export type ProductSuggestion = $Result.DefaultSelection<Prisma.$ProductSuggestionPayload>
 
 /**
  * Enums
@@ -201,16 +202,6 @@ export const MessageDirection: {
 };
 
 export type MessageDirection = (typeof MessageDirection)[keyof typeof MessageDirection]
-
-
-export const BackorderStatus: {
-  PENDING: 'PENDING',
-  NOTIFIED: 'NOTIFIED',
-  FULFILLED: 'FULFILLED',
-  CANCELLED: 'CANCELLED'
-};
-
-export type BackorderStatus = (typeof BackorderStatus)[keyof typeof BackorderStatus]
 
 
 export const PaymentMethod: {
@@ -251,10 +242,6 @@ export const OrderStatus: typeof $Enums.OrderStatus
 export type MessageDirection = $Enums.MessageDirection
 
 export const MessageDirection: typeof $Enums.MessageDirection
-
-export type BackorderStatus = $Enums.BackorderStatus
-
-export const BackorderStatus: typeof $Enums.BackorderStatus
 
 export type PaymentMethod = $Enums.PaymentMethod
 
@@ -660,14 +647,14 @@ export class PrismaClient<
   get priceListRequest(): Prisma.PriceListRequestDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.backorder`: Exposes CRUD operations for the **Backorder** model.
+   * `prisma.productSuggestion`: Exposes CRUD operations for the **ProductSuggestion** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Backorders
-    * const backorders = await prisma.backorder.findMany()
+    * // Fetch zero or more ProductSuggestions
+    * const productSuggestions = await prisma.productSuggestion.findMany()
     * ```
     */
-  get backorder(): Prisma.BackorderDelegate<ExtArgs, ClientOptions>;
+  get productSuggestion(): Prisma.ProductSuggestionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1129,7 +1116,7 @@ export namespace Prisma {
     SupportMessage: 'SupportMessage',
     OrderSurvey: 'OrderSurvey',
     PriceListRequest: 'PriceListRequest',
-    Backorder: 'Backorder'
+    ProductSuggestion: 'ProductSuggestion'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1145,7 +1132,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "post" | "faq" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "backorder"
+      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "post" | "faq" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3147,77 +3134,77 @@ export namespace Prisma {
           }
         }
       }
-      Backorder: {
-        payload: Prisma.$BackorderPayload<ExtArgs>
-        fields: Prisma.BackorderFieldRefs
+      ProductSuggestion: {
+        payload: Prisma.$ProductSuggestionPayload<ExtArgs>
+        fields: Prisma.ProductSuggestionFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.BackorderFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload> | null
+            args: Prisma.ProductSuggestionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.BackorderFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload>
+            args: Prisma.ProductSuggestionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload>
           }
           findFirst: {
-            args: Prisma.BackorderFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload> | null
+            args: Prisma.ProductSuggestionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.BackorderFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload>
+            args: Prisma.ProductSuggestionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload>
           }
           findMany: {
-            args: Prisma.BackorderFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload>[]
+            args: Prisma.ProductSuggestionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload>[]
           }
           create: {
-            args: Prisma.BackorderCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload>
+            args: Prisma.ProductSuggestionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload>
           }
           createMany: {
-            args: Prisma.BackorderCreateManyArgs<ExtArgs>
+            args: Prisma.ProductSuggestionCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.BackorderCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload>[]
+            args: Prisma.ProductSuggestionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload>[]
           }
           delete: {
-            args: Prisma.BackorderDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload>
+            args: Prisma.ProductSuggestionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload>
           }
           update: {
-            args: Prisma.BackorderUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload>
+            args: Prisma.ProductSuggestionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload>
           }
           deleteMany: {
-            args: Prisma.BackorderDeleteManyArgs<ExtArgs>
+            args: Prisma.ProductSuggestionDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.BackorderUpdateManyArgs<ExtArgs>
+            args: Prisma.ProductSuggestionUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.BackorderUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload>[]
+            args: Prisma.ProductSuggestionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload>[]
           }
           upsert: {
-            args: Prisma.BackorderUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BackorderPayload>
+            args: Prisma.ProductSuggestionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductSuggestionPayload>
           }
           aggregate: {
-            args: Prisma.BackorderAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateBackorder>
+            args: Prisma.ProductSuggestionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProductSuggestion>
           }
           groupBy: {
-            args: Prisma.BackorderGroupByArgs<ExtArgs>
-            result: $Utils.Optional<BackorderGroupByOutputType>[]
+            args: Prisma.ProductSuggestionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProductSuggestionGroupByOutputType>[]
           }
           count: {
-            args: Prisma.BackorderCountArgs<ExtArgs>
-            result: $Utils.Optional<BackorderCountAggregateOutputType> | number
+            args: Prisma.ProductSuggestionCountArgs<ExtArgs>
+            result: $Utils.Optional<ProductSuggestionCountAggregateOutputType> | number
           }
         }
       }
@@ -3356,7 +3343,7 @@ export namespace Prisma {
     supportMessage?: SupportMessageOmit
     orderSurvey?: OrderSurveyOmit
     priceListRequest?: PriceListRequestOmit
-    backorder?: BackorderOmit
+    productSuggestion?: ProductSuggestionOmit
   }
 
   /* Types for Logging */
@@ -3508,7 +3495,7 @@ export namespace Prisma {
     supportMessages: number
     orderSurveys: number
     priceListRequests: number
-    backorders: number
+    productSuggestions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3521,7 +3508,7 @@ export namespace Prisma {
     supportMessages?: boolean | UserCountOutputTypeCountSupportMessagesArgs
     orderSurveys?: boolean | UserCountOutputTypeCountOrderSurveysArgs
     priceListRequests?: boolean | UserCountOutputTypeCountPriceListRequestsArgs
-    backorders?: boolean | UserCountOutputTypeCountBackordersArgs
+    productSuggestions?: boolean | UserCountOutputTypeCountProductSuggestionsArgs
   }
 
   // Custom InputTypes
@@ -3601,8 +3588,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountBackordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BackorderWhereInput
+  export type UserCountOutputTypeCountProductSuggestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductSuggestionWhereInput
   }
 
 
@@ -3773,7 +3760,6 @@ export namespace Prisma {
     orderItems: number
     wishlistedBy: number
     comparedBy: number
-    backorders: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3784,7 +3770,6 @@ export namespace Prisma {
     orderItems?: boolean | ProductCountOutputTypeCountOrderItemsArgs
     wishlistedBy?: boolean | ProductCountOutputTypeCountWishlistedByArgs
     comparedBy?: boolean | ProductCountOutputTypeCountComparedByArgs
-    backorders?: boolean | ProductCountOutputTypeCountBackordersArgs
   }
 
   // Custom InputTypes
@@ -3845,13 +3830,6 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountComparedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CompareItemWhereInput
-  }
-
-  /**
-   * ProductCountOutputType without action
-   */
-  export type ProductCountOutputTypeCountBackordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BackorderWhereInput
   }
 
 
@@ -7505,7 +7483,7 @@ export namespace Prisma {
     supportMessages?: boolean | User$supportMessagesArgs<ExtArgs>
     orderSurveys?: boolean | User$orderSurveysArgs<ExtArgs>
     priceListRequests?: boolean | User$priceListRequestsArgs<ExtArgs>
-    backorders?: boolean | User$backordersArgs<ExtArgs>
+    productSuggestions?: boolean | User$productSuggestionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -7575,7 +7553,7 @@ export namespace Prisma {
     supportMessages?: boolean | User$supportMessagesArgs<ExtArgs>
     orderSurveys?: boolean | User$orderSurveysArgs<ExtArgs>
     priceListRequests?: boolean | User$priceListRequestsArgs<ExtArgs>
-    backorders?: boolean | User$backordersArgs<ExtArgs>
+    productSuggestions?: boolean | User$productSuggestionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -7594,7 +7572,7 @@ export namespace Prisma {
       supportMessages: Prisma.$SupportMessagePayload<ExtArgs>[]
       orderSurveys: Prisma.$OrderSurveyPayload<ExtArgs>[]
       priceListRequests: Prisma.$PriceListRequestPayload<ExtArgs>[]
-      backorders: Prisma.$BackorderPayload<ExtArgs>[]
+      productSuggestions: Prisma.$ProductSuggestionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8038,7 +8016,7 @@ export namespace Prisma {
     supportMessages<T extends User$supportMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$supportMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupportMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orderSurveys<T extends User$orderSurveysArgs<ExtArgs> = {}>(args?: Subset<T, User$orderSurveysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderSurveyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     priceListRequests<T extends User$priceListRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$priceListRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PriceListRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    backorders<T extends User$backordersArgs<ExtArgs> = {}>(args?: Subset<T, User$backordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    productSuggestions<T extends User$productSuggestionsArgs<ExtArgs> = {}>(args?: Subset<T, User$productSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8711,27 +8689,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.backorders
+   * User.productSuggestions
    */
-  export type User$backordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$productSuggestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
-    where?: BackorderWhereInput
-    orderBy?: BackorderOrderByWithRelationInput | BackorderOrderByWithRelationInput[]
-    cursor?: BackorderWhereUniqueInput
+    include?: ProductSuggestionInclude<ExtArgs> | null
+    where?: ProductSuggestionWhereInput
+    orderBy?: ProductSuggestionOrderByWithRelationInput | ProductSuggestionOrderByWithRelationInput[]
+    cursor?: ProductSuggestionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: BackorderScalarFieldEnum | BackorderScalarFieldEnum[]
+    distinct?: ProductSuggestionScalarFieldEnum | ProductSuggestionScalarFieldEnum[]
   }
 
   /**
@@ -17077,7 +17055,6 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     wishlistedBy?: boolean | Product$wishlistedByArgs<ExtArgs>
     comparedBy?: boolean | Product$comparedByArgs<ExtArgs>
-    backorders?: boolean | Product$backordersArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -17186,7 +17163,6 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     wishlistedBy?: boolean | Product$wishlistedByArgs<ExtArgs>
     comparedBy?: boolean | Product$comparedByArgs<ExtArgs>
-    backorders?: boolean | Product$backordersArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17210,7 +17186,6 @@ export namespace Prisma {
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
       wishlistedBy: Prisma.$WishlistItemPayload<ExtArgs>[]
       comparedBy: Prisma.$CompareItemPayload<ExtArgs>[]
-      backorders: Prisma.$BackorderPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -17688,7 +17663,6 @@ export namespace Prisma {
     orderItems<T extends Product$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     wishlistedBy<T extends Product$wishlistedByArgs<ExtArgs> = {}>(args?: Subset<T, Product$wishlistedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WishlistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comparedBy<T extends Product$comparedByArgs<ExtArgs> = {}>(args?: Subset<T, Product$comparedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompareItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    backorders<T extends Product$backordersArgs<ExtArgs> = {}>(args?: Subset<T, Product$backordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18311,30 +18285,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CompareItemScalarFieldEnum | CompareItemScalarFieldEnum[]
-  }
-
-  /**
-   * Product.backorders
-   */
-  export type Product$backordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Backorder
-     */
-    select?: BackorderSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Backorder
-     */
-    omit?: BackorderOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BackorderInclude<ExtArgs> | null
-    where?: BackorderWhereInput
-    orderBy?: BackorderOrderByWithRelationInput | BackorderOrderByWithRelationInput[]
-    cursor?: BackorderWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BackorderScalarFieldEnum | BackorderScalarFieldEnum[]
   }
 
   /**
@@ -35360,415 +35310,341 @@ export namespace Prisma {
 
 
   /**
-   * Model Backorder
+   * Model ProductSuggestion
    */
 
-  export type AggregateBackorder = {
-    _count: BackorderCountAggregateOutputType | null
-    _avg: BackorderAvgAggregateOutputType | null
-    _sum: BackorderSumAggregateOutputType | null
-    _min: BackorderMinAggregateOutputType | null
-    _max: BackorderMaxAggregateOutputType | null
+  export type AggregateProductSuggestion = {
+    _count: ProductSuggestionCountAggregateOutputType | null
+    _min: ProductSuggestionMinAggregateOutputType | null
+    _max: ProductSuggestionMaxAggregateOutputType | null
   }
 
-  export type BackorderAvgAggregateOutputType = {
-    quantity: number | null
-  }
-
-  export type BackorderSumAggregateOutputType = {
-    quantity: number | null
-  }
-
-  export type BackorderMinAggregateOutputType = {
+  export type ProductSuggestionMinAggregateOutputType = {
     id: string | null
     userId: string | null
-    productId: string | null
-    quantity: number | null
-    status: $Enums.BackorderStatus | null
-    note: string | null
+    body: string | null
     createdAt: Date | null
   }
 
-  export type BackorderMaxAggregateOutputType = {
+  export type ProductSuggestionMaxAggregateOutputType = {
     id: string | null
     userId: string | null
-    productId: string | null
-    quantity: number | null
-    status: $Enums.BackorderStatus | null
-    note: string | null
+    body: string | null
     createdAt: Date | null
   }
 
-  export type BackorderCountAggregateOutputType = {
+  export type ProductSuggestionCountAggregateOutputType = {
     id: number
     userId: number
-    productId: number
-    quantity: number
-    status: number
-    note: number
+    body: number
     createdAt: number
     _all: number
   }
 
 
-  export type BackorderAvgAggregateInputType = {
-    quantity?: true
-  }
-
-  export type BackorderSumAggregateInputType = {
-    quantity?: true
-  }
-
-  export type BackorderMinAggregateInputType = {
+  export type ProductSuggestionMinAggregateInputType = {
     id?: true
     userId?: true
-    productId?: true
-    quantity?: true
-    status?: true
-    note?: true
+    body?: true
     createdAt?: true
   }
 
-  export type BackorderMaxAggregateInputType = {
+  export type ProductSuggestionMaxAggregateInputType = {
     id?: true
     userId?: true
-    productId?: true
-    quantity?: true
-    status?: true
-    note?: true
+    body?: true
     createdAt?: true
   }
 
-  export type BackorderCountAggregateInputType = {
+  export type ProductSuggestionCountAggregateInputType = {
     id?: true
     userId?: true
-    productId?: true
-    quantity?: true
-    status?: true
-    note?: true
+    body?: true
     createdAt?: true
     _all?: true
   }
 
-  export type BackorderAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Backorder to aggregate.
+     * Filter which ProductSuggestion to aggregate.
      */
-    where?: BackorderWhereInput
+    where?: ProductSuggestionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Backorders to fetch.
+     * Determine the order of ProductSuggestions to fetch.
      */
-    orderBy?: BackorderOrderByWithRelationInput | BackorderOrderByWithRelationInput[]
+    orderBy?: ProductSuggestionOrderByWithRelationInput | ProductSuggestionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: BackorderWhereUniqueInput
+    cursor?: ProductSuggestionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Backorders from the position of the cursor.
+     * Take `±n` ProductSuggestions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Backorders.
+     * Skip the first `n` ProductSuggestions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Backorders
+     * Count returned ProductSuggestions
     **/
-    _count?: true | BackorderCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: BackorderAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: BackorderSumAggregateInputType
+    _count?: true | ProductSuggestionCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: BackorderMinAggregateInputType
+    _min?: ProductSuggestionMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: BackorderMaxAggregateInputType
+    _max?: ProductSuggestionMaxAggregateInputType
   }
 
-  export type GetBackorderAggregateType<T extends BackorderAggregateArgs> = {
-        [P in keyof T & keyof AggregateBackorder]: P extends '_count' | 'count'
+  export type GetProductSuggestionAggregateType<T extends ProductSuggestionAggregateArgs> = {
+        [P in keyof T & keyof AggregateProductSuggestion]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateBackorder[P]>
-      : GetScalarType<T[P], AggregateBackorder[P]>
+        : GetScalarType<T[P], AggregateProductSuggestion[P]>
+      : GetScalarType<T[P], AggregateProductSuggestion[P]>
   }
 
 
 
 
-  export type BackorderGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BackorderWhereInput
-    orderBy?: BackorderOrderByWithAggregationInput | BackorderOrderByWithAggregationInput[]
-    by: BackorderScalarFieldEnum[] | BackorderScalarFieldEnum
-    having?: BackorderScalarWhereWithAggregatesInput
+  export type ProductSuggestionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductSuggestionWhereInput
+    orderBy?: ProductSuggestionOrderByWithAggregationInput | ProductSuggestionOrderByWithAggregationInput[]
+    by: ProductSuggestionScalarFieldEnum[] | ProductSuggestionScalarFieldEnum
+    having?: ProductSuggestionScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: BackorderCountAggregateInputType | true
-    _avg?: BackorderAvgAggregateInputType
-    _sum?: BackorderSumAggregateInputType
-    _min?: BackorderMinAggregateInputType
-    _max?: BackorderMaxAggregateInputType
+    _count?: ProductSuggestionCountAggregateInputType | true
+    _min?: ProductSuggestionMinAggregateInputType
+    _max?: ProductSuggestionMaxAggregateInputType
   }
 
-  export type BackorderGroupByOutputType = {
+  export type ProductSuggestionGroupByOutputType = {
     id: string
     userId: string
-    productId: string
-    quantity: number
-    status: $Enums.BackorderStatus
-    note: string | null
+    body: string
     createdAt: Date
-    _count: BackorderCountAggregateOutputType | null
-    _avg: BackorderAvgAggregateOutputType | null
-    _sum: BackorderSumAggregateOutputType | null
-    _min: BackorderMinAggregateOutputType | null
-    _max: BackorderMaxAggregateOutputType | null
+    _count: ProductSuggestionCountAggregateOutputType | null
+    _min: ProductSuggestionMinAggregateOutputType | null
+    _max: ProductSuggestionMaxAggregateOutputType | null
   }
 
-  type GetBackorderGroupByPayload<T extends BackorderGroupByArgs> = Prisma.PrismaPromise<
+  type GetProductSuggestionGroupByPayload<T extends ProductSuggestionGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<BackorderGroupByOutputType, T['by']> &
+      PickEnumerable<ProductSuggestionGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof BackorderGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof ProductSuggestionGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], BackorderGroupByOutputType[P]>
-            : GetScalarType<T[P], BackorderGroupByOutputType[P]>
+              : GetScalarType<T[P], ProductSuggestionGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductSuggestionGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type BackorderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ProductSuggestionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    productId?: boolean
-    quantity?: boolean
-    status?: boolean
-    note?: boolean
+    body?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    product?: boolean | ProductDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["backorder"]>
+  }, ExtArgs["result"]["productSuggestion"]>
 
-  export type BackorderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ProductSuggestionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    productId?: boolean
-    quantity?: boolean
-    status?: boolean
-    note?: boolean
+    body?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    product?: boolean | ProductDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["backorder"]>
+  }, ExtArgs["result"]["productSuggestion"]>
 
-  export type BackorderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ProductSuggestionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    productId?: boolean
-    quantity?: boolean
-    status?: boolean
-    note?: boolean
+    body?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    product?: boolean | ProductDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["backorder"]>
+  }, ExtArgs["result"]["productSuggestion"]>
 
-  export type BackorderSelectScalar = {
+  export type ProductSuggestionSelectScalar = {
     id?: boolean
     userId?: boolean
-    productId?: boolean
-    quantity?: boolean
-    status?: boolean
-    note?: boolean
+    body?: boolean
     createdAt?: boolean
   }
 
-  export type BackorderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "productId" | "quantity" | "status" | "note" | "createdAt", ExtArgs["result"]["backorder"]>
-  export type BackorderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "body" | "createdAt", ExtArgs["result"]["productSuggestion"]>
+  export type ProductSuggestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    product?: boolean | ProductDefaultArgs<ExtArgs>
   }
-  export type BackorderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    product?: boolean | ProductDefaultArgs<ExtArgs>
   }
-  export type BackorderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    product?: boolean | ProductDefaultArgs<ExtArgs>
   }
 
-  export type $BackorderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Backorder"
+  export type $ProductSuggestionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProductSuggestion"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
-      product: Prisma.$ProductPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      productId: string
-      quantity: number
-      status: $Enums.BackorderStatus
-      note: string | null
+      /**
+       * Free-text description of the product the partner wants stocked.
+       */
+      body: string
       createdAt: Date
-    }, ExtArgs["result"]["backorder"]>
+    }, ExtArgs["result"]["productSuggestion"]>
     composites: {}
   }
 
-  type BackorderGetPayload<S extends boolean | null | undefined | BackorderDefaultArgs> = $Result.GetResult<Prisma.$BackorderPayload, S>
+  type ProductSuggestionGetPayload<S extends boolean | null | undefined | ProductSuggestionDefaultArgs> = $Result.GetResult<Prisma.$ProductSuggestionPayload, S>
 
-  type BackorderCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<BackorderFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: BackorderCountAggregateInputType | true
+  type ProductSuggestionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProductSuggestionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProductSuggestionCountAggregateInputType | true
     }
 
-  export interface BackorderDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Backorder'], meta: { name: 'Backorder' } }
+  export interface ProductSuggestionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProductSuggestion'], meta: { name: 'ProductSuggestion' } }
     /**
-     * Find zero or one Backorder that matches the filter.
-     * @param {BackorderFindUniqueArgs} args - Arguments to find a Backorder
+     * Find zero or one ProductSuggestion that matches the filter.
+     * @param {ProductSuggestionFindUniqueArgs} args - Arguments to find a ProductSuggestion
      * @example
-     * // Get one Backorder
-     * const backorder = await prisma.backorder.findUnique({
+     * // Get one ProductSuggestion
+     * const productSuggestion = await prisma.productSuggestion.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends BackorderFindUniqueArgs>(args: SelectSubset<T, BackorderFindUniqueArgs<ExtArgs>>): Prisma__BackorderClient<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends ProductSuggestionFindUniqueArgs>(args: SelectSubset<T, ProductSuggestionFindUniqueArgs<ExtArgs>>): Prisma__ProductSuggestionClient<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Backorder that matches the filter or throw an error with `error.code='P2025'`
+     * Find one ProductSuggestion that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {BackorderFindUniqueOrThrowArgs} args - Arguments to find a Backorder
+     * @param {ProductSuggestionFindUniqueOrThrowArgs} args - Arguments to find a ProductSuggestion
      * @example
-     * // Get one Backorder
-     * const backorder = await prisma.backorder.findUniqueOrThrow({
+     * // Get one ProductSuggestion
+     * const productSuggestion = await prisma.productSuggestion.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends BackorderFindUniqueOrThrowArgs>(args: SelectSubset<T, BackorderFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BackorderClient<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends ProductSuggestionFindUniqueOrThrowArgs>(args: SelectSubset<T, ProductSuggestionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProductSuggestionClient<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Backorder that matches the filter.
+     * Find the first ProductSuggestion that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {BackorderFindFirstArgs} args - Arguments to find a Backorder
+     * @param {ProductSuggestionFindFirstArgs} args - Arguments to find a ProductSuggestion
      * @example
-     * // Get one Backorder
-     * const backorder = await prisma.backorder.findFirst({
+     * // Get one ProductSuggestion
+     * const productSuggestion = await prisma.productSuggestion.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends BackorderFindFirstArgs>(args?: SelectSubset<T, BackorderFindFirstArgs<ExtArgs>>): Prisma__BackorderClient<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends ProductSuggestionFindFirstArgs>(args?: SelectSubset<T, ProductSuggestionFindFirstArgs<ExtArgs>>): Prisma__ProductSuggestionClient<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Backorder that matches the filter or
+     * Find the first ProductSuggestion that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {BackorderFindFirstOrThrowArgs} args - Arguments to find a Backorder
+     * @param {ProductSuggestionFindFirstOrThrowArgs} args - Arguments to find a ProductSuggestion
      * @example
-     * // Get one Backorder
-     * const backorder = await prisma.backorder.findFirstOrThrow({
+     * // Get one ProductSuggestion
+     * const productSuggestion = await prisma.productSuggestion.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends BackorderFindFirstOrThrowArgs>(args?: SelectSubset<T, BackorderFindFirstOrThrowArgs<ExtArgs>>): Prisma__BackorderClient<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends ProductSuggestionFindFirstOrThrowArgs>(args?: SelectSubset<T, ProductSuggestionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProductSuggestionClient<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Backorders that matches the filter.
+     * Find zero or more ProductSuggestions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {BackorderFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {ProductSuggestionFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Backorders
-     * const backorders = await prisma.backorder.findMany()
+     * // Get all ProductSuggestions
+     * const productSuggestions = await prisma.productSuggestion.findMany()
      * 
-     * // Get first 10 Backorders
-     * const backorders = await prisma.backorder.findMany({ take: 10 })
+     * // Get first 10 ProductSuggestions
+     * const productSuggestions = await prisma.productSuggestion.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const backorderWithIdOnly = await prisma.backorder.findMany({ select: { id: true } })
+     * const productSuggestionWithIdOnly = await prisma.productSuggestion.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends BackorderFindManyArgs>(args?: SelectSubset<T, BackorderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends ProductSuggestionFindManyArgs>(args?: SelectSubset<T, ProductSuggestionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Backorder.
-     * @param {BackorderCreateArgs} args - Arguments to create a Backorder.
+     * Create a ProductSuggestion.
+     * @param {ProductSuggestionCreateArgs} args - Arguments to create a ProductSuggestion.
      * @example
-     * // Create one Backorder
-     * const Backorder = await prisma.backorder.create({
+     * // Create one ProductSuggestion
+     * const ProductSuggestion = await prisma.productSuggestion.create({
      *   data: {
-     *     // ... data to create a Backorder
+     *     // ... data to create a ProductSuggestion
      *   }
      * })
      * 
      */
-    create<T extends BackorderCreateArgs>(args: SelectSubset<T, BackorderCreateArgs<ExtArgs>>): Prisma__BackorderClient<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends ProductSuggestionCreateArgs>(args: SelectSubset<T, ProductSuggestionCreateArgs<ExtArgs>>): Prisma__ProductSuggestionClient<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Backorders.
-     * @param {BackorderCreateManyArgs} args - Arguments to create many Backorders.
+     * Create many ProductSuggestions.
+     * @param {ProductSuggestionCreateManyArgs} args - Arguments to create many ProductSuggestions.
      * @example
-     * // Create many Backorders
-     * const backorder = await prisma.backorder.createMany({
+     * // Create many ProductSuggestions
+     * const productSuggestion = await prisma.productSuggestion.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends BackorderCreateManyArgs>(args?: SelectSubset<T, BackorderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends ProductSuggestionCreateManyArgs>(args?: SelectSubset<T, ProductSuggestionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Backorders and returns the data saved in the database.
-     * @param {BackorderCreateManyAndReturnArgs} args - Arguments to create many Backorders.
+     * Create many ProductSuggestions and returns the data saved in the database.
+     * @param {ProductSuggestionCreateManyAndReturnArgs} args - Arguments to create many ProductSuggestions.
      * @example
-     * // Create many Backorders
-     * const backorder = await prisma.backorder.createManyAndReturn({
+     * // Create many ProductSuggestions
+     * const productSuggestion = await prisma.productSuggestion.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Backorders and only return the `id`
-     * const backorderWithIdOnly = await prisma.backorder.createManyAndReturn({
+     * // Create many ProductSuggestions and only return the `id`
+     * const productSuggestionWithIdOnly = await prisma.productSuggestion.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -35778,28 +35654,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends BackorderCreateManyAndReturnArgs>(args?: SelectSubset<T, BackorderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends ProductSuggestionCreateManyAndReturnArgs>(args?: SelectSubset<T, ProductSuggestionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Backorder.
-     * @param {BackorderDeleteArgs} args - Arguments to delete one Backorder.
+     * Delete a ProductSuggestion.
+     * @param {ProductSuggestionDeleteArgs} args - Arguments to delete one ProductSuggestion.
      * @example
-     * // Delete one Backorder
-     * const Backorder = await prisma.backorder.delete({
+     * // Delete one ProductSuggestion
+     * const ProductSuggestion = await prisma.productSuggestion.delete({
      *   where: {
-     *     // ... filter to delete one Backorder
+     *     // ... filter to delete one ProductSuggestion
      *   }
      * })
      * 
      */
-    delete<T extends BackorderDeleteArgs>(args: SelectSubset<T, BackorderDeleteArgs<ExtArgs>>): Prisma__BackorderClient<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends ProductSuggestionDeleteArgs>(args: SelectSubset<T, ProductSuggestionDeleteArgs<ExtArgs>>): Prisma__ProductSuggestionClient<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Backorder.
-     * @param {BackorderUpdateArgs} args - Arguments to update one Backorder.
+     * Update one ProductSuggestion.
+     * @param {ProductSuggestionUpdateArgs} args - Arguments to update one ProductSuggestion.
      * @example
-     * // Update one Backorder
-     * const backorder = await prisma.backorder.update({
+     * // Update one ProductSuggestion
+     * const productSuggestion = await prisma.productSuggestion.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -35809,30 +35685,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends BackorderUpdateArgs>(args: SelectSubset<T, BackorderUpdateArgs<ExtArgs>>): Prisma__BackorderClient<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends ProductSuggestionUpdateArgs>(args: SelectSubset<T, ProductSuggestionUpdateArgs<ExtArgs>>): Prisma__ProductSuggestionClient<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Backorders.
-     * @param {BackorderDeleteManyArgs} args - Arguments to filter Backorders to delete.
+     * Delete zero or more ProductSuggestions.
+     * @param {ProductSuggestionDeleteManyArgs} args - Arguments to filter ProductSuggestions to delete.
      * @example
-     * // Delete a few Backorders
-     * const { count } = await prisma.backorder.deleteMany({
+     * // Delete a few ProductSuggestions
+     * const { count } = await prisma.productSuggestion.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends BackorderDeleteManyArgs>(args?: SelectSubset<T, BackorderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends ProductSuggestionDeleteManyArgs>(args?: SelectSubset<T, ProductSuggestionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Backorders.
+     * Update zero or more ProductSuggestions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {BackorderUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {ProductSuggestionUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Backorders
-     * const backorder = await prisma.backorder.updateMany({
+     * // Update many ProductSuggestions
+     * const productSuggestion = await prisma.productSuggestion.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -35842,14 +35718,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends BackorderUpdateManyArgs>(args: SelectSubset<T, BackorderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends ProductSuggestionUpdateManyArgs>(args: SelectSubset<T, ProductSuggestionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Backorders and returns the data updated in the database.
-     * @param {BackorderUpdateManyAndReturnArgs} args - Arguments to update many Backorders.
+     * Update zero or more ProductSuggestions and returns the data updated in the database.
+     * @param {ProductSuggestionUpdateManyAndReturnArgs} args - Arguments to update many ProductSuggestions.
      * @example
-     * // Update many Backorders
-     * const backorder = await prisma.backorder.updateManyAndReturn({
+     * // Update many ProductSuggestions
+     * const productSuggestion = await prisma.productSuggestion.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -35858,8 +35734,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Backorders and only return the `id`
-     * const backorderWithIdOnly = await prisma.backorder.updateManyAndReturn({
+     * // Update zero or more ProductSuggestions and only return the `id`
+     * const productSuggestionWithIdOnly = await prisma.productSuggestion.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -35872,56 +35748,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends BackorderUpdateManyAndReturnArgs>(args: SelectSubset<T, BackorderUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends ProductSuggestionUpdateManyAndReturnArgs>(args: SelectSubset<T, ProductSuggestionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Backorder.
-     * @param {BackorderUpsertArgs} args - Arguments to update or create a Backorder.
+     * Create or update one ProductSuggestion.
+     * @param {ProductSuggestionUpsertArgs} args - Arguments to update or create a ProductSuggestion.
      * @example
-     * // Update or create a Backorder
-     * const backorder = await prisma.backorder.upsert({
+     * // Update or create a ProductSuggestion
+     * const productSuggestion = await prisma.productSuggestion.upsert({
      *   create: {
-     *     // ... data to create a Backorder
+     *     // ... data to create a ProductSuggestion
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Backorder we want to update
+     *     // ... the filter for the ProductSuggestion we want to update
      *   }
      * })
      */
-    upsert<T extends BackorderUpsertArgs>(args: SelectSubset<T, BackorderUpsertArgs<ExtArgs>>): Prisma__BackorderClient<$Result.GetResult<Prisma.$BackorderPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends ProductSuggestionUpsertArgs>(args: SelectSubset<T, ProductSuggestionUpsertArgs<ExtArgs>>): Prisma__ProductSuggestionClient<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Backorders.
+     * Count the number of ProductSuggestions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {BackorderCountArgs} args - Arguments to filter Backorders to count.
+     * @param {ProductSuggestionCountArgs} args - Arguments to filter ProductSuggestions to count.
      * @example
-     * // Count the number of Backorders
-     * const count = await prisma.backorder.count({
+     * // Count the number of ProductSuggestions
+     * const count = await prisma.productSuggestion.count({
      *   where: {
-     *     // ... the filter for the Backorders we want to count
+     *     // ... the filter for the ProductSuggestions we want to count
      *   }
      * })
     **/
-    count<T extends BackorderCountArgs>(
-      args?: Subset<T, BackorderCountArgs>,
+    count<T extends ProductSuggestionCountArgs>(
+      args?: Subset<T, ProductSuggestionCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], BackorderCountAggregateOutputType>
+          : GetScalarType<T['select'], ProductSuggestionCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Backorder.
+     * Allows you to perform aggregations operations on a ProductSuggestion.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {BackorderAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {ProductSuggestionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -35941,13 +35817,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends BackorderAggregateArgs>(args: Subset<T, BackorderAggregateArgs>): Prisma.PrismaPromise<GetBackorderAggregateType<T>>
+    aggregate<T extends ProductSuggestionAggregateArgs>(args: Subset<T, ProductSuggestionAggregateArgs>): Prisma.PrismaPromise<GetProductSuggestionAggregateType<T>>
 
     /**
-     * Group by Backorder.
+     * Group by ProductSuggestion.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {BackorderGroupByArgs} args - Group by arguments.
+     * @param {ProductSuggestionGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -35962,14 +35838,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends BackorderGroupByArgs,
+      T extends ProductSuggestionGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: BackorderGroupByArgs['orderBy'] }
-        : { orderBy?: BackorderGroupByArgs['orderBy'] },
+        ? { orderBy: ProductSuggestionGroupByArgs['orderBy'] }
+        : { orderBy?: ProductSuggestionGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -36018,23 +35894,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, BackorderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBackorderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ProductSuggestionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductSuggestionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the Backorder model
+   * Fields of the ProductSuggestion model
    */
-  readonly fields: BackorderFieldRefs;
+  readonly fields: ProductSuggestionFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Backorder.
+   * The delegate class that acts as a "Promise-like" for ProductSuggestion.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__BackorderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__ProductSuggestionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -36061,432 +35936,429 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the Backorder model
+   * Fields of the ProductSuggestion model
    */
-  interface BackorderFieldRefs {
-    readonly id: FieldRef<"Backorder", 'String'>
-    readonly userId: FieldRef<"Backorder", 'String'>
-    readonly productId: FieldRef<"Backorder", 'String'>
-    readonly quantity: FieldRef<"Backorder", 'Int'>
-    readonly status: FieldRef<"Backorder", 'BackorderStatus'>
-    readonly note: FieldRef<"Backorder", 'String'>
-    readonly createdAt: FieldRef<"Backorder", 'DateTime'>
+  interface ProductSuggestionFieldRefs {
+    readonly id: FieldRef<"ProductSuggestion", 'String'>
+    readonly userId: FieldRef<"ProductSuggestion", 'String'>
+    readonly body: FieldRef<"ProductSuggestion", 'String'>
+    readonly createdAt: FieldRef<"ProductSuggestion", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * Backorder findUnique
+   * ProductSuggestion findUnique
    */
-  export type BackorderFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
     /**
-     * Filter, which Backorder to fetch.
+     * Filter, which ProductSuggestion to fetch.
      */
-    where: BackorderWhereUniqueInput
+    where: ProductSuggestionWhereUniqueInput
   }
 
   /**
-   * Backorder findUniqueOrThrow
+   * ProductSuggestion findUniqueOrThrow
    */
-  export type BackorderFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
     /**
-     * Filter, which Backorder to fetch.
+     * Filter, which ProductSuggestion to fetch.
      */
-    where: BackorderWhereUniqueInput
+    where: ProductSuggestionWhereUniqueInput
   }
 
   /**
-   * Backorder findFirst
+   * ProductSuggestion findFirst
    */
-  export type BackorderFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
     /**
-     * Filter, which Backorder to fetch.
+     * Filter, which ProductSuggestion to fetch.
      */
-    where?: BackorderWhereInput
+    where?: ProductSuggestionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Backorders to fetch.
+     * Determine the order of ProductSuggestions to fetch.
      */
-    orderBy?: BackorderOrderByWithRelationInput | BackorderOrderByWithRelationInput[]
+    orderBy?: ProductSuggestionOrderByWithRelationInput | ProductSuggestionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Backorders.
+     * Sets the position for searching for ProductSuggestions.
      */
-    cursor?: BackorderWhereUniqueInput
+    cursor?: ProductSuggestionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Backorders from the position of the cursor.
+     * Take `±n` ProductSuggestions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Backorders.
+     * Skip the first `n` ProductSuggestions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Backorders.
+     * Filter by unique combinations of ProductSuggestions.
      */
-    distinct?: BackorderScalarFieldEnum | BackorderScalarFieldEnum[]
+    distinct?: ProductSuggestionScalarFieldEnum | ProductSuggestionScalarFieldEnum[]
   }
 
   /**
-   * Backorder findFirstOrThrow
+   * ProductSuggestion findFirstOrThrow
    */
-  export type BackorderFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
     /**
-     * Filter, which Backorder to fetch.
+     * Filter, which ProductSuggestion to fetch.
      */
-    where?: BackorderWhereInput
+    where?: ProductSuggestionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Backorders to fetch.
+     * Determine the order of ProductSuggestions to fetch.
      */
-    orderBy?: BackorderOrderByWithRelationInput | BackorderOrderByWithRelationInput[]
+    orderBy?: ProductSuggestionOrderByWithRelationInput | ProductSuggestionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Backorders.
+     * Sets the position for searching for ProductSuggestions.
      */
-    cursor?: BackorderWhereUniqueInput
+    cursor?: ProductSuggestionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Backorders from the position of the cursor.
+     * Take `±n` ProductSuggestions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Backorders.
+     * Skip the first `n` ProductSuggestions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Backorders.
+     * Filter by unique combinations of ProductSuggestions.
      */
-    distinct?: BackorderScalarFieldEnum | BackorderScalarFieldEnum[]
+    distinct?: ProductSuggestionScalarFieldEnum | ProductSuggestionScalarFieldEnum[]
   }
 
   /**
-   * Backorder findMany
+   * ProductSuggestion findMany
    */
-  export type BackorderFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
     /**
-     * Filter, which Backorders to fetch.
+     * Filter, which ProductSuggestions to fetch.
      */
-    where?: BackorderWhereInput
+    where?: ProductSuggestionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Backorders to fetch.
+     * Determine the order of ProductSuggestions to fetch.
      */
-    orderBy?: BackorderOrderByWithRelationInput | BackorderOrderByWithRelationInput[]
+    orderBy?: ProductSuggestionOrderByWithRelationInput | ProductSuggestionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Backorders.
+     * Sets the position for listing ProductSuggestions.
      */
-    cursor?: BackorderWhereUniqueInput
+    cursor?: ProductSuggestionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Backorders from the position of the cursor.
+     * Take `±n` ProductSuggestions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Backorders.
+     * Skip the first `n` ProductSuggestions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Backorders.
+     * Filter by unique combinations of ProductSuggestions.
      */
-    distinct?: BackorderScalarFieldEnum | BackorderScalarFieldEnum[]
+    distinct?: ProductSuggestionScalarFieldEnum | ProductSuggestionScalarFieldEnum[]
   }
 
   /**
-   * Backorder create
+   * ProductSuggestion create
    */
-  export type BackorderCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
     /**
-     * The data needed to create a Backorder.
+     * The data needed to create a ProductSuggestion.
      */
-    data: XOR<BackorderCreateInput, BackorderUncheckedCreateInput>
+    data: XOR<ProductSuggestionCreateInput, ProductSuggestionUncheckedCreateInput>
   }
 
   /**
-   * Backorder createMany
+   * ProductSuggestion createMany
    */
-  export type BackorderCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Backorders.
+     * The data used to create many ProductSuggestions.
      */
-    data: BackorderCreateManyInput | BackorderCreateManyInput[]
+    data: ProductSuggestionCreateManyInput | ProductSuggestionCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * Backorder createManyAndReturn
+   * ProductSuggestion createManyAndReturn
    */
-  export type BackorderCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelectCreateManyAndReturn<ExtArgs> | null
+    select?: ProductSuggestionSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
-     * The data used to create many Backorders.
+     * The data used to create many ProductSuggestions.
      */
-    data: BackorderCreateManyInput | BackorderCreateManyInput[]
+    data: ProductSuggestionCreateManyInput | ProductSuggestionCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: ProductSuggestionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Backorder update
+   * ProductSuggestion update
    */
-  export type BackorderUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
     /**
-     * The data needed to update a Backorder.
+     * The data needed to update a ProductSuggestion.
      */
-    data: XOR<BackorderUpdateInput, BackorderUncheckedUpdateInput>
+    data: XOR<ProductSuggestionUpdateInput, ProductSuggestionUncheckedUpdateInput>
     /**
-     * Choose, which Backorder to update.
+     * Choose, which ProductSuggestion to update.
      */
-    where: BackorderWhereUniqueInput
+    where: ProductSuggestionWhereUniqueInput
   }
 
   /**
-   * Backorder updateMany
+   * ProductSuggestion updateMany
    */
-  export type BackorderUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update Backorders.
+     * The data used to update ProductSuggestions.
      */
-    data: XOR<BackorderUpdateManyMutationInput, BackorderUncheckedUpdateManyInput>
+    data: XOR<ProductSuggestionUpdateManyMutationInput, ProductSuggestionUncheckedUpdateManyInput>
     /**
-     * Filter which Backorders to update
+     * Filter which ProductSuggestions to update
      */
-    where?: BackorderWhereInput
+    where?: ProductSuggestionWhereInput
     /**
-     * Limit how many Backorders to update.
+     * Limit how many ProductSuggestions to update.
      */
     limit?: number
   }
 
   /**
-   * Backorder updateManyAndReturn
+   * ProductSuggestion updateManyAndReturn
    */
-  export type BackorderUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: ProductSuggestionSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
-     * The data used to update Backorders.
+     * The data used to update ProductSuggestions.
      */
-    data: XOR<BackorderUpdateManyMutationInput, BackorderUncheckedUpdateManyInput>
+    data: XOR<ProductSuggestionUpdateManyMutationInput, ProductSuggestionUncheckedUpdateManyInput>
     /**
-     * Filter which Backorders to update
+     * Filter which ProductSuggestions to update
      */
-    where?: BackorderWhereInput
+    where?: ProductSuggestionWhereInput
     /**
-     * Limit how many Backorders to update.
+     * Limit how many ProductSuggestions to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: ProductSuggestionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Backorder upsert
+   * ProductSuggestion upsert
    */
-  export type BackorderUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
     /**
-     * The filter to search for the Backorder to update in case it exists.
+     * The filter to search for the ProductSuggestion to update in case it exists.
      */
-    where: BackorderWhereUniqueInput
+    where: ProductSuggestionWhereUniqueInput
     /**
-     * In case the Backorder found by the `where` argument doesn't exist, create a new Backorder with this data.
+     * In case the ProductSuggestion found by the `where` argument doesn't exist, create a new ProductSuggestion with this data.
      */
-    create: XOR<BackorderCreateInput, BackorderUncheckedCreateInput>
+    create: XOR<ProductSuggestionCreateInput, ProductSuggestionUncheckedCreateInput>
     /**
-     * In case the Backorder was found with the provided `where` argument, update it with this data.
+     * In case the ProductSuggestion was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<BackorderUpdateInput, BackorderUncheckedUpdateInput>
+    update: XOR<ProductSuggestionUpdateInput, ProductSuggestionUncheckedUpdateInput>
   }
 
   /**
-   * Backorder delete
+   * ProductSuggestion delete
    */
-  export type BackorderDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
     /**
-     * Filter which Backorder to delete.
+     * Filter which ProductSuggestion to delete.
      */
-    where: BackorderWhereUniqueInput
+    where: ProductSuggestionWhereUniqueInput
   }
 
   /**
-   * Backorder deleteMany
+   * ProductSuggestion deleteMany
    */
-  export type BackorderDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Backorders to delete
+     * Filter which ProductSuggestions to delete
      */
-    where?: BackorderWhereInput
+    where?: ProductSuggestionWhereInput
     /**
-     * Limit how many Backorders to delete.
+     * Limit how many ProductSuggestions to delete.
      */
     limit?: number
   }
 
   /**
-   * Backorder without action
+   * ProductSuggestion without action
    */
-  export type BackorderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductSuggestionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Backorder
+     * Select specific fields to fetch from the ProductSuggestion
      */
-    select?: BackorderSelect<ExtArgs> | null
+    select?: ProductSuggestionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Backorder
+     * Omit specific fields from the ProductSuggestion
      */
-    omit?: BackorderOmit<ExtArgs> | null
+    omit?: ProductSuggestionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BackorderInclude<ExtArgs> | null
+    include?: ProductSuggestionInclude<ExtArgs> | null
   }
 
 
@@ -36886,17 +36758,14 @@ export namespace Prisma {
   export type PriceListRequestScalarFieldEnum = (typeof PriceListRequestScalarFieldEnum)[keyof typeof PriceListRequestScalarFieldEnum]
 
 
-  export const BackorderScalarFieldEnum: {
+  export const ProductSuggestionScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
-    productId: 'productId',
-    quantity: 'quantity',
-    status: 'status',
-    note: 'note',
+    body: 'body',
     createdAt: 'createdAt'
   };
 
-  export type BackorderScalarFieldEnum = (typeof BackorderScalarFieldEnum)[keyof typeof BackorderScalarFieldEnum]
+  export type ProductSuggestionScalarFieldEnum = (typeof ProductSuggestionScalarFieldEnum)[keyof typeof ProductSuggestionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -37086,20 +36955,6 @@ export namespace Prisma {
    * Reference to a field of type 'MessageDirection[]'
    */
   export type ListEnumMessageDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageDirection[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'BackorderStatus'
-   */
-  export type EnumBackorderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackorderStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'BackorderStatus[]'
-   */
-  export type ListEnumBackorderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BackorderStatus[]'>
     
 
 
@@ -37316,7 +37171,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageListRelationFilter
     orderSurveys?: OrderSurveyListRelationFilter
     priceListRequests?: PriceListRequestListRelationFilter
-    backorders?: BackorderListRelationFilter
+    productSuggestions?: ProductSuggestionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -37345,7 +37200,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageOrderByRelationAggregateInput
     orderSurveys?: OrderSurveyOrderByRelationAggregateInput
     priceListRequests?: PriceListRequestOrderByRelationAggregateInput
-    backorders?: BackorderOrderByRelationAggregateInput
+    productSuggestions?: ProductSuggestionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -37377,7 +37232,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageListRelationFilter
     orderSurveys?: OrderSurveyListRelationFilter
     priceListRequests?: PriceListRequestListRelationFilter
-    backorders?: BackorderListRelationFilter
+    productSuggestions?: ProductSuggestionListRelationFilter
   }, "id" | "phoneNumber" | "partnerCode">
 
   export type UserOrderByWithAggregationInput = {
@@ -37927,7 +37782,6 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     wishlistedBy?: WishlistItemListRelationFilter
     comparedBy?: CompareItemListRelationFilter
-    backorders?: BackorderListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -37967,7 +37821,6 @@ export namespace Prisma {
     orderItems?: OrderItemOrderByRelationAggregateInput
     wishlistedBy?: WishlistItemOrderByRelationAggregateInput
     comparedBy?: CompareItemOrderByRelationAggregateInput
-    backorders?: BackorderOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -38010,7 +37863,6 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     wishlistedBy?: WishlistItemListRelationFilter
     comparedBy?: CompareItemListRelationFilter
-    backorders?: BackorderListRelationFilter
   }, "id" | "sku" | "accountancyId">
 
   export type ProductOrderByWithAggregationInput = {
@@ -39172,74 +39024,54 @@ export namespace Prisma {
     expiresAt?: DateTimeWithAggregatesFilter<"PriceListRequest"> | Date | string
   }
 
-  export type BackorderWhereInput = {
-    AND?: BackorderWhereInput | BackorderWhereInput[]
-    OR?: BackorderWhereInput[]
-    NOT?: BackorderWhereInput | BackorderWhereInput[]
-    id?: StringFilter<"Backorder"> | string
-    userId?: StringFilter<"Backorder"> | string
-    productId?: StringFilter<"Backorder"> | string
-    quantity?: IntFilter<"Backorder"> | number
-    status?: EnumBackorderStatusFilter<"Backorder"> | $Enums.BackorderStatus
-    note?: StringNullableFilter<"Backorder"> | string | null
-    createdAt?: DateTimeFilter<"Backorder"> | Date | string
+  export type ProductSuggestionWhereInput = {
+    AND?: ProductSuggestionWhereInput | ProductSuggestionWhereInput[]
+    OR?: ProductSuggestionWhereInput[]
+    NOT?: ProductSuggestionWhereInput | ProductSuggestionWhereInput[]
+    id?: StringFilter<"ProductSuggestion"> | string
+    userId?: StringFilter<"ProductSuggestion"> | string
+    body?: StringFilter<"ProductSuggestion"> | string
+    createdAt?: DateTimeFilter<"ProductSuggestion"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
   }
 
-  export type BackorderOrderByWithRelationInput = {
+  export type ProductSuggestionOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    productId?: SortOrder
-    quantity?: SortOrder
-    status?: SortOrder
-    note?: SortOrderInput | SortOrder
+    body?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
-    product?: ProductOrderByWithRelationInput
   }
 
-  export type BackorderWhereUniqueInput = Prisma.AtLeast<{
+  export type ProductSuggestionWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: BackorderWhereInput | BackorderWhereInput[]
-    OR?: BackorderWhereInput[]
-    NOT?: BackorderWhereInput | BackorderWhereInput[]
-    userId?: StringFilter<"Backorder"> | string
-    productId?: StringFilter<"Backorder"> | string
-    quantity?: IntFilter<"Backorder"> | number
-    status?: EnumBackorderStatusFilter<"Backorder"> | $Enums.BackorderStatus
-    note?: StringNullableFilter<"Backorder"> | string | null
-    createdAt?: DateTimeFilter<"Backorder"> | Date | string
+    AND?: ProductSuggestionWhereInput | ProductSuggestionWhereInput[]
+    OR?: ProductSuggestionWhereInput[]
+    NOT?: ProductSuggestionWhereInput | ProductSuggestionWhereInput[]
+    userId?: StringFilter<"ProductSuggestion"> | string
+    body?: StringFilter<"ProductSuggestion"> | string
+    createdAt?: DateTimeFilter<"ProductSuggestion"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
   }, "id">
 
-  export type BackorderOrderByWithAggregationInput = {
+  export type ProductSuggestionOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    productId?: SortOrder
-    quantity?: SortOrder
-    status?: SortOrder
-    note?: SortOrderInput | SortOrder
+    body?: SortOrder
     createdAt?: SortOrder
-    _count?: BackorderCountOrderByAggregateInput
-    _avg?: BackorderAvgOrderByAggregateInput
-    _max?: BackorderMaxOrderByAggregateInput
-    _min?: BackorderMinOrderByAggregateInput
-    _sum?: BackorderSumOrderByAggregateInput
+    _count?: ProductSuggestionCountOrderByAggregateInput
+    _max?: ProductSuggestionMaxOrderByAggregateInput
+    _min?: ProductSuggestionMinOrderByAggregateInput
   }
 
-  export type BackorderScalarWhereWithAggregatesInput = {
-    AND?: BackorderScalarWhereWithAggregatesInput | BackorderScalarWhereWithAggregatesInput[]
-    OR?: BackorderScalarWhereWithAggregatesInput[]
-    NOT?: BackorderScalarWhereWithAggregatesInput | BackorderScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Backorder"> | string
-    userId?: StringWithAggregatesFilter<"Backorder"> | string
-    productId?: StringWithAggregatesFilter<"Backorder"> | string
-    quantity?: IntWithAggregatesFilter<"Backorder"> | number
-    status?: EnumBackorderStatusWithAggregatesFilter<"Backorder"> | $Enums.BackorderStatus
-    note?: StringNullableWithAggregatesFilter<"Backorder"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Backorder"> | Date | string
+  export type ProductSuggestionScalarWhereWithAggregatesInput = {
+    AND?: ProductSuggestionScalarWhereWithAggregatesInput | ProductSuggestionScalarWhereWithAggregatesInput[]
+    OR?: ProductSuggestionScalarWhereWithAggregatesInput[]
+    NOT?: ProductSuggestionScalarWhereWithAggregatesInput | ProductSuggestionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProductSuggestion"> | string
+    userId?: StringWithAggregatesFilter<"ProductSuggestion"> | string
+    body?: StringWithAggregatesFilter<"ProductSuggestion"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ProductSuggestion"> | Date | string
   }
 
   export type ProvinceCreateInput = {
@@ -39427,7 +39259,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -39456,7 +39288,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -39485,7 +39317,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -39514,7 +39346,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -40086,7 +39918,6 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -40124,7 +39955,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -40162,7 +39992,6 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -40200,7 +40029,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -41412,71 +41240,51 @@ export namespace Prisma {
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type BackorderCreateInput = {
+  export type ProductSuggestionCreateInput = {
     id?: string
-    quantity?: number
-    status?: $Enums.BackorderStatus
-    note?: string | null
+    body: string
     createdAt?: Date | string
-    user: UserCreateNestedOneWithoutBackordersInput
-    product: ProductCreateNestedOneWithoutBackordersInput
+    user: UserCreateNestedOneWithoutProductSuggestionsInput
   }
 
-  export type BackorderUncheckedCreateInput = {
+  export type ProductSuggestionUncheckedCreateInput = {
     id?: string
     userId: string
-    productId: string
-    quantity?: number
-    status?: $Enums.BackorderStatus
-    note?: string | null
+    body: string
     createdAt?: Date | string
   }
 
-  export type BackorderUpdateInput = {
+  export type ProductSuggestionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutBackordersNestedInput
-    product?: ProductUpdateOneRequiredWithoutBackordersNestedInput
+    user?: UserUpdateOneRequiredWithoutProductSuggestionsNestedInput
   }
 
-  export type BackorderUncheckedUpdateInput = {
+  export type ProductSuggestionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    productId?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type BackorderCreateManyInput = {
+  export type ProductSuggestionCreateManyInput = {
     id?: string
     userId: string
-    productId: string
-    quantity?: number
-    status?: $Enums.BackorderStatus
-    note?: string | null
+    body: string
     createdAt?: Date | string
   }
 
-  export type BackorderUpdateManyMutationInput = {
+  export type ProductSuggestionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type BackorderUncheckedUpdateManyInput = {
+  export type ProductSuggestionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    productId?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -41802,10 +41610,10 @@ export namespace Prisma {
     none?: PriceListRequestWhereInput
   }
 
-  export type BackorderListRelationFilter = {
-    every?: BackorderWhereInput
-    some?: BackorderWhereInput
-    none?: BackorderWhereInput
+  export type ProductSuggestionListRelationFilter = {
+    every?: ProductSuggestionWhereInput
+    some?: ProductSuggestionWhereInput
+    none?: ProductSuggestionWhereInput
   }
 
   export type SortOrderInput = {
@@ -41845,7 +41653,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type BackorderOrderByRelationAggregateInput = {
+  export type ProductSuggestionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -43266,59 +43074,25 @@ export namespace Prisma {
     carModelIds?: SortOrder
   }
 
-  export type EnumBackorderStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.BackorderStatus | EnumBackorderStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.BackorderStatus[] | ListEnumBackorderStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.BackorderStatus[] | ListEnumBackorderStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumBackorderStatusFilter<$PrismaModel> | $Enums.BackorderStatus
-  }
-
-  export type BackorderCountOrderByAggregateInput = {
+  export type ProductSuggestionCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    productId?: SortOrder
-    quantity?: SortOrder
-    status?: SortOrder
-    note?: SortOrder
+    body?: SortOrder
     createdAt?: SortOrder
   }
 
-  export type BackorderAvgOrderByAggregateInput = {
-    quantity?: SortOrder
-  }
-
-  export type BackorderMaxOrderByAggregateInput = {
+  export type ProductSuggestionMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    productId?: SortOrder
-    quantity?: SortOrder
-    status?: SortOrder
-    note?: SortOrder
+    body?: SortOrder
     createdAt?: SortOrder
   }
 
-  export type BackorderMinOrderByAggregateInput = {
+  export type ProductSuggestionMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    productId?: SortOrder
-    quantity?: SortOrder
-    status?: SortOrder
-    note?: SortOrder
+    body?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type BackorderSumOrderByAggregateInput = {
-    quantity?: SortOrder
-  }
-
-  export type EnumBackorderStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.BackorderStatus | EnumBackorderStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.BackorderStatus[] | ListEnumBackorderStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.BackorderStatus[] | ListEnumBackorderStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumBackorderStatusWithAggregatesFilter<$PrismaModel> | $Enums.BackorderStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumBackorderStatusFilter<$PrismaModel>
-    _max?: NestedEnumBackorderStatusFilter<$PrismaModel>
   }
 
   export type CityCreateNestedManyWithoutProvinceInput = {
@@ -43508,11 +43282,11 @@ export namespace Prisma {
     connect?: PriceListRequestWhereUniqueInput | PriceListRequestWhereUniqueInput[]
   }
 
-  export type BackorderCreateNestedManyWithoutUserInput = {
-    create?: XOR<BackorderCreateWithoutUserInput, BackorderUncheckedCreateWithoutUserInput> | BackorderCreateWithoutUserInput[] | BackorderUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BackorderCreateOrConnectWithoutUserInput | BackorderCreateOrConnectWithoutUserInput[]
-    createMany?: BackorderCreateManyUserInputEnvelope
-    connect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
+  export type ProductSuggestionCreateNestedManyWithoutUserInput = {
+    create?: XOR<ProductSuggestionCreateWithoutUserInput, ProductSuggestionUncheckedCreateWithoutUserInput> | ProductSuggestionCreateWithoutUserInput[] | ProductSuggestionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProductSuggestionCreateOrConnectWithoutUserInput | ProductSuggestionCreateOrConnectWithoutUserInput[]
+    createMany?: ProductSuggestionCreateManyUserInputEnvelope
+    connect?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
   }
 
   export type AddressUncheckedCreateNestedManyWithoutUserInput = {
@@ -43584,11 +43358,11 @@ export namespace Prisma {
     connect?: PriceListRequestWhereUniqueInput | PriceListRequestWhereUniqueInput[]
   }
 
-  export type BackorderUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<BackorderCreateWithoutUserInput, BackorderUncheckedCreateWithoutUserInput> | BackorderCreateWithoutUserInput[] | BackorderUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BackorderCreateOrConnectWithoutUserInput | BackorderCreateOrConnectWithoutUserInput[]
-    createMany?: BackorderCreateManyUserInputEnvelope
-    connect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
+  export type ProductSuggestionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ProductSuggestionCreateWithoutUserInput, ProductSuggestionUncheckedCreateWithoutUserInput> | ProductSuggestionCreateWithoutUserInput[] | ProductSuggestionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProductSuggestionCreateOrConnectWithoutUserInput | ProductSuggestionCreateOrConnectWithoutUserInput[]
+    createMany?: ProductSuggestionCreateManyUserInputEnvelope
+    connect?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
   }
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -43747,18 +43521,18 @@ export namespace Prisma {
     deleteMany?: PriceListRequestScalarWhereInput | PriceListRequestScalarWhereInput[]
   }
 
-  export type BackorderUpdateManyWithoutUserNestedInput = {
-    create?: XOR<BackorderCreateWithoutUserInput, BackorderUncheckedCreateWithoutUserInput> | BackorderCreateWithoutUserInput[] | BackorderUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BackorderCreateOrConnectWithoutUserInput | BackorderCreateOrConnectWithoutUserInput[]
-    upsert?: BackorderUpsertWithWhereUniqueWithoutUserInput | BackorderUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: BackorderCreateManyUserInputEnvelope
-    set?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    disconnect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    delete?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    connect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    update?: BackorderUpdateWithWhereUniqueWithoutUserInput | BackorderUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: BackorderUpdateManyWithWhereWithoutUserInput | BackorderUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: BackorderScalarWhereInput | BackorderScalarWhereInput[]
+  export type ProductSuggestionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ProductSuggestionCreateWithoutUserInput, ProductSuggestionUncheckedCreateWithoutUserInput> | ProductSuggestionCreateWithoutUserInput[] | ProductSuggestionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProductSuggestionCreateOrConnectWithoutUserInput | ProductSuggestionCreateOrConnectWithoutUserInput[]
+    upsert?: ProductSuggestionUpsertWithWhereUniqueWithoutUserInput | ProductSuggestionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ProductSuggestionCreateManyUserInputEnvelope
+    set?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
+    disconnect?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
+    delete?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
+    connect?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
+    update?: ProductSuggestionUpdateWithWhereUniqueWithoutUserInput | ProductSuggestionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ProductSuggestionUpdateManyWithWhereWithoutUserInput | ProductSuggestionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProductSuggestionScalarWhereInput | ProductSuggestionScalarWhereInput[]
   }
 
   export type AddressUncheckedUpdateManyWithoutUserNestedInput = {
@@ -43897,18 +43671,18 @@ export namespace Prisma {
     deleteMany?: PriceListRequestScalarWhereInput | PriceListRequestScalarWhereInput[]
   }
 
-  export type BackorderUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<BackorderCreateWithoutUserInput, BackorderUncheckedCreateWithoutUserInput> | BackorderCreateWithoutUserInput[] | BackorderUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BackorderCreateOrConnectWithoutUserInput | BackorderCreateOrConnectWithoutUserInput[]
-    upsert?: BackorderUpsertWithWhereUniqueWithoutUserInput | BackorderUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: BackorderCreateManyUserInputEnvelope
-    set?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    disconnect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    delete?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    connect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    update?: BackorderUpdateWithWhereUniqueWithoutUserInput | BackorderUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: BackorderUpdateManyWithWhereWithoutUserInput | BackorderUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: BackorderScalarWhereInput | BackorderScalarWhereInput[]
+  export type ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ProductSuggestionCreateWithoutUserInput, ProductSuggestionUncheckedCreateWithoutUserInput> | ProductSuggestionCreateWithoutUserInput[] | ProductSuggestionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProductSuggestionCreateOrConnectWithoutUserInput | ProductSuggestionCreateOrConnectWithoutUserInput[]
+    upsert?: ProductSuggestionUpsertWithWhereUniqueWithoutUserInput | ProductSuggestionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ProductSuggestionCreateManyUserInputEnvelope
+    set?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
+    disconnect?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
+    delete?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
+    connect?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
+    update?: ProductSuggestionUpdateWithWhereUniqueWithoutUserInput | ProductSuggestionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ProductSuggestionUpdateManyWithWhereWithoutUserInput | ProductSuggestionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProductSuggestionScalarWhereInput | ProductSuggestionScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -44246,13 +44020,6 @@ export namespace Prisma {
     connect?: CompareItemWhereUniqueInput | CompareItemWhereUniqueInput[]
   }
 
-  export type BackorderCreateNestedManyWithoutProductInput = {
-    create?: XOR<BackorderCreateWithoutProductInput, BackorderUncheckedCreateWithoutProductInput> | BackorderCreateWithoutProductInput[] | BackorderUncheckedCreateWithoutProductInput[]
-    connectOrCreate?: BackorderCreateOrConnectWithoutProductInput | BackorderCreateOrConnectWithoutProductInput[]
-    createMany?: BackorderCreateManyProductInputEnvelope
-    connect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-  }
-
   export type ProductImageUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput> | ProductImageCreateWithoutProductInput[] | ProductImageUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductImageCreateOrConnectWithoutProductInput | ProductImageCreateOrConnectWithoutProductInput[]
@@ -44300,13 +44067,6 @@ export namespace Prisma {
     connectOrCreate?: CompareItemCreateOrConnectWithoutProductInput | CompareItemCreateOrConnectWithoutProductInput[]
     createMany?: CompareItemCreateManyProductInputEnvelope
     connect?: CompareItemWhereUniqueInput | CompareItemWhereUniqueInput[]
-  }
-
-  export type BackorderUncheckedCreateNestedManyWithoutProductInput = {
-    create?: XOR<BackorderCreateWithoutProductInput, BackorderUncheckedCreateWithoutProductInput> | BackorderCreateWithoutProductInput[] | BackorderUncheckedCreateWithoutProductInput[]
-    connectOrCreate?: BackorderCreateOrConnectWithoutProductInput | BackorderCreateOrConnectWithoutProductInput[]
-    createMany?: BackorderCreateManyProductInputEnvelope
-    connect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
   }
 
   export type DecimalFieldUpdateOperationsInput = {
@@ -44431,20 +44191,6 @@ export namespace Prisma {
     deleteMany?: CompareItemScalarWhereInput | CompareItemScalarWhereInput[]
   }
 
-  export type BackorderUpdateManyWithoutProductNestedInput = {
-    create?: XOR<BackorderCreateWithoutProductInput, BackorderUncheckedCreateWithoutProductInput> | BackorderCreateWithoutProductInput[] | BackorderUncheckedCreateWithoutProductInput[]
-    connectOrCreate?: BackorderCreateOrConnectWithoutProductInput | BackorderCreateOrConnectWithoutProductInput[]
-    upsert?: BackorderUpsertWithWhereUniqueWithoutProductInput | BackorderUpsertWithWhereUniqueWithoutProductInput[]
-    createMany?: BackorderCreateManyProductInputEnvelope
-    set?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    disconnect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    delete?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    connect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    update?: BackorderUpdateWithWhereUniqueWithoutProductInput | BackorderUpdateWithWhereUniqueWithoutProductInput[]
-    updateMany?: BackorderUpdateManyWithWhereWithoutProductInput | BackorderUpdateManyWithWhereWithoutProductInput[]
-    deleteMany?: BackorderScalarWhereInput | BackorderScalarWhereInput[]
-  }
-
   export type ProductImageUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput> | ProductImageCreateWithoutProductInput[] | ProductImageUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductImageCreateOrConnectWithoutProductInput | ProductImageCreateOrConnectWithoutProductInput[]
@@ -44541,20 +44287,6 @@ export namespace Prisma {
     update?: CompareItemUpdateWithWhereUniqueWithoutProductInput | CompareItemUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: CompareItemUpdateManyWithWhereWithoutProductInput | CompareItemUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: CompareItemScalarWhereInput | CompareItemScalarWhereInput[]
-  }
-
-  export type BackorderUncheckedUpdateManyWithoutProductNestedInput = {
-    create?: XOR<BackorderCreateWithoutProductInput, BackorderUncheckedCreateWithoutProductInput> | BackorderCreateWithoutProductInput[] | BackorderUncheckedCreateWithoutProductInput[]
-    connectOrCreate?: BackorderCreateOrConnectWithoutProductInput | BackorderCreateOrConnectWithoutProductInput[]
-    upsert?: BackorderUpsertWithWhereUniqueWithoutProductInput | BackorderUpsertWithWhereUniqueWithoutProductInput[]
-    createMany?: BackorderCreateManyProductInputEnvelope
-    set?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    disconnect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    delete?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    connect?: BackorderWhereUniqueInput | BackorderWhereUniqueInput[]
-    update?: BackorderUpdateWithWhereUniqueWithoutProductInput | BackorderUpdateWithWhereUniqueWithoutProductInput[]
-    updateMany?: BackorderUpdateManyWithWhereWithoutProductInput | BackorderUpdateManyWithWhereWithoutProductInput[]
-    deleteMany?: BackorderScalarWhereInput | BackorderScalarWhereInput[]
   }
 
   export type ProductCreateNestedOneWithoutImagesInput = {
@@ -45093,36 +44825,18 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPriceListRequestsInput, UserUpdateWithoutPriceListRequestsInput>, UserUncheckedUpdateWithoutPriceListRequestsInput>
   }
 
-  export type UserCreateNestedOneWithoutBackordersInput = {
-    create?: XOR<UserCreateWithoutBackordersInput, UserUncheckedCreateWithoutBackordersInput>
-    connectOrCreate?: UserCreateOrConnectWithoutBackordersInput
+  export type UserCreateNestedOneWithoutProductSuggestionsInput = {
+    create?: XOR<UserCreateWithoutProductSuggestionsInput, UserUncheckedCreateWithoutProductSuggestionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProductSuggestionsInput
     connect?: UserWhereUniqueInput
   }
 
-  export type ProductCreateNestedOneWithoutBackordersInput = {
-    create?: XOR<ProductCreateWithoutBackordersInput, ProductUncheckedCreateWithoutBackordersInput>
-    connectOrCreate?: ProductCreateOrConnectWithoutBackordersInput
-    connect?: ProductWhereUniqueInput
-  }
-
-  export type EnumBackorderStatusFieldUpdateOperationsInput = {
-    set?: $Enums.BackorderStatus
-  }
-
-  export type UserUpdateOneRequiredWithoutBackordersNestedInput = {
-    create?: XOR<UserCreateWithoutBackordersInput, UserUncheckedCreateWithoutBackordersInput>
-    connectOrCreate?: UserCreateOrConnectWithoutBackordersInput
-    upsert?: UserUpsertWithoutBackordersInput
+  export type UserUpdateOneRequiredWithoutProductSuggestionsNestedInput = {
+    create?: XOR<UserCreateWithoutProductSuggestionsInput, UserUncheckedCreateWithoutProductSuggestionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProductSuggestionsInput
+    upsert?: UserUpsertWithoutProductSuggestionsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBackordersInput, UserUpdateWithoutBackordersInput>, UserUncheckedUpdateWithoutBackordersInput>
-  }
-
-  export type ProductUpdateOneRequiredWithoutBackordersNestedInput = {
-    create?: XOR<ProductCreateWithoutBackordersInput, ProductUncheckedCreateWithoutBackordersInput>
-    connectOrCreate?: ProductCreateOrConnectWithoutBackordersInput
-    upsert?: ProductUpsertWithoutBackordersInput
-    connect?: ProductWhereUniqueInput
-    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutBackordersInput, ProductUpdateWithoutBackordersInput>, ProductUncheckedUpdateWithoutBackordersInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProductSuggestionsInput, UserUpdateWithoutProductSuggestionsInput>, UserUncheckedUpdateWithoutProductSuggestionsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -45507,23 +45221,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMessageDirectionFilter<$PrismaModel>
     _max?: NestedEnumMessageDirectionFilter<$PrismaModel>
-  }
-
-  export type NestedEnumBackorderStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.BackorderStatus | EnumBackorderStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.BackorderStatus[] | ListEnumBackorderStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.BackorderStatus[] | ListEnumBackorderStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumBackorderStatusFilter<$PrismaModel> | $Enums.BackorderStatus
-  }
-
-  export type NestedEnumBackorderStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.BackorderStatus | EnumBackorderStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.BackorderStatus[] | ListEnumBackorderStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.BackorderStatus[] | ListEnumBackorderStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumBackorderStatusWithAggregatesFilter<$PrismaModel> | $Enums.BackorderStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumBackorderStatusFilter<$PrismaModel>
-    _max?: NestedEnumBackorderStatusFilter<$PrismaModel>
   }
 
   export type CityCreateWithoutProvinceInput = {
@@ -45982,31 +45679,25 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type BackorderCreateWithoutUserInput = {
+  export type ProductSuggestionCreateWithoutUserInput = {
     id?: string
-    quantity?: number
-    status?: $Enums.BackorderStatus
-    note?: string | null
-    createdAt?: Date | string
-    product: ProductCreateNestedOneWithoutBackordersInput
-  }
-
-  export type BackorderUncheckedCreateWithoutUserInput = {
-    id?: string
-    productId: string
-    quantity?: number
-    status?: $Enums.BackorderStatus
-    note?: string | null
+    body: string
     createdAt?: Date | string
   }
 
-  export type BackorderCreateOrConnectWithoutUserInput = {
-    where: BackorderWhereUniqueInput
-    create: XOR<BackorderCreateWithoutUserInput, BackorderUncheckedCreateWithoutUserInput>
+  export type ProductSuggestionUncheckedCreateWithoutUserInput = {
+    id?: string
+    body: string
+    createdAt?: Date | string
   }
 
-  export type BackorderCreateManyUserInputEnvelope = {
-    data: BackorderCreateManyUserInput | BackorderCreateManyUserInput[]
+  export type ProductSuggestionCreateOrConnectWithoutUserInput = {
+    where: ProductSuggestionWhereUniqueInput
+    create: XOR<ProductSuggestionCreateWithoutUserInput, ProductSuggestionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProductSuggestionCreateManyUserInputEnvelope = {
+    data: ProductSuggestionCreateManyUserInput | ProductSuggestionCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -46297,33 +45988,30 @@ export namespace Prisma {
     expiresAt?: DateTimeFilter<"PriceListRequest"> | Date | string
   }
 
-  export type BackorderUpsertWithWhereUniqueWithoutUserInput = {
-    where: BackorderWhereUniqueInput
-    update: XOR<BackorderUpdateWithoutUserInput, BackorderUncheckedUpdateWithoutUserInput>
-    create: XOR<BackorderCreateWithoutUserInput, BackorderUncheckedCreateWithoutUserInput>
+  export type ProductSuggestionUpsertWithWhereUniqueWithoutUserInput = {
+    where: ProductSuggestionWhereUniqueInput
+    update: XOR<ProductSuggestionUpdateWithoutUserInput, ProductSuggestionUncheckedUpdateWithoutUserInput>
+    create: XOR<ProductSuggestionCreateWithoutUserInput, ProductSuggestionUncheckedCreateWithoutUserInput>
   }
 
-  export type BackorderUpdateWithWhereUniqueWithoutUserInput = {
-    where: BackorderWhereUniqueInput
-    data: XOR<BackorderUpdateWithoutUserInput, BackorderUncheckedUpdateWithoutUserInput>
+  export type ProductSuggestionUpdateWithWhereUniqueWithoutUserInput = {
+    where: ProductSuggestionWhereUniqueInput
+    data: XOR<ProductSuggestionUpdateWithoutUserInput, ProductSuggestionUncheckedUpdateWithoutUserInput>
   }
 
-  export type BackorderUpdateManyWithWhereWithoutUserInput = {
-    where: BackorderScalarWhereInput
-    data: XOR<BackorderUpdateManyMutationInput, BackorderUncheckedUpdateManyWithoutUserInput>
+  export type ProductSuggestionUpdateManyWithWhereWithoutUserInput = {
+    where: ProductSuggestionScalarWhereInput
+    data: XOR<ProductSuggestionUpdateManyMutationInput, ProductSuggestionUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type BackorderScalarWhereInput = {
-    AND?: BackorderScalarWhereInput | BackorderScalarWhereInput[]
-    OR?: BackorderScalarWhereInput[]
-    NOT?: BackorderScalarWhereInput | BackorderScalarWhereInput[]
-    id?: StringFilter<"Backorder"> | string
-    userId?: StringFilter<"Backorder"> | string
-    productId?: StringFilter<"Backorder"> | string
-    quantity?: IntFilter<"Backorder"> | number
-    status?: EnumBackorderStatusFilter<"Backorder"> | $Enums.BackorderStatus
-    note?: StringNullableFilter<"Backorder"> | string | null
-    createdAt?: DateTimeFilter<"Backorder"> | Date | string
+  export type ProductSuggestionScalarWhereInput = {
+    AND?: ProductSuggestionScalarWhereInput | ProductSuggestionScalarWhereInput[]
+    OR?: ProductSuggestionScalarWhereInput[]
+    NOT?: ProductSuggestionScalarWhereInput | ProductSuggestionScalarWhereInput[]
+    id?: StringFilter<"ProductSuggestion"> | string
+    userId?: StringFilter<"ProductSuggestion"> | string
+    body?: StringFilter<"ProductSuggestion"> | string
+    createdAt?: DateTimeFilter<"ProductSuggestion"> | Date | string
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -46351,7 +46039,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -46379,7 +46067,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -46423,7 +46111,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -46451,7 +46139,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAddressesInput = {
@@ -46479,7 +46167,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAddressesInput = {
@@ -46507,7 +46195,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAddressesInput = {
@@ -46639,7 +46327,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAddressesInput = {
@@ -46667,7 +46355,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CityUpsertWithoutAddressesInput = {
@@ -46904,7 +46592,6 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutPartsBrandInput = {
@@ -46941,7 +46628,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPartsBrandInput = {
@@ -47037,7 +46723,6 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -47074,7 +46759,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -47323,34 +47007,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type BackorderCreateWithoutProductInput = {
-    id?: string
-    quantity?: number
-    status?: $Enums.BackorderStatus
-    note?: string | null
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutBackordersInput
-  }
-
-  export type BackorderUncheckedCreateWithoutProductInput = {
-    id?: string
-    userId: string
-    quantity?: number
-    status?: $Enums.BackorderStatus
-    note?: string | null
-    createdAt?: Date | string
-  }
-
-  export type BackorderCreateOrConnectWithoutProductInput = {
-    where: BackorderWhereUniqueInput
-    create: XOR<BackorderCreateWithoutProductInput, BackorderUncheckedCreateWithoutProductInput>
-  }
-
-  export type BackorderCreateManyProductInputEnvelope = {
-    data: BackorderCreateManyProductInput | BackorderCreateManyProductInput[]
-    skipDuplicates?: boolean
-  }
-
   export type PartsBrandUpsertWithoutProductsInput = {
     update: XOR<PartsBrandUpdateWithoutProductsInput, PartsBrandUncheckedUpdateWithoutProductsInput>
     create: XOR<PartsBrandCreateWithoutProductsInput, PartsBrandUncheckedCreateWithoutProductsInput>
@@ -47558,22 +47214,6 @@ export namespace Prisma {
     data: XOR<CompareItemUpdateManyMutationInput, CompareItemUncheckedUpdateManyWithoutProductInput>
   }
 
-  export type BackorderUpsertWithWhereUniqueWithoutProductInput = {
-    where: BackorderWhereUniqueInput
-    update: XOR<BackorderUpdateWithoutProductInput, BackorderUncheckedUpdateWithoutProductInput>
-    create: XOR<BackorderCreateWithoutProductInput, BackorderUncheckedCreateWithoutProductInput>
-  }
-
-  export type BackorderUpdateWithWhereUniqueWithoutProductInput = {
-    where: BackorderWhereUniqueInput
-    data: XOR<BackorderUpdateWithoutProductInput, BackorderUncheckedUpdateWithoutProductInput>
-  }
-
-  export type BackorderUpdateManyWithWhereWithoutProductInput = {
-    where: BackorderScalarWhereInput
-    data: XOR<BackorderUpdateManyMutationInput, BackorderUncheckedUpdateManyWithoutProductInput>
-  }
-
   export type ProductCreateWithoutImagesInput = {
     id?: string
     sku: string
@@ -47608,7 +47248,6 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutImagesInput = {
@@ -47645,7 +47284,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutImagesInput = {
@@ -47698,7 +47336,6 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -47735,7 +47372,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutCompatibilitiesInput = {
@@ -47772,7 +47408,6 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCompatibilitiesInput = {
@@ -47809,7 +47444,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCompatibilitiesInput = {
@@ -47888,7 +47522,6 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCompatibilitiesInput = {
@@ -47925,7 +47558,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CarModelUpsertWithoutCompatibilitiesInput = {
@@ -47994,7 +47626,6 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutReviewsInput = {
@@ -48031,7 +47662,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutReviewsInput = {
@@ -48064,7 +47694,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -48092,7 +47722,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -48145,7 +47775,6 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutReviewsInput = {
@@ -48182,7 +47811,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -48221,7 +47849,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -48249,7 +47877,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutCartInput = {
@@ -48277,7 +47905,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCartInput = {
@@ -48305,7 +47933,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCartInput = {
@@ -48373,7 +48001,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCartInput = {
@@ -48401,7 +48029,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CartItemUpsertWithWhereUniqueWithoutCartInput = {
@@ -48473,7 +48101,6 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCartItemsInput = {
@@ -48510,7 +48137,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCartItemsInput = {
@@ -48588,7 +48214,6 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCartItemsInput = {
@@ -48625,7 +48250,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutWishlistInput = {
@@ -48653,7 +48277,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWishlistInput = {
@@ -48681,7 +48305,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWishlistInput = {
@@ -48723,7 +48347,6 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutWishlistedByInput = {
@@ -48760,7 +48383,6 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutWishlistedByInput = {
@@ -48804,7 +48426,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWishlistInput = {
@@ -48832,7 +48454,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutWishlistedByInput = {
@@ -48880,7 +48502,6 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutWishlistedByInput = {
@@ -48917,7 +48538,6 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutCompareItemsInput = {
@@ -48945,7 +48565,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompareItemsInput = {
@@ -48973,7 +48593,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompareItemsInput = {
@@ -49015,7 +48635,6 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutComparedByInput = {
@@ -49052,7 +48671,6 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutComparedByInput = {
@@ -49096,7 +48714,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompareItemsInput = {
@@ -49124,7 +48742,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutComparedByInput = {
@@ -49172,7 +48790,6 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutComparedByInput = {
@@ -49209,7 +48826,6 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutShippingOptionInput = {
@@ -49323,7 +48939,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -49351,7 +48967,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -49506,7 +49122,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -49534,7 +49150,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AddressUpsertWithoutOrdersInput = {
@@ -49749,7 +49365,6 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-    backorders?: BackorderCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -49786,7 +49401,6 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -49909,7 +49523,6 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -49946,7 +49559,6 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutSupportMessagesInput = {
@@ -49974,7 +49586,7 @@ export namespace Prisma {
     compareItems?: CompareItemCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSupportMessagesInput = {
@@ -50002,7 +49614,7 @@ export namespace Prisma {
     compareItems?: CompareItemUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSupportMessagesInput = {
@@ -50046,7 +49658,7 @@ export namespace Prisma {
     compareItems?: CompareItemUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSupportMessagesInput = {
@@ -50074,7 +49686,7 @@ export namespace Prisma {
     compareItems?: CompareItemUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutSurveyInput = {
@@ -50167,7 +49779,7 @@ export namespace Prisma {
     compareItems?: CompareItemCreateNestedManyWithoutUserInput
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrderSurveysInput = {
@@ -50195,7 +49807,7 @@ export namespace Prisma {
     compareItems?: CompareItemUncheckedCreateNestedManyWithoutUserInput
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrderSurveysInput = {
@@ -50309,7 +49921,7 @@ export namespace Prisma {
     compareItems?: CompareItemUpdateManyWithoutUserNestedInput
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrderSurveysInput = {
@@ -50337,7 +49949,7 @@ export namespace Prisma {
     compareItems?: CompareItemUncheckedUpdateManyWithoutUserNestedInput
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPriceListRequestsInput = {
@@ -50365,7 +49977,7 @@ export namespace Prisma {
     compareItems?: CompareItemCreateNestedManyWithoutUserInput
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
-    backorders?: BackorderCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPriceListRequestsInput = {
@@ -50393,7 +50005,7 @@ export namespace Prisma {
     compareItems?: CompareItemUncheckedCreateNestedManyWithoutUserInput
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
-    backorders?: BackorderUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPriceListRequestsInput = {
@@ -50437,7 +50049,7 @@ export namespace Prisma {
     compareItems?: CompareItemUpdateManyWithoutUserNestedInput
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPriceListRequestsInput = {
@@ -50465,10 +50077,10 @@ export namespace Prisma {
     compareItems?: CompareItemUncheckedUpdateManyWithoutUserNestedInput
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type UserCreateWithoutBackordersInput = {
+  export type UserCreateWithoutProductSuggestionsInput = {
     id?: string
     phoneNumber: string
     firstName: string
@@ -50496,7 +50108,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutBackordersInput = {
+  export type UserUncheckedCreateWithoutProductSuggestionsInput = {
     id?: string
     phoneNumber: string
     firstName: string
@@ -50524,102 +50136,23 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutBackordersInput = {
+  export type UserCreateOrConnectWithoutProductSuggestionsInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutBackordersInput, UserUncheckedCreateWithoutBackordersInput>
+    create: XOR<UserCreateWithoutProductSuggestionsInput, UserUncheckedCreateWithoutProductSuggestionsInput>
   }
 
-  export type ProductCreateWithoutBackordersInput = {
-    id?: string
-    sku: string
-    name: string
-    wholesalePrice: bigint | number
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
-    retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
-    retailDiscountPct?: Decimal | DecimalJsLike | number | string
-    isOffer?: boolean
-    accountancyId?: string | null
-    lastSyncedAt?: Date | string | null
-    stock?: number
-    origin?: string | null
-    packQuantity?: number
-    cartonQuantity?: number
-    isOriginal?: boolean
-    mainImage?: string | null
-    description?: string | null
-    searchText?: string | null
-    viewCount?: number
-    saleCount?: number
-    ratingAvg?: Decimal | DecimalJsLike | number | string
-    reviewCount?: number
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    partsBrand: PartsBrandCreateNestedOneWithoutProductsInput
-    category: CategoryCreateNestedOneWithoutProductsInput
-    images?: ProductImageCreateNestedManyWithoutProductInput
-    compatibilities?: ProductCompatibilityCreateNestedManyWithoutProductInput
-    reviews?: ReviewCreateNestedManyWithoutProductInput
-    cartItems?: CartItemCreateNestedManyWithoutProductInput
-    orderItems?: OrderItemCreateNestedManyWithoutProductInput
-    wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
-    comparedBy?: CompareItemCreateNestedManyWithoutProductInput
-  }
-
-  export type ProductUncheckedCreateWithoutBackordersInput = {
-    id?: string
-    sku: string
-    name: string
-    partsBrandId: number
-    categoryId: number
-    wholesalePrice: bigint | number
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
-    retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
-    retailDiscountPct?: Decimal | DecimalJsLike | number | string
-    isOffer?: boolean
-    accountancyId?: string | null
-    lastSyncedAt?: Date | string | null
-    stock?: number
-    origin?: string | null
-    packQuantity?: number
-    cartonQuantity?: number
-    isOriginal?: boolean
-    mainImage?: string | null
-    description?: string | null
-    searchText?: string | null
-    viewCount?: number
-    saleCount?: number
-    ratingAvg?: Decimal | DecimalJsLike | number | string
-    reviewCount?: number
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
-    compatibilities?: ProductCompatibilityUncheckedCreateNestedManyWithoutProductInput
-    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
-    cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
-    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
-    wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
-    comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
-  }
-
-  export type ProductCreateOrConnectWithoutBackordersInput = {
-    where: ProductWhereUniqueInput
-    create: XOR<ProductCreateWithoutBackordersInput, ProductUncheckedCreateWithoutBackordersInput>
-  }
-
-  export type UserUpsertWithoutBackordersInput = {
-    update: XOR<UserUpdateWithoutBackordersInput, UserUncheckedUpdateWithoutBackordersInput>
-    create: XOR<UserCreateWithoutBackordersInput, UserUncheckedCreateWithoutBackordersInput>
+  export type UserUpsertWithoutProductSuggestionsInput = {
+    update: XOR<UserUpdateWithoutProductSuggestionsInput, UserUncheckedUpdateWithoutProductSuggestionsInput>
+    create: XOR<UserCreateWithoutProductSuggestionsInput, UserUncheckedCreateWithoutProductSuggestionsInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutBackordersInput = {
+  export type UserUpdateToOneWithWhereWithoutProductSuggestionsInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutBackordersInput, UserUncheckedUpdateWithoutBackordersInput>
+    data: XOR<UserUpdateWithoutProductSuggestionsInput, UserUncheckedUpdateWithoutProductSuggestionsInput>
   }
 
-  export type UserUpdateWithoutBackordersInput = {
+  export type UserUpdateWithoutProductSuggestionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -50647,7 +50180,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutBackordersInput = {
+  export type UserUncheckedUpdateWithoutProductSuggestionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -50673,91 +50206,6 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type ProductUpsertWithoutBackordersInput = {
-    update: XOR<ProductUpdateWithoutBackordersInput, ProductUncheckedUpdateWithoutBackordersInput>
-    create: XOR<ProductCreateWithoutBackordersInput, ProductUncheckedCreateWithoutBackordersInput>
-    where?: ProductWhereInput
-  }
-
-  export type ProductUpdateToOneWithWhereWithoutBackordersInput = {
-    where?: ProductWhereInput
-    data: XOR<ProductUpdateWithoutBackordersInput, ProductUncheckedUpdateWithoutBackordersInput>
-  }
-
-  export type ProductUpdateWithoutBackordersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    sku?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
-    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    stock?: IntFieldUpdateOperationsInput | number
-    origin?: NullableStringFieldUpdateOperationsInput | string | null
-    packQuantity?: IntFieldUpdateOperationsInput | number
-    cartonQuantity?: IntFieldUpdateOperationsInput | number
-    isOriginal?: BoolFieldUpdateOperationsInput | boolean
-    mainImage?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    searchText?: NullableStringFieldUpdateOperationsInput | string | null
-    viewCount?: IntFieldUpdateOperationsInput | number
-    saleCount?: IntFieldUpdateOperationsInput | number
-    ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    reviewCount?: IntFieldUpdateOperationsInput | number
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    partsBrand?: PartsBrandUpdateOneRequiredWithoutProductsNestedInput
-    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
-    images?: ProductImageUpdateManyWithoutProductNestedInput
-    compatibilities?: ProductCompatibilityUpdateManyWithoutProductNestedInput
-    reviews?: ReviewUpdateManyWithoutProductNestedInput
-    cartItems?: CartItemUpdateManyWithoutProductNestedInput
-    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
-    wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
-    comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-  }
-
-  export type ProductUncheckedUpdateWithoutBackordersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    sku?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    partsBrandId?: IntFieldUpdateOperationsInput | number
-    categoryId?: IntFieldUpdateOperationsInput | number
-    wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
-    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    stock?: IntFieldUpdateOperationsInput | number
-    origin?: NullableStringFieldUpdateOperationsInput | string | null
-    packQuantity?: IntFieldUpdateOperationsInput | number
-    cartonQuantity?: IntFieldUpdateOperationsInput | number
-    isOriginal?: BoolFieldUpdateOperationsInput | boolean
-    mainImage?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    searchText?: NullableStringFieldUpdateOperationsInput | string | null
-    viewCount?: IntFieldUpdateOperationsInput | number
-    saleCount?: IntFieldUpdateOperationsInput | number
-    ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    reviewCount?: IntFieldUpdateOperationsInput | number
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
-    compatibilities?: ProductCompatibilityUncheckedUpdateManyWithoutProductNestedInput
-    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
-    cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
-    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
-    wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
-    comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CityCreateManyProvinceInput = {
@@ -50923,12 +50371,9 @@ export namespace Prisma {
     expiresAt: Date | string
   }
 
-  export type BackorderCreateManyUserInput = {
+  export type ProductSuggestionCreateManyUserInput = {
     id?: string
-    productId: string
-    quantity?: number
-    status?: $Enums.BackorderStatus
-    note?: string | null
+    body: string
     createdAt?: Date | string
   }
 
@@ -51225,30 +50670,21 @@ export namespace Prisma {
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type BackorderUpdateWithoutUserInput = {
+  export type ProductSuggestionUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    product?: ProductUpdateOneRequiredWithoutBackordersNestedInput
-  }
-
-  export type BackorderUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    productId?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type BackorderUncheckedUpdateManyWithoutUserInput = {
+  export type ProductSuggestionUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    productId?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductSuggestionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -51491,7 +50927,6 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPartsBrandInput = {
@@ -51528,7 +50963,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutPartsBrandInput = {
@@ -51623,7 +51057,6 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -51660,7 +51093,6 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
-    backorders?: BackorderUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -51741,15 +51173,6 @@ export namespace Prisma {
   export type CompareItemCreateManyProductInput = {
     id?: string
     userId: string
-    createdAt?: Date | string
-  }
-
-  export type BackorderCreateManyProductInput = {
-    id?: string
-    userId: string
-    quantity?: number
-    status?: $Enums.BackorderStatus
-    note?: string | null
     createdAt?: Date | string
   }
 
@@ -51906,33 +51329,6 @@ export namespace Prisma {
   export type CompareItemUncheckedUpdateManyWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BackorderUpdateWithoutProductInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutBackordersNestedInput
-  }
-
-  export type BackorderUncheckedUpdateWithoutProductInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BackorderUncheckedUpdateManyWithoutProductInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    status?: EnumBackorderStatusFieldUpdateOperationsInput | $Enums.BackorderStatus
-    note?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -4,7 +4,7 @@
  * Partner dashboard stats Server Action.
  * ──────────────────────────────────────
  * One read that powers every card on the dashboard home: ledger balance, order
- * counts by lifecycle bucket, cart size, backorders, favorites and a pointer to
+ * counts by lifecycle bucket, cart size, favorites and a pointer to
  * the most recent invoice. Per-user / dynamic (reads the session cookie) — never
  * cached. Returns `null` for guests (the page redirects them via the proxy).
  */
@@ -38,7 +38,6 @@ export async function getDashboardStats(): Promise<DashboardStatsVM | null> {
         inProgressOrders,
         totalOrders,
         cartItems,
-        backorderCount,
         favoritesCount,
         lastOrder,
       ] = await Promise.all([
@@ -51,7 +50,6 @@ export async function getDashboardStats(): Promise<DashboardStatsVM | null> {
           where: { cart: { userId: user.id } },
           select: { quantity: true },
         }),
-        prisma.backorder.count({ where: { userId: user.id, status: 'PENDING' } }),
         prisma.wishlistItem.count({ where: { userId: user.id } }),
         prisma.order.findFirst({
           where: { userId: user.id },
@@ -73,7 +71,6 @@ export async function getDashboardStats(): Promise<DashboardStatsVM | null> {
         inProgressOrders,
         totalOrders,
         cartItemCount: cartItems.reduce((sum, i) => sum + i.quantity, 0),
-        backorderCount,
         favoritesCount,
         lastInvoice: lastOrder
           ? {

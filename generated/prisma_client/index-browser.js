@@ -421,13 +421,10 @@ exports.Prisma.PriceListRequestScalarFieldEnum = {
   expiresAt: 'expiresAt'
 };
 
-exports.Prisma.BackorderScalarFieldEnum = {
+exports.Prisma.ProductSuggestionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  productId: 'productId',
-  quantity: 'quantity',
-  status: 'status',
-  note: 'note',
+  body: 'body',
   createdAt: 'createdAt'
 };
 
@@ -486,13 +483,6 @@ exports.MessageDirection = exports.$Enums.MessageDirection = {
   OUTBOUND: 'OUTBOUND'
 };
 
-exports.BackorderStatus = exports.$Enums.BackorderStatus = {
-  PENDING: 'PENDING',
-  NOTIFIED: 'NOTIFIED',
-  FULFILLED: 'FULFILLED',
-  CANCELLED: 'CANCELLED'
-};
-
 exports.Prisma.ModelName = {
   Province: 'Province',
   City: 'City',
@@ -521,7 +511,7 @@ exports.Prisma.ModelName = {
   SupportMessage: 'SupportMessage',
   OrderSurvey: 'OrderSurvey',
   PriceListRequest: 'PriceListRequest',
-  Backorder: 'Backorder'
+  ProductSuggestion: 'ProductSuggestion'
 };
 
 /**
