@@ -1,4 +1,4 @@
-import type { PaymentMethod } from '@/src/data/cartMockData';
+import type { PaymentMethod } from '@/generated/prisma_client';
 
 interface PaymentDef {
   id: PaymentMethod;
@@ -47,13 +47,13 @@ function BanknoteIcon() {
 
 const PAYMENT_DEFS: PaymentDef[] = [
   {
-    id: 'online',
+    id: 'ONLINE',
     label: 'پرداخت آنلاین (درگاه بانکی)',
     hint: 'پس از ثبت سفارش به درگاه پرداخت امن بانکی هدایت می‌شوید. تمام کارت‌های شتاب پذیرفته می‌شود.',
     icon: <BankIcon />,
   },
   {
-    id: 'cod',
+    id: 'COD',
     label: 'پرداخت در محل (نقد / کارت)',
     hint: 'مبلغ سفارش هنگام تحویل توسط پیک دریافت می‌شود. این روش فقط در محدوده تهران قابل انتخاب است.',
     icon: <BanknoteIcon />,

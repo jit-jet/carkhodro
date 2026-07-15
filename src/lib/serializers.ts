@@ -5,7 +5,7 @@
  * that are NOT serializable across the `use cache` / RSC boundary. Every value
  * returned from a Server Action is mapped through the helpers below into plain
  * JSON-safe view-models whose field names match what the existing UI components
- * already consume (see `src/data/mockDatabase.ts`).
+ * already consume.
  *
  * Pricing: products store wholesale + retail tier fields; `toProductVM` embeds
  * the raw fields and defaults display to retail. Call `applyRoleToProduct` at

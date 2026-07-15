@@ -1,11 +1,11 @@
-import type { ShippingOption } from '@/src/data/cartMockData';
+import type { ShippingOptionVM } from '@/src/lib/serializers';
 
 function formatPrice(n: number) {
   return n.toLocaleString('fa-IR') + ' تومان';
 }
 
 interface Props {
-  options: ShippingOption[];
+  options: ShippingOptionVM[];
   selected: string;
   onChange: (id: string) => void;
 }

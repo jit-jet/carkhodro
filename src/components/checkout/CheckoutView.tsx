@@ -183,7 +183,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
 
         <ShippingSelector options={shippingOptions} selected={shippingId} onChange={setShippingId} />
 
-        <PaymentSelector selected="online" onChange={() => {}} allowedMethods={['online']} />
+        <PaymentSelector selected="ONLINE" onChange={() => {}} allowedMethods={['ONLINE']} />
       </div>
 
       {/* Sidebar */}
