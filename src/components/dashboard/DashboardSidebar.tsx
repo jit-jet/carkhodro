@@ -47,7 +47,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/price-list', label: 'دریافت لیست قیمت', icon: 'pricelist' },
   {
     href: '/dashboard/suggest-product',
-    label: 'پیشنهاد محصول',
+    label: 'درخواست تأمین کالا',
     icon: 'suggest',
     wholesaleOnly: true,
   },

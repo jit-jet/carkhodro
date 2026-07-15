@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * Product suggestions — «پیشنهاد محصول».
+ * Product suggestions — درخواست تأمین کالا.
  * ───────────────────────────────────────
  * Wholesale partners can propose products to stock. Each submission is stored
  * with the authenticated user id for later admin review. Restricted to

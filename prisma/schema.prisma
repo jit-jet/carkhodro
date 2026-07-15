@@ -695,7 +695,7 @@ model PriceListRequest {
 }
 
 /// Wholesale partner suggestion to add a product to the shop catalogue
-/// («پیشنهاد محصول»). Admin review comes later; for now this is append-only
+/// (درخواست تأمین کالا). Admin review comes later; for now this is append-only
 /// storage keyed to the submitting user.
 model ProductSuggestion {
   id        String   @id @default(cuid())

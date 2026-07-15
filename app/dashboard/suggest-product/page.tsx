@@ -1,5 +1,5 @@
 /**
- * Product suggestions — «پیشنهاد محصول».
+ * Product suggestions — درخواست تأمین کالا.
  * Wholesale-only: partners propose catalogue items for later admin review.
  */
 
@@ -12,7 +12,7 @@ import { getCurrentUser } from '@/src/lib/session';
 import { isWholesaleUser } from '@/src/lib/user-role';
 
 export const metadata: Metadata = {
-  title: 'پیشنهاد محصول | پنل کاربری کارخودرو',
+  title: 'درخواست تأمین کالا | پنل کاربری کارخودرو',
 };
 
 export default function SuggestProductPage() {

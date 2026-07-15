@@ -12,12 +12,21 @@ import AccountMenu, {
   MobileAccountSection,
 } from '@/src/components/layout/AccountMenu';
 import { getCurrentUser } from '@/src/lib/session';
-import { cartPathForRole, pricingRoleFromUser } from '@/src/lib/user-role';
+import { cartPathForRole, pricingRoleFromUser ,isWholesaleUser} from '@/src/lib/user-role';
 
 export default async function SiteHeader() {
   const [navLinks, user] = await Promise.all([getNavLinks(), getCurrentUser()]);
   const cartHref = cartPathForRole(pricingRoleFromUser(user?.role));
-
+  console.log("first",navLinks)
+  if(isWholesaleUser(pricingRoleFromUser(user?.role))){
+    navLinks.push({
+      id: 100,
+      href: '/dashboard/suggest-product',
+      label: 'درخواست تأمین کالا',
+      order: 100,
+    });
+  }
+  console.log("second",navLinks)
   return (
     <Header
       navLinks={navLinks}

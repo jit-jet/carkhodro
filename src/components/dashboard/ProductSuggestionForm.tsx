@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Product suggestion form — «پیشنهاد محصول».
+ * Product suggestion form — درخواست تأمین کالا.
  * ───────────────────────────────────────────
  * Free-text composer for wholesale partners to request new catalogue items.
  * Shows prior submissions below so the partner can confirm they were recorded.
@@ -47,7 +47,7 @@ export default function ProductSuggestionForm({
         className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-7 space-y-5"
       >
         <div>
-          <h1 className="text-lg font-extrabold text-charcoal mb-1">پیشنهاد محصول</h1>
+          <h1 className="text-lg font-extrabold text-charcoal mb-1">درخواست تأمین کالا</h1>
           <p className="text-xs text-gray-400">
             نام، مشخصات یا کد قطعه‌ای که مایلید به فروشگاه اضافه شود را بنویسید. پیشنهاد شما برای
             بررسی ثبت می‌شود.
