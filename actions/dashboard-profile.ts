@@ -5,9 +5,9 @@
  * ───────────────────────────────────────────────
  * Read + update the editable account fields (name, store, referrer, activity,
  * Jalali birth date, delivery address) and manage the avatar. Username, mobile,
- * special code and user type are read-only. Avatars are stored inline as a
- * base64 JPEG data URL on `users.profile_image` (no external object store), so
- * the panel is self-contained. Per-user / dynamic — never cached.
+ * special code and user type are read-only. Avatars are saved under
+ * `public/storage/avatars/`; `users.profile_image` stores only the public path.
+ * Per-user / dynamic — never cached.
  */
 
 import { revalidatePath } from 'next/cache';
@@ -17,10 +17,11 @@ import { getCurrentUser } from '@/src/lib/session';
 import { USER_ROLE_FA } from '@/src/lib/user-labels';
 import { dateToJalaliParts, jalaliPartsToDate } from '@/src/lib/jalali-convert';
 import { resolveLocation } from '@/src/lib/resolve-location';
+import { deleteFile, saveFile } from '@/src/lib/storage';
 import type { ProfileVM } from '@/src/lib/dashboard-types';
 
 const PROFILE_PATH = '/dashboard/profile';
-/** Avatars are kept small (inline data URL) — reject anything over ~1 MB. */
+/** Reject avatars over ~1 MB. */
 const MAX_AVATAR_BYTES = 1_000_000;
 
 export async function getProfile(): Promise<ProfileVM | null> {
@@ -162,12 +163,18 @@ export async function updateAvatar(formData: FormData): Promise<ActionResult> {
     if (file.size > MAX_AVATAR_BYTES) return fail('حجم تصویر باید کمتر از ۱ مگابایت باشد.');
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const dataUrl = `data:image/jpeg;base64,${buffer.toString('base64')}`;
+    const previous = user.profileImage;
+    const profileImage = await saveFile('avatars', `${user.id}.jpg`, buffer);
 
     await prisma.user.update({
       where: { id: user.id },
-      data: { profileImage: dataUrl },
+      data: { profileImage },
     });
+
+    // Drop legacy data-URL or superseded storage file (same path is a no-op delete).
+    if (previous && previous !== profileImage) {
+      await deleteFile(previous);
+    }
 
     revalidatePath(PROFILE_PATH);
     revalidatePath('/dashboard');
@@ -179,7 +186,10 @@ export async function removeAvatar(): Promise<ActionResult> {
   return runMutation('removeAvatar', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('ابتدا وارد شوید.');
+
     await prisma.user.update({ where: { id: user.id }, data: { profileImage: null } });
+    await deleteFile(user.profileImage);
+
     revalidatePath(PROFILE_PATH);
     revalidatePath('/dashboard');
     return ok(undefined);

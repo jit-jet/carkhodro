@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# uploaded media (keep folder structure via .gitkeep)
+/public/storage/**
+!/public/storage/**/
+!/public/storage/**/.gitkeep

@@ -3,7 +3,7 @@
 /**
  * Partner profile form.
  * ─────────────────────
- * Editable: avatar (jpg only) upload/remove, full name, store name, referrer,
+ * Editable: avatar (jpg → public/storage/avatars) upload/remove, full name, store name, referrer,
  * Jalali birth date, activity field and delivery address. Read-only: username,
  * mobile, special code and user type. Avatar upload/remove call their own
  * actions for instant feedback; the rest saves through `updateProfile`.

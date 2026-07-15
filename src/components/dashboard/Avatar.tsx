@@ -1,9 +1,8 @@
 import Image from 'next/image';
 
 /**
- * Partner avatar. Renders the uploaded JPEG (stored inline as a base64 data URL)
- * when present, otherwise a neutral person placeholder. Data URLs bypass the
- * image optimizer (`unoptimized`), which keeps next/image happy with inline src.
+ * Partner avatar. Prefers a storage path (`/storage/avatars/...`); still
+ * renders legacy base64 data URLs with `unoptimized` so old rows keep working.
  */
 export default function Avatar({
   src,
@@ -15,13 +14,14 @@ export default function Avatar({
   alt?: string;
 }) {
   if (src) {
+    const isDataUrl = src.startsWith('data:');
     return (
       <Image
         src={src}
         alt={alt}
         width={size}
         height={size}
-        unoptimized
+        unoptimized={isDataUrl}
         className="rounded-full object-cover bg-silver-light"
         style={{ width: size, height: size }}
       />
