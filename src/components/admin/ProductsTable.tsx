@@ -1,0 +1,602 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  bulkUpdateProducts,
+  deleteProduct,
+  reactivateProduct,
+  type BulkProductOp,
+} from "@/actions/admin-products";
+import type {
+  AdminProductListItemVM,
+  AdminProductSortBy,
+  AdminProductSortDir,
+} from "@/actions/products";
+import { Button, FormError, FormSuccess, Input, Select } from "@/src/components/admin/AdminUI";
+import { formatToman, noFormatNumberFa } from "@/src/lib/format";
+import {
+  buildProductsHref,
+  type ProductsTableFilters,
+} from "@/src/lib/admin-products-query";
+
+type BulkOpKey =
+  | "category"
+  | "brand"
+  | "vehicleType"
+  | "wholesaleDiscount"
+  | "retailDiscount"
+  | "retailPriceDiff"
+  | "setActive"
+  | "setOffer";
+
+const BULK_OPTIONS: { value: BulkOpKey; label: string }[] = [
+  { value: "category", label: "تغییر دسته‌بندی" },
+  { value: "brand", label: "تغییر برند" },
+  { value: "vehicleType", label: "تغییر نوع خودرو" },
+  { value: "wholesaleDiscount", label: "تنظیم تخفیف عمده (%)" },
+  { value: "retailDiscount", label: "تنظیم تخفیف تک‌فروشی (%)" },
+  { value: "retailPriceDiff", label: "تنظیم اختلاف عمده/تک‌فروشی (%)" },
+  { value: "setActive", label: "فعال / غیرفعال کردن محصولات" },
+  { value: "setOffer", label: "ویژه / غیرویژه کردن محصولات" },
+];
+
+function SortButton({
+  label,
+  column,
+  sortBy,
+  sortDir,
+  onSort,
+}: {
+  label: string;
+  column: AdminProductSortBy;
+  sortBy: string;
+  sortDir: string;
+  onSort: (column: AdminProductSortBy) => void;
+}) {
+  const active = sortBy === column;
+  const arrow = !active ? "↕" : sortDir === "asc" ? "↑" : "↓";
+  return (
+    <button
+      type="button"
+      onClick={() => onSort(column)}
+      className={[
+        "inline-flex items-center gap-1 font-semibold whitespace-nowrap",
+        active ? "text-charcoal" : "text-gray-500 hover:text-charcoal",
+      ].join(" ")}
+    >
+      {label}
+      <span className="text-[10px] opacity-70">{arrow}</span>
+    </button>
+  );
+}
+
+export default function ProductsTable({
+  items,
+  filters,
+  categories,
+  partsBrands,
+  carModels,
+}: {
+  items: AdminProductListItemVM[];
+  filters: ProductsTableFilters;
+  categories: { id: number; name: string }[];
+  partsBrands: { id: number; name: string }[];
+  carModels: { id: number; name: string; brandName: string }[];
+}) {
+  const router = useRouter();
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [searchDraft, setSearchDraft] = useState(filters.search);
+  const [bulkOp, setBulkOp] = useState<BulkOpKey | "">("");
+  const [bulkValue, setBulkValue] = useState("");
+  const [bulkFlag, setBulkFlag] = useState(true);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [pending, startTransition] = useTransition();
+
+  const allSelected = items.length > 0 && items.every((p) => selected.has(p.id));
+
+  function pushFilters(patch: Partial<ProductsTableFilters>) {
+    const next = { ...filters, ...patch };
+    router.push(buildProductsHref(next));
+  }
+
+  function toggleSort(column: AdminProductSortBy) {
+    const nextDir: AdminProductSortDir =
+      filters.sortBy === column && filters.sortDir === "asc" ? "desc" : "asc";
+    pushFilters({ sortBy: column, sortDir: nextDir });
+  }
+
+  function toggleAll() {
+    setSelected(allSelected ? new Set() : new Set(items.map((p) => p.id)));
+  }
+
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function needsValueInput(op: BulkOpKey | ""): boolean {
+    return (
+      op === "category" ||
+      op === "brand" ||
+      op === "vehicleType" ||
+      op === "wholesaleDiscount" ||
+      op === "retailDiscount" ||
+      op === "retailPriceDiff"
+    );
+  }
+
+  function buildBulkAction(): BulkProductOp | null {
+    if (!bulkOp) return null;
+    switch (bulkOp) {
+      case "category":
+        return { op: "category", categoryId: Number(bulkValue) };
+      case "brand":
+        return { op: "brand", partsBrandId: Number(bulkValue) };
+      case "vehicleType":
+        return { op: "vehicleType", carModelId: Number(bulkValue) };
+      case "wholesaleDiscount":
+        return { op: "wholesaleDiscount", value: Number(bulkValue) };
+      case "retailDiscount":
+        return { op: "retailDiscount", value: Number(bulkValue) };
+      case "retailPriceDiff":
+        return { op: "retailPriceDiff", value: Number(bulkValue) };
+      case "setActive":
+        return { op: "setActive", isActive: bulkFlag };
+      case "setOffer":
+        return { op: "setOffer", isOffer: bulkFlag };
+      default:
+        return null;
+    }
+  }
+
+  function handleBulkSubmit() {
+    setError("");
+    setMessage("");
+    if (selected.size === 0) return setError("حداقل یک محصول را انتخاب کنید.");
+    if (!bulkOp) return setError("یک عملیات گروهی انتخاب کنید.");
+    if (needsValueInput(bulkOp) && !bulkValue) {
+      return setError("مقدار عملیات را وارد یا انتخاب کنید.");
+    }
+
+    const action = buildBulkAction();
+    if (!action) return setError("عملیات گروهی نامعتبر است.");
+    if (
+      (action.op === "category" || action.op === "brand" || action.op === "vehicleType") &&
+      !Number.isFinite(
+        action.op === "category"
+          ? action.categoryId
+          : action.op === "brand"
+            ? action.partsBrandId
+            : action.carModelId,
+      )
+    ) {
+      return setError("گزینه انتخاب‌شده معتبر نیست.");
+    }
+
+    startTransition(async () => {
+      const result = await bulkUpdateProducts(Array.from(selected), action);
+      if (!result.ok) return setError(result.error);
+      setMessage(`${result.data.count.toLocaleString("fa-IR")} محصول با موفقیت به‌روزرسانی شد.`);
+      setSelected(new Set());
+      setBulkValue("");
+      router.refresh();
+    });
+  }
+
+  function handleDelete(id: string) {
+    setError("");
+    startTransition(async () => {
+      const result = await deleteProduct(id);
+      if (!result.ok) return setError(result.error);
+      router.refresh();
+    });
+  }
+
+  function handleReactivate(id: string) {
+    setError("");
+    startTransition(async () => {
+      const result = await reactivateProduct(id);
+      if (!result.ok) return setError(result.error);
+      router.refresh();
+    });
+  }
+
+  const headerSelectClass = "!py-1.5 !text-xs !rounded-lg min-w-[120px]";
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center gap-3 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
+        <span className="text-sm font-semibold text-charcoal">
+          {selected.size > 0
+            ? `${selected.size.toLocaleString("fa-IR")} مورد انتخاب شده`
+            : "عملیات گروهی"}
+        </span>
+        <Select
+          value={bulkOp}
+          onChange={(e) => {
+            setBulkOp(e.target.value as BulkOpKey | "");
+            setBulkValue("");
+            setBulkFlag(true);
+          }}
+          className="w-auto min-w-[220px]"
+        >
+          <option value="">انتخاب عملیات…</option>
+          {BULK_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </Select>
+
+        {bulkOp === "category" && (
+          <Select
+            value={bulkValue}
+            onChange={(e) => setBulkValue(e.target.value)}
+            className="w-auto min-w-[180px]"
+          >
+            <option value="">انتخاب دسته‌بندی…</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </Select>
+        )}
+
+        {bulkOp === "brand" && (
+          <Select
+            value={bulkValue}
+            onChange={(e) => setBulkValue(e.target.value)}
+            className="w-auto min-w-[180px]"
+          >
+            <option value="">انتخاب برند…</option>
+            {partsBrands.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name}
+              </option>
+            ))}
+          </Select>
+        )}
+
+        {bulkOp === "vehicleType" && (
+          <Select
+            value={bulkValue}
+            onChange={(e) => setBulkValue(e.target.value)}
+            className="w-auto min-w-[200px]"
+          >
+            <option value="">انتخاب نوع خودرو…</option>
+            {carModels.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.brandName} — {m.name}
+              </option>
+            ))}
+          </Select>
+        )}
+
+        {(bulkOp === "wholesaleDiscount" ||
+          bulkOp === "retailDiscount" ||
+          bulkOp === "retailPriceDiff") && (
+          <Input
+            type="number"
+            min={0}
+            max={100}
+            step={0.01}
+            placeholder="درصد…"
+            value={bulkValue}
+            onChange={(e) => setBulkValue(e.target.value)}
+            className="w-28"
+          />
+        )}
+
+        {bulkOp === "setActive" && (
+          <label className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={bulkFlag}
+              onChange={(e) => setBulkFlag(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            {bulkFlag ? "فعال" : "غیرفعال"}
+          </label>
+        )}
+
+        {bulkOp === "setOffer" && (
+          <label className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={bulkFlag}
+              onChange={(e) => setBulkFlag(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            {bulkFlag ? "ویژه" : "غیرویژه"}
+          </label>
+        )}
+
+        <Button type="button" onClick={handleBulkSubmit} disabled={pending} className="!py-2">
+          ثبت تغییرات
+        </Button>
+      </div>
+
+      {error && <FormError message={error} />}
+      {message && <FormSuccess message={message} />}
+
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[1200px]">
+            <thead className="bg-silver-light text-gray-500">
+              <tr>
+                <th className="px-4 py-3 align-bottom">
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={toggleAll}
+                    className="w-4 h-4 accent-accent"
+                  />
+                </th>
+                <th className="text-right px-4 py-3 align-bottom">
+                  <div className="flex flex-col gap-1.5 items-stretch">
+                    <SortButton
+                      label="محصول"
+                      column="name"
+                      sortBy={filters.sortBy}
+                      sortDir={filters.sortDir}
+                      onSort={toggleSort}
+                    />
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        pushFilters({ search: searchDraft.trim() });
+                      }}
+                    >
+                      <Input
+                        value={searchDraft}
+                        onChange={(e) => setSearchDraft(e.target.value)}
+                        placeholder="جستجو…"
+                        className="!py-1.5 !text-xs !rounded-lg"
+                      />
+                    </form>
+                  </div>
+                </th>
+                <th className="text-right px-4 py-3 align-bottom">
+                  <div className="flex flex-col gap-1.5">
+                    <SortButton
+                      label="دسته‌بندی"
+                      column="category"
+                      sortBy={filters.sortBy}
+                      sortDir={filters.sortDir}
+                      onSort={toggleSort}
+                    />
+                    <Select
+                      value={filters.categoryId}
+                      onChange={(e) => pushFilters({ categoryId: e.target.value })}
+                      className={headerSelectClass}
+                    >
+                      <option value="">همه</option>
+                      {categories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                </th>
+                <th className="text-right px-4 py-3 align-bottom">
+                  <div className="flex flex-col gap-1.5">
+                    <SortButton
+                      label="نوع برند"
+                      column="partsBrand"
+                      sortBy={filters.sortBy}
+                      sortDir={filters.sortDir}
+                      onSort={toggleSort}
+                    />
+                    <Select
+                      value={filters.partsBrandId}
+                      onChange={(e) => pushFilters({ partsBrandId: e.target.value })}
+                      className={headerSelectClass}
+                    >
+                      <option value="">همه</option>
+                      {partsBrands.map((b) => (
+                        <option key={b.id} value={b.id}>
+                          {b.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                </th>
+                <th className="text-right px-4 py-3 align-bottom">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="font-semibold text-gray-500">نوع خودرو</span>
+                    <Select
+                      value={filters.carModelId}
+                      onChange={(e) => pushFilters({ carModelId: e.target.value })}
+                      className={headerSelectClass}
+                    >
+                      <option value="">همه</option>
+                      {carModels.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                </th>
+                <th className="text-right px-4 py-3 align-bottom">
+                  <SortButton
+                    label="قیمت عمده"
+                    column="wholesalePrice"
+                    sortBy={filters.sortBy}
+                    sortDir={filters.sortDir}
+                    onSort={toggleSort}
+                  />
+                </th>
+                <th className="text-right px-4 py-3 align-bottom">
+                  <SortButton
+                    label="قیمت تک‌فروشی"
+                    column="retailPrice"
+                    sortBy={filters.sortBy}
+                    sortDir={filters.sortDir}
+                    onSort={toggleSort}
+                  />
+                </th>
+                <th className="text-right px-4 py-3 align-bottom">
+                  <SortButton
+                    label="موجودی"
+                    column="stock"
+                    sortBy={filters.sortBy}
+                    sortDir={filters.sortDir}
+                    onSort={toggleSort}
+                  />
+                </th>
+                <th className="text-right px-4 py-3 align-bottom">
+                  <div className="flex flex-col gap-1.5">
+                    <SortButton
+                      label="وضعیت"
+                      column="isActive"
+                      sortBy={filters.sortBy}
+                      sortDir={filters.sortDir}
+                      onSort={toggleSort}
+                    />
+                    <Select
+                      value={filters.status}
+                      onChange={(e) => pushFilters({ status: e.target.value })}
+                      className={headerSelectClass}
+                    >
+                      <option value="">همه</option>
+                      <option value="active">فعال</option>
+                      <option value="inactive">غیرفعال</option>
+                    </Select>
+                  </div>
+                </th>
+                <th className="text-right px-4 py-3 align-bottom">
+                  <div className="flex flex-col gap-1.5">
+                    <SortButton
+                      label="ویژه"
+                      column="isOffer"
+                      sortBy={filters.sortBy}
+                      sortDir={filters.sortDir}
+                      onSort={toggleSort}
+                    />
+                    <Select
+                      value={filters.offer}
+                      onChange={(e) => pushFilters({ offer: e.target.value })}
+                      className={headerSelectClass}
+                    >
+                      <option value="">همه</option>
+                      <option value="special">ویژه</option>
+                      <option value="normal">عادی</option>
+                    </Select>
+                  </div>
+                </th>
+                <th className="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {items.length === 0 ? (
+                <tr>
+                  <td colSpan={11} className="px-4 py-12 text-center text-gray-400">
+                    محصولی با این فیلترها یافت نشد.
+                  </td>
+                </tr>
+              ) : (
+                items.map((p) => (
+                  <tr key={p.id} className={selected.has(p.id) ? "bg-amber-50/40" : undefined}>
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selected.has(p.id)}
+                        onChange={() => toggleOne(p.id)}
+                        className="w-4 h-4 accent-accent"
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="font-semibold text-charcoal">{p.name}</p>
+                      <p className="text-xs text-gray-400 font-mono">{p.sku}</p>
+                    </td>
+                    <td className="px-4 py-3 text-gray-500">{p.categoryName}</td>
+                    <td className="px-4 py-3 text-gray-500">{p.partsBrandName}</td>
+                    <td className="px-4 py-3 text-gray-500">{p.carType || "—"}</td>
+                    <td className="px-4 py-3 whitespace-nowrap tabular-nums">
+                      {formatToman(p.wholesaleFinal)}
+                      {p.wholesaleDiscountPct > 0 && (
+                        <span className="text-xs text-red-500 mr-1">
+                          (٪{noFormatNumberFa(p.wholesaleDiscountPct)})
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap tabular-nums">
+                      {formatToman(p.retailFinal)}
+                      {p.retailDiscountPct > 0 && (
+                        <span className="text-xs text-red-500 mr-1">
+                          (٪{noFormatNumberFa(p.retailDiscountPct)})
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={p.stock === 0 ? "text-red-600 font-semibold" : "text-gray-600"}>
+                        {noFormatNumberFa(p.stock)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={[
+                          "inline-block text-[11px] font-bold px-2.5 py-1 rounded-full",
+                          p.isActive ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500",
+                        ].join(" ")}
+                      >
+                        {p.isActive ? "فعال" : "غیرفعال"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={[
+                          "inline-block text-[11px] font-bold px-2.5 py-1 rounded-full",
+                          p.isOffer ? "bg-amber-50 text-accent-dark" : "bg-gray-100 text-gray-500",
+                        ].join(" ")}
+                      >
+                        {p.isOffer ? "ویژه" : "عادی"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-2 whitespace-nowrap">
+                        <Link
+                          href={`/admin/products/${p.id}`}
+                          className="text-accent-dark font-semibold hover:underline text-xs"
+                        >
+                          ویرایش
+                        </Link>
+                        {p.isActive ? (
+                          <button
+                            onClick={() => handleDelete(p.id)}
+                            disabled={pending}
+                            className="text-red-600 font-semibold hover:underline text-xs disabled:opacity-50"
+                          >
+                            غیرفعال
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleReactivate(p.id)}
+                            disabled={pending}
+                            className="text-green-700 font-semibold hover:underline text-xs disabled:opacity-50"
+                          >
+                            فعال‌سازی
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,3 +1,9 @@
+/**
+ * FAQ Server Actions — reads only. Mutations live in `actions/admin-faq.ts`
+ * (pure `use server`) so `FaqManager` (a Client Component) can import writes
+ * without pulling this file's `use cache` read into the browser bundle.
+ */
+
 import { cacheLife, cacheTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { toFaqVM, type FaqVM } from '@/src/lib/serializers';

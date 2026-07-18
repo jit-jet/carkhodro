@@ -17,11 +17,34 @@ import type { NextRequest } from 'next/server';
 // with `SESSION_COOKIE` there.
 const SESSION_COOKIE = 'session_token';
 
-/** Routes that require a logged-in user. */
+/** Routes that require a logged-in customer/partner. */
 const PROTECTED_PREFIXES = ['/dashboard', '/checkout', '/wishlist'];
+
+// Kept in sync with `ADMIN_SESSION_COOKIE` in `src/lib/admin-session.ts`. A
+// separate cookie from `SESSION_COOKIE` so an admin login never collides with
+// (or gets confused for) a customer/partner session in the same browser.
+const ADMIN_SESSION_COOKIE = 'admin_session_token';
+const ADMIN_LOGIN_PATH = '/admin/login';
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (pathname === ADMIN_LOGIN_PATH) {
+    // Already-authenticated admins skip straight past the login screen.
+    const hasAdminSession = Boolean(request.cookies.get(ADMIN_SESSION_COOKIE)?.value);
+    if (hasAdminSession) return NextResponse.redirect(new URL('/admin', request.url));
+    return NextResponse.next();
+  }
+
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    const hasAdminSession = Boolean(request.cookies.get(ADMIN_SESSION_COOKIE)?.value);
+    if (hasAdminSession) return NextResponse.next();
+
+    const loginUrl = new URL(ADMIN_LOGIN_PATH, request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
   const isProtected = PROTECTED_PREFIXES.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`),
   );
@@ -37,5 +60,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/checkout/:path*', '/wishlist'],
+  matcher: ['/dashboard/:path*', '/checkout/:path*', '/wishlist', '/admin/:path*'],
 };

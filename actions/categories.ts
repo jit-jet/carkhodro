@@ -1,11 +1,17 @@
 /**
- * Category Server Actions. Categories change rarely → `days` cache profile.
+ * Category Server Actions — reads only. Categories change rarely → `days`
+ * cache profile.
+ *
+ * Mutations live in `actions/admin-categories.ts` (pure `use server`, no
+ * `use cache` reads) so they can be imported directly by admin Client
+ * Components — see the comment at the top of `actions/products.ts` for why
+ * the split is necessary.
  */
 
-import { cacheLife, cacheTag, updateTag } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { toCategoryVM, type CategoryVM } from '@/src/lib/serializers';
-import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
+import { safeQuery } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
 
 export async function getCategories(): Promise<CategoryVM[]> {
@@ -28,65 +34,4 @@ export async function getCategoryByKey(key: string): Promise<CategoryVM | null> 
     const row = await prisma.category.findUnique({ where: { key } });
     return row ? toCategoryVM(row) : null;
   }, null);
-}
-
-// ── Mutations ────────────────────────────────────────────────────────────────
-
-export interface CategoryInput {
-  key: string;
-  name: string;
-  image?: string | null;
-  sortOrder?: number;
-}
-
-export async function createCategory(
-  input: CategoryInput,
-): Promise<ActionResult<{ id: number }>> {
-  'use server';
-  return runMutation('createCategory', async () => {
-    if (!input.key?.trim() || !input.name?.trim()) {
-      return fail('کلید و نام دسته‌بندی الزامی است.');
-    }
-    const created = await prisma.category.create({
-      data: {
-        key: input.key.trim(),
-        name: input.name.trim(),
-        image: input.image ?? '/logo.png',
-        sortOrder: input.sortOrder ?? 0,
-      },
-      select: { id: true },
-    });
-    updateTag(tags.categories);
-    return ok(created);
-  });
-}
-
-export async function updateCategory(
-  id: number,
-  input: Partial<CategoryInput>,
-): Promise<ActionResult<{ id: number }>> {
-  'use server';
-  return runMutation('updateCategory', async () => {
-    const updated = await prisma.category.update({
-      where: { id },
-      data: {
-        ...(input.key !== undefined ? { key: input.key.trim() } : {}),
-        ...(input.name !== undefined ? { name: input.name.trim() } : {}),
-        ...(input.image !== undefined ? { image: input.image ?? '/logo.png' } : {}),
-        ...(input.sortOrder !== undefined ? { sortOrder: input.sortOrder } : {}),
-      },
-      select: { id: true },
-    });
-    updateTag(tags.categories);
-    return ok(updated);
-  });
-}
-
-export async function deleteCategory(id: number): Promise<ActionResult> {
-  'use server';
-  return runMutation('deleteCategory', async () => {
-    await prisma.category.delete({ where: { id } });
-    updateTag(tags.categories);
-    return ok(undefined);
-  });
 }

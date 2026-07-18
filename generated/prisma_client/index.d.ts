@@ -122,6 +122,19 @@ export type Post = $Result.DefaultSelection<Prisma.$PostPayload>
  */
 export type Faq = $Result.DefaultSelection<Prisma.$FaqPayload>
 /**
+ * Model SiteSetting
+ * Dynamic site info shown across the storefront (footer/contact/etc). Always a
+ * single row — the app upserts `id = 1`.
+ */
+export type SiteSetting = $Result.DefaultSelection<Prisma.$SiteSettingPayload>
+/**
+ * Model SmsCampaign
+ * One row per bulk SMS blast the admin sends («ارسال گروهی پیامک»). Snapshot
+ * only — the recipient list itself isn't retained, just the counts, to keep
+ * this table cheap and avoid storing phone numbers redundantly.
+ */
+export type SmsCampaign = $Result.DefaultSelection<Prisma.$SmsCampaignPayload>
+/**
  * Model ShippingOption
  * Shipping methods and their current cost — editable by admin.
  */
@@ -162,7 +175,7 @@ export type PriceListRequest = $Result.DefaultSelection<Prisma.$PriceListRequest
 /**
  * Model ProductSuggestion
  * Wholesale partner suggestion to add a product to the shop catalogue
- * («پیشنهاد محصول»). Admin review comes later; for now this is append-only
+ * (درخواست تأمین کالا). Admin review comes later; for now this is append-only
  * storage keyed to the submitting user.
  */
 export type ProductSuggestion = $Result.DefaultSelection<Prisma.$ProductSuggestionPayload>
@@ -179,6 +192,25 @@ export namespace $Enums {
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const SmsTargetRole: {
+  RETAIL: 'RETAIL',
+  WHOLESALE: 'WHOLESALE',
+  ALL: 'ALL'
+};
+
+export type SmsTargetRole = (typeof SmsTargetRole)[keyof typeof SmsTargetRole]
+
+
+export const SmsCampaignStatus: {
+  PENDING: 'PENDING',
+  SENT: 'SENT',
+  PARTIAL: 'PARTIAL',
+  FAILED: 'FAILED'
+};
+
+export type SmsCampaignStatus = (typeof SmsCampaignStatus)[keyof typeof SmsCampaignStatus]
 
 
 export const OrderStatus: {
@@ -234,6 +266,14 @@ export type ShippingMethod = (typeof ShippingMethod)[keyof typeof ShippingMethod
 export type UserRole = $Enums.UserRole
 
 export const UserRole: typeof $Enums.UserRole
+
+export type SmsTargetRole = $Enums.SmsTargetRole
+
+export const SmsTargetRole: typeof $Enums.SmsTargetRole
+
+export type SmsCampaignStatus = $Enums.SmsCampaignStatus
+
+export const SmsCampaignStatus: typeof $Enums.SmsCampaignStatus
 
 export type OrderStatus = $Enums.OrderStatus
 
@@ -585,6 +625,26 @@ export class PrismaClient<
     * ```
     */
   get faq(): Prisma.FaqDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.siteSetting`: Exposes CRUD operations for the **SiteSetting** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SiteSettings
+    * const siteSettings = await prisma.siteSetting.findMany()
+    * ```
+    */
+  get siteSetting(): Prisma.SiteSettingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.smsCampaign`: Exposes CRUD operations for the **SmsCampaign** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SmsCampaigns
+    * const smsCampaigns = await prisma.smsCampaign.findMany()
+    * ```
+    */
+  get smsCampaign(): Prisma.SmsCampaignDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.shippingOption`: Exposes CRUD operations for the **ShippingOption** model.
@@ -1110,6 +1170,8 @@ export namespace Prisma {
     CompareItem: 'CompareItem',
     Post: 'Post',
     Faq: 'Faq',
+    SiteSetting: 'SiteSetting',
+    SmsCampaign: 'SmsCampaign',
     ShippingOption: 'ShippingOption',
     Order: 'Order',
     OrderItem: 'OrderItem',
@@ -1132,7 +1194,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "post" | "faq" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion"
+      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "post" | "faq" | "siteSetting" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2690,6 +2752,154 @@ export namespace Prisma {
           }
         }
       }
+      SiteSetting: {
+        payload: Prisma.$SiteSettingPayload<ExtArgs>
+        fields: Prisma.SiteSettingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SiteSettingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SiteSettingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload>
+          }
+          findFirst: {
+            args: Prisma.SiteSettingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SiteSettingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload>
+          }
+          findMany: {
+            args: Prisma.SiteSettingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload>[]
+          }
+          create: {
+            args: Prisma.SiteSettingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload>
+          }
+          createMany: {
+            args: Prisma.SiteSettingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SiteSettingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload>[]
+          }
+          delete: {
+            args: Prisma.SiteSettingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload>
+          }
+          update: {
+            args: Prisma.SiteSettingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload>
+          }
+          deleteMany: {
+            args: Prisma.SiteSettingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SiteSettingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SiteSettingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload>[]
+          }
+          upsert: {
+            args: Prisma.SiteSettingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteSettingPayload>
+          }
+          aggregate: {
+            args: Prisma.SiteSettingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSiteSetting>
+          }
+          groupBy: {
+            args: Prisma.SiteSettingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SiteSettingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SiteSettingCountArgs<ExtArgs>
+            result: $Utils.Optional<SiteSettingCountAggregateOutputType> | number
+          }
+        }
+      }
+      SmsCampaign: {
+        payload: Prisma.$SmsCampaignPayload<ExtArgs>
+        fields: Prisma.SmsCampaignFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SmsCampaignFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SmsCampaignFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          findFirst: {
+            args: Prisma.SmsCampaignFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SmsCampaignFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          findMany: {
+            args: Prisma.SmsCampaignFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>[]
+          }
+          create: {
+            args: Prisma.SmsCampaignCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          createMany: {
+            args: Prisma.SmsCampaignCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SmsCampaignCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>[]
+          }
+          delete: {
+            args: Prisma.SmsCampaignDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          update: {
+            args: Prisma.SmsCampaignUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          deleteMany: {
+            args: Prisma.SmsCampaignDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SmsCampaignUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SmsCampaignUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>[]
+          }
+          upsert: {
+            args: Prisma.SmsCampaignUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          aggregate: {
+            args: Prisma.SmsCampaignAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSmsCampaign>
+          }
+          groupBy: {
+            args: Prisma.SmsCampaignGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SmsCampaignGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SmsCampaignCountArgs<ExtArgs>
+            result: $Utils.Optional<SmsCampaignCountAggregateOutputType> | number
+          }
+        }
+      }
       ShippingOption: {
         payload: Prisma.$ShippingOptionPayload<ExtArgs>
         fields: Prisma.ShippingOptionFieldRefs
@@ -3337,6 +3547,8 @@ export namespace Prisma {
     compareItem?: CompareItemOmit
     post?: PostOmit
     faq?: FaqOmit
+    siteSetting?: SiteSettingOmit
+    smsCampaign?: SmsCampaignOmit
     shippingOption?: ShippingOptionOmit
     order?: OrderOmit
     orderItem?: OrderItemOmit
@@ -3496,6 +3708,7 @@ export namespace Prisma {
     orderSurveys: number
     priceListRequests: number
     productSuggestions: number
+    smsCampaigns: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3509,6 +3722,7 @@ export namespace Prisma {
     orderSurveys?: boolean | UserCountOutputTypeCountOrderSurveysArgs
     priceListRequests?: boolean | UserCountOutputTypeCountPriceListRequestsArgs
     productSuggestions?: boolean | UserCountOutputTypeCountProductSuggestionsArgs
+    smsCampaigns?: boolean | UserCountOutputTypeCountSmsCampaignsArgs
   }
 
   // Custom InputTypes
@@ -3590,6 +3804,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountProductSuggestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductSuggestionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSmsCampaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SmsCampaignWhereInput
   }
 
 
@@ -7229,6 +7450,8 @@ export namespace Prisma {
     referredBy: string | null
     activityField: string | null
     partnerCode: string | null
+    username: string | null
+    passwordHash: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7247,6 +7470,8 @@ export namespace Prisma {
     referredBy: string | null
     activityField: string | null
     partnerCode: string | null
+    username: string | null
+    passwordHash: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7265,6 +7490,8 @@ export namespace Prisma {
     referredBy: number
     activityField: number
     partnerCode: number
+    username: number
+    passwordHash: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7293,6 +7520,8 @@ export namespace Prisma {
     referredBy?: true
     activityField?: true
     partnerCode?: true
+    username?: true
+    passwordHash?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7311,6 +7540,8 @@ export namespace Prisma {
     referredBy?: true
     activityField?: true
     partnerCode?: true
+    username?: true
+    passwordHash?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7329,6 +7560,8 @@ export namespace Prisma {
     referredBy?: true
     activityField?: true
     partnerCode?: true
+    username?: true
+    passwordHash?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7434,6 +7667,8 @@ export namespace Prisma {
     referredBy: string | null
     activityField: string | null
     partnerCode: string | null
+    username: string | null
+    passwordHash: string | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -7471,6 +7706,8 @@ export namespace Prisma {
     referredBy?: boolean
     activityField?: boolean
     partnerCode?: boolean
+    username?: boolean
+    passwordHash?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     addresses?: boolean | User$addressesArgs<ExtArgs>
@@ -7484,6 +7721,7 @@ export namespace Prisma {
     orderSurveys?: boolean | User$orderSurveysArgs<ExtArgs>
     priceListRequests?: boolean | User$priceListRequestsArgs<ExtArgs>
     productSuggestions?: boolean | User$productSuggestionsArgs<ExtArgs>
+    smsCampaigns?: boolean | User$smsCampaignsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -7501,6 +7739,8 @@ export namespace Prisma {
     referredBy?: boolean
     activityField?: boolean
     partnerCode?: boolean
+    username?: boolean
+    passwordHash?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -7519,6 +7759,8 @@ export namespace Prisma {
     referredBy?: boolean
     activityField?: boolean
     partnerCode?: boolean
+    username?: boolean
+    passwordHash?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -7537,11 +7779,13 @@ export namespace Prisma {
     referredBy?: boolean
     activityField?: boolean
     partnerCode?: boolean
+    username?: boolean
+    passwordHash?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addresses?: boolean | User$addressesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -7554,6 +7798,7 @@ export namespace Prisma {
     orderSurveys?: boolean | User$orderSurveysArgs<ExtArgs>
     priceListRequests?: boolean | User$priceListRequestsArgs<ExtArgs>
     productSuggestions?: boolean | User$productSuggestionsArgs<ExtArgs>
+    smsCampaigns?: boolean | User$smsCampaignsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -7573,6 +7818,7 @@ export namespace Prisma {
       orderSurveys: Prisma.$OrderSurveyPayload<ExtArgs>[]
       priceListRequests: Prisma.$PriceListRequestPayload<ExtArgs>[]
       productSuggestions: Prisma.$ProductSuggestionPayload<ExtArgs>[]
+      smsCampaigns: Prisma.$SmsCampaignPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7610,6 +7856,16 @@ export namespace Prisma {
        * Short, unique partner/affiliate code («کد اختصاصی») — null for retail users.
        */
       partnerCode: string | null
+      /**
+       * Admin login username — only set for ADMIN-role users; storefront customers
+       * authenticate with SMS OTP and never get one.
+       */
+      username: string | null
+      /**
+       * Scrypt password hash — only set for admin/back-office logins (ADMIN role).
+       * Storefront customers keep authenticating with SMS OTP and never get one.
+       */
+      passwordHash: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -8017,6 +8273,7 @@ export namespace Prisma {
     orderSurveys<T extends User$orderSurveysArgs<ExtArgs> = {}>(args?: Subset<T, User$orderSurveysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderSurveyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     priceListRequests<T extends User$priceListRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$priceListRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PriceListRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     productSuggestions<T extends User$productSuggestionsArgs<ExtArgs> = {}>(args?: Subset<T, User$productSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    smsCampaigns<T extends User$smsCampaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$smsCampaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8059,6 +8316,8 @@ export namespace Prisma {
     readonly referredBy: FieldRef<"User", 'String'>
     readonly activityField: FieldRef<"User", 'String'>
     readonly partnerCode: FieldRef<"User", 'String'>
+    readonly username: FieldRef<"User", 'String'>
+    readonly passwordHash: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -8710,6 +8969,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProductSuggestionScalarFieldEnum | ProductSuggestionScalarFieldEnum[]
+  }
+
+  /**
+   * User.smsCampaigns
+   */
+  export type User$smsCampaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    where?: SmsCampaignWhereInput
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    cursor?: SmsCampaignWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SmsCampaignScalarFieldEnum | SmsCampaignScalarFieldEnum[]
   }
 
   /**
@@ -28141,6 +28424,2307 @@ export namespace Prisma {
 
 
   /**
+   * Model SiteSetting
+   */
+
+  export type AggregateSiteSetting = {
+    _count: SiteSettingCountAggregateOutputType | null
+    _avg: SiteSettingAvgAggregateOutputType | null
+    _sum: SiteSettingSumAggregateOutputType | null
+    _min: SiteSettingMinAggregateOutputType | null
+    _max: SiteSettingMaxAggregateOutputType | null
+  }
+
+  export type SiteSettingAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SiteSettingSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SiteSettingMinAggregateOutputType = {
+    id: number | null
+    phone: string | null
+    secondaryPhone: string | null
+    email: string | null
+    address: string | null
+    workingHours: string | null
+    instagramUrl: string | null
+    telegramUrl: string | null
+    whatsappUrl: string | null
+    aboutText: string | null
+    updatedAt: Date | null
+  }
+
+  export type SiteSettingMaxAggregateOutputType = {
+    id: number | null
+    phone: string | null
+    secondaryPhone: string | null
+    email: string | null
+    address: string | null
+    workingHours: string | null
+    instagramUrl: string | null
+    telegramUrl: string | null
+    whatsappUrl: string | null
+    aboutText: string | null
+    updatedAt: Date | null
+  }
+
+  export type SiteSettingCountAggregateOutputType = {
+    id: number
+    phone: number
+    secondaryPhone: number
+    email: number
+    address: number
+    workingHours: number
+    instagramUrl: number
+    telegramUrl: number
+    whatsappUrl: number
+    aboutText: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SiteSettingAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type SiteSettingSumAggregateInputType = {
+    id?: true
+  }
+
+  export type SiteSettingMinAggregateInputType = {
+    id?: true
+    phone?: true
+    secondaryPhone?: true
+    email?: true
+    address?: true
+    workingHours?: true
+    instagramUrl?: true
+    telegramUrl?: true
+    whatsappUrl?: true
+    aboutText?: true
+    updatedAt?: true
+  }
+
+  export type SiteSettingMaxAggregateInputType = {
+    id?: true
+    phone?: true
+    secondaryPhone?: true
+    email?: true
+    address?: true
+    workingHours?: true
+    instagramUrl?: true
+    telegramUrl?: true
+    whatsappUrl?: true
+    aboutText?: true
+    updatedAt?: true
+  }
+
+  export type SiteSettingCountAggregateInputType = {
+    id?: true
+    phone?: true
+    secondaryPhone?: true
+    email?: true
+    address?: true
+    workingHours?: true
+    instagramUrl?: true
+    telegramUrl?: true
+    whatsappUrl?: true
+    aboutText?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SiteSettingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SiteSetting to aggregate.
+     */
+    where?: SiteSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteSettings to fetch.
+     */
+    orderBy?: SiteSettingOrderByWithRelationInput | SiteSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SiteSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SiteSettings
+    **/
+    _count?: true | SiteSettingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SiteSettingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SiteSettingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SiteSettingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SiteSettingMaxAggregateInputType
+  }
+
+  export type GetSiteSettingAggregateType<T extends SiteSettingAggregateArgs> = {
+        [P in keyof T & keyof AggregateSiteSetting]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSiteSetting[P]>
+      : GetScalarType<T[P], AggregateSiteSetting[P]>
+  }
+
+
+
+
+  export type SiteSettingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SiteSettingWhereInput
+    orderBy?: SiteSettingOrderByWithAggregationInput | SiteSettingOrderByWithAggregationInput[]
+    by: SiteSettingScalarFieldEnum[] | SiteSettingScalarFieldEnum
+    having?: SiteSettingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SiteSettingCountAggregateInputType | true
+    _avg?: SiteSettingAvgAggregateInputType
+    _sum?: SiteSettingSumAggregateInputType
+    _min?: SiteSettingMinAggregateInputType
+    _max?: SiteSettingMaxAggregateInputType
+  }
+
+  export type SiteSettingGroupByOutputType = {
+    id: number
+    phone: string | null
+    secondaryPhone: string | null
+    email: string | null
+    address: string | null
+    workingHours: string | null
+    instagramUrl: string | null
+    telegramUrl: string | null
+    whatsappUrl: string | null
+    aboutText: string | null
+    updatedAt: Date
+    _count: SiteSettingCountAggregateOutputType | null
+    _avg: SiteSettingAvgAggregateOutputType | null
+    _sum: SiteSettingSumAggregateOutputType | null
+    _min: SiteSettingMinAggregateOutputType | null
+    _max: SiteSettingMaxAggregateOutputType | null
+  }
+
+  type GetSiteSettingGroupByPayload<T extends SiteSettingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SiteSettingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SiteSettingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SiteSettingGroupByOutputType[P]>
+            : GetScalarType<T[P], SiteSettingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SiteSettingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    phone?: boolean
+    secondaryPhone?: boolean
+    email?: boolean
+    address?: boolean
+    workingHours?: boolean
+    instagramUrl?: boolean
+    telegramUrl?: boolean
+    whatsappUrl?: boolean
+    aboutText?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["siteSetting"]>
+
+  export type SiteSettingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    phone?: boolean
+    secondaryPhone?: boolean
+    email?: boolean
+    address?: boolean
+    workingHours?: boolean
+    instagramUrl?: boolean
+    telegramUrl?: boolean
+    whatsappUrl?: boolean
+    aboutText?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["siteSetting"]>
+
+  export type SiteSettingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    phone?: boolean
+    secondaryPhone?: boolean
+    email?: boolean
+    address?: boolean
+    workingHours?: boolean
+    instagramUrl?: boolean
+    telegramUrl?: boolean
+    whatsappUrl?: boolean
+    aboutText?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["siteSetting"]>
+
+  export type SiteSettingSelectScalar = {
+    id?: boolean
+    phone?: boolean
+    secondaryPhone?: boolean
+    email?: boolean
+    address?: boolean
+    workingHours?: boolean
+    instagramUrl?: boolean
+    telegramUrl?: boolean
+    whatsappUrl?: boolean
+    aboutText?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "secondaryPhone" | "email" | "address" | "workingHours" | "instagramUrl" | "telegramUrl" | "whatsappUrl" | "aboutText" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+
+  export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SiteSetting"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      phone: string | null
+      secondaryPhone: string | null
+      email: string | null
+      address: string | null
+      workingHours: string | null
+      instagramUrl: string | null
+      telegramUrl: string | null
+      whatsappUrl: string | null
+      aboutText: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["siteSetting"]>
+    composites: {}
+  }
+
+  type SiteSettingGetPayload<S extends boolean | null | undefined | SiteSettingDefaultArgs> = $Result.GetResult<Prisma.$SiteSettingPayload, S>
+
+  type SiteSettingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SiteSettingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SiteSettingCountAggregateInputType | true
+    }
+
+  export interface SiteSettingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SiteSetting'], meta: { name: 'SiteSetting' } }
+    /**
+     * Find zero or one SiteSetting that matches the filter.
+     * @param {SiteSettingFindUniqueArgs} args - Arguments to find a SiteSetting
+     * @example
+     * // Get one SiteSetting
+     * const siteSetting = await prisma.siteSetting.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SiteSettingFindUniqueArgs>(args: SelectSubset<T, SiteSettingFindUniqueArgs<ExtArgs>>): Prisma__SiteSettingClient<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SiteSetting that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SiteSettingFindUniqueOrThrowArgs} args - Arguments to find a SiteSetting
+     * @example
+     * // Get one SiteSetting
+     * const siteSetting = await prisma.siteSetting.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SiteSettingFindUniqueOrThrowArgs>(args: SelectSubset<T, SiteSettingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SiteSettingClient<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SiteSetting that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteSettingFindFirstArgs} args - Arguments to find a SiteSetting
+     * @example
+     * // Get one SiteSetting
+     * const siteSetting = await prisma.siteSetting.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SiteSettingFindFirstArgs>(args?: SelectSubset<T, SiteSettingFindFirstArgs<ExtArgs>>): Prisma__SiteSettingClient<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SiteSetting that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteSettingFindFirstOrThrowArgs} args - Arguments to find a SiteSetting
+     * @example
+     * // Get one SiteSetting
+     * const siteSetting = await prisma.siteSetting.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SiteSettingFindFirstOrThrowArgs>(args?: SelectSubset<T, SiteSettingFindFirstOrThrowArgs<ExtArgs>>): Prisma__SiteSettingClient<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SiteSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteSettingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SiteSettings
+     * const siteSettings = await prisma.siteSetting.findMany()
+     * 
+     * // Get first 10 SiteSettings
+     * const siteSettings = await prisma.siteSetting.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const siteSettingWithIdOnly = await prisma.siteSetting.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SiteSettingFindManyArgs>(args?: SelectSubset<T, SiteSettingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SiteSetting.
+     * @param {SiteSettingCreateArgs} args - Arguments to create a SiteSetting.
+     * @example
+     * // Create one SiteSetting
+     * const SiteSetting = await prisma.siteSetting.create({
+     *   data: {
+     *     // ... data to create a SiteSetting
+     *   }
+     * })
+     * 
+     */
+    create<T extends SiteSettingCreateArgs>(args: SelectSubset<T, SiteSettingCreateArgs<ExtArgs>>): Prisma__SiteSettingClient<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SiteSettings.
+     * @param {SiteSettingCreateManyArgs} args - Arguments to create many SiteSettings.
+     * @example
+     * // Create many SiteSettings
+     * const siteSetting = await prisma.siteSetting.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SiteSettingCreateManyArgs>(args?: SelectSubset<T, SiteSettingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SiteSettings and returns the data saved in the database.
+     * @param {SiteSettingCreateManyAndReturnArgs} args - Arguments to create many SiteSettings.
+     * @example
+     * // Create many SiteSettings
+     * const siteSetting = await prisma.siteSetting.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SiteSettings and only return the `id`
+     * const siteSettingWithIdOnly = await prisma.siteSetting.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SiteSettingCreateManyAndReturnArgs>(args?: SelectSubset<T, SiteSettingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SiteSetting.
+     * @param {SiteSettingDeleteArgs} args - Arguments to delete one SiteSetting.
+     * @example
+     * // Delete one SiteSetting
+     * const SiteSetting = await prisma.siteSetting.delete({
+     *   where: {
+     *     // ... filter to delete one SiteSetting
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SiteSettingDeleteArgs>(args: SelectSubset<T, SiteSettingDeleteArgs<ExtArgs>>): Prisma__SiteSettingClient<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SiteSetting.
+     * @param {SiteSettingUpdateArgs} args - Arguments to update one SiteSetting.
+     * @example
+     * // Update one SiteSetting
+     * const siteSetting = await prisma.siteSetting.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SiteSettingUpdateArgs>(args: SelectSubset<T, SiteSettingUpdateArgs<ExtArgs>>): Prisma__SiteSettingClient<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SiteSettings.
+     * @param {SiteSettingDeleteManyArgs} args - Arguments to filter SiteSettings to delete.
+     * @example
+     * // Delete a few SiteSettings
+     * const { count } = await prisma.siteSetting.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SiteSettingDeleteManyArgs>(args?: SelectSubset<T, SiteSettingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SiteSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteSettingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SiteSettings
+     * const siteSetting = await prisma.siteSetting.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SiteSettingUpdateManyArgs>(args: SelectSubset<T, SiteSettingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SiteSettings and returns the data updated in the database.
+     * @param {SiteSettingUpdateManyAndReturnArgs} args - Arguments to update many SiteSettings.
+     * @example
+     * // Update many SiteSettings
+     * const siteSetting = await prisma.siteSetting.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SiteSettings and only return the `id`
+     * const siteSettingWithIdOnly = await prisma.siteSetting.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SiteSettingUpdateManyAndReturnArgs>(args: SelectSubset<T, SiteSettingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SiteSetting.
+     * @param {SiteSettingUpsertArgs} args - Arguments to update or create a SiteSetting.
+     * @example
+     * // Update or create a SiteSetting
+     * const siteSetting = await prisma.siteSetting.upsert({
+     *   create: {
+     *     // ... data to create a SiteSetting
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SiteSetting we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SiteSettingUpsertArgs>(args: SelectSubset<T, SiteSettingUpsertArgs<ExtArgs>>): Prisma__SiteSettingClient<$Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SiteSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteSettingCountArgs} args - Arguments to filter SiteSettings to count.
+     * @example
+     * // Count the number of SiteSettings
+     * const count = await prisma.siteSetting.count({
+     *   where: {
+     *     // ... the filter for the SiteSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends SiteSettingCountArgs>(
+      args?: Subset<T, SiteSettingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SiteSettingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SiteSetting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteSettingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SiteSettingAggregateArgs>(args: Subset<T, SiteSettingAggregateArgs>): Prisma.PrismaPromise<GetSiteSettingAggregateType<T>>
+
+    /**
+     * Group by SiteSetting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteSettingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SiteSettingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SiteSettingGroupByArgs['orderBy'] }
+        : { orderBy?: SiteSettingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SiteSettingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSiteSettingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SiteSetting model
+   */
+  readonly fields: SiteSettingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SiteSetting.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SiteSettingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SiteSetting model
+   */
+  interface SiteSettingFieldRefs {
+    readonly id: FieldRef<"SiteSetting", 'Int'>
+    readonly phone: FieldRef<"SiteSetting", 'String'>
+    readonly secondaryPhone: FieldRef<"SiteSetting", 'String'>
+    readonly email: FieldRef<"SiteSetting", 'String'>
+    readonly address: FieldRef<"SiteSetting", 'String'>
+    readonly workingHours: FieldRef<"SiteSetting", 'String'>
+    readonly instagramUrl: FieldRef<"SiteSetting", 'String'>
+    readonly telegramUrl: FieldRef<"SiteSetting", 'String'>
+    readonly whatsappUrl: FieldRef<"SiteSetting", 'String'>
+    readonly aboutText: FieldRef<"SiteSetting", 'String'>
+    readonly updatedAt: FieldRef<"SiteSetting", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SiteSetting findUnique
+   */
+  export type SiteSettingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which SiteSetting to fetch.
+     */
+    where: SiteSettingWhereUniqueInput
+  }
+
+  /**
+   * SiteSetting findUniqueOrThrow
+   */
+  export type SiteSettingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which SiteSetting to fetch.
+     */
+    where: SiteSettingWhereUniqueInput
+  }
+
+  /**
+   * SiteSetting findFirst
+   */
+  export type SiteSettingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which SiteSetting to fetch.
+     */
+    where?: SiteSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteSettings to fetch.
+     */
+    orderBy?: SiteSettingOrderByWithRelationInput | SiteSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SiteSettings.
+     */
+    cursor?: SiteSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SiteSettings.
+     */
+    distinct?: SiteSettingScalarFieldEnum | SiteSettingScalarFieldEnum[]
+  }
+
+  /**
+   * SiteSetting findFirstOrThrow
+   */
+  export type SiteSettingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which SiteSetting to fetch.
+     */
+    where?: SiteSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteSettings to fetch.
+     */
+    orderBy?: SiteSettingOrderByWithRelationInput | SiteSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SiteSettings.
+     */
+    cursor?: SiteSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SiteSettings.
+     */
+    distinct?: SiteSettingScalarFieldEnum | SiteSettingScalarFieldEnum[]
+  }
+
+  /**
+   * SiteSetting findMany
+   */
+  export type SiteSettingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * Filter, which SiteSettings to fetch.
+     */
+    where?: SiteSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteSettings to fetch.
+     */
+    orderBy?: SiteSettingOrderByWithRelationInput | SiteSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SiteSettings.
+     */
+    cursor?: SiteSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SiteSettings.
+     */
+    distinct?: SiteSettingScalarFieldEnum | SiteSettingScalarFieldEnum[]
+  }
+
+  /**
+   * SiteSetting create
+   */
+  export type SiteSettingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SiteSetting.
+     */
+    data: XOR<SiteSettingCreateInput, SiteSettingUncheckedCreateInput>
+  }
+
+  /**
+   * SiteSetting createMany
+   */
+  export type SiteSettingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SiteSettings.
+     */
+    data: SiteSettingCreateManyInput | SiteSettingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SiteSetting createManyAndReturn
+   */
+  export type SiteSettingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * The data used to create many SiteSettings.
+     */
+    data: SiteSettingCreateManyInput | SiteSettingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SiteSetting update
+   */
+  export type SiteSettingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SiteSetting.
+     */
+    data: XOR<SiteSettingUpdateInput, SiteSettingUncheckedUpdateInput>
+    /**
+     * Choose, which SiteSetting to update.
+     */
+    where: SiteSettingWhereUniqueInput
+  }
+
+  /**
+   * SiteSetting updateMany
+   */
+  export type SiteSettingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SiteSettings.
+     */
+    data: XOR<SiteSettingUpdateManyMutationInput, SiteSettingUncheckedUpdateManyInput>
+    /**
+     * Filter which SiteSettings to update
+     */
+    where?: SiteSettingWhereInput
+    /**
+     * Limit how many SiteSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SiteSetting updateManyAndReturn
+   */
+  export type SiteSettingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * The data used to update SiteSettings.
+     */
+    data: XOR<SiteSettingUpdateManyMutationInput, SiteSettingUncheckedUpdateManyInput>
+    /**
+     * Filter which SiteSettings to update
+     */
+    where?: SiteSettingWhereInput
+    /**
+     * Limit how many SiteSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SiteSetting upsert
+   */
+  export type SiteSettingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SiteSetting to update in case it exists.
+     */
+    where: SiteSettingWhereUniqueInput
+    /**
+     * In case the SiteSetting found by the `where` argument doesn't exist, create a new SiteSetting with this data.
+     */
+    create: XOR<SiteSettingCreateInput, SiteSettingUncheckedCreateInput>
+    /**
+     * In case the SiteSetting was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SiteSettingUpdateInput, SiteSettingUncheckedUpdateInput>
+  }
+
+  /**
+   * SiteSetting delete
+   */
+  export type SiteSettingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+    /**
+     * Filter which SiteSetting to delete.
+     */
+    where: SiteSettingWhereUniqueInput
+  }
+
+  /**
+   * SiteSetting deleteMany
+   */
+  export type SiteSettingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SiteSettings to delete
+     */
+    where?: SiteSettingWhereInput
+    /**
+     * Limit how many SiteSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SiteSetting without action
+   */
+  export type SiteSettingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteSetting
+     */
+    select?: SiteSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SiteSetting
+     */
+    omit?: SiteSettingOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SmsCampaign
+   */
+
+  export type AggregateSmsCampaign = {
+    _count: SmsCampaignCountAggregateOutputType | null
+    _avg: SmsCampaignAvgAggregateOutputType | null
+    _sum: SmsCampaignSumAggregateOutputType | null
+    _min: SmsCampaignMinAggregateOutputType | null
+    _max: SmsCampaignMaxAggregateOutputType | null
+  }
+
+  export type SmsCampaignAvgAggregateOutputType = {
+    recipientCount: number | null
+    successCount: number | null
+    failedCount: number | null
+  }
+
+  export type SmsCampaignSumAggregateOutputType = {
+    recipientCount: number | null
+    successCount: number | null
+    failedCount: number | null
+  }
+
+  export type SmsCampaignMinAggregateOutputType = {
+    id: string | null
+    body: string | null
+    targetRole: $Enums.SmsTargetRole | null
+    recipientCount: number | null
+    successCount: number | null
+    failedCount: number | null
+    status: $Enums.SmsCampaignStatus | null
+    createdById: string | null
+    createdAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type SmsCampaignMaxAggregateOutputType = {
+    id: string | null
+    body: string | null
+    targetRole: $Enums.SmsTargetRole | null
+    recipientCount: number | null
+    successCount: number | null
+    failedCount: number | null
+    status: $Enums.SmsCampaignStatus | null
+    createdById: string | null
+    createdAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type SmsCampaignCountAggregateOutputType = {
+    id: number
+    body: number
+    targetRole: number
+    recipientCount: number
+    successCount: number
+    failedCount: number
+    status: number
+    createdById: number
+    createdAt: number
+    completedAt: number
+    _all: number
+  }
+
+
+  export type SmsCampaignAvgAggregateInputType = {
+    recipientCount?: true
+    successCount?: true
+    failedCount?: true
+  }
+
+  export type SmsCampaignSumAggregateInputType = {
+    recipientCount?: true
+    successCount?: true
+    failedCount?: true
+  }
+
+  export type SmsCampaignMinAggregateInputType = {
+    id?: true
+    body?: true
+    targetRole?: true
+    recipientCount?: true
+    successCount?: true
+    failedCount?: true
+    status?: true
+    createdById?: true
+    createdAt?: true
+    completedAt?: true
+  }
+
+  export type SmsCampaignMaxAggregateInputType = {
+    id?: true
+    body?: true
+    targetRole?: true
+    recipientCount?: true
+    successCount?: true
+    failedCount?: true
+    status?: true
+    createdById?: true
+    createdAt?: true
+    completedAt?: true
+  }
+
+  export type SmsCampaignCountAggregateInputType = {
+    id?: true
+    body?: true
+    targetRole?: true
+    recipientCount?: true
+    successCount?: true
+    failedCount?: true
+    status?: true
+    createdById?: true
+    createdAt?: true
+    completedAt?: true
+    _all?: true
+  }
+
+  export type SmsCampaignAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SmsCampaign to aggregate.
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsCampaigns to fetch.
+     */
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SmsCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SmsCampaigns
+    **/
+    _count?: true | SmsCampaignCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SmsCampaignAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SmsCampaignSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SmsCampaignMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SmsCampaignMaxAggregateInputType
+  }
+
+  export type GetSmsCampaignAggregateType<T extends SmsCampaignAggregateArgs> = {
+        [P in keyof T & keyof AggregateSmsCampaign]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSmsCampaign[P]>
+      : GetScalarType<T[P], AggregateSmsCampaign[P]>
+  }
+
+
+
+
+  export type SmsCampaignGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SmsCampaignWhereInput
+    orderBy?: SmsCampaignOrderByWithAggregationInput | SmsCampaignOrderByWithAggregationInput[]
+    by: SmsCampaignScalarFieldEnum[] | SmsCampaignScalarFieldEnum
+    having?: SmsCampaignScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SmsCampaignCountAggregateInputType | true
+    _avg?: SmsCampaignAvgAggregateInputType
+    _sum?: SmsCampaignSumAggregateInputType
+    _min?: SmsCampaignMinAggregateInputType
+    _max?: SmsCampaignMaxAggregateInputType
+  }
+
+  export type SmsCampaignGroupByOutputType = {
+    id: string
+    body: string
+    targetRole: $Enums.SmsTargetRole
+    recipientCount: number
+    successCount: number
+    failedCount: number
+    status: $Enums.SmsCampaignStatus
+    createdById: string | null
+    createdAt: Date
+    completedAt: Date | null
+    _count: SmsCampaignCountAggregateOutputType | null
+    _avg: SmsCampaignAvgAggregateOutputType | null
+    _sum: SmsCampaignSumAggregateOutputType | null
+    _min: SmsCampaignMinAggregateOutputType | null
+    _max: SmsCampaignMaxAggregateOutputType | null
+  }
+
+  type GetSmsCampaignGroupByPayload<T extends SmsCampaignGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SmsCampaignGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SmsCampaignGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SmsCampaignGroupByOutputType[P]>
+            : GetScalarType<T[P], SmsCampaignGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SmsCampaignSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    body?: boolean
+    targetRole?: boolean
+    recipientCount?: boolean
+    successCount?: boolean
+    failedCount?: boolean
+    status?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+    createdBy?: boolean | SmsCampaign$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["smsCampaign"]>
+
+  export type SmsCampaignSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    body?: boolean
+    targetRole?: boolean
+    recipientCount?: boolean
+    successCount?: boolean
+    failedCount?: boolean
+    status?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+    createdBy?: boolean | SmsCampaign$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["smsCampaign"]>
+
+  export type SmsCampaignSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    body?: boolean
+    targetRole?: boolean
+    recipientCount?: boolean
+    successCount?: boolean
+    failedCount?: boolean
+    status?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+    createdBy?: boolean | SmsCampaign$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["smsCampaign"]>
+
+  export type SmsCampaignSelectScalar = {
+    id?: boolean
+    body?: boolean
+    targetRole?: boolean
+    recipientCount?: boolean
+    successCount?: boolean
+    failedCount?: boolean
+    status?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+  }
+
+  export type SmsCampaignOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "body" | "targetRole" | "recipientCount" | "successCount" | "failedCount" | "status" | "createdById" | "createdAt" | "completedAt", ExtArgs["result"]["smsCampaign"]>
+  export type SmsCampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | SmsCampaign$createdByArgs<ExtArgs>
+  }
+  export type SmsCampaignIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | SmsCampaign$createdByArgs<ExtArgs>
+  }
+  export type SmsCampaignIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | SmsCampaign$createdByArgs<ExtArgs>
+  }
+
+  export type $SmsCampaignPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SmsCampaign"
+    objects: {
+      createdBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      body: string
+      targetRole: $Enums.SmsTargetRole
+      recipientCount: number
+      successCount: number
+      failedCount: number
+      status: $Enums.SmsCampaignStatus
+      createdById: string | null
+      createdAt: Date
+      completedAt: Date | null
+    }, ExtArgs["result"]["smsCampaign"]>
+    composites: {}
+  }
+
+  type SmsCampaignGetPayload<S extends boolean | null | undefined | SmsCampaignDefaultArgs> = $Result.GetResult<Prisma.$SmsCampaignPayload, S>
+
+  type SmsCampaignCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SmsCampaignFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SmsCampaignCountAggregateInputType | true
+    }
+
+  export interface SmsCampaignDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SmsCampaign'], meta: { name: 'SmsCampaign' } }
+    /**
+     * Find zero or one SmsCampaign that matches the filter.
+     * @param {SmsCampaignFindUniqueArgs} args - Arguments to find a SmsCampaign
+     * @example
+     * // Get one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SmsCampaignFindUniqueArgs>(args: SelectSubset<T, SmsCampaignFindUniqueArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SmsCampaign that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SmsCampaignFindUniqueOrThrowArgs} args - Arguments to find a SmsCampaign
+     * @example
+     * // Get one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SmsCampaignFindUniqueOrThrowArgs>(args: SelectSubset<T, SmsCampaignFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SmsCampaign that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignFindFirstArgs} args - Arguments to find a SmsCampaign
+     * @example
+     * // Get one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SmsCampaignFindFirstArgs>(args?: SelectSubset<T, SmsCampaignFindFirstArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SmsCampaign that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignFindFirstOrThrowArgs} args - Arguments to find a SmsCampaign
+     * @example
+     * // Get one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SmsCampaignFindFirstOrThrowArgs>(args?: SelectSubset<T, SmsCampaignFindFirstOrThrowArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SmsCampaigns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SmsCampaigns
+     * const smsCampaigns = await prisma.smsCampaign.findMany()
+     * 
+     * // Get first 10 SmsCampaigns
+     * const smsCampaigns = await prisma.smsCampaign.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const smsCampaignWithIdOnly = await prisma.smsCampaign.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SmsCampaignFindManyArgs>(args?: SelectSubset<T, SmsCampaignFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SmsCampaign.
+     * @param {SmsCampaignCreateArgs} args - Arguments to create a SmsCampaign.
+     * @example
+     * // Create one SmsCampaign
+     * const SmsCampaign = await prisma.smsCampaign.create({
+     *   data: {
+     *     // ... data to create a SmsCampaign
+     *   }
+     * })
+     * 
+     */
+    create<T extends SmsCampaignCreateArgs>(args: SelectSubset<T, SmsCampaignCreateArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SmsCampaigns.
+     * @param {SmsCampaignCreateManyArgs} args - Arguments to create many SmsCampaigns.
+     * @example
+     * // Create many SmsCampaigns
+     * const smsCampaign = await prisma.smsCampaign.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SmsCampaignCreateManyArgs>(args?: SelectSubset<T, SmsCampaignCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SmsCampaigns and returns the data saved in the database.
+     * @param {SmsCampaignCreateManyAndReturnArgs} args - Arguments to create many SmsCampaigns.
+     * @example
+     * // Create many SmsCampaigns
+     * const smsCampaign = await prisma.smsCampaign.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SmsCampaigns and only return the `id`
+     * const smsCampaignWithIdOnly = await prisma.smsCampaign.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SmsCampaignCreateManyAndReturnArgs>(args?: SelectSubset<T, SmsCampaignCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SmsCampaign.
+     * @param {SmsCampaignDeleteArgs} args - Arguments to delete one SmsCampaign.
+     * @example
+     * // Delete one SmsCampaign
+     * const SmsCampaign = await prisma.smsCampaign.delete({
+     *   where: {
+     *     // ... filter to delete one SmsCampaign
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SmsCampaignDeleteArgs>(args: SelectSubset<T, SmsCampaignDeleteArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SmsCampaign.
+     * @param {SmsCampaignUpdateArgs} args - Arguments to update one SmsCampaign.
+     * @example
+     * // Update one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SmsCampaignUpdateArgs>(args: SelectSubset<T, SmsCampaignUpdateArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SmsCampaigns.
+     * @param {SmsCampaignDeleteManyArgs} args - Arguments to filter SmsCampaigns to delete.
+     * @example
+     * // Delete a few SmsCampaigns
+     * const { count } = await prisma.smsCampaign.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SmsCampaignDeleteManyArgs>(args?: SelectSubset<T, SmsCampaignDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SmsCampaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SmsCampaigns
+     * const smsCampaign = await prisma.smsCampaign.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SmsCampaignUpdateManyArgs>(args: SelectSubset<T, SmsCampaignUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SmsCampaigns and returns the data updated in the database.
+     * @param {SmsCampaignUpdateManyAndReturnArgs} args - Arguments to update many SmsCampaigns.
+     * @example
+     * // Update many SmsCampaigns
+     * const smsCampaign = await prisma.smsCampaign.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SmsCampaigns and only return the `id`
+     * const smsCampaignWithIdOnly = await prisma.smsCampaign.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SmsCampaignUpdateManyAndReturnArgs>(args: SelectSubset<T, SmsCampaignUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SmsCampaign.
+     * @param {SmsCampaignUpsertArgs} args - Arguments to update or create a SmsCampaign.
+     * @example
+     * // Update or create a SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.upsert({
+     *   create: {
+     *     // ... data to create a SmsCampaign
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SmsCampaign we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SmsCampaignUpsertArgs>(args: SelectSubset<T, SmsCampaignUpsertArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SmsCampaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignCountArgs} args - Arguments to filter SmsCampaigns to count.
+     * @example
+     * // Count the number of SmsCampaigns
+     * const count = await prisma.smsCampaign.count({
+     *   where: {
+     *     // ... the filter for the SmsCampaigns we want to count
+     *   }
+     * })
+    **/
+    count<T extends SmsCampaignCountArgs>(
+      args?: Subset<T, SmsCampaignCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SmsCampaignCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SmsCampaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SmsCampaignAggregateArgs>(args: Subset<T, SmsCampaignAggregateArgs>): Prisma.PrismaPromise<GetSmsCampaignAggregateType<T>>
+
+    /**
+     * Group by SmsCampaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SmsCampaignGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SmsCampaignGroupByArgs['orderBy'] }
+        : { orderBy?: SmsCampaignGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SmsCampaignGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSmsCampaignGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SmsCampaign model
+   */
+  readonly fields: SmsCampaignFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SmsCampaign.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SmsCampaignClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    createdBy<T extends SmsCampaign$createdByArgs<ExtArgs> = {}>(args?: Subset<T, SmsCampaign$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SmsCampaign model
+   */
+  interface SmsCampaignFieldRefs {
+    readonly id: FieldRef<"SmsCampaign", 'String'>
+    readonly body: FieldRef<"SmsCampaign", 'String'>
+    readonly targetRole: FieldRef<"SmsCampaign", 'SmsTargetRole'>
+    readonly recipientCount: FieldRef<"SmsCampaign", 'Int'>
+    readonly successCount: FieldRef<"SmsCampaign", 'Int'>
+    readonly failedCount: FieldRef<"SmsCampaign", 'Int'>
+    readonly status: FieldRef<"SmsCampaign", 'SmsCampaignStatus'>
+    readonly createdById: FieldRef<"SmsCampaign", 'String'>
+    readonly createdAt: FieldRef<"SmsCampaign", 'DateTime'>
+    readonly completedAt: FieldRef<"SmsCampaign", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SmsCampaign findUnique
+   */
+  export type SmsCampaignFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaign to fetch.
+     */
+    where: SmsCampaignWhereUniqueInput
+  }
+
+  /**
+   * SmsCampaign findUniqueOrThrow
+   */
+  export type SmsCampaignFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaign to fetch.
+     */
+    where: SmsCampaignWhereUniqueInput
+  }
+
+  /**
+   * SmsCampaign findFirst
+   */
+  export type SmsCampaignFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaign to fetch.
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsCampaigns to fetch.
+     */
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SmsCampaigns.
+     */
+    cursor?: SmsCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SmsCampaigns.
+     */
+    distinct?: SmsCampaignScalarFieldEnum | SmsCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * SmsCampaign findFirstOrThrow
+   */
+  export type SmsCampaignFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaign to fetch.
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsCampaigns to fetch.
+     */
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SmsCampaigns.
+     */
+    cursor?: SmsCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SmsCampaigns.
+     */
+    distinct?: SmsCampaignScalarFieldEnum | SmsCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * SmsCampaign findMany
+   */
+  export type SmsCampaignFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaigns to fetch.
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsCampaigns to fetch.
+     */
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SmsCampaigns.
+     */
+    cursor?: SmsCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SmsCampaigns.
+     */
+    distinct?: SmsCampaignScalarFieldEnum | SmsCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * SmsCampaign create
+   */
+  export type SmsCampaignCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SmsCampaign.
+     */
+    data: XOR<SmsCampaignCreateInput, SmsCampaignUncheckedCreateInput>
+  }
+
+  /**
+   * SmsCampaign createMany
+   */
+  export type SmsCampaignCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SmsCampaigns.
+     */
+    data: SmsCampaignCreateManyInput | SmsCampaignCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SmsCampaign createManyAndReturn
+   */
+  export type SmsCampaignCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * The data used to create many SmsCampaigns.
+     */
+    data: SmsCampaignCreateManyInput | SmsCampaignCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SmsCampaign update
+   */
+  export type SmsCampaignUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SmsCampaign.
+     */
+    data: XOR<SmsCampaignUpdateInput, SmsCampaignUncheckedUpdateInput>
+    /**
+     * Choose, which SmsCampaign to update.
+     */
+    where: SmsCampaignWhereUniqueInput
+  }
+
+  /**
+   * SmsCampaign updateMany
+   */
+  export type SmsCampaignUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SmsCampaigns.
+     */
+    data: XOR<SmsCampaignUpdateManyMutationInput, SmsCampaignUncheckedUpdateManyInput>
+    /**
+     * Filter which SmsCampaigns to update
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * Limit how many SmsCampaigns to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SmsCampaign updateManyAndReturn
+   */
+  export type SmsCampaignUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * The data used to update SmsCampaigns.
+     */
+    data: XOR<SmsCampaignUpdateManyMutationInput, SmsCampaignUncheckedUpdateManyInput>
+    /**
+     * Filter which SmsCampaigns to update
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * Limit how many SmsCampaigns to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SmsCampaign upsert
+   */
+  export type SmsCampaignUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SmsCampaign to update in case it exists.
+     */
+    where: SmsCampaignWhereUniqueInput
+    /**
+     * In case the SmsCampaign found by the `where` argument doesn't exist, create a new SmsCampaign with this data.
+     */
+    create: XOR<SmsCampaignCreateInput, SmsCampaignUncheckedCreateInput>
+    /**
+     * In case the SmsCampaign was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SmsCampaignUpdateInput, SmsCampaignUncheckedUpdateInput>
+  }
+
+  /**
+   * SmsCampaign delete
+   */
+  export type SmsCampaignDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter which SmsCampaign to delete.
+     */
+    where: SmsCampaignWhereUniqueInput
+  }
+
+  /**
+   * SmsCampaign deleteMany
+   */
+  export type SmsCampaignDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SmsCampaigns to delete
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * Limit how many SmsCampaigns to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SmsCampaign.createdBy
+   */
+  export type SmsCampaign$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * SmsCampaign without action
+   */
+  export type SmsCampaignDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsCampaign
+     */
+    omit?: SmsCampaignOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model ShippingOption
    */
 
@@ -36422,6 +39006,8 @@ export namespace Prisma {
     referredBy: 'referredBy',
     activityField: 'activityField',
     partnerCode: 'partnerCode',
+    username: 'username',
+    passwordHash: 'passwordHash',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -36656,6 +39242,39 @@ export namespace Prisma {
   export type FaqScalarFieldEnum = (typeof FaqScalarFieldEnum)[keyof typeof FaqScalarFieldEnum]
 
 
+  export const SiteSettingScalarFieldEnum: {
+    id: 'id',
+    phone: 'phone',
+    secondaryPhone: 'secondaryPhone',
+    email: 'email',
+    address: 'address',
+    workingHours: 'workingHours',
+    instagramUrl: 'instagramUrl',
+    telegramUrl: 'telegramUrl',
+    whatsappUrl: 'whatsappUrl',
+    aboutText: 'aboutText',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SiteSettingScalarFieldEnum = (typeof SiteSettingScalarFieldEnum)[keyof typeof SiteSettingScalarFieldEnum]
+
+
+  export const SmsCampaignScalarFieldEnum: {
+    id: 'id',
+    body: 'body',
+    targetRole: 'targetRole',
+    recipientCount: 'recipientCount',
+    successCount: 'successCount',
+    failedCount: 'failedCount',
+    status: 'status',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    completedAt: 'completedAt'
+  };
+
+  export type SmsCampaignScalarFieldEnum = (typeof SmsCampaignScalarFieldEnum)[keyof typeof SmsCampaignScalarFieldEnum]
+
+
   export const ShippingOptionScalarFieldEnum: {
     id: 'id',
     method: 'method',
@@ -36885,6 +39504,34 @@ export namespace Prisma {
    * Reference to a field of type 'Decimal[]'
    */
   export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsTargetRole'
+   */
+  export type EnumSmsTargetRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsTargetRole'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsTargetRole[]'
+   */
+  export type ListEnumSmsTargetRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsTargetRole[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsCampaignStatus'
+   */
+  export type EnumSmsCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsCampaignStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsCampaignStatus[]'
+   */
+  export type ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsCampaignStatus[]'>
     
 
 
@@ -37159,6 +39806,8 @@ export namespace Prisma {
     referredBy?: StringNullableFilter<"User"> | string | null
     activityField?: StringNullableFilter<"User"> | string | null
     partnerCode?: StringNullableFilter<"User"> | string | null
+    username?: StringNullableFilter<"User"> | string | null
+    passwordHash?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     addresses?: AddressListRelationFilter
@@ -37172,6 +39821,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyListRelationFilter
     priceListRequests?: PriceListRequestListRelationFilter
     productSuggestions?: ProductSuggestionListRelationFilter
+    smsCampaigns?: SmsCampaignListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -37188,6 +39838,8 @@ export namespace Prisma {
     referredBy?: SortOrderInput | SortOrder
     activityField?: SortOrderInput | SortOrder
     partnerCode?: SortOrderInput | SortOrder
+    username?: SortOrderInput | SortOrder
+    passwordHash?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     addresses?: AddressOrderByRelationAggregateInput
@@ -37201,12 +39853,14 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyOrderByRelationAggregateInput
     priceListRequests?: PriceListRequestOrderByRelationAggregateInput
     productSuggestions?: ProductSuggestionOrderByRelationAggregateInput
+    smsCampaigns?: SmsCampaignOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     phoneNumber?: string
     partnerCode?: string
+    username?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -37220,6 +39874,7 @@ export namespace Prisma {
     accountBalance?: BigIntFilter<"User"> | bigint | number
     referredBy?: StringNullableFilter<"User"> | string | null
     activityField?: StringNullableFilter<"User"> | string | null
+    passwordHash?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     addresses?: AddressListRelationFilter
@@ -37233,7 +39888,8 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyListRelationFilter
     priceListRequests?: PriceListRequestListRelationFilter
     productSuggestions?: ProductSuggestionListRelationFilter
-  }, "id" | "phoneNumber" | "partnerCode">
+    smsCampaigns?: SmsCampaignListRelationFilter
+  }, "id" | "phoneNumber" | "partnerCode" | "username">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -37249,6 +39905,8 @@ export namespace Prisma {
     referredBy?: SortOrderInput | SortOrder
     activityField?: SortOrderInput | SortOrder
     partnerCode?: SortOrderInput | SortOrder
+    username?: SortOrderInput | SortOrder
+    passwordHash?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -37275,6 +39933,8 @@ export namespace Prisma {
     referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
     activityField?: StringNullableWithAggregatesFilter<"User"> | string | null
     partnerCode?: StringNullableWithAggregatesFilter<"User"> | string | null
+    username?: StringNullableWithAggregatesFilter<"User"> | string | null
+    passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -38486,6 +41146,172 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Faq"> | Date | string
   }
 
+  export type SiteSettingWhereInput = {
+    AND?: SiteSettingWhereInput | SiteSettingWhereInput[]
+    OR?: SiteSettingWhereInput[]
+    NOT?: SiteSettingWhereInput | SiteSettingWhereInput[]
+    id?: IntFilter<"SiteSetting"> | number
+    phone?: StringNullableFilter<"SiteSetting"> | string | null
+    secondaryPhone?: StringNullableFilter<"SiteSetting"> | string | null
+    email?: StringNullableFilter<"SiteSetting"> | string | null
+    address?: StringNullableFilter<"SiteSetting"> | string | null
+    workingHours?: StringNullableFilter<"SiteSetting"> | string | null
+    instagramUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    telegramUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    whatsappUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    aboutText?: StringNullableFilter<"SiteSetting"> | string | null
+    updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
+  }
+
+  export type SiteSettingOrderByWithRelationInput = {
+    id?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    secondaryPhone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    workingHours?: SortOrderInput | SortOrder
+    instagramUrl?: SortOrderInput | SortOrder
+    telegramUrl?: SortOrderInput | SortOrder
+    whatsappUrl?: SortOrderInput | SortOrder
+    aboutText?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SiteSettingWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: SiteSettingWhereInput | SiteSettingWhereInput[]
+    OR?: SiteSettingWhereInput[]
+    NOT?: SiteSettingWhereInput | SiteSettingWhereInput[]
+    phone?: StringNullableFilter<"SiteSetting"> | string | null
+    secondaryPhone?: StringNullableFilter<"SiteSetting"> | string | null
+    email?: StringNullableFilter<"SiteSetting"> | string | null
+    address?: StringNullableFilter<"SiteSetting"> | string | null
+    workingHours?: StringNullableFilter<"SiteSetting"> | string | null
+    instagramUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    telegramUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    whatsappUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    aboutText?: StringNullableFilter<"SiteSetting"> | string | null
+    updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
+  }, "id">
+
+  export type SiteSettingOrderByWithAggregationInput = {
+    id?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    secondaryPhone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    workingHours?: SortOrderInput | SortOrder
+    instagramUrl?: SortOrderInput | SortOrder
+    telegramUrl?: SortOrderInput | SortOrder
+    whatsappUrl?: SortOrderInput | SortOrder
+    aboutText?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: SiteSettingCountOrderByAggregateInput
+    _avg?: SiteSettingAvgOrderByAggregateInput
+    _max?: SiteSettingMaxOrderByAggregateInput
+    _min?: SiteSettingMinOrderByAggregateInput
+    _sum?: SiteSettingSumOrderByAggregateInput
+  }
+
+  export type SiteSettingScalarWhereWithAggregatesInput = {
+    AND?: SiteSettingScalarWhereWithAggregatesInput | SiteSettingScalarWhereWithAggregatesInput[]
+    OR?: SiteSettingScalarWhereWithAggregatesInput[]
+    NOT?: SiteSettingScalarWhereWithAggregatesInput | SiteSettingScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"SiteSetting"> | number
+    phone?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    secondaryPhone?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    email?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    address?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    workingHours?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    instagramUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    telegramUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    whatsappUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    aboutText?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"SiteSetting"> | Date | string
+  }
+
+  export type SmsCampaignWhereInput = {
+    AND?: SmsCampaignWhereInput | SmsCampaignWhereInput[]
+    OR?: SmsCampaignWhereInput[]
+    NOT?: SmsCampaignWhereInput | SmsCampaignWhereInput[]
+    id?: StringFilter<"SmsCampaign"> | string
+    body?: StringFilter<"SmsCampaign"> | string
+    targetRole?: EnumSmsTargetRoleFilter<"SmsCampaign"> | $Enums.SmsTargetRole
+    recipientCount?: IntFilter<"SmsCampaign"> | number
+    successCount?: IntFilter<"SmsCampaign"> | number
+    failedCount?: IntFilter<"SmsCampaign"> | number
+    status?: EnumSmsCampaignStatusFilter<"SmsCampaign"> | $Enums.SmsCampaignStatus
+    createdById?: StringNullableFilter<"SmsCampaign"> | string | null
+    createdAt?: DateTimeFilter<"SmsCampaign"> | Date | string
+    completedAt?: DateTimeNullableFilter<"SmsCampaign"> | Date | string | null
+    createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type SmsCampaignOrderByWithRelationInput = {
+    id?: SortOrder
+    body?: SortOrder
+    targetRole?: SortOrder
+    recipientCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdBy?: UserOrderByWithRelationInput
+  }
+
+  export type SmsCampaignWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SmsCampaignWhereInput | SmsCampaignWhereInput[]
+    OR?: SmsCampaignWhereInput[]
+    NOT?: SmsCampaignWhereInput | SmsCampaignWhereInput[]
+    body?: StringFilter<"SmsCampaign"> | string
+    targetRole?: EnumSmsTargetRoleFilter<"SmsCampaign"> | $Enums.SmsTargetRole
+    recipientCount?: IntFilter<"SmsCampaign"> | number
+    successCount?: IntFilter<"SmsCampaign"> | number
+    failedCount?: IntFilter<"SmsCampaign"> | number
+    status?: EnumSmsCampaignStatusFilter<"SmsCampaign"> | $Enums.SmsCampaignStatus
+    createdById?: StringNullableFilter<"SmsCampaign"> | string | null
+    createdAt?: DateTimeFilter<"SmsCampaign"> | Date | string
+    completedAt?: DateTimeNullableFilter<"SmsCampaign"> | Date | string | null
+    createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type SmsCampaignOrderByWithAggregationInput = {
+    id?: SortOrder
+    body?: SortOrder
+    targetRole?: SortOrder
+    recipientCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    _count?: SmsCampaignCountOrderByAggregateInput
+    _avg?: SmsCampaignAvgOrderByAggregateInput
+    _max?: SmsCampaignMaxOrderByAggregateInput
+    _min?: SmsCampaignMinOrderByAggregateInput
+    _sum?: SmsCampaignSumOrderByAggregateInput
+  }
+
+  export type SmsCampaignScalarWhereWithAggregatesInput = {
+    AND?: SmsCampaignScalarWhereWithAggregatesInput | SmsCampaignScalarWhereWithAggregatesInput[]
+    OR?: SmsCampaignScalarWhereWithAggregatesInput[]
+    NOT?: SmsCampaignScalarWhereWithAggregatesInput | SmsCampaignScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SmsCampaign"> | string
+    body?: StringWithAggregatesFilter<"SmsCampaign"> | string
+    targetRole?: EnumSmsTargetRoleWithAggregatesFilter<"SmsCampaign"> | $Enums.SmsTargetRole
+    recipientCount?: IntWithAggregatesFilter<"SmsCampaign"> | number
+    successCount?: IntWithAggregatesFilter<"SmsCampaign"> | number
+    failedCount?: IntWithAggregatesFilter<"SmsCampaign"> | number
+    status?: EnumSmsCampaignStatusWithAggregatesFilter<"SmsCampaign"> | $Enums.SmsCampaignStatus
+    createdById?: StringNullableWithAggregatesFilter<"SmsCampaign"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SmsCampaign"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"SmsCampaign"> | Date | string | null
+  }
+
   export type ShippingOptionWhereInput = {
     AND?: ShippingOptionWhereInput | ShippingOptionWhereInput[]
     OR?: ShippingOptionWhereInput[]
@@ -39247,6 +42073,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -39260,6 +42088,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -39276,6 +42105,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -39289,6 +42120,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUpdateInput = {
@@ -39305,6 +42137,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -39318,6 +42152,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -39334,6 +42169,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -39347,6 +42184,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -39363,6 +42201,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39381,6 +42221,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39399,6 +42241,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -40651,6 +43495,194 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SiteSettingCreateInput = {
+    id?: number
+    phone?: string | null
+    secondaryPhone?: string | null
+    email?: string | null
+    address?: string | null
+    workingHours?: string | null
+    instagramUrl?: string | null
+    telegramUrl?: string | null
+    whatsappUrl?: string | null
+    aboutText?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type SiteSettingUncheckedCreateInput = {
+    id?: number
+    phone?: string | null
+    secondaryPhone?: string | null
+    email?: string | null
+    address?: string | null
+    workingHours?: string | null
+    instagramUrl?: string | null
+    telegramUrl?: string | null
+    whatsappUrl?: string | null
+    aboutText?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type SiteSettingUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    workingHours?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    telegramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SiteSettingUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    workingHours?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    telegramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SiteSettingCreateManyInput = {
+    id?: number
+    phone?: string | null
+    secondaryPhone?: string | null
+    email?: string | null
+    address?: string | null
+    workingHours?: string | null
+    instagramUrl?: string | null
+    telegramUrl?: string | null
+    whatsappUrl?: string | null
+    aboutText?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type SiteSettingUpdateManyMutationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    workingHours?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    telegramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SiteSettingUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    workingHours?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    telegramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsappUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SmsCampaignCreateInput = {
+    id?: string
+    body: string
+    targetRole: $Enums.SmsTargetRole
+    recipientCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+    createdBy?: UserCreateNestedOneWithoutSmsCampaignsInput
+  }
+
+  export type SmsCampaignUncheckedCreateInput = {
+    id?: string
+    body: string
+    targetRole: $Enums.SmsTargetRole
+    recipientCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdById?: string | null
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type SmsCampaignUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    targetRole?: EnumSmsTargetRoleFieldUpdateOperationsInput | $Enums.SmsTargetRole
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdBy?: UserUpdateOneWithoutSmsCampaignsNestedInput
+  }
+
+  export type SmsCampaignUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    targetRole?: EnumSmsTargetRoleFieldUpdateOperationsInput | $Enums.SmsTargetRole
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SmsCampaignCreateManyInput = {
+    id?: string
+    body: string
+    targetRole: $Enums.SmsTargetRole
+    recipientCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdById?: string | null
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type SmsCampaignUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    targetRole?: EnumSmsTargetRoleFieldUpdateOperationsInput | $Enums.SmsTargetRole
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SmsCampaignUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    targetRole?: EnumSmsTargetRoleFieldUpdateOperationsInput | $Enums.SmsTargetRole
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type ShippingOptionCreateInput = {
     id?: string
     method: $Enums.ShippingMethod
@@ -41616,6 +44648,12 @@ export namespace Prisma {
     none?: ProductSuggestionWhereInput
   }
 
+  export type SmsCampaignListRelationFilter = {
+    every?: SmsCampaignWhereInput
+    some?: SmsCampaignWhereInput
+    none?: SmsCampaignWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -41657,6 +44695,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type SmsCampaignOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     phoneNumber?: SortOrder
@@ -41671,6 +44713,8 @@ export namespace Prisma {
     referredBy?: SortOrder
     activityField?: SortOrder
     partnerCode?: SortOrder
+    username?: SortOrder
+    passwordHash?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -41693,6 +44737,8 @@ export namespace Prisma {
     referredBy?: SortOrder
     activityField?: SortOrder
     partnerCode?: SortOrder
+    username?: SortOrder
+    passwordHash?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -41711,6 +44757,8 @@ export namespace Prisma {
     referredBy?: SortOrder
     activityField?: SortOrder
     partnerCode?: SortOrder
+    username?: SortOrder
+    passwordHash?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -42634,6 +45682,141 @@ export namespace Prisma {
     sortOrder?: SortOrder
   }
 
+  export type SiteSettingCountOrderByAggregateInput = {
+    id?: SortOrder
+    phone?: SortOrder
+    secondaryPhone?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    workingHours?: SortOrder
+    instagramUrl?: SortOrder
+    telegramUrl?: SortOrder
+    whatsappUrl?: SortOrder
+    aboutText?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SiteSettingAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type SiteSettingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    phone?: SortOrder
+    secondaryPhone?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    workingHours?: SortOrder
+    instagramUrl?: SortOrder
+    telegramUrl?: SortOrder
+    whatsappUrl?: SortOrder
+    aboutText?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SiteSettingMinOrderByAggregateInput = {
+    id?: SortOrder
+    phone?: SortOrder
+    secondaryPhone?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    workingHours?: SortOrder
+    instagramUrl?: SortOrder
+    telegramUrl?: SortOrder
+    whatsappUrl?: SortOrder
+    aboutText?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SiteSettingSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type EnumSmsTargetRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsTargetRole | EnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsTargetRoleFilter<$PrismaModel> | $Enums.SmsTargetRole
+  }
+
+  export type EnumSmsCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignStatus | EnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignStatusFilter<$PrismaModel> | $Enums.SmsCampaignStatus
+  }
+
+  export type SmsCampaignCountOrderByAggregateInput = {
+    id?: SortOrder
+    body?: SortOrder
+    targetRole?: SortOrder
+    recipientCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type SmsCampaignAvgOrderByAggregateInput = {
+    recipientCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+  }
+
+  export type SmsCampaignMaxOrderByAggregateInput = {
+    id?: SortOrder
+    body?: SortOrder
+    targetRole?: SortOrder
+    recipientCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type SmsCampaignMinOrderByAggregateInput = {
+    id?: SortOrder
+    body?: SortOrder
+    targetRole?: SortOrder
+    recipientCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type SmsCampaignSumOrderByAggregateInput = {
+    recipientCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+  }
+
+  export type EnumSmsTargetRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsTargetRole | EnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsTargetRoleWithAggregatesFilter<$PrismaModel> | $Enums.SmsTargetRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsTargetRoleFilter<$PrismaModel>
+    _max?: NestedEnumSmsTargetRoleFilter<$PrismaModel>
+  }
+
+  export type EnumSmsCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignStatus | EnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.SmsCampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
+  }
+
   export type EnumShippingMethodFilter<$PrismaModel = never> = {
     equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
     in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
@@ -43289,6 +46472,13 @@ export namespace Prisma {
     connect?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
   }
 
+  export type SmsCampaignCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<SmsCampaignCreateWithoutCreatedByInput, SmsCampaignUncheckedCreateWithoutCreatedByInput> | SmsCampaignCreateWithoutCreatedByInput[] | SmsCampaignUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: SmsCampaignCreateOrConnectWithoutCreatedByInput | SmsCampaignCreateOrConnectWithoutCreatedByInput[]
+    createMany?: SmsCampaignCreateManyCreatedByInputEnvelope
+    connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+  }
+
   export type AddressUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -43363,6 +46553,13 @@ export namespace Prisma {
     connectOrCreate?: ProductSuggestionCreateOrConnectWithoutUserInput | ProductSuggestionCreateOrConnectWithoutUserInput[]
     createMany?: ProductSuggestionCreateManyUserInputEnvelope
     connect?: ProductSuggestionWhereUniqueInput | ProductSuggestionWhereUniqueInput[]
+  }
+
+  export type SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<SmsCampaignCreateWithoutCreatedByInput, SmsCampaignUncheckedCreateWithoutCreatedByInput> | SmsCampaignCreateWithoutCreatedByInput[] | SmsCampaignUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: SmsCampaignCreateOrConnectWithoutCreatedByInput | SmsCampaignCreateOrConnectWithoutCreatedByInput[]
+    createMany?: SmsCampaignCreateManyCreatedByInputEnvelope
+    connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
   }
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -43535,6 +46732,20 @@ export namespace Prisma {
     deleteMany?: ProductSuggestionScalarWhereInput | ProductSuggestionScalarWhereInput[]
   }
 
+  export type SmsCampaignUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<SmsCampaignCreateWithoutCreatedByInput, SmsCampaignUncheckedCreateWithoutCreatedByInput> | SmsCampaignCreateWithoutCreatedByInput[] | SmsCampaignUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: SmsCampaignCreateOrConnectWithoutCreatedByInput | SmsCampaignCreateOrConnectWithoutCreatedByInput[]
+    upsert?: SmsCampaignUpsertWithWhereUniqueWithoutCreatedByInput | SmsCampaignUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: SmsCampaignCreateManyCreatedByInputEnvelope
+    set?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    disconnect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    delete?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    update?: SmsCampaignUpdateWithWhereUniqueWithoutCreatedByInput | SmsCampaignUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: SmsCampaignUpdateManyWithWhereWithoutCreatedByInput | SmsCampaignUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
+  }
+
   export type AddressUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -43683,6 +46894,20 @@ export namespace Prisma {
     update?: ProductSuggestionUpdateWithWhereUniqueWithoutUserInput | ProductSuggestionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ProductSuggestionUpdateManyWithWhereWithoutUserInput | ProductSuggestionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ProductSuggestionScalarWhereInput | ProductSuggestionScalarWhereInput[]
+  }
+
+  export type SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<SmsCampaignCreateWithoutCreatedByInput, SmsCampaignUncheckedCreateWithoutCreatedByInput> | SmsCampaignCreateWithoutCreatedByInput[] | SmsCampaignUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: SmsCampaignCreateOrConnectWithoutCreatedByInput | SmsCampaignCreateOrConnectWithoutCreatedByInput[]
+    upsert?: SmsCampaignUpsertWithWhereUniqueWithoutCreatedByInput | SmsCampaignUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: SmsCampaignCreateManyCreatedByInputEnvelope
+    set?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    disconnect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    delete?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    update?: SmsCampaignUpdateWithWhereUniqueWithoutCreatedByInput | SmsCampaignUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: SmsCampaignUpdateManyWithWhereWithoutCreatedByInput | SmsCampaignUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -44510,6 +47735,30 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type UserCreateNestedOneWithoutSmsCampaignsInput = {
+    create?: XOR<UserCreateWithoutSmsCampaignsInput, UserUncheckedCreateWithoutSmsCampaignsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSmsCampaignsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumSmsTargetRoleFieldUpdateOperationsInput = {
+    set?: $Enums.SmsTargetRole
+  }
+
+  export type EnumSmsCampaignStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SmsCampaignStatus
+  }
+
+  export type UserUpdateOneWithoutSmsCampaignsNestedInput = {
+    create?: XOR<UserCreateWithoutSmsCampaignsInput, UserUncheckedCreateWithoutSmsCampaignsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSmsCampaignsInput
+    upsert?: UserUpsertWithoutSmsCampaignsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSmsCampaignsInput, UserUpdateWithoutSmsCampaignsInput>, UserUncheckedUpdateWithoutSmsCampaignsInput>
+  }
+
   export type OrderCreateNestedManyWithoutShippingOptionInput = {
     create?: XOR<OrderCreateWithoutShippingOptionInput, OrderUncheckedCreateWithoutShippingOptionInput> | OrderCreateWithoutShippingOptionInput[] | OrderUncheckedCreateWithoutShippingOptionInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutShippingOptionInput | OrderCreateOrConnectWithoutShippingOptionInput[]
@@ -45111,6 +48360,40 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
+  export type NestedEnumSmsTargetRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsTargetRole | EnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsTargetRoleFilter<$PrismaModel> | $Enums.SmsTargetRole
+  }
+
+  export type NestedEnumSmsCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignStatus | EnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignStatusFilter<$PrismaModel> | $Enums.SmsCampaignStatus
+  }
+
+  export type NestedEnumSmsTargetRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsTargetRole | EnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsTargetRoleWithAggregatesFilter<$PrismaModel> | $Enums.SmsTargetRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsTargetRoleFilter<$PrismaModel>
+    _max?: NestedEnumSmsTargetRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSmsCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignStatus | EnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.SmsCampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumShippingMethodFilter<$PrismaModel = never> = {
     equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
     in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
@@ -45701,6 +48984,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SmsCampaignCreateWithoutCreatedByInput = {
+    id?: string
+    body: string
+    targetRole: $Enums.SmsTargetRole
+    recipientCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type SmsCampaignUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    body: string
+    targetRole: $Enums.SmsTargetRole
+    recipientCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type SmsCampaignCreateOrConnectWithoutCreatedByInput = {
+    where: SmsCampaignWhereUniqueInput
+    create: XOR<SmsCampaignCreateWithoutCreatedByInput, SmsCampaignUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type SmsCampaignCreateManyCreatedByInputEnvelope = {
+    data: SmsCampaignCreateManyCreatedByInput | SmsCampaignCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AddressUpsertWithWhereUniqueWithoutUserInput = {
     where: AddressWhereUniqueInput
     update: XOR<AddressUpdateWithoutUserInput, AddressUncheckedUpdateWithoutUserInput>
@@ -46014,6 +49331,38 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ProductSuggestion"> | Date | string
   }
 
+  export type SmsCampaignUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: SmsCampaignWhereUniqueInput
+    update: XOR<SmsCampaignUpdateWithoutCreatedByInput, SmsCampaignUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<SmsCampaignCreateWithoutCreatedByInput, SmsCampaignUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type SmsCampaignUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: SmsCampaignWhereUniqueInput
+    data: XOR<SmsCampaignUpdateWithoutCreatedByInput, SmsCampaignUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type SmsCampaignUpdateManyWithWhereWithoutCreatedByInput = {
+    where: SmsCampaignScalarWhereInput
+    data: XOR<SmsCampaignUpdateManyMutationInput, SmsCampaignUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type SmsCampaignScalarWhereInput = {
+    AND?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
+    OR?: SmsCampaignScalarWhereInput[]
+    NOT?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
+    id?: StringFilter<"SmsCampaign"> | string
+    body?: StringFilter<"SmsCampaign"> | string
+    targetRole?: EnumSmsTargetRoleFilter<"SmsCampaign"> | $Enums.SmsTargetRole
+    recipientCount?: IntFilter<"SmsCampaign"> | number
+    successCount?: IntFilter<"SmsCampaign"> | number
+    failedCount?: IntFilter<"SmsCampaign"> | number
+    status?: EnumSmsCampaignStatusFilter<"SmsCampaign"> | $Enums.SmsCampaignStatus
+    createdById?: StringNullableFilter<"SmsCampaign"> | string | null
+    createdAt?: DateTimeFilter<"SmsCampaign"> | Date | string
+    completedAt?: DateTimeNullableFilter<"SmsCampaign"> | Date | string | null
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id?: string
     phoneNumber: string
@@ -46028,6 +49377,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -46040,6 +49391,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -46056,6 +49408,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -46068,6 +49422,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -46100,6 +49455,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -46112,6 +49469,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -46128,6 +49486,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -46140,6 +49500,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutAddressesInput = {
@@ -46156,6 +49517,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -46168,6 +49531,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutAddressesInput = {
@@ -46184,6 +49548,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -46196,6 +49562,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutAddressesInput = {
@@ -46316,6 +49683,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -46328,6 +49697,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAddressesInput = {
@@ -46344,6 +49714,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -46356,6 +49728,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type CityUpsertWithoutAddressesInput = {
@@ -47683,6 +51056,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -47695,6 +51070,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -47711,6 +51087,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -47723,6 +51101,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -47838,6 +51217,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -47850,6 +51231,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -47866,6 +51248,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -47878,6 +51262,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutCartInput = {
@@ -47894,6 +51279,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -47906,6 +51293,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutCartInput = {
@@ -47922,6 +51310,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -47934,6 +51324,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutCartInput = {
@@ -47990,6 +51381,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -48002,6 +51395,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCartInput = {
@@ -48018,6 +51412,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -48030,6 +51426,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type CartItemUpsertWithWhereUniqueWithoutCartInput = {
@@ -48266,6 +51663,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -48278,6 +51677,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutWishlistInput = {
@@ -48294,6 +51694,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -48306,6 +51708,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutWishlistInput = {
@@ -48415,6 +51818,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -48427,6 +51832,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWishlistInput = {
@@ -48443,6 +51849,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -48455,6 +51863,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProductUpsertWithoutWishlistedByInput = {
@@ -48554,6 +51963,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -48566,6 +51977,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutCompareItemsInput = {
@@ -48582,6 +51994,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -48594,6 +52008,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutCompareItemsInput = {
@@ -48703,6 +52118,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -48715,6 +52132,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompareItemsInput = {
@@ -48731,6 +52149,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -48743,6 +52163,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProductUpsertWithoutComparedByInput = {
@@ -48826,6 +52247,146 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type UserCreateWithoutSmsCampaignsInput = {
+    id?: string
+    phoneNumber: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserRole
+    isVerified?: boolean
+    shopName?: string | null
+    birthDate?: Date | string | null
+    profileImage?: string | null
+    accountBalance?: bigint | number
+    referredBy?: string | null
+    activityField?: string | null
+    partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addresses?: AddressCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    cart?: CartCreateNestedOneWithoutUserInput
+    wishlist?: WishlistItemCreateNestedManyWithoutUserInput
+    compareItems?: CompareItemCreateNestedManyWithoutUserInput
+    supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
+    orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
+    priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSmsCampaignsInput = {
+    id?: string
+    phoneNumber: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserRole
+    isVerified?: boolean
+    shopName?: string | null
+    birthDate?: Date | string | null
+    profileImage?: string | null
+    accountBalance?: bigint | number
+    referredBy?: string | null
+    activityField?: string | null
+    partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    cart?: CartUncheckedCreateNestedOneWithoutUserInput
+    wishlist?: WishlistItemUncheckedCreateNestedManyWithoutUserInput
+    compareItems?: CompareItemUncheckedCreateNestedManyWithoutUserInput
+    supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
+    orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
+    priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSmsCampaignsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSmsCampaignsInput, UserUncheckedCreateWithoutSmsCampaignsInput>
+  }
+
+  export type UserUpsertWithoutSmsCampaignsInput = {
+    update: XOR<UserUpdateWithoutSmsCampaignsInput, UserUncheckedUpdateWithoutSmsCampaignsInput>
+    create: XOR<UserCreateWithoutSmsCampaignsInput, UserUncheckedCreateWithoutSmsCampaignsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSmsCampaignsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSmsCampaignsInput, UserUncheckedUpdateWithoutSmsCampaignsInput>
+  }
+
+  export type UserUpdateWithoutSmsCampaignsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    shopName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    activityField?: NullableStringFieldUpdateOperationsInput | string | null
+    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: AddressUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    cart?: CartUpdateOneWithoutUserNestedInput
+    wishlist?: WishlistItemUpdateManyWithoutUserNestedInput
+    compareItems?: CompareItemUpdateManyWithoutUserNestedInput
+    supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
+    orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
+    priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSmsCampaignsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    shopName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    activityField?: NullableStringFieldUpdateOperationsInput | string | null
+    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    cart?: CartUncheckedUpdateOneWithoutUserNestedInput
+    wishlist?: WishlistItemUncheckedUpdateManyWithoutUserNestedInput
+    compareItems?: CompareItemUncheckedUpdateManyWithoutUserNestedInput
+    supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
+    orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
+    priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutShippingOptionInput = {
@@ -48928,6 +52489,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -48940,6 +52503,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -48956,6 +52520,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -48968,6 +52534,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -49111,6 +52678,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -49123,6 +52692,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -49139,6 +52709,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -49151,6 +52723,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type AddressUpsertWithoutOrdersInput = {
@@ -49575,6 +53148,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -49587,6 +53162,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutSupportMessagesInput = {
@@ -49603,6 +53179,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -49615,6 +53193,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutSupportMessagesInput = {
@@ -49647,6 +53226,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -49659,6 +53240,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSupportMessagesInput = {
@@ -49675,6 +53257,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -49687,6 +53271,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type OrderCreateWithoutSurveyInput = {
@@ -49768,6 +53353,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -49780,6 +53367,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutOrderSurveysInput = {
@@ -49796,6 +53384,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -49808,6 +53398,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutOrderSurveysInput = {
@@ -49910,6 +53501,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -49922,6 +53515,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrderSurveysInput = {
@@ -49938,6 +53532,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -49950,6 +53546,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutPriceListRequestsInput = {
@@ -49966,6 +53563,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -49978,6 +53577,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutPriceListRequestsInput = {
@@ -49994,6 +53594,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -50006,6 +53608,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutPriceListRequestsInput = {
@@ -50038,6 +53641,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -50050,6 +53655,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPriceListRequestsInput = {
@@ -50066,6 +53672,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -50078,6 +53686,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutProductSuggestionsInput = {
@@ -50094,6 +53703,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -50106,6 +53717,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutProductSuggestionsInput = {
@@ -50122,6 +53734,8 @@ export namespace Prisma {
     referredBy?: string | null
     activityField?: string | null
     partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -50134,6 +53748,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutProductSuggestionsInput = {
@@ -50166,6 +53781,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -50178,6 +53795,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProductSuggestionsInput = {
@@ -50194,6 +53812,8 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -50206,6 +53826,7 @@ export namespace Prisma {
     supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type CityCreateManyProvinceInput = {
@@ -50375,6 +53996,18 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
+  }
+
+  export type SmsCampaignCreateManyCreatedByInput = {
+    id?: string
+    body: string
+    targetRole: $Enums.SmsTargetRole
+    recipientCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdAt?: Date | string
+    completedAt?: Date | string | null
   }
 
   export type AddressUpdateWithoutUserInput = {
@@ -50686,6 +54319,42 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SmsCampaignUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    targetRole?: EnumSmsTargetRoleFieldUpdateOperationsInput | $Enums.SmsTargetRole
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SmsCampaignUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    targetRole?: EnumSmsTargetRoleFieldUpdateOperationsInput | $Enums.SmsTargetRole
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SmsCampaignUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    targetRole?: EnumSmsTargetRoleFieldUpdateOperationsInput | $Enums.SmsTargetRole
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type OrderCreateManyAddressInput = {

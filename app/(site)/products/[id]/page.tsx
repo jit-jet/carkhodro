@@ -105,7 +105,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
 
           {/* Image gallery */}
           <ImageGallery
-            images={[product.mainImage, ...product.images.filter((u) => u !== product.mainImage)]}
+            images={product.images}
             name={product.name}
           />
 

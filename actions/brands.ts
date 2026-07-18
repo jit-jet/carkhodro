@@ -1,9 +1,14 @@
 /**
- * Brand & car-taxonomy Server Actions (car brands, car models, parts brands).
- * Reference data → `days` cache profile.
+ * Brand & car-taxonomy Server Actions (car brands, car models, parts brands)
+ * — reads only. Reference data → `days` cache profile.
+ *
+ * Mutations live in `actions/admin-brands.ts` (pure `use server`) so admin
+ * Client Components can import them without dragging this file's `use cache`
+ * reads into the browser bundle — see the note at the top of
+ * `actions/products.ts` for the full explanation.
  */
 
-import { cacheLife, cacheTag, updateTag } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import {
   toCarBrandVM,
@@ -11,7 +16,7 @@ import {
   type CarBrandVM,
   type CarModelVM,
 } from '@/src/lib/serializers';
-import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
+import { safeQuery } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
 
 // ── Car brands (manufacturers) ───────────────────────────────────────────────
@@ -56,67 +61,53 @@ export async function getPartsBrands(): Promise<{ id: number; name: string }[]> 
   }, []);
 }
 
-// ── Mutations (baseline) ─────────────────────────────────────────────────────
+// ── Admin-panel raw shapes (include fields the storefront VMs drop, e.g. slug) ─
 
-export async function createCarBrand(input: {
+export interface AdminCarBrandVM {
+  id: number;
   name: string;
   slug: string;
-  logoImage?: string | null;
-}): Promise<ActionResult<{ id: number }>> {
-  'use server';
-  return runMutation('createCarBrand', async () => {
-    if (!input.name?.trim() || !input.slug?.trim()) {
-      return fail('نام و اسلاگ برند الزامی است.');
-    }
-    const created = await prisma.carBrand.create({
-      data: {
-        name: input.name.trim(),
-        slug: input.slug.trim(),
-        logoImage: input.logoImage ?? null,
-      },
-      select: { id: true },
-    });
-    updateTag(tags.carBrands);
-    return ok(created);
-  });
+  logoImage: string | null;
+  productCount: number;
 }
 
-export async function createCarModel(input: {
+export async function getCarBrandsAdmin(): Promise<AdminCarBrandVM[]> {
+  return safeQuery('getCarBrandsAdmin', async () => {
+    const rows = await prisma.carBrand.findMany({ orderBy: { name: 'asc' } });
+    return rows.map((b) => ({
+      id: b.id,
+      name: b.name,
+      slug: b.slug,
+      logoImage: b.logoImage,
+      productCount: b.productCount,
+    }));
+  }, []);
+}
+
+export interface AdminCarModelVM {
+  id: number;
   carBrandId: number;
+  brandName: string;
   name: string;
-  yearStart?: number | null;
-  yearEnd?: number | null;
-  image?: string | null;
-}): Promise<ActionResult<{ id: number }>> {
-  'use server';
-  return runMutation('createCarModel', async () => {
-    if (!input.name?.trim()) return fail('نام مدل الزامی است.');
-    const created = await prisma.carModel.create({
-      data: {
-        carBrandId: input.carBrandId,
-        name: input.name.trim(),
-        yearStart: input.yearStart ?? null,
-        yearEnd: input.yearEnd ?? null,
-        image: input.image ?? null,
-      },
-      select: { id: true },
-    });
-    updateTag(tags.carModels);
-    return ok(created);
-  });
+  yearStart: number | null;
+  yearEnd: number | null;
+  image: string | null;
 }
 
-export async function createPartsBrand(
-  name: string,
-): Promise<ActionResult<{ id: number }>> {
-  'use server';
-  return runMutation('createPartsBrand', async () => {
-    if (!name?.trim()) return fail('نام برند الزامی است.');
-    const created = await prisma.partsBrand.create({
-      data: { name: name.trim() },
-      select: { id: true },
+export async function getCarModelsAdmin(): Promise<AdminCarModelVM[]> {
+  return safeQuery('getCarModelsAdmin', async () => {
+    const rows = await prisma.carModel.findMany({
+      include: { carBrand: true },
+      orderBy: { id: 'asc' },
     });
-    updateTag(tags.partsBrands);
-    return ok(created);
-  });
+    return rows.map((m) => ({
+      id: m.id,
+      carBrandId: m.carBrandId,
+      brandName: m.carBrand.name,
+      name: m.name,
+      yearStart: m.yearStart,
+      yearEnd: m.yearEnd,
+      image: m.image,
+    }));
+  }, []);
 }

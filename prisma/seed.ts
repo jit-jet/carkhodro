@@ -3,6 +3,7 @@ import { PrismaClient, ShippingMethod, UserRole } from '../generated/prisma_clie
 import type { OrderStatus } from '../generated/prisma_client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { normalizePersianText } from '../src/lib/persian';
+import { hashPassword } from '../src/lib/password';
 import provincesCitiesData from '../src/assets/provinces_cities.json';
 
 const prisma = new PrismaClient({
@@ -816,6 +817,57 @@ async function main() {
 
   // ── Dashboard data (idempotent — runs in both branches) ─────────────────────
   await seedDashboard();
+
+  // ── Admin panel login (idempotent — runs in both branches) ─────────────────
+  await seedAdminUser();
+}
+
+/**
+ * Creates the initial `/admin` login — an ADMIN-role `User` with a password
+ * hash. Reads credentials from `ADMIN_SEED_USERNAME` / `ADMIN_SEED_PASSWORD`
+ * (see `.env.example`) so no password ever lands in source control. Idempotent:
+ * skips if an admin with that username already exists.
+ */
+async function seedAdminUser() {
+  const username = process.env.ADMIN_SEED_USERNAME;
+  const password = process.env.ADMIN_SEED_PASSWORD;
+  if (!username || !password) {
+    console.warn('  Skipping admin seed — set ADMIN_SEED_USERNAME/ADMIN_SEED_PASSWORD in .env.');
+    return;
+  }
+
+  const existing = await prisma.user.findUnique({ where: { username } });
+  if (existing) {
+    console.log(`  Admin login already exists for ${username}. Skipping.`);
+    return;
+  }
+
+  const legacyAdmin = await prisma.user.findFirst({
+    where: { role: UserRole.ADMIN, username: null },
+  });
+  if (legacyAdmin) {
+    await prisma.user.update({
+      where: { id: legacyAdmin.id },
+      data: { username },
+    });
+    console.log(`  Admin username set to ${username} for existing admin (/admin/login).`);
+    return;
+  }
+
+  const passwordHash = await hashPassword(password);
+  await prisma.user.create({
+    data: {
+      // `phoneNumber` is required on User but unused for admin login.
+      phoneNumber: '09000000000',
+      username,
+      firstName: 'مدیر',
+      lastName: 'سیستم',
+      role: UserRole.ADMIN,
+      isVerified: true,
+      passwordHash,
+    },
+  });
+  console.log(`  Admin login created for ${username} (/admin/login).`);
 }
 
 /**

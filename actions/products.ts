@@ -1,14 +1,19 @@
 /**
- * Product Server Actions.
+ * Product Server Actions — reads only.
  *
  * Reads use the `use cache` directive (Cache Components) with a `hours` profile
  * — product/price/stock data refreshes a few times a day but is otherwise served
  * from the prerendered shell. Each read is tagged so mutations can invalidate
- * precisely. Mutations use `use server` and call `updateTag` so an admin sees
- * their own write immediately.
+ * precisely.
+ *
+ * Mutations live in `actions/admin-products.ts` instead: a file mixing
+ * `use cache` reads with `use server` writes cannot be imported from a Client
+ * Component (Next bundles the whole module, including the cache/`pg` machinery,
+ * for the browser). Admin Client Components import mutations from there; this
+ * file stays Server-Component-only, as it always was for the storefront.
  */
 
-import { cacheLife, cacheTag, updateTag } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import {
   productInclude,
@@ -21,8 +26,13 @@ import {
 } from '@/src/lib/serializers';
 import { pricingRoleFromUser } from '@/src/lib/user-role';
 import { getCurrentUser } from '@/src/lib/session';
-import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
+import { safeQuery } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
+import {
+  computeRetailPrice,
+  computeRetailFinal,
+  computeWholesaleFinal,
+} from '@/src/lib/pricing';
 
 /** Re-resolve cached product VMs for the current viewer's role. */
 export async function withViewerPricing(products: ProductVM[]): Promise<ProductVM[]> {
@@ -179,113 +189,258 @@ export async function getProductFilters(): Promise<{
   );
 }
 
-// ── Mutations (baseline CRUD) ────────────────────────────────────────────────
+// ── Admin panel: listing ─────────────────────────────────────────────────────
+// Deliberately uncached (no `use cache`) — the admin table must always show
+// fresh data (including inactive products) right after a mutation. Reads only —
+// mutations (create/update/delete/bulk assign/upload) live in
+// `actions/admin-products.ts` so this file stays safe to import from Server
+// Components without dragging Prisma/`pg` into any client bundle.
 
-export interface ProductInput {
+export type AdminProductSortBy =
+  | 'name'
+  | 'category'
+  | 'partsBrand'
+  | 'wholesalePrice'
+  | 'retailPrice'
+  | 'stock'
+  | 'isActive'
+  | 'isOffer'
+  | 'createdAt';
+
+export type AdminProductSortDir = 'asc' | 'desc';
+
+export interface AdminProductListItemVM {
+  id: string;
   sku: string;
   name: string;
-  partsBrandId: number;
   categoryId: number;
+  categoryName: string;
+  partsBrandId: number;
+  /** Parts brand name — shown as “نوع برند”. */
+  partsBrandName: string;
+  /** First compatible car model id — used as “نوع خودرو”. */
+  carModelId: number | null;
+  /** First compatible car model name — “نوع خودرو”. */
+  carType: string;
   wholesalePrice: number;
-  wholesaleDiscountPct?: number;
-  retailPriceDiffPct?: number;
-  retailDiscountPct?: number;
+  wholesaleDiscountPct: number;
+  retailPriceDiffPct: number;
+  retailDiscountPct: number;
+  retailPrice: number; // computed list price
+  retailFinal: number; // computed after retail discount
+  wholesaleFinal: number; // computed after wholesale discount
+  stock: number;
+  isActive: boolean;
+  isOffer: boolean;
+  mainImage: string | null;
+}
+
+export interface AdminProductFilters {
+  search?: string;
+  categoryId?: number;
+  partsBrandId?: number;
+  carModelId?: number;
+  isActive?: boolean;
   isOffer?: boolean;
-  stock?: number;
-  origin?: string | null;
-  mainImage?: string | null;
-  description?: string | null;
+  sortBy?: AdminProductSortBy;
+  sortDir?: AdminProductSortDir;
+  page?: number;
+  perPage?: number;
 }
 
-export async function createProduct(
-  input: ProductInput,
-): Promise<ActionResult<{ id: string }>> {
-  'use server';
-  return runMutation('createProduct', async () => {
-    if (!input.sku?.trim() || !input.name?.trim()) {
-      return fail('کد کالا و نام محصول الزامی است.');
-    }
-    const created = await prisma.product.create({
-      data: {
-        sku: input.sku.trim(),
-        name: input.name.trim(),
-        partsBrandId: input.partsBrandId,
-        categoryId: input.categoryId,
-        wholesalePrice: BigInt(Math.round(input.wholesalePrice)),
-        wholesaleDiscountPct: input.wholesaleDiscountPct ?? 0,
-        retailPriceDiffPct: input.retailPriceDiffPct ?? 25,
-        retailDiscountPct: input.retailDiscountPct ?? 0,
-        isOffer: input.isOffer ?? false,
-        stock: input.stock ?? 0,
-        origin: input.origin ?? null,
-        mainImage: input.mainImage ?? null,
-        description: input.description ?? null,
-      },
-      select: { id: true },
-    });
-    updateTag(tags.products);
-    return ok(created);
-  });
+export interface AdminProductPage {
+  items: AdminProductListItemVM[];
+  total: number;
+  page: number;
+  perPage: number;
+  pageCount: number;
 }
 
-export async function updateProduct(
-  id: string,
-  input: Partial<ProductInput>,
-): Promise<ActionResult<{ id: string }>> {
-  'use server';
-  return runMutation('updateProduct', async () => {
-    const updated = await prisma.product.update({
-      where: { id },
-      data: {
-        ...(input.sku !== undefined ? { sku: input.sku.trim() } : {}),
-        ...(input.name !== undefined ? { name: input.name.trim() } : {}),
-        ...(input.partsBrandId !== undefined ? { partsBrandId: input.partsBrandId } : {}),
-        ...(input.categoryId !== undefined ? { categoryId: input.categoryId } : {}),
-        ...(input.wholesalePrice !== undefined
-          ? { wholesalePrice: BigInt(Math.round(input.wholesalePrice)) }
-          : {}),
-        ...(input.wholesaleDiscountPct !== undefined
-          ? { wholesaleDiscountPct: input.wholesaleDiscountPct }
-          : {}),
-        ...(input.retailPriceDiffPct !== undefined
-          ? { retailPriceDiffPct: input.retailPriceDiffPct }
-          : {}),
-        ...(input.retailDiscountPct !== undefined
-          ? { retailDiscountPct: input.retailDiscountPct }
-          : {}),
-        ...(input.isOffer !== undefined ? { isOffer: input.isOffer } : {}),
-        ...(input.stock !== undefined ? { stock: input.stock } : {}),
-        ...(input.origin !== undefined ? { origin: input.origin } : {}),
-        ...(input.mainImage !== undefined ? { mainImage: input.mainImage } : {}),
-        ...(input.description !== undefined ? { description: input.description } : {}),
-      },
-      select: { id: true },
-    });
-    updateTag(tags.products);
-    updateTag(tags.product(id));
-    return ok(updated);
-  });
+function toAdminProductListItem(p: {
+  id: string;
+  sku: string;
+  name: string;
+  categoryId: number;
+  category: { name: string };
+  partsBrandId: number;
+  partsBrand: { name: string };
+  compatibilities: { carModelId: number; carModel: { name: string } }[];
+  wholesalePrice: bigint;
+  wholesaleDiscountPct: unknown;
+  retailPriceDiffPct: unknown;
+  retailDiscountPct: unknown;
+  stock: number;
+  isActive: boolean;
+  isOffer: boolean;
+  mainImage: string | null;
+}): AdminProductListItemVM {
+  const fields = {
+    wholesalePrice: p.wholesalePrice,
+    wholesaleDiscountPct: Number(p.wholesaleDiscountPct),
+    retailPriceDiffPct: Number(p.retailPriceDiffPct),
+    retailDiscountPct: Number(p.retailDiscountPct),
+  };
+  const firstCompat = p.compatibilities[0];
+  return {
+    id: p.id,
+    sku: p.sku,
+    name: p.name,
+    categoryId: p.categoryId,
+    categoryName: p.category.name,
+    partsBrandId: p.partsBrandId,
+    partsBrandName: p.partsBrand.name,
+    carModelId: firstCompat?.carModelId ?? null,
+    carType: firstCompat?.carModel.name ?? '',
+    wholesalePrice: Number(p.wholesalePrice),
+    wholesaleDiscountPct: fields.wholesaleDiscountPct,
+    retailPriceDiffPct: fields.retailPriceDiffPct,
+    retailDiscountPct: fields.retailDiscountPct,
+    retailPrice: computeRetailPrice(fields),
+    retailFinal: computeRetailFinal(fields),
+    wholesaleFinal: computeWholesaleFinal(fields),
+    stock: p.stock,
+    isActive: p.isActive,
+    isOffer: p.isOffer,
+    mainImage: p.mainImage,
+  };
 }
 
-export async function deleteProduct(id: string): Promise<ActionResult> {
-  'use server';
-  return runMutation('deleteProduct', async () => {
-    // Soft delete — keep order history intact, just drop it from the catalogue.
-    await prisma.product.update({ where: { id }, data: { isActive: false } });
-    updateTag(tags.products);
-    updateTag(tags.product(id));
-    return ok(undefined);
-  });
+function adminProductOrderBy(
+  sortBy: AdminProductSortBy | undefined,
+  sortDir: AdminProductSortDir | undefined,
+) {
+  const dir = sortDir === 'asc' ? ('asc' as const) : ('desc' as const);
+  switch (sortBy) {
+    case 'name':
+      return { name: dir };
+    case 'category':
+      return { category: { name: dir } };
+    case 'partsBrand':
+      return { partsBrand: { name: dir } };
+    case 'wholesalePrice':
+      return { wholesalePrice: dir };
+    case 'retailPrice':
+      // Retail is derived from wholesale + diff%; sort by those inputs.
+      return [{ retailPriceDiffPct: dir }, { wholesalePrice: dir }];
+    case 'stock':
+      return { stock: dir };
+    case 'isActive':
+      return { isActive: dir };
+    case 'isOffer':
+      return { isOffer: dir };
+    case 'createdAt':
+      return { createdAt: dir };
+    default:
+      return { createdAt: 'desc' as const };
+  }
 }
 
-/** Fire-and-forget view counter. Uses stale-while-revalidate to avoid thrash. */
-export async function incrementProductView(id: string): Promise<ActionResult> {
-  'use server';
-  return runMutation('incrementProductView', async () => {
-    await prisma.product.update({
-      where: { id },
-      data: { viewCount: { increment: 1 } },
-    });
-    return ok(undefined);
-  });
+export async function getProductsAdmin(
+  filters: AdminProductFilters = {},
+): Promise<AdminProductPage> {
+  const page = Math.max(1, filters.page ?? 1);
+  const perPage = Math.min(100, Math.max(1, filters.perPage ?? 20));
+
+  return safeQuery(
+    'getProductsAdmin',
+    async () => {
+      const where = {
+        ...(filters.search
+          ? {
+              OR: [
+                { name: { contains: filters.search, mode: 'insensitive' as const } },
+                { sku: { contains: filters.search, mode: 'insensitive' as const } },
+              ],
+            }
+          : {}),
+        ...(filters.categoryId ? { categoryId: filters.categoryId } : {}),
+        ...(filters.partsBrandId ? { partsBrandId: filters.partsBrandId } : {}),
+        ...(filters.carModelId
+          ? { compatibilities: { some: { carModelId: filters.carModelId } } }
+          : {}),
+        ...(filters.isActive !== undefined ? { isActive: filters.isActive } : {}),
+        ...(filters.isOffer !== undefined ? { isOffer: filters.isOffer } : {}),
+      };
+
+      const orderBy = adminProductOrderBy(filters.sortBy, filters.sortDir);
+
+      const [rows, total] = await Promise.all([
+        prisma.product.findMany({
+          where,
+          include: {
+            category: true,
+            partsBrand: true,
+            compatibilities: {
+              include: { carModel: true },
+              orderBy: { id: 'asc' },
+              take: 1,
+            },
+          },
+          orderBy,
+          skip: (page - 1) * perPage,
+          take: perPage,
+        }),
+        prisma.product.count({ where }),
+      ]);
+
+      return {
+        items: rows.map(toAdminProductListItem),
+        total,
+        page,
+        perPage,
+        pageCount: Math.max(1, Math.ceil(total / perPage)),
+      };
+    },
+    { items: [], total: 0, page, perPage, pageCount: 1 },
+  );
+}
+
+export async function getProductAdminById(id: string) {
+  return safeQuery(
+    `getProductAdminById:${id}`,
+    async () => {
+      const row = await prisma.product.findUnique({
+        where: { id },
+        include: {
+          images: { orderBy: { sortOrder: 'asc' } },
+          compatibilities: {
+            include: { carModel: true },
+            orderBy: { id: 'asc' },
+            take: 1,
+          },
+        },
+      });
+      if (!row) return null;
+      const galleryUrls = row.images.map((img) => img.url);
+      // Ensure main image is present in the gallery list for the editor.
+      const images =
+        row.mainImage && !galleryUrls.includes(row.mainImage)
+          ? [row.mainImage, ...galleryUrls]
+          : galleryUrls.length > 0
+            ? galleryUrls
+            : row.mainImage
+              ? [row.mainImage]
+              : [];
+      return {
+        id: row.id,
+        sku: row.sku,
+        name: row.name,
+        partsBrandId: row.partsBrandId,
+        categoryId: row.categoryId,
+        carModelId: row.compatibilities[0]?.carModelId ?? null,
+        wholesalePrice: Number(row.wholesalePrice),
+        wholesaleDiscountPct: Number(row.wholesaleDiscountPct),
+        retailPriceDiffPct: Number(row.retailPriceDiffPct),
+        retailDiscountPct: Number(row.retailDiscountPct),
+        isOffer: row.isOffer,
+        isActive: row.isActive,
+        stock: row.stock,
+        origin: row.origin,
+        mainImage: row.mainImage,
+        images,
+        description: row.description,
+      };
+    },
+    null,
+  );
 }

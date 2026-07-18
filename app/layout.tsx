@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import "./globals.css";
-import SiteHeader from "@/src/components/layout/SiteHeader";
-import HeaderFallback from "@/src/components/layout/HeaderFallback";
-import Footer from "@/src/components/layout/Footer";
 import Toaster from "@/src/components/ui/Toaster";
 
 export const metadata: Metadata = {
@@ -11,6 +7,12 @@ export const metadata: Metadata = {
   description: "خرید آنلاین قطعات یدکی خودروهای ایرانی و خارجی با بهترین قیمت و ضمانت اصالت کالا",
 };
 
+/**
+ * True App Router root — just `<html>`/`<body>`, fonts and the global toast
+ * viewport. Storefront chrome (header/footer) lives in `app/(site)/layout.tsx`;
+ * `/admin/*` gets its own chrome instead. Keeping this shell free of any
+ * route-specific UI is what lets both sub-trees coexist under one root layout.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,13 +29,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-charcoal font-sans antialiased flex flex-col">
-        <Suspense fallback={<HeaderFallback />}>
-          <SiteHeader />
-        </Suspense>
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        {children}
         {/* Global toast viewport — driven by the cart UI store. */}
         <Toaster />
       </body>

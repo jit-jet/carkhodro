@@ -39,6 +39,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
   const [terms, setTerms] = useState(paymentTerms[0] ?? '');
   const [notes, setNotes] = useState('');
   const [modal, setModal] = useState<'search' | 'previous' | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const [submitting, startSubmit] = useTransition();
   const [error, setError] = useState('');
@@ -98,7 +99,10 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
       if (result.ok) {
         setCount(0);
         router.push(`/dashboard/orders/${result.data.id}`);
-      } else setError(result.error);
+      } else {
+        setConfirmOpen(false);
+        setError(result.error);
+      }
     });
   }
 
@@ -260,7 +264,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
               </p>
             </div>
             <button
-              onClick={submit}
+              onClick={() => setConfirmOpen(true)}
               disabled={submitting}
               className="mt-4 w-full flex items-center justify-center gap-2 bg-charcoal hover:bg-charcoal/90 text-white font-bold text-sm py-3.5 rounded-xl transition-colors disabled:opacity-60"
             >
@@ -282,6 +286,145 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
           adding={pending}
         />
       )}
+
+      {confirmOpen && (
+        <ConfirmInvoiceModal
+          cart={cart}
+          notes={notes}
+          submitting={submitting}
+          onConfirm={submit}
+          onClose={() => setConfirmOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+function ConfirmInvoiceModal({
+  cart,
+  notes,
+  submitting,
+  onConfirm,
+  onClose,
+}: {
+  cart: DashboardCartVM;
+  notes: string;
+  submitting: boolean;
+  onConfirm: () => void;
+  onClose: () => void;
+}) {
+  const previewLines = cart.lines.slice(0, 5);
+  const remaining = cart.lines.length - previewLines.length;
+  const trimmedNotes = notes.trim();
+
+  return (
+    <div
+      className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto"
+      onClick={submitting ? undefined : onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="تأیید ثبت فاکتور"
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg my-8 overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 bg-accent">
+          <h2 className="font-bold text-charcoal">تأیید ثبت فاکتور</h2>
+          <button
+            onClick={onClose}
+            disabled={submitting}
+            aria-label="بستن"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-black/10 hover:bg-black/20 text-charcoal transition-colors disabled:opacity-50"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="p-5 space-y-4">
+          <p className="text-sm text-gray-500 leading-6">
+            لطفاً خلاصه فاکتور را بررسی کنید و در صورت صحت، ثبت را تأیید نمایید.
+          </p>
+
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="rounded-xl bg-silver-light/60 px-3 py-2.5">
+              <p className="text-xs text-gray-400 mb-1">تعداد اقلام</p>
+              <p className="font-bold text-charcoal tabular-nums">
+                {cart.totalItems.toLocaleString('fa-IR')} عدد
+              </p>
+            </div>
+            <div className="rounded-xl bg-silver-light/60 px-3 py-2.5">
+              <p className="text-xs text-gray-400 mb-1">تعداد ردیف</p>
+              <p className="font-bold text-charcoal tabular-nums">
+                {cart.lines.length.toLocaleString('fa-IR')} ردیف
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-gray-100 overflow-hidden">
+            <ul className="divide-y divide-gray-50 max-h-48 overflow-y-auto">
+              {previewLines.map((line) => (
+                <li key={line.id} className="flex items-start justify-between gap-3 px-3 py-2.5 text-sm">
+                  <div className="min-w-0 text-right">
+                    <p className="font-semibold text-charcoal truncate">{line.name}</p>
+                    <p className="text-[11px] font-mono text-gray-400 mt-0.5">{line.sku}</p>
+                  </div>
+                  <div className="shrink-0 text-left">
+                    <p className="font-bold text-charcoal tabular-nums whitespace-nowrap">
+                      {formatNumberFa(line.lineTotalToman * 10)}
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-0.5 tabular-nums">
+                      × {line.quantity.toLocaleString('fa-IR')}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {remaining > 0 && (
+              <p className="text-xs text-gray-400 text-center py-2 border-t border-gray-50">
+                و {remaining.toLocaleString('fa-IR')} ردیف دیگر…
+              </p>
+            )}
+          </div>
+
+          {trimmedNotes && (
+            <div className="rounded-xl bg-amber-50/70 border border-amber-100 px-3 py-2.5">
+              <p className="text-xs text-gray-400 mb-1">توضیحات</p>
+              <p className="text-sm text-charcoal leading-6 whitespace-pre-wrap">{trimmedNotes}</p>
+            </div>
+          )}
+
+          <div className="text-center pt-1">
+            <p className="text-xs text-gray-400">جمع کل</p>
+            <p className="text-xl font-extrabold text-charcoal mt-1 tabular-nums">
+              {formatRial(cart.subtotalToman)}
+            </p>
+            <p className="text-xs font-semibold text-accent-dark mt-1">
+              {tomanInWords(cart.subtotalToman)}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 pt-1">
+            <button
+              onClick={onClose}
+              disabled={submitting}
+              className="flex-1 text-sm font-semibold text-charcoal border-2 border-gray-200 hover:bg-gray-50 py-3 rounded-xl transition-colors disabled:opacity-50"
+            >
+              انصراف
+            </button>
+            <button
+              onClick={onConfirm}
+              disabled={submitting}
+              className="flex-1 flex items-center justify-center gap-2 bg-charcoal hover:bg-charcoal/90 text-white font-bold text-sm py-3 rounded-xl transition-colors disabled:opacity-60"
+            >
+              {submitting ? 'در حال ثبت…' : 'تأیید و ثبت فاکتور'}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

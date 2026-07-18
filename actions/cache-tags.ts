@@ -18,4 +18,5 @@ export const tags = {
   faqs: 'faqs',
   posts: 'posts',
   post: (slug: string) => `post:${slug}`,
+  siteSettings: 'site-settings',
 } as const;

@@ -1,12 +1,17 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   // Required for Docker: generates .next/standalone with a minimal server.js
   output: "standalone",
   // Next.js 16 Cache Components: data is uncached by default and excluded from
   // prerenders unless explicitly marked with `use cache`. Enables the
   // `use cache` directive together with cacheLife / cacheTag and PPR.
   cacheComponents: true,
+  // Product image uploads allow up to 2 MB per file via Server Actions.
+  // Cast: Next 16 typings omit `serverActions` even though the runtime supports it.
+  serverActions: {
+    bodySizeLimit: "3mb",
+  },
   images: {
     remotePatterns: [
       {
@@ -24,6 +29,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
+} as NextConfig;
 
 export default nextConfig;

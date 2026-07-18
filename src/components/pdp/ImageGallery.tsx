@@ -16,7 +16,7 @@ export default function ImageGallery({ images, name }: Props) {
   const hasMultiple = images.length > 1;
 
   // Pad to at least 4 thumbnails using the first image as fallback
-  const thumbs = images.length >= 4
+  const thumbs = images.length >= 2
     ? images
     : [...images, ...Array<string>(4 - images.length).fill(images[0] ?? '')];
 
@@ -77,7 +77,7 @@ export default function ImageGallery({ images, name }: Props) {
             className={[
               'shrink-0 w-16 h-16 rounded-xl border-2 overflow-hidden transition-all duration-150',
               activeIdx === idx
-                ? 'border-accent shadow-md scale-105'
+                ? 'border-accent shadow-md'
                 : 'border-gray-200 hover:border-gray-300 opacity-70 hover:opacity-100',
             ].join(' ')}
             aria-label={`تصویر ${idx + 1}`}

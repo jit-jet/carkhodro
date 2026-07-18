@@ -327,6 +327,10 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
   const gallery = [...p.images]
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((img) => img.url);
+  const uniqueGallery = [
+    ...(p.mainImage ? [p.mainImage] : []),
+    ...gallery.filter((url) => url !== p.mainImage),
+  ];
 
   return {
     id: p.id,
@@ -342,7 +346,7 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     retailPriceDiffPct: Number(p.retailPriceDiffPct),
     retailDiscountPct: Number(p.retailDiscountPct),
     mainImage: p.mainImage ?? FALLBACK_IMAGE,
-    images: gallery.length > 0 ? gallery : [p.mainImage ?? FALLBACK_IMAGE],
+    images: uniqueGallery.length > 0 ? uniqueGallery : [p.mainImage ?? FALLBACK_IMAGE],
     isOffer: p.isOffer,
     sku: p.sku,
     origin: p.origin ?? '',

@@ -157,6 +157,8 @@ exports.Prisma.UserScalarFieldEnum = {
   referredBy: 'referredBy',
   activityField: 'activityField',
   partnerCode: 'partnerCode',
+  username: 'username',
+  passwordHash: 'passwordHash',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -337,6 +339,33 @@ exports.Prisma.FaqScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.SiteSettingScalarFieldEnum = {
+  id: 'id',
+  phone: 'phone',
+  secondaryPhone: 'secondaryPhone',
+  email: 'email',
+  address: 'address',
+  workingHours: 'workingHours',
+  instagramUrl: 'instagramUrl',
+  telegramUrl: 'telegramUrl',
+  whatsappUrl: 'whatsappUrl',
+  aboutText: 'aboutText',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SmsCampaignScalarFieldEnum = {
+  id: 'id',
+  body: 'body',
+  targetRole: 'targetRole',
+  recipientCount: 'recipientCount',
+  successCount: 'successCount',
+  failedCount: 'failedCount',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.ShippingOptionScalarFieldEnum = {
   id: 'id',
   method: 'method',
@@ -449,6 +478,19 @@ exports.UserRole = exports.$Enums.UserRole = {
   SUPPORT: 'SUPPORT'
 };
 
+exports.SmsTargetRole = exports.$Enums.SmsTargetRole = {
+  RETAIL: 'RETAIL',
+  WHOLESALE: 'WHOLESALE',
+  ALL: 'ALL'
+};
+
+exports.SmsCampaignStatus = exports.$Enums.SmsCampaignStatus = {
+  PENDING: 'PENDING',
+  SENT: 'SENT',
+  PARTIAL: 'PARTIAL',
+  FAILED: 'FAILED'
+};
+
 exports.ShippingMethod = exports.$Enums.ShippingMethod = {
   STANDARD: 'STANDARD',
   EXPRESS: 'EXPRESS'
@@ -505,6 +547,8 @@ exports.Prisma.ModelName = {
   CompareItem: 'CompareItem',
   Post: 'Post',
   Faq: 'Faq',
+  SiteSetting: 'SiteSetting',
+  SmsCampaign: 'SmsCampaign',
   ShippingOption: 'ShippingOption',
   Order: 'Order',
   OrderItem: 'OrderItem',

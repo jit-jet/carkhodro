@@ -23,6 +23,21 @@ enum UserRole {
   SUPPORT  // read-only order/customer access
 }
 
+/// Audience filter for a bulk SMS blast — mirrors the RETAIL/WHOLESALE split
+/// used everywhere else for pricing, with ALL meaning both.
+enum SmsTargetRole {
+  RETAIL
+  WHOLESALE
+  ALL
+}
+
+enum SmsCampaignStatus {
+  PENDING
+  SENT
+  PARTIAL  // some recipients failed
+  FAILED
+}
+
 /// Wholesale-order lifecycle, surfaced in the partner dashboard's order list and
 /// status filter. Ordered roughly by progression; cancellation/archive are
 /// terminal side-states. Persian labels live in `src/lib/order-labels.ts`.
@@ -130,6 +145,12 @@ model User {
   activityField String? @map("activity_field")
   /// Short, unique partner/affiliate code («کد اختصاصی») — null for retail users.
   partnerCode  String?  @unique @map("partner_code")
+  /// Admin login username — only set for ADMIN-role users; storefront customers
+  /// authenticate with SMS OTP and never get one.
+  username     String?  @unique
+  /// Scrypt password hash — only set for admin/back-office logins (ADMIN role).
+  /// Storefront customers keep authenticating with SMS OTP and never get one.
+  passwordHash String?  @map("password_hash")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -144,6 +165,7 @@ model User {
   orderSurveys        OrderSurvey[]
   priceListRequests   PriceListRequest[]
   productSuggestions  ProductSuggestion[]
+  smsCampaigns        SmsCampaign[]
 
   @@index([phoneNumber])
   @@map("users")
@@ -523,6 +545,53 @@ model Faq {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("faqs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SITE SETTINGS — singleton row, admin-managed
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Dynamic site info shown across the storefront (footer/contact/etc). Always a
+/// single row — the app upserts `id = 1`.
+model SiteSetting {
+  id             Int      @id @default(1)
+  phone          String?
+  secondaryPhone String?  @map("secondary_phone")
+  email          String?
+  address        String?  @db.Text
+  workingHours   String?  @map("working_hours")
+  instagramUrl   String?  @map("instagram_url")
+  telegramUrl    String?  @map("telegram_url")
+  whatsappUrl    String?  @map("whatsapp_url")
+  aboutText      String?  @db.Text @map("about_text")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BULK SMS MARKETING — admin-managed
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// One row per bulk SMS blast the admin sends («ارسال گروهی پیامک»). Snapshot
+/// only — the recipient list itself isn't retained, just the counts, to keep
+/// this table cheap and avoid storing phone numbers redundantly.
+model SmsCampaign {
+  id             String            @id @default(cuid())
+  body           String            @db.Text
+  targetRole     SmsTargetRole     @map("target_role")
+  recipientCount Int               @default(0) @map("recipient_count")
+  successCount   Int               @default(0) @map("success_count")
+  failedCount    Int               @default(0) @map("failed_count")
+  status         SmsCampaignStatus @default(PENDING)
+  createdById    String?           @map("created_by_id")
+  createdAt      DateTime          @default(now()) @map("created_at")
+  completedAt    DateTime?         @map("completed_at")
+
+  createdBy User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@map("sms_campaigns")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
