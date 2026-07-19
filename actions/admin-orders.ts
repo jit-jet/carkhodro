@@ -415,16 +415,6 @@ export async function updateOrderAdmin(
     if (!input.customerFirstName?.trim() || !input.customerLastName?.trim()) {
       return fail('نام و نام خانوادگی مشتری الزامی است.');
     }
-    const phone = input.customerPhone.trim();
-    if (!/^09\d{9}$/.test(phone)) {
-      return fail('شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
-    }
-
-    const phoneTaken = await prisma.user.findFirst({
-      where: { phoneNumber: phone, id: { not: order.userId } },
-      select: { id: true },
-    });
-    if (phoneTaken) return fail('این شماره موبایل متعلق به کاربر دیگری است.');
 
     const now = new Date();
     const statusChanged = input.status !== order.status;
@@ -453,7 +443,6 @@ export async function updateOrderAdmin(
         data: {
           firstName: input.customerFirstName.trim(),
           lastName: input.customerLastName.trim(),
-          phoneNumber: phone,
           shopName: input.customerShopName?.trim() || null,
         },
       }),

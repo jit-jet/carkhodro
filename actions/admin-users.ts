@@ -231,19 +231,9 @@ export async function updateUser(
       return fail('این نقش از این بخش قابل تنظیم نیست.');
     }
 
-    const phone = input.phoneNumber.trim();
-    if (!/^09\d{9}$/.test(phone)) {
-      return fail('شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
-    }
     if (!input.firstName?.trim() || !input.lastName?.trim()) {
       return fail('نام و نام خانوادگی الزامی است.');
     }
-
-    const duplicate = await prisma.user.findFirst({
-      where: { phoneNumber: phone, id: { not: userId } },
-      select: { id: true },
-    });
-    if (duplicate) return fail('این شماره موبایل قبلاً ثبت شده است.');
 
     let partnerCode = input.partnerCode?.trim() || null;
     if (input.role === 'RETAIL') partnerCode = null;
@@ -288,7 +278,6 @@ export async function updateUser(
       await tx.user.update({
         where: { id: userId },
         data: {
-          phoneNumber: phone,
           firstName: input.firstName.trim(),
           lastName: input.lastName.trim(),
           role: input.role,

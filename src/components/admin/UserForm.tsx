@@ -64,7 +64,7 @@ export default function UserForm({
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [avatar, setAvatar] = useState<string | null>(initial.profileImage);
-  const [phoneNumber, setPhoneNumber] = useState(initial.phoneNumber);
+  const phoneNumber = initial.phoneNumber;
   const [firstName, setFirstName] = useState(initial.firstName);
   const [lastName, setLastName] = useState(initial.lastName);
   const [role, setRole] = useState<UserRole>(
@@ -233,9 +233,9 @@ export default function UserForm({
                 <Input
                   dir="ltr"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="09xxxxxxxxx"
-                  required
+                  disabled
+                  readOnly
+                  title="شماره موبایل قابل تغییر نیست"
                 />
               </div>
               <div>

@@ -45,7 +45,7 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
   const [postalCode, setPostalCode] = useState(order.snapshotPostalCode);
   const [firstName, setFirstName] = useState(order.user.firstName);
   const [lastName, setLastName] = useState(order.user.lastName);
-  const [phone, setPhone] = useState(order.user.phoneNumber);
+  const phone = order.user.phoneNumber;
   const [shopName, setShopName] = useState(order.user.shopName ?? "");
 
   const [error, setError] = useState("");
@@ -186,8 +186,9 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
             <Input
               dir="ltr"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
+              disabled
+              readOnly
+              title="شماره موبایل قابل تغییر نیست"
             />
           </div>
           <div>
