@@ -17,6 +17,7 @@ type IconKey =
   | "car"
   | "box"
   | "users"
+  | "orders"
   | "sms"
   | "settings"
   | "faq";
@@ -30,6 +31,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { href: "/admin", label: "داشبورد", icon: "grid" },
   { href: "/admin/products", label: "محصولات و قیمت‌گذاری", icon: "box" },
+  { href: "/admin/orders", label: "سفارشات و فاکتورها", icon: "orders" },
   { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: "category" },
   { href: "/admin/brands", label: "برندها و خودروها", icon: "car" },
   { href: "/admin/users", label: "کاربران", icon: "users" },
@@ -84,6 +86,16 @@ function NavIcon({ icon }: { icon: IconKey }) {
           <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+        </svg>
+      );
+    case "orders":
+      return (
+        <svg {...common}>
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <line x1="10" y1="9" x2="8" y2="9" />
         </svg>
       );
     case "sms":

@@ -1,59 +1,190 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { updateUserRole, type AdminUserListItemVM } from "@/actions/admin-users";
+import {
+  type AdminUserListItemVM,
+  type AdminUserSortBy,
+  type AdminUserSortDir,
+} from "@/actions/admin-users";
 import { USER_ROLE_FA } from "@/src/lib/user-labels";
 import { ASSIGNABLE_ROLES } from "@/src/lib/admin-options";
-import { Button, Select } from "@/src/components/admin/AdminUI";
+import { buildUsersHref, type UsersTableFilters } from "@/src/lib/admin-users-query";
+import { buildOrdersHref } from "@/src/lib/admin-orders-query";
+import { Input, Select } from "@/src/components/admin/AdminUI";
 import { formatToman, noFormatNumberFa } from "@/src/lib/format";
-import type { UserRole } from "@/generated/prisma_client";
 
-export default function UsersTable({ items }: { items: AdminUserListItemVM[] }) {
+function SortButton({
+  label,
+  column,
+  sortBy,
+  sortDir,
+  onSort,
+}: {
+  label: string;
+  column: AdminUserSortBy;
+  sortBy: string;
+  sortDir: string;
+  onSort: (column: AdminUserSortBy) => void;
+}) {
+  const active = sortBy === column;
+  const arrow = !active ? "↕" : sortDir === "asc" ? "↑" : "↓";
+  return (
+    <button
+      type="button"
+      onClick={() => onSort(column)}
+      className={[
+        "inline-flex items-center gap-1 font-semibold whitespace-nowrap",
+        active ? "text-charcoal" : "text-gray-500 hover:text-charcoal",
+      ].join(" ")}
+    >
+      {label}
+      <span className="text-[10px] opacity-70">{arrow}</span>
+    </button>
+  );
+}
+
+export default function UsersTable({
+  items,
+  filters,
+}: {
+  items: AdminUserListItemVM[];
+  filters: UsersTableFilters;
+}) {
   const router = useRouter();
-  const [pendingRoles, setPendingRoles] = useState<Record<string, UserRole>>({});
-  const [error, setError] = useState<{ id: string; message: string } | null>(null);
-  const [pending, startTransition] = useTransition();
+  const [searchDraft, setSearchDraft] = useState(filters.search);
+  const [phoneDraft, setPhoneDraft] = useState(filters.phone);
 
-  function handleSave(userId: string) {
-    const role = pendingRoles[userId];
-    if (!role) return;
-    setError(null);
-    startTransition(async () => {
-      const result = await updateUserRole(userId, role);
-      if (!result.ok) {
-        setError({ id: userId, message: result.error });
-        return;
-      }
-      router.refresh();
-    });
+  function pushFilters(patch: Partial<UsersTableFilters>) {
+    router.push(buildUsersHref({ ...filters, ...patch }));
   }
+
+  function toggleSort(column: AdminUserSortBy) {
+    const nextDir: AdminUserSortDir =
+      filters.sortBy === column && filters.sortDir === "asc" ? "desc" : "asc";
+    pushFilters({ sortBy: column, sortDir: nextDir });
+  }
+
+  const headerSelectClass = "!py-1.5 !text-xs !rounded-lg min-w-[120px]";
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-sm min-w-[820px]">
+        <table className="w-full text-sm min-w-[920px]">
           <thead className="bg-silver-light text-gray-500">
             <tr>
-              <th className="text-right px-4 py-3 font-semibold">کاربر</th>
-              <th className="text-right px-4 py-3 font-semibold">موبایل</th>
-              <th className="text-right px-4 py-3 font-semibold">نقش فعلی</th>
-              <th className="text-right px-4 py-3 font-semibold">سفارشات</th>
-              <th className="text-right px-4 py-3 font-semibold">مانده حساب</th>
-              <th className="text-right px-4 py-3 font-semibold">تغییر نقش</th>
+              <th className="text-right px-4 py-3 align-bottom">
+                <div className="flex flex-col gap-1.5 items-stretch">
+                  <SortButton
+                    label="کاربر"
+                    column="name"
+                    sortBy={filters.sortBy}
+                    sortDir={filters.sortDir}
+                    onSort={toggleSort}
+                  />
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      pushFilters({ search: searchDraft.trim() });
+                    }}
+                  >
+                    <Input
+                      value={searchDraft}
+                      onChange={(e) => setSearchDraft(e.target.value)}
+                      placeholder="جستجو…"
+                      className="!py-1.5 !text-xs !rounded-lg"
+                    />
+                  </form>
+                </div>
+              </th>
+              <th className="text-right px-4 py-3 align-bottom">
+                <div className="flex flex-col gap-1.5 items-stretch">
+                  <SortButton
+                    label="موبایل"
+                    column="phone"
+                    sortBy={filters.sortBy}
+                    sortDir={filters.sortDir}
+                    onSort={toggleSort}
+                  />
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      pushFilters({ phone: phoneDraft.trim() });
+                    }}
+                  >
+                    <Input
+                      value={phoneDraft}
+                      onChange={(e) => setPhoneDraft(e.target.value)}
+                      placeholder="جستجو…"
+                      className="!py-1.5 !text-xs !rounded-lg"
+                      dir="ltr"
+                    />
+                  </form>
+                </div>
+              </th>
+              <th className="text-right px-4 py-3 align-bottom">
+                <div className="flex flex-col gap-1.5">
+                  <SortButton
+                    label="نقش فعلی"
+                    column="role"
+                    sortBy={filters.sortBy}
+                    sortDir={filters.sortDir}
+                    onSort={toggleSort}
+                  />
+                  <Select
+                    value={filters.role}
+                    onChange={(e) => pushFilters({ role: e.target.value })}
+                    className={headerSelectClass}
+                  >
+                    <option value="">همه</option>
+                    {ASSIGNABLE_ROLES.map((r) => (
+                      <option key={r} value={r}>
+                        {USER_ROLE_FA[r]}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+              </th>
+              <th className="text-right px-4 py-3 align-bottom">
+                <SortButton
+                  label="سفارشات"
+                  column="orders"
+                  sortBy={filters.sortBy}
+                  sortDir={filters.sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="text-right px-4 py-3 align-bottom whitespace-nowrap">
+                <span className="font-semibold text-gray-500">نمایش سفارشات</span>
+              </th>
+              <th className="text-right px-4 py-3 align-bottom">
+                <SortButton
+                  label="مانده حساب"
+                  column="balance"
+                  sortBy={filters.sortBy}
+                  sortDir={filters.sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {items.map((u) => {
-              const selectedRole = pendingRoles[u.id] ?? u.role;
-              const dirty = selectedRole !== u.role;
-              return (
+            {items.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-4 py-12 text-center text-gray-400">
+                  کاربری با این فیلترها یافت نشد.
+                </td>
+              </tr>
+            ) : (
+              items.map((u) => (
                 <tr key={u.id}>
                   <td className="px-4 py-3">
                     <p className="font-semibold text-charcoal">{u.fullName || "—"}</p>
                     {u.shopName && <p className="text-xs text-gray-400">{u.shopName}</p>}
                   </td>
-                  <td className="px-4 py-3 font-mono text-gray-600" dir="ltr">
+                  <td className="px-4 py-3 font-mono text-gray-600 text-right" dir="ltr">
                     {u.phoneNumber}
                   </td>
                   <td className="px-4 py-3">
@@ -62,36 +193,39 @@ export default function UsersTable({ items }: { items: AdminUserListItemVM[] }) 
                     </span>
                   </td>
                   <td className="px-4 py-3 text-gray-600">{noFormatNumberFa(u.ordersCount)}</td>
-                  <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{formatToman(u.accountBalanceToman)}</td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <Select
-                        value={selectedRole}
-                        onChange={(e) =>
-                          setPendingRoles((prev) => ({ ...prev, [u.id]: e.target.value as UserRole }))
-                        }
-                        className="!py-1.5 !text-xs w-auto min-w-[110px]"
+                    <Link
+                      href={buildOrdersHref({
+                        orderNumber: "",
+                        customer: "",
+                        phone: "",
+                        status: "",
+                        paymentStatus: "",
+                        userId: u.id,
+                        sortBy: "",
+                        sortDir: "",
+                      })}
+                      className="text-accent-dark font-semibold hover:underline text-xs whitespace-nowrap"
+                    >
+                      مشاهده سفارشات
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                    {formatToman(u.accountBalanceToman)}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end">
+                      <Link
+                        href={`/admin/users/${u.id}`}
+                        className="text-accent-dark font-semibold hover:underline text-xs"
                       >
-                        {ASSIGNABLE_ROLES.map((r) => (
-                          <option key={r} value={r}>
-                            {USER_ROLE_FA[r]}
-                          </option>
-                        ))}
-                      </Select>
-                      <Button
-                        type="button"
-                        onClick={() => handleSave(u.id)}
-                        disabled={!dirty || pending}
-                        className="!py-1.5 !px-3 text-xs"
-                      >
-                        ذخیره
-                      </Button>
+                        ویرایش
+                      </Link>
                     </div>
-                    {error?.id === u.id && <p className="text-xs text-red-600 mt-1">{error.message}</p>}
                   </td>
                 </tr>
-              );
-            })}
+              ))
+            )}
           </tbody>
         </table>
       </div>

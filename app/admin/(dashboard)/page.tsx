@@ -28,7 +28,7 @@ async function AdminHomeContent() {
     { label: "دسته‌بندی‌ها", value: stats.categoryCount, href: "/admin/categories", tone: "text-charcoal" },
     { label: "همکاران (عمده)", value: stats.partnerCount, href: "/admin/users", tone: "text-accent-dark" },
     { label: "مشتریان تک‌فروش", value: stats.retailCount, href: "/admin/users", tone: "text-charcoal" },
-    { label: "سفارشات در انتظار", value: stats.pendingOrderCount, href: "/admin/users", tone: "text-amber-600" },
+    { label: "سفارشات در انتظار", value: stats.pendingOrderCount, href: "/admin/orders", tone: "text-amber-600" },
     { label: "پیامک‌های ارسالی", value: stats.smsCampaignCount, href: "/admin/sms", tone: "text-charcoal" },
   ];
 
@@ -53,6 +53,9 @@ async function AdminHomeContent() {
           </Link>
           <Link href="/admin/sms" className="text-sm font-semibold text-accent-dark hover:underline">
             ارسال پیامک گروهی
+          </Link>
+          <Link href="/admin/orders" className="text-sm font-semibold text-accent-dark hover:underline">
+            سفارشات و فاکتورها
           </Link>
           <Link href="/admin/users" className="text-sm font-semibold text-accent-dark hover:underline">
             مدیریت نقش همکاران
