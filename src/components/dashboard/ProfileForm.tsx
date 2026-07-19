@@ -17,6 +17,7 @@ import {
   removeAvatar,
 } from "@/actions/dashboard-profile";
 import { JALALI_MONTHS } from "@/src/lib/jalali-convert";
+import { useCartUI } from "@/src/store/cart-ui";
 import type { ProfileVM } from "@/src/lib/dashboard-types";
 import type { ProvinceVM } from "@/src/lib/serializers";
 
@@ -49,18 +50,19 @@ export default function ProfileForm({
   const [street, setStreet] = useState(profile.street);
   const [postalCode, setPostalCode] = useState(profile.postalCode);
 
-  const [error, setError] = useState("");
-  const [avatarError, setAvatarError] = useState("");
-  const [saved, setSaved] = useState(false);
+  const notify = useCartUI((s) => s.notify);
   const [pending, startTransition] = useTransition();
   const [avatarPending, startAvatar] = useTransition();
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setAvatarError("");
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.type !== "image/jpeg") {
-      setAvatarError("تصویر باید با پسوند jpg باشد.");
+      notify({
+        variant: "error",
+        title: "خطا",
+        description: "تصویر باید با پسوند jpg باشد.",
+      });
       return;
     }
     const form = new FormData();
@@ -68,13 +70,17 @@ export default function ProfileForm({
     startAvatar(async () => {
       const result = await updateAvatar(form);
       if (!result.ok) {
-        setAvatarError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
       // Show the new image immediately from the local file.
       const reader = new FileReader();
       reader.onload = () => setAvatar(reader.result as string);
       reader.readAsDataURL(file);
+      notify({
+        variant: "success",
+        title: "عکس پروفایل به‌روزرسانی شد",
+      });
     });
     if (fileRef.current) fileRef.current.value = "";
   }
@@ -82,18 +88,24 @@ export default function ProfileForm({
   function handleRemoveAvatar() {
     startAvatar(async () => {
       const result = await removeAvatar();
-      if (result.ok) setAvatar(null);
-      else setAvatarError(result.error);
+      if (result.ok) {
+        setAvatar(null);
+        notify({ variant: "success", title: "عکس پروفایل حذف شد" });
+      } else {
+        notify({ variant: "error", title: "خطا", description: result.error });
+      }
     });
   }
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
-    setSaved(false);
     const trimmed = fullName.trim();
     if (!trimmed) {
-      setError("نام کامل را وارد کنید.");
+      notify({
+        variant: "error",
+        title: "خطا",
+        description: "نام کامل را وارد کنید.",
+      });
       return;
     }
     const [firstName, ...rest] = trimmed.split(/\s+/);
@@ -113,11 +125,14 @@ export default function ProfileForm({
         postalCode,
       });
       if (!result.ok) {
-        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
-      setSaved(true);
-      setTimeout(() => setSaved(false), 4000);
+      notify({
+        variant: "success",
+        title: "ذخیره موفق",
+        description: "اطلاعات با موفقیت ذخیره شد.",
+      });
     });
   }
 
@@ -163,26 +178,10 @@ export default function ProfileForm({
           <p className="text-[11px] text-gray-400 text-center">
             تصویر باید با پسوند jpg باشد
           </p>
-          {avatarError && (
-            <p className="text-[11px] text-red-500 text-center">
-              {avatarError}
-            </p>
-          )}
         </div>
 
         {/* Fields column */}
         <div className="space-y-4">
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">
-              {error}
-            </div>
-          )}
-          {saved && (
-            <div className="bg-green-50 border border-green-200 text-green-700 text-sm font-semibold rounded-xl px-4 py-3">
-              اطلاعات با موفقیت ذخیره شد.
-            </div>
-          )}
-
           {/* Read-only account info */}
           <div className="grid sm:grid-cols-2 gap-3">
             <ReadOnly label="نام کاربری" value={profile.phoneNumber} ltr />
