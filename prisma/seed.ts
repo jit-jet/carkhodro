@@ -720,6 +720,31 @@ async function main() {
     ],
   });
 
+  // ── Site Settings & Social Links ───────────────────────────────────────────
+  await prisma.siteSetting.upsert({
+    where: { id: 1 },
+    create: {
+      id: 1,
+      phone: '۰۲۱-۸۸۱۲۳۴۵۶',
+      secondaryPhone: '۰۲۱-۸۸۶۵۴۳۲۱',
+      email: 'info@carkhodro.ir',
+      address: 'تهران، خیابان ولیعصر\nبالاتر از میدان ونک، پلاک ۲۴۱',
+      workingHours: 'شنبه تا چهارشنبه: ۸ تا ۲۰\nپنجشنبه: ۸ تا ۱۴',
+      headerPromo1: 'ضمانت اصالت کالا',
+      headerPromo2: 'ارسال سریع به سراسر کشور',
+      aboutText: 'بزرگترین فروشگاه آنلاین قطعات یدکی خودروهای ایرانی و خارجی با بیش از ۵۰,۰۰۰ قطعه اصل و ضمانت اصالت کالا.',
+    },
+    update: {},
+  });
+
+  await prisma.socialLink.createMany({
+    data: [
+      { label: 'اینستاگرام', url: 'https://instagram.com/carkhodro', icon: 'instagram', sortOrder: 0 },
+      { label: 'تلگرام', url: 'https://t.me/carkhodro', icon: 'telegram', sortOrder: 1 },
+      { label: 'واتساپ', url: 'https://wa.me/989121234567', icon: 'whatsapp', sortOrder: 2 },
+    ],
+  });
+
   // ── Shipping Options ───────────────────────────────────────────────────────
   await prisma.shippingOption.createMany({
     data: [

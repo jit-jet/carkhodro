@@ -116,6 +116,33 @@ export interface NavLinkVM {
   order: number;
 }
 
+export interface AdminNavLinkVM extends NavLinkVM {
+  isActive: boolean;
+}
+
+export interface PublicSiteSettingsVM {
+  phone: string;
+  secondaryPhone: string;
+  email: string;
+  address: string;
+  workingHours: string;
+  headerPromo1: string;
+  headerPromo2: string;
+  aboutText: string;
+}
+
+export interface SocialLinkVM {
+  id: number;
+  label: string;
+  url: string;
+  icon: string;
+  order: number;
+}
+
+export interface AdminSocialLinkVM extends SocialLinkVM {
+  isActive: boolean;
+}
+
 export interface ShippingOptionVM {
   id: string;
   method: string;
@@ -455,6 +482,66 @@ export function toNavLinkVM(n: {
   sortOrder: number;
 }): NavLinkVM {
   return { id: n.id, href: n.href, label: n.label, order: n.sortOrder };
+}
+
+export function toAdminNavLinkVM(n: {
+  id: number;
+  href: string;
+  label: string;
+  sortOrder: number;
+  isActive: boolean;
+}): AdminNavLinkVM {
+  return { id: n.id, href: n.href, label: n.label, order: n.sortOrder, isActive: n.isActive };
+}
+
+export function toPublicSiteSettingsVM(row: {
+  phone: string | null;
+  secondaryPhone: string | null;
+  email: string | null;
+  address: string | null;
+  workingHours: string | null;
+  headerPromo1: string | null;
+  headerPromo2: string | null;
+  aboutText: string | null;
+} | null): PublicSiteSettingsVM {
+  return {
+    phone: row?.phone ?? '',
+    secondaryPhone: row?.secondaryPhone ?? '',
+    email: row?.email ?? '',
+    address: row?.address ?? '',
+    workingHours: row?.workingHours ?? '',
+    headerPromo1: row?.headerPromo1 ?? '',
+    headerPromo2: row?.headerPromo2 ?? '',
+    aboutText: row?.aboutText ?? '',
+  };
+}
+
+export function toSocialLinkVM(s: {
+  id: number;
+  label: string;
+  url: string;
+  icon: string;
+  sortOrder: number;
+}): SocialLinkVM {
+  return { id: s.id, label: s.label, url: s.url, icon: s.icon, order: s.sortOrder };
+}
+
+export function toAdminSocialLinkVM(s: {
+  id: number;
+  label: string;
+  url: string;
+  icon: string;
+  sortOrder: number;
+  isActive: boolean;
+}): AdminSocialLinkVM {
+  return {
+    id: s.id,
+    label: s.label,
+    url: s.url,
+    icon: s.icon,
+    order: s.sortOrder,
+    isActive: s.isActive,
+  };
 }
 
 export function toFaqVM(f: {

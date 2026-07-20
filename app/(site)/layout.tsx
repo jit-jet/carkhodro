@@ -10,7 +10,7 @@
 import { Suspense } from "react";
 import SiteHeader from "@/src/components/layout/SiteHeader";
 import HeaderFallback from "@/src/components/layout/HeaderFallback";
-import Footer from "@/src/components/layout/Footer";
+import SiteFooter from "@/src/components/layout/SiteFooter";
 
 export default function SiteLayout({
   children,
@@ -23,7 +23,7 @@ export default function SiteLayout({
         <SiteHeader />
       </Suspense>
       <main className="flex-1">{children}</main>
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }

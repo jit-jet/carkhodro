@@ -6,6 +6,7 @@
 
 import { Suspense } from 'react';
 import { getNavLinks } from '@/actions/navigation';
+import { getPublicSiteSettings } from '@/actions/site-settings';
 import Header from '@/src/components/layout/Header';
 import AccountMenu, {
   AccountMenuFallback,
@@ -15,7 +16,11 @@ import { getCurrentUser } from '@/src/lib/session';
 import { cartPathForRole, pricingRoleFromUser ,isWholesaleUser} from '@/src/lib/user-role';
 
 export default async function SiteHeader() {
-  const [navLinks, user] = await Promise.all([getNavLinks(), getCurrentUser()]);
+  const [navLinks, user, settings] = await Promise.all([
+    getNavLinks(),
+    getCurrentUser(),
+    getPublicSiteSettings(),
+  ]);
   const cartHref = cartPathForRole(pricingRoleFromUser(user?.role));
   if(isWholesaleUser(pricingRoleFromUser(user?.role))){
     navLinks.push({
@@ -25,11 +30,11 @@ export default async function SiteHeader() {
       order: 100,
     });
   }
-  console.log("second",navLinks)
   return (
     <Header
       navLinks={navLinks}
       cartHref={cartHref}
+      contactInfo={settings}
       mobileMenuAccount={
         <Suspense fallback={null}>
           <MobileAccountSection />

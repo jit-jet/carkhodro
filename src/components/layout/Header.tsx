@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import type { NavLinkVM, ProductVM } from "@/src/lib/serializers";
+import type { NavLinkVM, ProductVM, PublicSiteSettingsVM } from "@/src/lib/serializers";
+import { phoneTelHref, settingLines } from "@/src/lib/site-settings-display";
 import { searchProducts } from "@/actions/search";
 import { useCartUI } from "@/src/store/cart-ui";
 import { useListsUI, ensureListsHydrated } from "@/src/store/lists-ui";
@@ -309,11 +310,13 @@ export default function Header({
   children,
   mobileMenuAccount,
   cartHref = '/cart',
+  contactInfo,
 }: {
   navLinks: NavLinkVM[];
   children: React.ReactNode;
   mobileMenuAccount?: React.ReactNode;
   cartHref?: string;
+  contactInfo: PublicSiteSettingsVM;
 }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -409,6 +412,11 @@ export default function Header({
     onSeeAll: () => handleSearch(),
   };
 
+  const headerPhone = contactInfo.phone;
+  const headerAddress = settingLines(contactInfo.address)[0] ?? '';
+  const headerPromo1 = contactInfo.headerPromo1;
+  const headerPromo2 = contactInfo.headerPromo2;
+
   const searchInput = (isMobile: boolean) => (
     <form onSubmit={handleSearch}>
       <div className={[
@@ -456,24 +464,32 @@ export default function Header({
       <div className="bg-charcoal text-white text-xs">
         <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5 text-white/90">
-              <PhoneIcon />
-              <span>۰۲۱-۸۸۱۲۳۴۵۶</span>
-            </span>
-            <span className="hidden sm:flex items-center gap-1.5 text-white/70 border-s border-white/20 ps-4">
-              <MapPinIcon />
-              <span>تهران، خیابان ولیعصر</span>
-            </span>
+            {headerPhone && (
+              <span className="flex items-center gap-1.5 text-white/90">
+                <PhoneIcon />
+                <span>{headerPhone}</span>
+              </span>
+            )}
+            {headerAddress && (
+              <span className="hidden sm:flex items-center gap-1.5 text-white/70 border-s border-white/20 ps-4">
+                <MapPinIcon />
+                <span>{headerAddress}</span>
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-4 text-white/70">
-            <span className="hidden sm:flex items-center gap-1.5">
-              <ShieldCheckIcon />
-              <span>ضمانت اصالت کالا</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <TruckIcon />
-              <span>ارسال سریع به سراسر کشور</span>
-            </span>
+            {headerPromo1 && (
+              <span className="hidden sm:flex items-center gap-1.5">
+                <ShieldCheckIcon />
+                <span>{headerPromo1}</span>
+              </span>
+            )}
+            {headerPromo2 && (
+              <span className="flex items-center gap-1.5">
+                <TruckIcon />
+                <span>{headerPromo2}</span>
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -679,16 +695,22 @@ export default function Header({
           </nav>
 
           {/* Bottom contact info */}
-          <div className="p-4 bg-charcoal text-white text-sm space-y-3 shrink-0">
-            <a href="tel:02188123456" className="flex items-center gap-2.5 hover:text-accent transition-colors">
-              <PhoneIcon />
-              <span>۰۲۱-۸۸۱۲۳۴۵۶</span>
-            </a>
-            <div className="flex items-center gap-2.5 text-white/70">
-              <MapPinIcon />
-              <span>تهران، خیابان ولیعصر</span>
+          {(headerPhone || headerAddress) && (
+            <div className="p-4 bg-charcoal text-white text-sm space-y-3 shrink-0">
+              {headerPhone && (
+                <a href={phoneTelHref(headerPhone)} className="flex items-center gap-2.5 hover:text-accent transition-colors">
+                  <PhoneIcon />
+                  <span>{headerPhone}</span>
+                </a>
+              )}
+              {headerAddress && (
+                <div className="flex items-center gap-2.5 text-white/70">
+                  <MapPinIcon />
+                  <span>{headerAddress}</span>
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </div>
 
         {/* Backdrop */}

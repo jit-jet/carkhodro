@@ -20,7 +20,8 @@ type IconKey =
   | "orders"
   | "sms"
   | "settings"
-  | "faq";
+  | "faq"
+  | "menu";
 
 interface NavItem {
   href: string;
@@ -36,6 +37,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/admin/brands", label: "برندها و خودروها", icon: "car" },
   { href: "/admin/users", label: "کاربران", icon: "users" },
   { href: "/admin/sms", label: "پیامک گروهی", icon: "sms" },
+  { href: "/admin/navigation", label: "منوی سایت", icon: "menu" },
   { href: "/admin/faq", label: "سوالات متداول", icon: "faq" },
   { href: "/admin/settings", label: "تنظیمات سایت", icon: "settings" },
 ];
@@ -116,6 +118,14 @@ function NavIcon({ icon }: { icon: IconKey }) {
         <svg {...common}>
           <circle cx="12" cy="12" r="10" />
           <path d="M9.09 9a3 3 0 115.83 1c0 2-3 3-3 3M12 17h.01" />
+        </svg>
+      );
+    case "menu":
+      return (
+        <svg {...common}>
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
         </svg>
       );
   }

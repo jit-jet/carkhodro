@@ -346,10 +346,20 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   email: 'email',
   address: 'address',
   workingHours: 'workingHours',
-  instagramUrl: 'instagramUrl',
-  telegramUrl: 'telegramUrl',
-  whatsappUrl: 'whatsappUrl',
+  headerPromo1: 'headerPromo1',
+  headerPromo2: 'headerPromo2',
   aboutText: 'aboutText',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SocialLinkScalarFieldEnum = {
+  id: 'id',
+  label: 'label',
+  url: 'url',
+  icon: 'icon',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
@@ -548,6 +558,7 @@ exports.Prisma.ModelName = {
   Post: 'Post',
   Faq: 'Faq',
   SiteSetting: 'SiteSetting',
+  SocialLink: 'SocialLink',
   SmsCampaign: 'SmsCampaign',
   ShippingOption: 'ShippingOption',
   Order: 'Order',

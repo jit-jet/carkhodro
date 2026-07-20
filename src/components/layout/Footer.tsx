@@ -1,4 +1,7 @@
 import Link from "next/link";
+import type { PublicSiteSettingsVM, SocialLinkVM } from "@/src/lib/serializers";
+import { settingLines } from "@/src/lib/site-settings-display";
+import { SocialLinksRow } from "@/src/components/layout/SocialLinksRow";
 
 const quickLinks = [
   { href: "/", label: "صفحه اصلی" },
@@ -61,7 +64,17 @@ function ClockIcon() {
   );
 }
 
-export default function Footer() {
+export default function Footer({
+  settings,
+  socialLinks,
+}: {
+  settings: PublicSiteSettingsVM;
+  socialLinks: SocialLinkVM[];
+}) {
+  const phoneLines = [settings.phone, settings.secondaryPhone].filter(Boolean);
+  const addressLines = settingLines(settings.address);
+  const workingHourLines = settingLines(settings.workingHours);
+
   return (
     <footer className="bg-charcoal text-white">
       {/* Trust badges */}
@@ -93,15 +106,9 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="text-2xl font-black text-accent mb-3">کارخودرو</div>
             <p className="text-sm text-gray-400 leading-7 mb-4">
-              بزرگترین فروشگاه آنلاین قطعات یدکی خودروهای ایرانی و خارجی با بیش از ۵۰,۰۰۰ قطعه اصل و ضمانت اصالت کالا.
+              {settings.aboutText || "اطلاعات فروشگاه از پنل مدیریت قابل ویرایش است."}
             </p>
-            <div className="flex gap-3">
-              {["📘", "📸", "📢", "💬"].map((icon, i) => (
-                <button key={i} className="w-9 h-9 bg-white/10 hover:bg-accent hover:text-charcoal rounded-lg flex items-center justify-center transition-colors text-sm">
-                  {icon}
-                </button>
-              ))}
-            </div>
+            <SocialLinksRow links={socialLinks} />
           </div>
 
           {/* Quick links */}
@@ -147,25 +154,36 @@ export default function Footer() {
               اطلاعات تماس
             </h3>
             <ul className="space-y-3">
-              <li className="flex items-start gap-3 text-sm text-gray-400">
-                <PhoneIcon />
-                <div>
-                  <p>۰۲۱-۸۸۱۲۳۴۵۶</p>
-                  <p>۰۲۱-۸۸۶۵۴۳۲۱</p>
-                </div>
-              </li>
-              <li className="flex items-center gap-3 text-sm text-gray-400">
-                <MailIcon />
-                <span>info@carkhodro.ir</span>
-              </li>
-              <li className="flex items-start gap-3 text-sm text-gray-400">
-                <MapPinIcon />
-                <span>تهران، خیابان ولیعصر، بالاتر از میدان ونک، پلاک ۲۴۱</span>
-              </li>
-              <li className="flex items-center gap-3 text-sm text-gray-400">
-                <ClockIcon />
-                <span>شنبه تا چهارشنبه: ۸ تا ۲۰ | پنجشنبه: ۸ تا ۱۴</span>
-              </li>
+              {phoneLines.length > 0 && (
+                <li className="flex items-start gap-3 text-sm text-gray-400">
+                  <PhoneIcon />
+                  <div>
+                    {phoneLines.map((phone) => (
+                      <p key={phone}>{phone}</p>
+                    ))}
+                  </div>
+                </li>
+              )}
+              {settings.email && (
+                <li className="flex items-center gap-3 text-sm text-gray-400">
+                  <MailIcon />
+                  <a href={`mailto:${settings.email}`} className="hover:text-accent transition-colors">
+                    {settings.email}
+                  </a>
+                </li>
+              )}
+              {addressLines.length > 0 && (
+                <li className="flex items-start gap-3 text-sm text-gray-400">
+                  <MapPinIcon />
+                  <span>{addressLines.join("، ")}</span>
+                </li>
+              )}
+              {workingHourLines.length > 0 && (
+                <li className="flex items-start gap-3 text-sm text-gray-400">
+                  <ClockIcon />
+                  <span>{workingHourLines.join(" | ")}</span>
+                </li>
+              )}
             </ul>
           </div>
         </div>

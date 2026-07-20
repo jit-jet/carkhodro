@@ -128,6 +128,11 @@ export type Faq = $Result.DefaultSelection<Prisma.$FaqPayload>
  */
 export type SiteSetting = $Result.DefaultSelection<Prisma.$SiteSettingPayload>
 /**
+ * Model SocialLink
+ * Admin-managed social media links — shown in the footer and contact page.
+ */
+export type SocialLink = $Result.DefaultSelection<Prisma.$SocialLinkPayload>
+/**
  * Model SmsCampaign
  * One row per bulk SMS blast the admin sends («ارسال گروهی پیامک»). Snapshot
  * only — the recipient list itself isn't retained, just the counts, to keep
@@ -635,6 +640,16 @@ export class PrismaClient<
     * ```
     */
   get siteSetting(): Prisma.SiteSettingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.socialLink`: Exposes CRUD operations for the **SocialLink** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SocialLinks
+    * const socialLinks = await prisma.socialLink.findMany()
+    * ```
+    */
+  get socialLink(): Prisma.SocialLinkDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.smsCampaign`: Exposes CRUD operations for the **SmsCampaign** model.
@@ -1171,6 +1186,7 @@ export namespace Prisma {
     Post: 'Post',
     Faq: 'Faq',
     SiteSetting: 'SiteSetting',
+    SocialLink: 'SocialLink',
     SmsCampaign: 'SmsCampaign',
     ShippingOption: 'ShippingOption',
     Order: 'Order',
@@ -1194,7 +1210,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "post" | "faq" | "siteSetting" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion"
+      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "post" | "faq" | "siteSetting" | "socialLink" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2826,6 +2842,80 @@ export namespace Prisma {
           }
         }
       }
+      SocialLink: {
+        payload: Prisma.$SocialLinkPayload<ExtArgs>
+        fields: Prisma.SocialLinkFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SocialLinkFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SocialLinkFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+          }
+          findFirst: {
+            args: Prisma.SocialLinkFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SocialLinkFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+          }
+          findMany: {
+            args: Prisma.SocialLinkFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload>[]
+          }
+          create: {
+            args: Prisma.SocialLinkCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+          }
+          createMany: {
+            args: Prisma.SocialLinkCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SocialLinkCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload>[]
+          }
+          delete: {
+            args: Prisma.SocialLinkDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+          }
+          update: {
+            args: Prisma.SocialLinkUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+          }
+          deleteMany: {
+            args: Prisma.SocialLinkDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SocialLinkUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SocialLinkUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload>[]
+          }
+          upsert: {
+            args: Prisma.SocialLinkUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SocialLinkPayload>
+          }
+          aggregate: {
+            args: Prisma.SocialLinkAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSocialLink>
+          }
+          groupBy: {
+            args: Prisma.SocialLinkGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SocialLinkGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SocialLinkCountArgs<ExtArgs>
+            result: $Utils.Optional<SocialLinkCountAggregateOutputType> | number
+          }
+        }
+      }
       SmsCampaign: {
         payload: Prisma.$SmsCampaignPayload<ExtArgs>
         fields: Prisma.SmsCampaignFieldRefs
@@ -3548,6 +3638,7 @@ export namespace Prisma {
     post?: PostOmit
     faq?: FaqOmit
     siteSetting?: SiteSettingOmit
+    socialLink?: SocialLinkOmit
     smsCampaign?: SmsCampaignOmit
     shippingOption?: ShippingOptionOmit
     order?: OrderOmit
@@ -28450,9 +28541,8 @@ export namespace Prisma {
     email: string | null
     address: string | null
     workingHours: string | null
-    instagramUrl: string | null
-    telegramUrl: string | null
-    whatsappUrl: string | null
+    headerPromo1: string | null
+    headerPromo2: string | null
     aboutText: string | null
     updatedAt: Date | null
   }
@@ -28464,9 +28554,8 @@ export namespace Prisma {
     email: string | null
     address: string | null
     workingHours: string | null
-    instagramUrl: string | null
-    telegramUrl: string | null
-    whatsappUrl: string | null
+    headerPromo1: string | null
+    headerPromo2: string | null
     aboutText: string | null
     updatedAt: Date | null
   }
@@ -28478,9 +28567,8 @@ export namespace Prisma {
     email: number
     address: number
     workingHours: number
-    instagramUrl: number
-    telegramUrl: number
-    whatsappUrl: number
+    headerPromo1: number
+    headerPromo2: number
     aboutText: number
     updatedAt: number
     _all: number
@@ -28502,9 +28590,8 @@ export namespace Prisma {
     email?: true
     address?: true
     workingHours?: true
-    instagramUrl?: true
-    telegramUrl?: true
-    whatsappUrl?: true
+    headerPromo1?: true
+    headerPromo2?: true
     aboutText?: true
     updatedAt?: true
   }
@@ -28516,9 +28603,8 @@ export namespace Prisma {
     email?: true
     address?: true
     workingHours?: true
-    instagramUrl?: true
-    telegramUrl?: true
-    whatsappUrl?: true
+    headerPromo1?: true
+    headerPromo2?: true
     aboutText?: true
     updatedAt?: true
   }
@@ -28530,9 +28616,8 @@ export namespace Prisma {
     email?: true
     address?: true
     workingHours?: true
-    instagramUrl?: true
-    telegramUrl?: true
-    whatsappUrl?: true
+    headerPromo1?: true
+    headerPromo2?: true
     aboutText?: true
     updatedAt?: true
     _all?: true
@@ -28631,9 +28716,8 @@ export namespace Prisma {
     email: string | null
     address: string | null
     workingHours: string | null
-    instagramUrl: string | null
-    telegramUrl: string | null
-    whatsappUrl: string | null
+    headerPromo1: string | null
+    headerPromo2: string | null
     aboutText: string | null
     updatedAt: Date
     _count: SiteSettingCountAggregateOutputType | null
@@ -28664,9 +28748,8 @@ export namespace Prisma {
     email?: boolean
     address?: boolean
     workingHours?: boolean
-    instagramUrl?: boolean
-    telegramUrl?: boolean
-    whatsappUrl?: boolean
+    headerPromo1?: boolean
+    headerPromo2?: boolean
     aboutText?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
@@ -28678,9 +28761,8 @@ export namespace Prisma {
     email?: boolean
     address?: boolean
     workingHours?: boolean
-    instagramUrl?: boolean
-    telegramUrl?: boolean
-    whatsappUrl?: boolean
+    headerPromo1?: boolean
+    headerPromo2?: boolean
     aboutText?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
@@ -28692,9 +28774,8 @@ export namespace Prisma {
     email?: boolean
     address?: boolean
     workingHours?: boolean
-    instagramUrl?: boolean
-    telegramUrl?: boolean
-    whatsappUrl?: boolean
+    headerPromo1?: boolean
+    headerPromo2?: boolean
     aboutText?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
@@ -28706,14 +28787,13 @@ export namespace Prisma {
     email?: boolean
     address?: boolean
     workingHours?: boolean
-    instagramUrl?: boolean
-    telegramUrl?: boolean
-    whatsappUrl?: boolean
+    headerPromo1?: boolean
+    headerPromo2?: boolean
     aboutText?: boolean
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "secondaryPhone" | "email" | "address" | "workingHours" | "instagramUrl" | "telegramUrl" | "whatsappUrl" | "aboutText" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "secondaryPhone" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "aboutText" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
@@ -28725,9 +28805,11 @@ export namespace Prisma {
       email: string | null
       address: string | null
       workingHours: string | null
-      instagramUrl: string | null
-      telegramUrl: string | null
-      whatsappUrl: string | null
+      /**
+       * Short promo lines shown in the header top bar (e.g. trust badges).
+       */
+      headerPromo1: string | null
+      headerPromo2: string | null
       aboutText: string | null
       updatedAt: Date
     }, ExtArgs["result"]["siteSetting"]>
@@ -29159,9 +29241,8 @@ export namespace Prisma {
     readonly email: FieldRef<"SiteSetting", 'String'>
     readonly address: FieldRef<"SiteSetting", 'String'>
     readonly workingHours: FieldRef<"SiteSetting", 'String'>
-    readonly instagramUrl: FieldRef<"SiteSetting", 'String'>
-    readonly telegramUrl: FieldRef<"SiteSetting", 'String'>
-    readonly whatsappUrl: FieldRef<"SiteSetting", 'String'>
+    readonly headerPromo1: FieldRef<"SiteSetting", 'String'>
+    readonly headerPromo2: FieldRef<"SiteSetting", 'String'>
     readonly aboutText: FieldRef<"SiteSetting", 'String'>
     readonly updatedAt: FieldRef<"SiteSetting", 'DateTime'>
   }
@@ -29532,6 +29613,1086 @@ export namespace Prisma {
      * Omit specific fields from the SiteSetting
      */
     omit?: SiteSettingOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SocialLink
+   */
+
+  export type AggregateSocialLink = {
+    _count: SocialLinkCountAggregateOutputType | null
+    _avg: SocialLinkAvgAggregateOutputType | null
+    _sum: SocialLinkSumAggregateOutputType | null
+    _min: SocialLinkMinAggregateOutputType | null
+    _max: SocialLinkMaxAggregateOutputType | null
+  }
+
+  export type SocialLinkAvgAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type SocialLinkSumAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type SocialLinkMinAggregateOutputType = {
+    id: number | null
+    label: string | null
+    url: string | null
+    icon: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SocialLinkMaxAggregateOutputType = {
+    id: number | null
+    label: string | null
+    url: string | null
+    icon: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SocialLinkCountAggregateOutputType = {
+    id: number
+    label: number
+    url: number
+    icon: number
+    sortOrder: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SocialLinkAvgAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type SocialLinkSumAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type SocialLinkMinAggregateInputType = {
+    id?: true
+    label?: true
+    url?: true
+    icon?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SocialLinkMaxAggregateInputType = {
+    id?: true
+    label?: true
+    url?: true
+    icon?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SocialLinkCountAggregateInputType = {
+    id?: true
+    label?: true
+    url?: true
+    icon?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SocialLinkAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SocialLink to aggregate.
+     */
+    where?: SocialLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SocialLinks to fetch.
+     */
+    orderBy?: SocialLinkOrderByWithRelationInput | SocialLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SocialLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SocialLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SocialLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SocialLinks
+    **/
+    _count?: true | SocialLinkCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SocialLinkAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SocialLinkSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SocialLinkMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SocialLinkMaxAggregateInputType
+  }
+
+  export type GetSocialLinkAggregateType<T extends SocialLinkAggregateArgs> = {
+        [P in keyof T & keyof AggregateSocialLink]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSocialLink[P]>
+      : GetScalarType<T[P], AggregateSocialLink[P]>
+  }
+
+
+
+
+  export type SocialLinkGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SocialLinkWhereInput
+    orderBy?: SocialLinkOrderByWithAggregationInput | SocialLinkOrderByWithAggregationInput[]
+    by: SocialLinkScalarFieldEnum[] | SocialLinkScalarFieldEnum
+    having?: SocialLinkScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SocialLinkCountAggregateInputType | true
+    _avg?: SocialLinkAvgAggregateInputType
+    _sum?: SocialLinkSumAggregateInputType
+    _min?: SocialLinkMinAggregateInputType
+    _max?: SocialLinkMaxAggregateInputType
+  }
+
+  export type SocialLinkGroupByOutputType = {
+    id: number
+    label: string
+    url: string
+    icon: string
+    sortOrder: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: SocialLinkCountAggregateOutputType | null
+    _avg: SocialLinkAvgAggregateOutputType | null
+    _sum: SocialLinkSumAggregateOutputType | null
+    _min: SocialLinkMinAggregateOutputType | null
+    _max: SocialLinkMaxAggregateOutputType | null
+  }
+
+  type GetSocialLinkGroupByPayload<T extends SocialLinkGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SocialLinkGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SocialLinkGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SocialLinkGroupByOutputType[P]>
+            : GetScalarType<T[P], SocialLinkGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SocialLinkSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    label?: boolean
+    url?: boolean
+    icon?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["socialLink"]>
+
+  export type SocialLinkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    label?: boolean
+    url?: boolean
+    icon?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["socialLink"]>
+
+  export type SocialLinkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    label?: boolean
+    url?: boolean
+    icon?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["socialLink"]>
+
+  export type SocialLinkSelectScalar = {
+    id?: boolean
+    label?: boolean
+    url?: boolean
+    icon?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SocialLinkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "label" | "url" | "icon" | "sortOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["socialLink"]>
+
+  export type $SocialLinkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SocialLink"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      label: string
+      url: string
+      /**
+       * Display icon — typically an emoji (e.g. 📸 for Instagram).
+       */
+      icon: string
+      sortOrder: number
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["socialLink"]>
+    composites: {}
+  }
+
+  type SocialLinkGetPayload<S extends boolean | null | undefined | SocialLinkDefaultArgs> = $Result.GetResult<Prisma.$SocialLinkPayload, S>
+
+  type SocialLinkCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SocialLinkFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SocialLinkCountAggregateInputType | true
+    }
+
+  export interface SocialLinkDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SocialLink'], meta: { name: 'SocialLink' } }
+    /**
+     * Find zero or one SocialLink that matches the filter.
+     * @param {SocialLinkFindUniqueArgs} args - Arguments to find a SocialLink
+     * @example
+     * // Get one SocialLink
+     * const socialLink = await prisma.socialLink.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SocialLinkFindUniqueArgs>(args: SelectSubset<T, SocialLinkFindUniqueArgs<ExtArgs>>): Prisma__SocialLinkClient<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SocialLink that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SocialLinkFindUniqueOrThrowArgs} args - Arguments to find a SocialLink
+     * @example
+     * // Get one SocialLink
+     * const socialLink = await prisma.socialLink.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SocialLinkFindUniqueOrThrowArgs>(args: SelectSubset<T, SocialLinkFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SocialLinkClient<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SocialLink that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SocialLinkFindFirstArgs} args - Arguments to find a SocialLink
+     * @example
+     * // Get one SocialLink
+     * const socialLink = await prisma.socialLink.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SocialLinkFindFirstArgs>(args?: SelectSubset<T, SocialLinkFindFirstArgs<ExtArgs>>): Prisma__SocialLinkClient<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SocialLink that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SocialLinkFindFirstOrThrowArgs} args - Arguments to find a SocialLink
+     * @example
+     * // Get one SocialLink
+     * const socialLink = await prisma.socialLink.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SocialLinkFindFirstOrThrowArgs>(args?: SelectSubset<T, SocialLinkFindFirstOrThrowArgs<ExtArgs>>): Prisma__SocialLinkClient<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SocialLinks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SocialLinkFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SocialLinks
+     * const socialLinks = await prisma.socialLink.findMany()
+     * 
+     * // Get first 10 SocialLinks
+     * const socialLinks = await prisma.socialLink.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const socialLinkWithIdOnly = await prisma.socialLink.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SocialLinkFindManyArgs>(args?: SelectSubset<T, SocialLinkFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SocialLink.
+     * @param {SocialLinkCreateArgs} args - Arguments to create a SocialLink.
+     * @example
+     * // Create one SocialLink
+     * const SocialLink = await prisma.socialLink.create({
+     *   data: {
+     *     // ... data to create a SocialLink
+     *   }
+     * })
+     * 
+     */
+    create<T extends SocialLinkCreateArgs>(args: SelectSubset<T, SocialLinkCreateArgs<ExtArgs>>): Prisma__SocialLinkClient<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SocialLinks.
+     * @param {SocialLinkCreateManyArgs} args - Arguments to create many SocialLinks.
+     * @example
+     * // Create many SocialLinks
+     * const socialLink = await prisma.socialLink.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SocialLinkCreateManyArgs>(args?: SelectSubset<T, SocialLinkCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SocialLinks and returns the data saved in the database.
+     * @param {SocialLinkCreateManyAndReturnArgs} args - Arguments to create many SocialLinks.
+     * @example
+     * // Create many SocialLinks
+     * const socialLink = await prisma.socialLink.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SocialLinks and only return the `id`
+     * const socialLinkWithIdOnly = await prisma.socialLink.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SocialLinkCreateManyAndReturnArgs>(args?: SelectSubset<T, SocialLinkCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SocialLink.
+     * @param {SocialLinkDeleteArgs} args - Arguments to delete one SocialLink.
+     * @example
+     * // Delete one SocialLink
+     * const SocialLink = await prisma.socialLink.delete({
+     *   where: {
+     *     // ... filter to delete one SocialLink
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SocialLinkDeleteArgs>(args: SelectSubset<T, SocialLinkDeleteArgs<ExtArgs>>): Prisma__SocialLinkClient<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SocialLink.
+     * @param {SocialLinkUpdateArgs} args - Arguments to update one SocialLink.
+     * @example
+     * // Update one SocialLink
+     * const socialLink = await prisma.socialLink.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SocialLinkUpdateArgs>(args: SelectSubset<T, SocialLinkUpdateArgs<ExtArgs>>): Prisma__SocialLinkClient<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SocialLinks.
+     * @param {SocialLinkDeleteManyArgs} args - Arguments to filter SocialLinks to delete.
+     * @example
+     * // Delete a few SocialLinks
+     * const { count } = await prisma.socialLink.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SocialLinkDeleteManyArgs>(args?: SelectSubset<T, SocialLinkDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SocialLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SocialLinkUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SocialLinks
+     * const socialLink = await prisma.socialLink.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SocialLinkUpdateManyArgs>(args: SelectSubset<T, SocialLinkUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SocialLinks and returns the data updated in the database.
+     * @param {SocialLinkUpdateManyAndReturnArgs} args - Arguments to update many SocialLinks.
+     * @example
+     * // Update many SocialLinks
+     * const socialLink = await prisma.socialLink.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SocialLinks and only return the `id`
+     * const socialLinkWithIdOnly = await prisma.socialLink.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SocialLinkUpdateManyAndReturnArgs>(args: SelectSubset<T, SocialLinkUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SocialLink.
+     * @param {SocialLinkUpsertArgs} args - Arguments to update or create a SocialLink.
+     * @example
+     * // Update or create a SocialLink
+     * const socialLink = await prisma.socialLink.upsert({
+     *   create: {
+     *     // ... data to create a SocialLink
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SocialLink we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SocialLinkUpsertArgs>(args: SelectSubset<T, SocialLinkUpsertArgs<ExtArgs>>): Prisma__SocialLinkClient<$Result.GetResult<Prisma.$SocialLinkPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SocialLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SocialLinkCountArgs} args - Arguments to filter SocialLinks to count.
+     * @example
+     * // Count the number of SocialLinks
+     * const count = await prisma.socialLink.count({
+     *   where: {
+     *     // ... the filter for the SocialLinks we want to count
+     *   }
+     * })
+    **/
+    count<T extends SocialLinkCountArgs>(
+      args?: Subset<T, SocialLinkCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SocialLinkCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SocialLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SocialLinkAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SocialLinkAggregateArgs>(args: Subset<T, SocialLinkAggregateArgs>): Prisma.PrismaPromise<GetSocialLinkAggregateType<T>>
+
+    /**
+     * Group by SocialLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SocialLinkGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SocialLinkGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SocialLinkGroupByArgs['orderBy'] }
+        : { orderBy?: SocialLinkGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SocialLinkGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSocialLinkGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SocialLink model
+   */
+  readonly fields: SocialLinkFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SocialLink.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SocialLinkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SocialLink model
+   */
+  interface SocialLinkFieldRefs {
+    readonly id: FieldRef<"SocialLink", 'Int'>
+    readonly label: FieldRef<"SocialLink", 'String'>
+    readonly url: FieldRef<"SocialLink", 'String'>
+    readonly icon: FieldRef<"SocialLink", 'String'>
+    readonly sortOrder: FieldRef<"SocialLink", 'Int'>
+    readonly isActive: FieldRef<"SocialLink", 'Boolean'>
+    readonly createdAt: FieldRef<"SocialLink", 'DateTime'>
+    readonly updatedAt: FieldRef<"SocialLink", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SocialLink findUnique
+   */
+  export type SocialLinkFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which SocialLink to fetch.
+     */
+    where: SocialLinkWhereUniqueInput
+  }
+
+  /**
+   * SocialLink findUniqueOrThrow
+   */
+  export type SocialLinkFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which SocialLink to fetch.
+     */
+    where: SocialLinkWhereUniqueInput
+  }
+
+  /**
+   * SocialLink findFirst
+   */
+  export type SocialLinkFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which SocialLink to fetch.
+     */
+    where?: SocialLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SocialLinks to fetch.
+     */
+    orderBy?: SocialLinkOrderByWithRelationInput | SocialLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SocialLinks.
+     */
+    cursor?: SocialLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SocialLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SocialLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SocialLinks.
+     */
+    distinct?: SocialLinkScalarFieldEnum | SocialLinkScalarFieldEnum[]
+  }
+
+  /**
+   * SocialLink findFirstOrThrow
+   */
+  export type SocialLinkFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which SocialLink to fetch.
+     */
+    where?: SocialLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SocialLinks to fetch.
+     */
+    orderBy?: SocialLinkOrderByWithRelationInput | SocialLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SocialLinks.
+     */
+    cursor?: SocialLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SocialLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SocialLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SocialLinks.
+     */
+    distinct?: SocialLinkScalarFieldEnum | SocialLinkScalarFieldEnum[]
+  }
+
+  /**
+   * SocialLink findMany
+   */
+  export type SocialLinkFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which SocialLinks to fetch.
+     */
+    where?: SocialLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SocialLinks to fetch.
+     */
+    orderBy?: SocialLinkOrderByWithRelationInput | SocialLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SocialLinks.
+     */
+    cursor?: SocialLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SocialLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SocialLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SocialLinks.
+     */
+    distinct?: SocialLinkScalarFieldEnum | SocialLinkScalarFieldEnum[]
+  }
+
+  /**
+   * SocialLink create
+   */
+  export type SocialLinkCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SocialLink.
+     */
+    data: XOR<SocialLinkCreateInput, SocialLinkUncheckedCreateInput>
+  }
+
+  /**
+   * SocialLink createMany
+   */
+  export type SocialLinkCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SocialLinks.
+     */
+    data: SocialLinkCreateManyInput | SocialLinkCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SocialLink createManyAndReturn
+   */
+  export type SocialLinkCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * The data used to create many SocialLinks.
+     */
+    data: SocialLinkCreateManyInput | SocialLinkCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SocialLink update
+   */
+  export type SocialLinkUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SocialLink.
+     */
+    data: XOR<SocialLinkUpdateInput, SocialLinkUncheckedUpdateInput>
+    /**
+     * Choose, which SocialLink to update.
+     */
+    where: SocialLinkWhereUniqueInput
+  }
+
+  /**
+   * SocialLink updateMany
+   */
+  export type SocialLinkUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SocialLinks.
+     */
+    data: XOR<SocialLinkUpdateManyMutationInput, SocialLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which SocialLinks to update
+     */
+    where?: SocialLinkWhereInput
+    /**
+     * Limit how many SocialLinks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SocialLink updateManyAndReturn
+   */
+  export type SocialLinkUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * The data used to update SocialLinks.
+     */
+    data: XOR<SocialLinkUpdateManyMutationInput, SocialLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which SocialLinks to update
+     */
+    where?: SocialLinkWhereInput
+    /**
+     * Limit how many SocialLinks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SocialLink upsert
+   */
+  export type SocialLinkUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SocialLink to update in case it exists.
+     */
+    where: SocialLinkWhereUniqueInput
+    /**
+     * In case the SocialLink found by the `where` argument doesn't exist, create a new SocialLink with this data.
+     */
+    create: XOR<SocialLinkCreateInput, SocialLinkUncheckedCreateInput>
+    /**
+     * In case the SocialLink was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SocialLinkUpdateInput, SocialLinkUncheckedUpdateInput>
+  }
+
+  /**
+   * SocialLink delete
+   */
+  export type SocialLinkDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
+    /**
+     * Filter which SocialLink to delete.
+     */
+    where: SocialLinkWhereUniqueInput
+  }
+
+  /**
+   * SocialLink deleteMany
+   */
+  export type SocialLinkDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SocialLinks to delete
+     */
+    where?: SocialLinkWhereInput
+    /**
+     * Limit how many SocialLinks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SocialLink without action
+   */
+  export type SocialLinkDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SocialLink
+     */
+    select?: SocialLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SocialLink
+     */
+    omit?: SocialLinkOmit<ExtArgs> | null
   }
 
 
@@ -39249,14 +40410,27 @@ export namespace Prisma {
     email: 'email',
     address: 'address',
     workingHours: 'workingHours',
-    instagramUrl: 'instagramUrl',
-    telegramUrl: 'telegramUrl',
-    whatsappUrl: 'whatsappUrl',
+    headerPromo1: 'headerPromo1',
+    headerPromo2: 'headerPromo2',
     aboutText: 'aboutText',
     updatedAt: 'updatedAt'
   };
 
   export type SiteSettingScalarFieldEnum = (typeof SiteSettingScalarFieldEnum)[keyof typeof SiteSettingScalarFieldEnum]
+
+
+  export const SocialLinkScalarFieldEnum: {
+    id: 'id',
+    label: 'label',
+    url: 'url',
+    icon: 'icon',
+    sortOrder: 'sortOrder',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SocialLinkScalarFieldEnum = (typeof SocialLinkScalarFieldEnum)[keyof typeof SocialLinkScalarFieldEnum]
 
 
   export const SmsCampaignScalarFieldEnum: {
@@ -41156,9 +42330,8 @@ export namespace Prisma {
     email?: StringNullableFilter<"SiteSetting"> | string | null
     address?: StringNullableFilter<"SiteSetting"> | string | null
     workingHours?: StringNullableFilter<"SiteSetting"> | string | null
-    instagramUrl?: StringNullableFilter<"SiteSetting"> | string | null
-    telegramUrl?: StringNullableFilter<"SiteSetting"> | string | null
-    whatsappUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }
@@ -41170,9 +42343,8 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     workingHours?: SortOrderInput | SortOrder
-    instagramUrl?: SortOrderInput | SortOrder
-    telegramUrl?: SortOrderInput | SortOrder
-    whatsappUrl?: SortOrderInput | SortOrder
+    headerPromo1?: SortOrderInput | SortOrder
+    headerPromo2?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
   }
@@ -41187,9 +42359,8 @@ export namespace Prisma {
     email?: StringNullableFilter<"SiteSetting"> | string | null
     address?: StringNullableFilter<"SiteSetting"> | string | null
     workingHours?: StringNullableFilter<"SiteSetting"> | string | null
-    instagramUrl?: StringNullableFilter<"SiteSetting"> | string | null
-    telegramUrl?: StringNullableFilter<"SiteSetting"> | string | null
-    whatsappUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }, "id">
@@ -41201,9 +42372,8 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     workingHours?: SortOrderInput | SortOrder
-    instagramUrl?: SortOrderInput | SortOrder
-    telegramUrl?: SortOrderInput | SortOrder
-    whatsappUrl?: SortOrderInput | SortOrder
+    headerPromo1?: SortOrderInput | SortOrder
+    headerPromo2?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: SiteSettingCountOrderByAggregateInput
@@ -41223,11 +42393,79 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     address?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     workingHours?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
-    instagramUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
-    telegramUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
-    whatsappUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    headerPromo1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    headerPromo2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSetting"> | Date | string
+  }
+
+  export type SocialLinkWhereInput = {
+    AND?: SocialLinkWhereInput | SocialLinkWhereInput[]
+    OR?: SocialLinkWhereInput[]
+    NOT?: SocialLinkWhereInput | SocialLinkWhereInput[]
+    id?: IntFilter<"SocialLink"> | number
+    label?: StringFilter<"SocialLink"> | string
+    url?: StringFilter<"SocialLink"> | string
+    icon?: StringFilter<"SocialLink"> | string
+    sortOrder?: IntFilter<"SocialLink"> | number
+    isActive?: BoolFilter<"SocialLink"> | boolean
+    createdAt?: DateTimeFilter<"SocialLink"> | Date | string
+    updatedAt?: DateTimeFilter<"SocialLink"> | Date | string
+  }
+
+  export type SocialLinkOrderByWithRelationInput = {
+    id?: SortOrder
+    label?: SortOrder
+    url?: SortOrder
+    icon?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SocialLinkWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: SocialLinkWhereInput | SocialLinkWhereInput[]
+    OR?: SocialLinkWhereInput[]
+    NOT?: SocialLinkWhereInput | SocialLinkWhereInput[]
+    label?: StringFilter<"SocialLink"> | string
+    url?: StringFilter<"SocialLink"> | string
+    icon?: StringFilter<"SocialLink"> | string
+    sortOrder?: IntFilter<"SocialLink"> | number
+    isActive?: BoolFilter<"SocialLink"> | boolean
+    createdAt?: DateTimeFilter<"SocialLink"> | Date | string
+    updatedAt?: DateTimeFilter<"SocialLink"> | Date | string
+  }, "id">
+
+  export type SocialLinkOrderByWithAggregationInput = {
+    id?: SortOrder
+    label?: SortOrder
+    url?: SortOrder
+    icon?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SocialLinkCountOrderByAggregateInput
+    _avg?: SocialLinkAvgOrderByAggregateInput
+    _max?: SocialLinkMaxOrderByAggregateInput
+    _min?: SocialLinkMinOrderByAggregateInput
+    _sum?: SocialLinkSumOrderByAggregateInput
+  }
+
+  export type SocialLinkScalarWhereWithAggregatesInput = {
+    AND?: SocialLinkScalarWhereWithAggregatesInput | SocialLinkScalarWhereWithAggregatesInput[]
+    OR?: SocialLinkScalarWhereWithAggregatesInput[]
+    NOT?: SocialLinkScalarWhereWithAggregatesInput | SocialLinkScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"SocialLink"> | number
+    label?: StringWithAggregatesFilter<"SocialLink"> | string
+    url?: StringWithAggregatesFilter<"SocialLink"> | string
+    icon?: StringWithAggregatesFilter<"SocialLink"> | string
+    sortOrder?: IntWithAggregatesFilter<"SocialLink"> | number
+    isActive?: BoolWithAggregatesFilter<"SocialLink"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"SocialLink"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SocialLink"> | Date | string
   }
 
   export type SmsCampaignWhereInput = {
@@ -43502,9 +44740,8 @@ export namespace Prisma {
     email?: string | null
     address?: string | null
     workingHours?: string | null
-    instagramUrl?: string | null
-    telegramUrl?: string | null
-    whatsappUrl?: string | null
+    headerPromo1?: string | null
+    headerPromo2?: string | null
     aboutText?: string | null
     updatedAt?: Date | string
   }
@@ -43516,9 +44753,8 @@ export namespace Prisma {
     email?: string | null
     address?: string | null
     workingHours?: string | null
-    instagramUrl?: string | null
-    telegramUrl?: string | null
-    whatsappUrl?: string | null
+    headerPromo1?: string | null
+    headerPromo2?: string | null
     aboutText?: string | null
     updatedAt?: Date | string
   }
@@ -43530,9 +44766,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
-    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    telegramUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsappUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -43544,9 +44779,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
-    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    telegramUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsappUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -43558,9 +44792,8 @@ export namespace Prisma {
     email?: string | null
     address?: string | null
     workingHours?: string | null
-    instagramUrl?: string | null
-    telegramUrl?: string | null
-    whatsappUrl?: string | null
+    headerPromo1?: string | null
+    headerPromo2?: string | null
     aboutText?: string | null
     updatedAt?: Date | string
   }
@@ -43572,9 +44805,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
-    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    telegramUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsappUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -43586,10 +44818,83 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
-    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    telegramUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsappUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SocialLinkCreateInput = {
+    label: string
+    url: string
+    icon: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SocialLinkUncheckedCreateInput = {
+    id?: number
+    label: string
+    url: string
+    icon: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SocialLinkUpdateInput = {
+    label?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SocialLinkUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    label?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SocialLinkCreateManyInput = {
+    id?: number
+    label: string
+    url: string
+    icon: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SocialLinkUpdateManyMutationInput = {
+    label?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SocialLinkUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    label?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -45689,9 +46994,8 @@ export namespace Prisma {
     email?: SortOrder
     address?: SortOrder
     workingHours?: SortOrder
-    instagramUrl?: SortOrder
-    telegramUrl?: SortOrder
-    whatsappUrl?: SortOrder
+    headerPromo1?: SortOrder
+    headerPromo2?: SortOrder
     aboutText?: SortOrder
     updatedAt?: SortOrder
   }
@@ -45707,9 +47011,8 @@ export namespace Prisma {
     email?: SortOrder
     address?: SortOrder
     workingHours?: SortOrder
-    instagramUrl?: SortOrder
-    telegramUrl?: SortOrder
-    whatsappUrl?: SortOrder
+    headerPromo1?: SortOrder
+    headerPromo2?: SortOrder
     aboutText?: SortOrder
     updatedAt?: SortOrder
   }
@@ -45721,15 +47024,57 @@ export namespace Prisma {
     email?: SortOrder
     address?: SortOrder
     workingHours?: SortOrder
-    instagramUrl?: SortOrder
-    telegramUrl?: SortOrder
-    whatsappUrl?: SortOrder
+    headerPromo1?: SortOrder
+    headerPromo2?: SortOrder
     aboutText?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SiteSettingSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type SocialLinkCountOrderByAggregateInput = {
+    id?: SortOrder
+    label?: SortOrder
+    url?: SortOrder
+    icon?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SocialLinkAvgOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type SocialLinkMaxOrderByAggregateInput = {
+    id?: SortOrder
+    label?: SortOrder
+    url?: SortOrder
+    icon?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SocialLinkMinOrderByAggregateInput = {
+    id?: SortOrder
+    label?: SortOrder
+    url?: SortOrder
+    icon?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SocialLinkSumOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type EnumSmsTargetRoleFilter<$PrismaModel = never> = {
