@@ -10,7 +10,8 @@
  *
  * Flow:
  *   1. requestOtp(phone)        → generate code, hash + store in `otp_sessions`,
- *                                 "send" it (console in dev, SMS provider in prod).
+ *                                 deliver via IranPayamak (or console + `devCode`
+ *                                 when SMS_API_KEY is "console").
  *   2. verifyOtp(phone, code)   → check hash/expiry/attempts. On success:
  *                                   • existing user → create session + merge cart
  *                                   • new user      → issue a signed `verified_phone`
@@ -39,19 +40,19 @@ import {
 import { signToken, verifyToken } from '@/src/lib/auth-tokens';
 import { mergeGuestCartIntoUser } from '@/src/lib/guest-cart';
 import { resolveLocation } from '@/src/lib/resolve-location';
+import { sendOtpSms } from '@/src/lib/sms-gateway';
 
 const PHONE_RE = /^09\d{9}$/;
 const VERIFIED_PHONE_COOKIE = 'verified_phone';
 const VERIFIED_PHONE_TTL_MS = 15 * 60 * 1000; // window to finish the signup form
 
-// const isDev = process.env.NODE_ENV !== 'production';    //uncomment later
-const isDev = true;   
-
-
 // ── Result payload types (mirror the old authApi shapes the UI expects) ──────
 
 export interface RequestOtpData {
-  /** Dev-only: the plain code, so the UI can surface it without a real SMS. */
+  /**
+   * Console / testing only: plain OTP when SMS_API_KEY is "console" (or unset).
+   * The login UI shows this via `alert` instead of a real SMS.
+   */
   devCode?: string;
 }
 
@@ -68,27 +69,6 @@ export interface RegisterInput {
   cityId: number | null;
   address: string;
   postalCode: string;
-}
-
-// ── SMS delivery (swap the console stub for a real provider in prod) ─────────
-
-async function deliverOtp(phoneNumber: string, code: string): Promise<void> {
-  // ── PRODUCTION ──────────────────────────────────────────────────────────
-  // Example (Kavenegar — a popular Iranian SMS gateway):
-  //
-  //   if (process.env.SMS_PROVIDER === 'kavenegar') {
-  //     await fetch(
-  //       `https://api.kavenegar.com/v1/${process.env.SMS_API_KEY}/verify/lookup.json` +
-  //         `?receptor=${phoneNumber}&token=${code}&template=carkhodro-otp`,
-  //       { method: 'POST' },
-  //     );
-  //     return;
-  //   }
-  // ─────────────────────────────────────────────────────────────────────────
-
-  // ── DEV ───────────────────────────────────────────────────────────────────
-  // No real SMS: log the code so it can be read from the server console.
-  console.info(`[otp] code for ${phoneNumber}: ${code} (dev — no SMS sent)`);
 }
 
 // ── 1. Request OTP ───────────────────────────────────────────────────────────
@@ -130,9 +110,12 @@ export async function requestOtp(
       },
     });
 
-    await deliverOtp(phone, code);
+    const delivered = await sendOtpSms(phone, code);
+    if (!delivered.ok) return fail(delivered.error);
 
-    return ok<RequestOtpData>({ ...(isDev ? { devCode: code } : {}) });
+    return ok<RequestOtpData>({
+      ...(delivered.consoleMode ? { devCode: code } : {}),
+    });
   });
 }
 

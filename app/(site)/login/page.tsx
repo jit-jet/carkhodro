@@ -12,8 +12,8 @@
  *   • New user       →  /signup?phone=…  (carries `?redirect=` through)
  *
  * Backend calls go through the real Server Actions in `actions/auth.ts`
- * (`requestOtp` / `verifyOtp`). In development the OTP isn't texted — the action
- * returns it as `devCode` and we surface it here so the flow is testable.
+ * (`requestOtp` / `verifyOtp`). When SMS_API_KEY is "console", the OTP isn't
+ * texted — the action returns it as `devCode` and we `alert` it for testing.
  *
  * Wrapped in <Suspense> because it reads `useSearchParams()` (the `redirect`
  * destination set when a guest is bounced here from checkout).
@@ -56,12 +56,12 @@ function LoginFlow() {
     };
   }
 
-  /** Dev convenience: show the OTP the server generated (no real SMS in dev). */
+  /** Console mode: show the OTP when SMS_API_KEY is "console" (no real SMS). */
   function showDevCode(devCode?: string) {
     if (devCode) {
       alert(
-        `📱 پیامک ارسال شد (حالت توسعه)\n\nکد تأیید: ${devCode}\n\n` +
-          `⚠️ در محیط واقعی این کد از طریق پیامک ارسال می‌شود.`,
+        `پیامک ارسال شد (حالت توسعه)\n\nکد تأیید: ${devCode}\n\n` +
+          `در محیط واقعی این کد از طریق پیامک ارسال می‌شود.`,
       );
     }
   }

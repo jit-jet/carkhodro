@@ -1,40 +1,70 @@
 /**
  * Generic SMS delivery — server-only.
  * ────────────────────────────────────
- * Shared by the bulk marketing panel (`actions/admin-sms.ts`). Credentials
- * (`SMS_API_KEY`) never leave the server — this module is never imported from
- * a Client Component. Mirrors the console-in-dev / real-gateway-in-prod split
- * already used for OTP delivery in `actions/auth.ts`.
+ * Shared by OTP login (`actions/auth.ts`) and bulk marketing
+ * (`actions/admin-sms.ts`). Credentials never leave the server.
+ *
+ * Console mode (no network): SMS_API_KEY empty / "console", or
+ * bulk SMS is logged only.
+ *
+ * Live mode: IranPayamak / FarazSMS public API
+ * (https://docs.iranpayamak.com/).
  */
 
-const SMS_PROVIDER = process.env.SMS_PROVIDER ?? 'console';
-const SMS_API_KEY = process.env.SMS_API_KEY ?? '';
+import { isSmsConsoleMode } from '@/src/lib/iranpayamak/config';
+import {
+  sendPatternOtp,
+  sendSimpleSms,
+  toUserFacingSmsError,
+} from '@/src/lib/iranpayamak/client';
+
+export { isSmsConsoleMode };
 
 export interface SmsSendResult {
   phoneNumber: string;
   ok: boolean;
 }
 
-/** Send one message to one recipient. Never throws — failures are reported per-recipient. */
+export type SendOtpResult =
+  | { ok: true; consoleMode: boolean }
+  | { ok: false; error: string; consoleMode: boolean };
+
+/**
+ * Deliver a login verification code.
+ * In console mode: logs only (caller should expose the code via `devCode` + alert).
+ * In live mode: IranPayamak pattern SMS.
+ */
+export async function sendOtpSms(
+  phoneNumber: string,
+  code: string,
+): Promise<SendOtpResult> {
+  if (isSmsConsoleMode()) {
+    console.info(`[otp] code for ${phoneNumber}: ${code} (console — no SMS sent)`);
+    return { ok: true, consoleMode: true };
+  }
+
+  try {
+    await sendPatternOtp(phoneNumber, code);
+    return { ok: true, consoleMode: false };
+  } catch (err) {
+    console.error('[sms-gateway:sendOtpSms]', err);
+    return {
+      ok: false,
+      error: toUserFacingSmsError(err),
+      consoleMode: false,
+    };
+  }
+}
+
+/** Send one free-text message to one recipient. Never throws. */
 async function sendOne(phoneNumber: string, body: string): Promise<SmsSendResult> {
   try {
-    if (SMS_PROVIDER === 'console' || !SMS_API_KEY) {
+    if (isSmsConsoleMode()) {
       console.info(`[sms] → ${phoneNumber}: ${body}`);
       return { phoneNumber, ok: true };
     }
 
-    // ── PRODUCTION ──────────────────────────────────────────────────────────
-    // Example (Kavenegar bulk send):
-    //
-    //   const res = await fetch(
-    //     `https://api.kavenegar.com/v1/${SMS_API_KEY}/sms/send.json` +
-    //       `?receptor=${encodeURIComponent(phoneNumber)}&message=${encodeURIComponent(body)}`,
-    //     { method: 'POST' },
-    //   );
-    //   return { phoneNumber, ok: res.ok };
-    // ─────────────────────────────────────────────────────────────────────────
-
-    console.info(`[sms:${SMS_PROVIDER}] → ${phoneNumber}: ${body}`);
+    await sendSimpleSms([phoneNumber], body);
     return { phoneNumber, ok: true };
   } catch (err) {
     console.error('[sms-gateway:sendOne]', err);
@@ -42,17 +72,38 @@ async function sendOne(phoneNumber: string, body: string): Promise<SmsSendResult
   }
 }
 
-/** Send the same message to many recipients. Runs in small concurrent batches. */
+/**
+ * Send the same marketing message to many recipients.
+ * Live mode batches recipients into fewer IranPayamak simple-SMS calls.
+ */
 export async function sendBulkSms(
   phoneNumbers: string[],
   body: string,
-  batchSize = 20,
+  batchSize = 50,
 ): Promise<SmsSendResult[]> {
+  if (isSmsConsoleMode()) {
+    const results: SmsSendResult[] = [];
+    for (const phone of phoneNumbers) {
+      console.info(`[sms] → ${phone}: ${body}`);
+      results.push({ phoneNumber: phone, ok: true });
+    }
+    return results;
+  }
+
   const results: SmsSendResult[] = [];
   for (let i = 0; i < phoneNumbers.length; i += batchSize) {
     const batch = phoneNumbers.slice(i, i + batchSize);
-    const batchResults = await Promise.all(batch.map((phone) => sendOne(phone, body)));
-    results.push(...batchResults);
+    try {
+      await sendSimpleSms(batch, body);
+      for (const phone of batch) {
+        results.push({ phoneNumber: phone, ok: true });
+      }
+    } catch (err) {
+      console.error('[sms-gateway:sendBulkSms]', err);
+      // Fall back to per-number sends so a single bad number does not fail the batch.
+      const fallback = await Promise.all(batch.map((phone) => sendOne(phone, body)));
+      results.push(...fallback);
+    }
   }
   return results;
 }
