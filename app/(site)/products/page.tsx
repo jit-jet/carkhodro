@@ -74,6 +74,7 @@ export default async function ProductsPage({ searchParams }: Props) {
 
 type Filters = {
   brands: { slug: string; name: string }[];
+  carBrands: { slug: string; name: string }[];
   carTypes: string[];
   categories: { key: string; label: string }[];
 };
@@ -91,6 +92,7 @@ async function FilteredBrowser({
     <ProductsBrowser
       products={products}
       allBrands={filters.brands}
+      allCarBrands={filters.carBrands}
       allCarTypes={filters.carTypes}
       allCategories={filters.categories}
     />

@@ -156,47 +156,43 @@ export async function getAllProductIds(): Promise<string[]> {
 /** Distinct filter option lists for the PLP sidebar. */
 export async function getProductFilters(): Promise<{
   brands: { slug: string; name: string }[];
+  carBrands: { slug: string; name: string }[];
   carTypes: string[];
   categories: { key: string; label: string }[];
 }> {
   'use cache';
   cacheLife('hours');
-  cacheTag(tags.products, tags.categories, tags.partsBrands, tags.carModels);
+  cacheTag(tags.products, tags.categories, tags.partsBrands, tags.carBrands, tags.carModels);
 
   return safeQuery(
     'getProductFilters',
     async () => {
-      const [partsBrands, categories, models] = await Promise.all([
+      const [partsBrands, carBrands, categories, models] = await Promise.all([
         prisma.partsBrand.findMany({
-          where: {
-            isActive: true,
-            products: { some: { isActive: true } },
-          },
+          where: { isActive: true },
+          orderBy: { name: 'asc' },
+        }),
+        prisma.carBrand.findMany({
+          where: { isActive: true },
           orderBy: { name: 'asc' },
         }),
         prisma.category.findMany({
-          where: {
-            isActive: true,
-            products: { some: { isActive: true } },
-          },
+          where: { isActive: true },
           orderBy: { sortOrder: 'asc' },
         }),
         prisma.carModel.findMany({
-          where: {
-            isActive: true,
-            carBrand: { isActive: true },
-            compatibilities: { some: { product: { isActive: true } } },
-          },
+          where: { isActive: true, carBrand: { isActive: true } },
           orderBy: { name: 'asc' },
         }),
       ]);
       return {
         brands: partsBrands.map((b) => ({ slug: b.slug, name: b.name })),
+        carBrands: carBrands.map((b) => ({ slug: b.slug, name: b.name })),
         carTypes: [...new Set(models.map((m) => m.name))],
         categories: categories.map((c) => ({ key: c.key, label: c.name })),
       };
     },
-    { brands: [], carTypes: [], categories: [] },
+    { brands: [], carBrands: [], carTypes: [], categories: [] },
   );
 }
 

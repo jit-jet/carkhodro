@@ -23,7 +23,7 @@ export const productInclude = {
   partsBrand: true,
   category: true,
   images: true,
-  compatibilities: { include: { carModel: true } },
+  compatibilities: { include: { carModel: { include: { carBrand: true } } } },
 } satisfies Prisma.ProductInclude;
 
 export type ProductWithRelations = Prisma.ProductGetPayload<{
@@ -66,6 +66,10 @@ export interface ProductVM {
   brand: string; // partsBrand.name (display)
   brandSlug: string; // partsBrand.slug (URL / filter)
   carType: string; // first compatible car model name (“مدل خودرو”)
+  /** First compatible car brand name (“برند خودرو”). */
+  carBrand: string;
+  /** First compatible car brand slug (URL / filter). */
+  carBrandSlug: string;
   category: string; // category.key (filter slug)
   categoryLabel: string; // category.name (display)
 }
@@ -385,6 +389,8 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     brand: p.partsBrand.name,
     brandSlug: p.partsBrand.slug,
     carType: firstModel?.name ?? '',
+    carBrand: firstModel?.carBrand.name ?? '',
+    carBrandSlug: firstModel?.carBrand.slug ?? '',
     category: p.category.key,
     categoryLabel: p.category.name,
   };

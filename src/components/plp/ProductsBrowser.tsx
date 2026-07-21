@@ -154,6 +154,7 @@ function toggleValue(arr: string[], value: string): string[] {
 interface Props {
   products: Product[];
   allBrands: { slug: string; name: string }[];
+  allCarBrands: { slug: string; name: string }[];
   allCarTypes: string[];
   allCategories: { key: string; label: string }[];
 }
@@ -161,6 +162,7 @@ interface Props {
 export default function ProductsBrowser({
   products,
   allBrands,
+  allCarBrands,
   allCarTypes,
   allCategories,
 }: Props) {
@@ -180,6 +182,7 @@ export default function ProductsBrowser({
   // All filter state is derived from URL — single source of truth
   const searchQuery        = searchParams.get('q') ?? '';
   const selectedBrands     = searchParams.getAll('brand');
+  const selectedCarBrands  = searchParams.getAll('carBrand');
   const selectedCarTypes   = searchParams.getAll('car');
   const selectedCategories = searchParams.getAll('category');
   const sortBy             = (searchParams.get('sort') ?? 'newest') as SortOption;
@@ -204,16 +207,18 @@ export default function ProductsBrowser({
 
   function handleSearchChange(v: string)    { push(buildUrl({ q: v || null })); }
   function handleBrandToggle(b: string)     { push(buildUrl({ brand:    toggleValue(selectedBrands,     b) })); }
+  function handleCarBrandToggle(b: string)  { push(buildUrl({ carBrand: toggleValue(selectedCarBrands,  b) })); }
   function handleCarTypeToggle(ct: string)  { push(buildUrl({ car:      toggleValue(selectedCarTypes,   ct) })); }
   function handleCategoryToggle(c: string)  { push(buildUrl({ category: toggleValue(selectedCategories, c) })); }
   function handleSortChange(s: SortOption)  { push(buildUrl({ sort: s })); }
 
   function removeFilter(type: string, value: string) {
     switch (type) {
-      case 'brand':    push(buildUrl({ brand:    selectedBrands.filter(b => b !== value)      })); break;
-      case 'car':      push(buildUrl({ car:      selectedCarTypes.filter(c => c !== value)    })); break;
-      case 'category': push(buildUrl({ category: selectedCategories.filter(c => c !== value) })); break;
-      case 'q':        push(buildUrl({ q: null })); break;
+      case 'brand':     push(buildUrl({ brand:    selectedBrands.filter(b => b !== value)      })); break;
+      case 'carBrand':  push(buildUrl({ carBrand: selectedCarBrands.filter(b => b !== value)  })); break;
+      case 'car':       push(buildUrl({ car:      selectedCarTypes.filter(c => c !== value)    })); break;
+      case 'category':  push(buildUrl({ category: selectedCategories.filter(c => c !== value) })); break;
+      case 'q':         push(buildUrl({ q: null })); break;
     }
   }
 
@@ -241,14 +246,15 @@ export default function ProductsBrowser({
     let result = searchQuery.trim() ? (searchResults ?? []) : products;
 
     if (selectedBrands.length)     result = result.filter(p => selectedBrands.includes(p.brandSlug));
+    if (selectedCarBrands.length)  result = result.filter(p => selectedCarBrands.includes(p.carBrandSlug));
     if (selectedCarTypes.length)   result = result.filter(p => selectedCarTypes.includes(p.carType));
     if (selectedCategories.length) result = result.filter(p => selectedCategories.includes(p.category));
 
     return applySorting(result, sortBy);
-  }, [products, searchQuery, searchResults, selectedBrands, selectedCarTypes, selectedCategories, sortBy]);
+  }, [products, searchQuery, searchResults, selectedBrands, selectedCarBrands, selectedCarTypes, selectedCategories, sortBy]);
 
   // Reset pagination whenever filters or sort change
-  const filterKey = [searchQuery, ...selectedBrands, ...selectedCarTypes, ...selectedCategories, sortBy].join('|');
+  const filterKey = [searchQuery, ...selectedBrands, ...selectedCarBrands, ...selectedCarTypes, ...selectedCategories, sortBy].join('|');
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
   }, [filterKey]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -278,6 +284,7 @@ export default function ProductsBrowser({
 
   const activeFilterCount =
     selectedBrands.length +
+    selectedCarBrands.length +
     selectedCarTypes.length +
     selectedCategories.length +
     (searchQuery.trim() ? 1 : 0);
@@ -288,6 +295,11 @@ export default function ProductsBrowser({
       type: 'brand',
       value: b,
       label: allBrands.find(a => a.slug === b)?.name ?? b,
+    })),
+    ...selectedCarBrands.map(b => ({
+      type: 'carBrand',
+      value: b,
+      label: allCarBrands.find(a => a.slug === b)?.name ?? b,
     })),
     ...selectedCarTypes.map(c   => ({ type: 'car',      value: c,  label: c })),
     ...selectedCategories.map(c => ({
@@ -331,6 +343,8 @@ export default function ProductsBrowser({
             onSearchChange={handleSearchChange}
             selectedBrands={selectedBrands}
             onBrandToggle={handleBrandToggle}
+            selectedCarBrands={selectedCarBrands}
+            onCarBrandToggle={handleCarBrandToggle}
             selectedCarTypes={selectedCarTypes}
             onCarTypeToggle={handleCarTypeToggle}
             selectedCategories={selectedCategories}
@@ -339,6 +353,7 @@ export default function ProductsBrowser({
             onRemoveFilter={removeFilter}
             onExportPDF={() => openPDFWindow(filteredProducts)}
             allBrands={allBrands}
+            allCarBrands={allCarBrands}
             allCarTypes={allCarTypes}
             allCategories={allCategories}
             activeFilterCount={activeFilterCount}

@@ -9,6 +9,8 @@ interface FilterSidebarProps {
   onSearchChange: (v: string) => void;
   selectedBrands: string[];
   onBrandToggle: (brand: string) => void;
+  selectedCarBrands: string[];
+  onCarBrandToggle: (carBrand: string) => void;
   selectedCarTypes: string[];
   onCarTypeToggle: (carType: string) => void;
   selectedCategories: string[];
@@ -17,6 +19,7 @@ interface FilterSidebarProps {
   onRemoveFilter: (type: string, value: string) => void;
   onExportPDF: () => void;
   allBrands: { slug: string; name: string }[];
+  allCarBrands: { slug: string; name: string }[];
   allCarTypes: string[];
   allCategories: { key: string; label: string }[];
   activeFilterCount: number;
@@ -109,14 +112,17 @@ export default function FilterSidebar({
   onSearchChange,
   selectedBrands,
   onBrandToggle,
+  selectedCarBrands,
+  onCarBrandToggle,
   selectedCarTypes,
   onCarTypeToggle,
-  selectedCategories, 
+  selectedCategories,
   onCategoryToggle,
   onClearAll,
   onRemoveFilter,
   onExportPDF,
   allBrands,
+  allCarBrands,
   allCarTypes,
   allCategories,
   activeFilterCount,
@@ -185,14 +191,26 @@ export default function FilterSidebar({
 
       <div className="h-px bg-gray-100 mb-1" />
 
-      {/* Brand */}
-      <AccordionSection title="برند">
+      {/* Parts brand */}
+      <AccordionSection title="برند قطعه">
         {allBrands.map(brand => (
           <CheckItem
             key={brand.slug}
             label={brand.name}
             checked={selectedBrands.includes(brand.slug)}
             onChange={() => onBrandToggle(brand.slug)}
+          />
+        ))}
+      </AccordionSection>
+
+      {/* Vehicle brand (CarBrand) */}
+      <AccordionSection title="برند خودرو">
+        {allCarBrands.map(brand => (
+          <CheckItem
+            key={brand.slug}
+            label={brand.name}
+            checked={selectedCarBrands.includes(brand.slug)}
+            onChange={() => onCarBrandToggle(brand.slug)}
           />
         ))}
       </AccordionSection>
