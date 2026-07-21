@@ -19,6 +19,7 @@ export async function createCarBrand(input: {
   name: string;
   slug: string;
   logoImage?: string | null;
+  isActive?: boolean;
 }): Promise<ActionResult<{ id: number }>> {
   return runMutation('createCarBrand', async () => {
     if (!input.name?.trim() || !input.slug?.trim()) {
@@ -29,6 +30,7 @@ export async function createCarBrand(input: {
         name: input.name.trim(),
         slug: input.slug.trim(),
         logoImage: input.logoImage ?? null,
+        isActive: input.isActive ?? true,
       },
       select: { id: true },
     });
@@ -39,25 +41,60 @@ export async function createCarBrand(input: {
 
 export async function updateCarBrand(
   id: number,
-  input: { name?: string; slug?: string; logoImage?: string | null },
+  input: {
+    name?: string;
+    slug?: string;
+    logoImage?: string | null;
+    isActive?: boolean;
+  },
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updateCarBrand', async () => {
+    if (input.isActive === false) {
+      const activeProductCount = await prisma.product.count({
+        where: {
+          isActive: true,
+          compatibilities: {
+            some: { carModel: { carBrandId: id } },
+          },
+        },
+      });
+      if (activeProductCount > 0) {
+        return fail(
+          'این برند خودرو دارای محصول فعال است و نمی‌توان آن را غیرفعال کرد.',
+        );
+      }
+    }
+
     const updated = await prisma.carBrand.update({
       where: { id },
       data: {
         ...(input.name !== undefined ? { name: input.name.trim() } : {}),
         ...(input.slug !== undefined ? { slug: input.slug.trim() } : {}),
         ...(input.logoImage !== undefined ? { logoImage: input.logoImage } : {}),
+        ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
       },
       select: { id: true },
     });
     updateTag(tags.carBrands);
+    updateTag(tags.carModels);
     return ok(updated);
   });
 }
 
 export async function deleteCarBrand(id: number): Promise<ActionResult> {
   return runMutation('deleteCarBrand', async () => {
+    const productCount = await prisma.product.count({
+      where: {
+        compatibilities: {
+          some: { carModel: { carBrandId: id } },
+        },
+      },
+    });
+    if (productCount > 0) {
+      return fail(
+        'این برند خودرو به محصولاتی متصل است و نمی‌توان آن را حذف کرد.',
+      );
+    }
     const modelCount = await prisma.carModel.count({ where: { carBrandId: id } });
     if (modelCount > 0) {
       return fail('این برند خودرو دارای مدل خودرو است. ابتدا مدل‌ها را حذف کنید.');
@@ -74,6 +111,7 @@ export async function createCarModel(input: {
   carBrandId: number;
   name: string;
   image?: string | null;
+  isActive?: boolean;
 }): Promise<ActionResult<{ id: number }>> {
   return runMutation('createCarModel', async () => {
     if (!input.name?.trim()) return fail('مدل خودرو الزامی است.');
@@ -82,6 +120,7 @@ export async function createCarModel(input: {
         carBrandId: input.carBrandId,
         name: input.name.trim(),
         image: input.image ?? null,
+        isActive: input.isActive ?? true,
       },
       select: { id: true },
     });
@@ -96,15 +135,31 @@ export async function updateCarModel(
     carBrandId?: number;
     name?: string;
     image?: string | null;
+    isActive?: boolean;
   },
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updateCarModel', async () => {
+    if (input.isActive === false) {
+      const activeProductCount = await prisma.product.count({
+        where: {
+          isActive: true,
+          compatibilities: { some: { carModelId: id } },
+        },
+      });
+      if (activeProductCount > 0) {
+        return fail(
+          'این مدل خودرو دارای محصول فعال است و نمی‌توان آن را غیرفعال کرد.',
+        );
+      }
+    }
+
     const updated = await prisma.carModel.update({
       where: { id },
       data: {
         ...(input.carBrandId !== undefined ? { carBrandId: input.carBrandId } : {}),
         ...(input.name !== undefined ? { name: input.name.trim() } : {}),
         ...(input.image !== undefined ? { image: input.image } : {}),
+        ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
       },
       select: { id: true },
     });
@@ -131,6 +186,7 @@ export async function createPartsBrand(input: {
   name: string;
   slug: string;
   logoImage?: string | null;
+  isActive?: boolean;
 }): Promise<ActionResult<{ id: number }>> {
   return runMutation('createPartsBrand', async () => {
     if (!input.name?.trim()) return fail('نام برند الزامی است.');
@@ -141,6 +197,7 @@ export async function createPartsBrand(input: {
         name: input.name.trim(),
         slug,
         logoImage: input.logoImage ?? null,
+        isActive: input.isActive ?? true,
       },
       select: { id: true },
     });
@@ -151,9 +208,20 @@ export async function createPartsBrand(input: {
 
 export async function updatePartsBrand(
   id: number,
-  input: { name?: string; slug?: string; logoImage?: string | null },
+  input: { name?: string; slug?: string; logoImage?: string | null; isActive?: boolean },
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updatePartsBrand', async () => {
+    if (input.isActive === false) {
+      const activeProductCount = await prisma.product.count({
+        where: { partsBrandId: id, isActive: true },
+      });
+      if (activeProductCount > 0) {
+        return fail(
+          'این برند قطعه دارای محصول فعال است و نمی‌توان آن را غیرفعال کرد.',
+        );
+      }
+    }
+
     let slug: string | undefined;
     if (input.slug !== undefined) {
       slug = normalizeSlug(input.slug);
@@ -165,6 +233,7 @@ export async function updatePartsBrand(
         ...(input.name !== undefined ? { name: input.name.trim() } : {}),
         ...(slug !== undefined ? { slug } : {}),
         ...(input.logoImage !== undefined ? { logoImage: input.logoImage } : {}),
+        ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
       },
       select: { id: true },
     });

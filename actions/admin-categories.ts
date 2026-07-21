@@ -17,6 +17,7 @@ export interface CategoryInput {
   name: string;
   image?: string | null;
   sortOrder?: number;
+  isActive?: boolean;
 }
 
 export async function createCategory(
@@ -32,6 +33,7 @@ export async function createCategory(
         name: input.name.trim(),
         image: input.image ?? '/logo.png',
         sortOrder: input.sortOrder ?? 0,
+        isActive: input.isActive ?? true,
       },
       select: { id: true },
     });
@@ -45,6 +47,17 @@ export async function updateCategory(
   input: Partial<CategoryInput>,
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updateCategory', async () => {
+    if (input.isActive === false) {
+      const activeProductCount = await prisma.product.count({
+        where: { categoryId: id, isActive: true },
+      });
+      if (activeProductCount > 0) {
+        return fail(
+          'این دسته‌بندی دارای محصول فعال است و نمی‌توان آن را غیرفعال کرد.',
+        );
+      }
+    }
+
     const updated = await prisma.category.update({
       where: { id },
       data: {
@@ -52,6 +65,7 @@ export async function updateCategory(
         ...(input.name !== undefined ? { name: input.name.trim() } : {}),
         ...(input.image !== undefined ? { image: input.image ?? '/logo.png' } : {}),
         ...(input.sortOrder !== undefined ? { sortOrder: input.sortOrder } : {}),
+        ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
       },
       select: { id: true },
     });

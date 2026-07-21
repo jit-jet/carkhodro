@@ -27,7 +27,10 @@ export async function getCarBrands(): Promise<CarBrandVM[]> {
   cacheTag(tags.carBrands);
 
   return safeQuery('getCarBrands', async () => {
-    const rows = await prisma.carBrand.findMany({ orderBy: { productCount: 'desc' } });
+    const rows = await prisma.carBrand.findMany({
+      where: { isActive: true },
+      orderBy: { productCount: 'desc' },
+    });
     return rows.map(toCarBrandVM);
   }, []);
 }
@@ -41,6 +44,7 @@ export async function getCarModels(): Promise<CarModelVM[]> {
 
   return safeQuery('getCarModels', async () => {
     const rows = await prisma.carModel.findMany({
+      where: { isActive: true, carBrand: { isActive: true } },
       include: { carBrand: true },
       orderBy: { id: 'asc' },
     });
@@ -56,7 +60,10 @@ export async function getPartsBrands(): Promise<{ id: number; name: string; slug
   cacheTag(tags.partsBrands);
 
   return safeQuery('getPartsBrands', async () => {
-    const rows = await prisma.partsBrand.findMany({ orderBy: { name: 'asc' } });
+    const rows = await prisma.partsBrand.findMany({
+      where: { isActive: true },
+      orderBy: { name: 'asc' },
+    });
     return rows.map((b) => ({ id: b.id, name: b.name, slug: b.slug }));
   }, []);
 }
@@ -71,7 +78,7 @@ export async function getPartsBrandsHome(): Promise<
 
   return safeQuery('getPartsBrandsHome', async () => {
     const rows = await prisma.partsBrand.findMany({
-      where: { products: { some: { isActive: true } } },
+      where: { isActive: true, products: { some: { isActive: true } } },
       orderBy: { name: 'asc' },
       include: { _count: { select: { products: { where: { isActive: true } } } } },
     });
@@ -90,6 +97,7 @@ export interface AdminPartsBrandVM {
   name: string;
   slug: string;
   logoImage: string | null;
+  isActive: boolean;
 }
 
 export async function getPartsBrandsAdmin(): Promise<AdminPartsBrandVM[]> {
@@ -100,6 +108,7 @@ export async function getPartsBrandsAdmin(): Promise<AdminPartsBrandVM[]> {
       name: b.name,
       slug: b.slug,
       logoImage: b.logoImage,
+      isActive: b.isActive,
     }));
   }, []);
 }
@@ -113,6 +122,7 @@ export interface AdminCarBrandVM {
   slug: string;
   logoImage: string | null;
   productCount: number;
+  isActive: boolean;
 }
 
 export async function getCarBrandsAdmin(): Promise<AdminCarBrandVM[]> {
@@ -124,6 +134,7 @@ export async function getCarBrandsAdmin(): Promise<AdminCarBrandVM[]> {
       slug: b.slug,
       logoImage: b.logoImage,
       productCount: b.productCount,
+      isActive: b.isActive,
     }));
   }, []);
 }
@@ -135,6 +146,7 @@ export interface AdminCarModelVM {
   brandName: string;
   name: string;
   image: string | null;
+  isActive: boolean;
 }
 
 export async function getCarModelsAdmin(): Promise<AdminCarModelVM[]> {
@@ -149,6 +161,7 @@ export async function getCarModelsAdmin(): Promise<AdminCarModelVM[]> {
       brandName: m.carBrand.name,
       name: m.name,
       image: m.image,
+      isActive: m.isActive,
     }));
   }, []);
 }

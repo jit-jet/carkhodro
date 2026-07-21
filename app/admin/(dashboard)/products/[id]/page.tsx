@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProductAdminById } from "@/actions/products";
-import { getCategories } from "@/actions/categories";
-import { getPartsBrands, getCarModelsAdmin } from "@/actions/brands";
+import { getCategoriesAdmin } from "@/actions/categories";
+import { getPartsBrandsAdmin, getCarModelsAdmin } from "@/actions/brands";
 import { PageHeader } from "@/src/components/admin/AdminUI";
 import ProductForm from "@/src/components/admin/ProductForm";
 
@@ -25,8 +25,8 @@ async function EditProductContent({ params }: Props) {
   const { id } = await params;
   const [product, categories, partsBrands, carModels] = await Promise.all([
     getProductAdminById(id),
-    getCategories(),
-    getPartsBrands(),
+    getCategoriesAdmin(),
+    getPartsBrandsAdmin(),
     getCarModelsAdmin(),
   ]);
 

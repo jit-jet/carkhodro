@@ -168,15 +168,25 @@ export async function getProductFilters(): Promise<{
     async () => {
       const [partsBrands, categories, models] = await Promise.all([
         prisma.partsBrand.findMany({
-          where: { products: { some: { isActive: true } } },
+          where: {
+            isActive: true,
+            products: { some: { isActive: true } },
+          },
           orderBy: { name: 'asc' },
         }),
         prisma.category.findMany({
-          where: { products: { some: { isActive: true } } },
+          where: {
+            isActive: true,
+            products: { some: { isActive: true } },
+          },
           orderBy: { sortOrder: 'asc' },
         }),
         prisma.carModel.findMany({
-          where: { compatibilities: { some: { product: { isActive: true } } } },
+          where: {
+            isActive: true,
+            carBrand: { isActive: true },
+            compatibilities: { some: { product: { isActive: true } } },
+          },
           orderBy: { name: 'asc' },
         }),
       ]);

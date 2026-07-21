@@ -7,8 +7,9 @@ import {
   deleteCategory,
   type CategoryInput,
 } from "@/actions/admin-categories";
-import type { CategoryVM } from "@/src/lib/serializers";
+import type { AdminCategoryVM } from "@/actions/categories";
 import {
+  Badge,
   Button,
   Card,
   CardHeader,
@@ -22,9 +23,19 @@ import {
 } from "@/src/components/admin/AdminUI";
 import ImageUploadField, { AdminThumb } from "@/src/components/admin/ImageUploadField";
 
-const EMPTY_FORM: CategoryInput = { key: "", name: "", image: "", sortOrder: 0 };
+const EMPTY_FORM: CategoryInput = {
+  key: "",
+  name: "",
+  image: "",
+  sortOrder: 0,
+  isActive: true,
+};
 
-export default function CategoriesManager({ initialCategories }: { initialCategories: CategoryVM[] }) {
+export default function CategoriesManager({
+  initialCategories,
+}: {
+  initialCategories: AdminCategoryVM[];
+}) {
   const [categories, setCategories] = useState(initialCategories);
   const [form, setForm] = useState<CategoryInput>(EMPTY_FORM);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -32,9 +43,15 @@ export default function CategoriesManager({ initialCategories }: { initialCatego
   const [rowError, setRowError] = useState<{ id: number; message: string } | null>(null);
   const [pending, startTransition] = useTransition();
 
-  function startEdit(c: CategoryVM) {
+  function startEdit(c: AdminCategoryVM) {
     setEditingId(c.id);
-    setForm({ key: c.key, name: c.name, image: c.image, sortOrder: 0 });
+    setForm({
+      key: c.key,
+      name: c.name,
+      image: c.image,
+      sortOrder: 0,
+      isActive: c.isActive,
+    });
     setError("");
   }
 
@@ -48,23 +65,40 @@ export default function CategoriesManager({ initialCategories }: { initialCatego
     e.preventDefault();
     setError("");
     startTransition(async () => {
+      const payload: CategoryInput = {
+        ...form,
+        isActive: form.isActive ?? true,
+      };
       if (editingId) {
-        const result = await updateCategory(editingId, form);
+        const result = await updateCategory(editingId, payload);
         if (!result.ok) return setError(result.error);
         setCategories((prev) =>
           prev.map((c) =>
             c.id === editingId
-              ? { ...c, key: form.key, name: form.name, image: form.image || c.image }
+              ? {
+                  ...c,
+                  key: payload.key,
+                  name: payload.name,
+                  image: payload.image || c.image,
+                  isActive: payload.isActive ?? true,
+                }
               : c,
           ),
         );
         cancelEdit();
       } else {
-        const result = await createCategory(form);
+        const result = await createCategory(payload);
         if (!result.ok) return setError(result.error);
         setCategories((prev) => [
           ...prev,
-          { id: result.data.id, key: form.key, name: form.name, image: form.image || "/logo.png", count: 0 },
+          {
+            id: result.data.id,
+            key: payload.key,
+            name: payload.name,
+            image: payload.image || "/logo.png",
+            count: 0,
+            isActive: payload.isActive ?? true,
+          },
         ]);
         setForm(EMPTY_FORM);
       }
@@ -119,6 +153,15 @@ export default function CategoriesManager({ initialCategories }: { initialCatego
               value={form.image ?? ""}
               onChange={(url) => setForm({ ...form, image: url })}
             />
+            <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.isActive ?? true}
+                onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                className="w-4 h-4 accent-accent"
+              />
+              فعال (نمایش در فروشگاه)
+            </label>
           </form>
           {error && (
             <div className="mt-3">
@@ -146,6 +189,9 @@ export default function CategoriesManager({ initialCategories }: { initialCatego
                 کلید
               </th>
               <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                وضعیت
+              </th>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
                 تعداد محصول
               </th>
               <th className="text-right px-4 py-3 font-semibold"></th>
@@ -159,6 +205,11 @@ export default function CategoriesManager({ initialCategories }: { initialCatego
                 </td>
                 <td className="px-4 py-3 font-semibold text-charcoal">{c.name}</td>
                 <td className="px-4 py-3 text-gray-500 font-mono">{c.key}</td>
+                <td className="px-4 py-3">
+                  <Badge tone={c.isActive ? "success" : "warning"}>
+                    {c.isActive ? "فعال" : "غیرفعال"}
+                  </Badge>
+                </td>
                 <td className="px-4 py-3 text-gray-500">{c.count.toLocaleString("fa-IR")}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-1.5">

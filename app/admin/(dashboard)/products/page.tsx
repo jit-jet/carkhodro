@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getProductsAdmin, type AdminProductSortBy, type AdminProductSortDir } from "@/actions/products";
-import { getCategories } from "@/actions/categories";
-import { getPartsBrands, getCarModelsAdmin } from "@/actions/brands";
+import { getCategoriesAdmin } from "@/actions/categories";
+import { getPartsBrandsAdmin, getCarModelsAdmin } from "@/actions/brands";
 import { PageHeader, Button } from "@/src/components/admin/AdminUI";
 import ProductsTable from "@/src/components/admin/ProductsTable";
 import { buildProductsHref } from "@/src/lib/admin-products-query";
@@ -85,8 +85,8 @@ async function ProductsContent({ searchParams }: Props) {
       page,
       perPage: 20,
     }),
-    getCategories(),
-    getPartsBrands(),
+    getCategoriesAdmin(),
+    getPartsBrandsAdmin(),
     getCarModelsAdmin(),
   ]);
 

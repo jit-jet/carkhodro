@@ -197,6 +197,7 @@ exports.Prisma.CarBrandScalarFieldEnum = {
   slug: 'slug',
   logoImage: 'logoImage',
   productCount: 'productCount',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -206,6 +207,7 @@ exports.Prisma.CarModelScalarFieldEnum = {
   carBrandId: 'carBrandId',
   name: 'name',
   image: 'image',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -215,6 +217,7 @@ exports.Prisma.PartsBrandScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   logoImage: 'logoImage',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -226,6 +229,7 @@ exports.Prisma.CategoryScalarFieldEnum = {
   image: 'image',
   sortOrder: 'sortOrder',
   productCount: 'productCount',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

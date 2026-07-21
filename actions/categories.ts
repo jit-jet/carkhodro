@@ -20,7 +20,10 @@ export async function getCategories(): Promise<CategoryVM[]> {
   cacheTag(tags.categories);
 
   return safeQuery('getCategories', async () => {
-    const rows = await prisma.category.findMany({ orderBy: { sortOrder: 'asc' } });
+    const rows = await prisma.category.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: 'asc' },
+    });
     return rows.map(toCategoryVM);
   }, []);
 }
@@ -31,7 +34,24 @@ export async function getCategoryByKey(key: string): Promise<CategoryVM | null> 
   cacheTag(tags.categories);
 
   return safeQuery(`getCategoryByKey:${key}`, async () => {
-    const row = await prisma.category.findUnique({ where: { key } });
+    const row = await prisma.category.findFirst({
+      where: { key, isActive: true },
+    });
     return row ? toCategoryVM(row) : null;
   }, null);
+}
+
+/** Admin CRUD — includes inactive categories. */
+export interface AdminCategoryVM extends CategoryVM {
+  isActive: boolean;
+}
+
+export async function getCategoriesAdmin(): Promise<AdminCategoryVM[]> {
+  return safeQuery('getCategoriesAdmin', async () => {
+    const rows = await prisma.category.findMany({ orderBy: { sortOrder: 'asc' } });
+    return rows.map((c) => ({
+      ...toCategoryVM(c),
+      isActive: c.isActive,
+    }));
+  }, []);
 }

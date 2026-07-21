@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { getCategories } from "@/actions/categories";
+import { getCategoriesAdmin } from "@/actions/categories";
 import { PageHeader } from "@/src/components/admin/AdminUI";
 import CategoriesManager from "@/src/components/admin/CategoriesManager";
 
 export const metadata: Metadata = { title: "دسته‌بندی‌ها | پنل مدیریت" };
 
 export default async function AdminCategoriesPage() {
-  const categories = await getCategories();
+  const categories = await getCategoriesAdmin();
 
   return (
     <div>

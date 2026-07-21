@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { getCategories } from "@/actions/categories";
-import { getPartsBrands, getCarModelsAdmin } from "@/actions/brands";
+import { getCategoriesAdmin } from "@/actions/categories";
+import { getPartsBrandsAdmin, getCarModelsAdmin } from "@/actions/brands";
 import { PageHeader } from "@/src/components/admin/AdminUI";
 import ProductForm from "@/src/components/admin/ProductForm";
 
@@ -8,8 +8,8 @@ export const metadata: Metadata = { title: "محصول جدید | پنل مدی�
 
 export default async function NewProductPage() {
   const [categories, partsBrands, carModels] = await Promise.all([
-    getCategories(),
-    getPartsBrands(),
+    getCategoriesAdmin(),
+    getPartsBrandsAdmin(),
     getCarModelsAdmin(),
   ]);
 

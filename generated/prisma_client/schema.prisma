@@ -226,7 +226,7 @@ model Address {
 // CATALOGUE — CAR TAXONOMY
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Automobile manufacturers: ایران‌خودرو, سایپا, تویوتا, …
+/// Automobile manufacturers / vehicle brands (“برند خودرو”): ایران‌خودرو, سایپا, تویوتا, …
 model CarBrand {
   id           Int      @id @default(autoincrement())
   name         String   @unique
@@ -235,20 +235,23 @@ model CarBrand {
   logoImage    String?  @map("logo_image")
   /// Denormalized counter — refreshed by a background job or DB trigger
   productCount Int      @default(0) @map("product_count")
+  isActive     Boolean  @default(true) @map("is_active")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   carModels CarModel[]
 
+  @@index([isActive])
   @@map("car_brands")
 }
 
-/// Specific car models — FK carBrandId → car_brands.id
+/// Specific vehicle models (“مدل خودرو”) — FK carBrandId → car_brands.id
 model CarModel {
   id         Int      @id @default(autoincrement())
   carBrandId Int      @map("car_brand_id")
   name       String
   image      String?
+  isActive   Boolean  @default(true) @map("is_active")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
@@ -256,6 +259,7 @@ model CarModel {
   compatibilities ProductCompatibility[]
 
   @@index([carBrandId])
+  @@index([isActive])
   @@map("car_models")
 }
 
@@ -271,11 +275,13 @@ model PartsBrand {
   /// URL / filter slug, e.g. "bosch", "ngk"
   slug      String   @unique
   logoImage String?  @map("logo_image")
+  isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   products Product[]
 
+  @@index([isActive])
   @@map("parts_brands")
 }
 
@@ -289,11 +295,13 @@ model Category {
   sortOrder    Int      @default(0) @map("sort_order")
   /// Denormalized counter — refreshed by a background job or DB trigger
   productCount Int      @default(0) @map("product_count")
+  isActive     Boolean  @default(true) @map("is_active")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   products Product[]
 
+  @@index([isActive])
   @@map("categories")
 }
 
