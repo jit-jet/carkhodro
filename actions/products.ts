@@ -33,6 +33,7 @@ import {
   computeRetailFinal,
   computeWholesaleFinal,
 } from '@/src/lib/pricing';
+import { buildAdminProductWhere } from '@/src/lib/admin-product-where';
 
 /** Re-resolve cached product VMs for the current viewer's role. */
 export async function withViewerPricing(products: ProductVM[]): Promise<ProductVM[]> {
@@ -344,23 +345,7 @@ export async function getProductsAdmin(
   return safeQuery(
     'getProductsAdmin',
     async () => {
-      const where = {
-        ...(filters.search
-          ? {
-              OR: [
-                { name: { contains: filters.search, mode: 'insensitive' as const } },
-                { sku: { contains: filters.search, mode: 'insensitive' as const } },
-              ],
-            }
-          : {}),
-        ...(filters.categoryId ? { categoryId: filters.categoryId } : {}),
-        ...(filters.partsBrandId ? { partsBrandId: filters.partsBrandId } : {}),
-        ...(filters.carModelId
-          ? { compatibilities: { some: { carModelId: filters.carModelId } } }
-          : {}),
-        ...(filters.isActive !== undefined ? { isActive: filters.isActive } : {}),
-        ...(filters.isOffer !== undefined ? { isOffer: filters.isOffer } : {}),
-      };
+      const where = buildAdminProductWhere(filters);
 
       const orderBy = adminProductOrderBy(filters.sortBy, filters.sortDir);
 

@@ -104,6 +104,7 @@ async function ProductsContent({ searchParams }: Props) {
 
       <ProductsTable
         items={data.items}
+        total={data.total}
         filters={filters}
         categories={categories}
         partsBrands={partsBrands}

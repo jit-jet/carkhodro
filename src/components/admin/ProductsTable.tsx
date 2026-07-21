@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -30,6 +30,8 @@ import {
 import { formatToman, noFormatNumberFa } from "@/src/lib/format";
 import {
   buildProductsHref,
+  productsFilterKey,
+  toAdminProductWhereFilters,
   type ProductsTableFilters,
 } from "@/src/lib/admin-products-query";
 
@@ -53,6 +55,8 @@ const BULK_OPTIONS: { value: BulkOpKey; label: string }[] = [
   { value: "setActive", label: "فعال / غیرفعال کردن محصولات" },
   { value: "setOffer", label: "ویژه / غیرویژه کردن محصولات" },
 ];
+
+const SELECT_ALL_STORAGE_KEY = "admin-products-select-all-matching";
 
 function SortButton({
   label,
@@ -86,12 +90,14 @@ function SortButton({
 
 export default function ProductsTable({
   items,
+  total,
   filters,
   categories,
   partsBrands,
   carModels,
 }: {
   items: AdminProductListItemVM[];
+  total: number;
   filters: ProductsTableFilters;
   categories: { id: number; name: string }[];
   partsBrands: { id: number; name: string }[];
@@ -99,6 +105,8 @@ export default function ProductsTable({
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  /** When true, every product matching current filters (all pages) is selected. */
+  const [selectAllMatching, setSelectAllMatching] = useState(false);
   const [searchDraft, setSearchDraft] = useState(filters.search);
   const [bulkOp, setBulkOp] = useState<BulkOpKey | "">("");
   const [bulkValue, setBulkValue] = useState("");
@@ -107,7 +115,72 @@ export default function ProductsTable({
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
 
-  const allSelected = items.length > 0 && items.every((p) => selected.has(p.id));
+  const filterKey = productsFilterKey(filters);
+  const prevFilterKey = useRef(filterKey);
+  const restoredRef = useRef(false);
+
+  // Restore "select all matching" after remounts (e.g. Suspense on page change).
+  useEffect(() => {
+    if (restoredRef.current) return;
+    restoredRef.current = true;
+    try {
+      const raw = sessionStorage.getItem(SELECT_ALL_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { filterKey?: string; selectAllMatching?: boolean };
+      if (parsed.filterKey === filterKey && parsed.selectAllMatching) {
+        setSelectAllMatching(true);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [filterKey]);
+
+  // Clear selection when search/filters change (not on sort or page change).
+  useEffect(() => {
+    if (prevFilterKey.current === filterKey) return;
+    prevFilterKey.current = filterKey;
+    setSelected(new Set());
+    setSelectAllMatching(false);
+    try {
+      sessionStorage.removeItem(SELECT_ALL_STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }, [filterKey]);
+
+  useEffect(() => {
+    try {
+      if (selectAllMatching) {
+        sessionStorage.setItem(
+          SELECT_ALL_STORAGE_KEY,
+          JSON.stringify({ filterKey, selectAllMatching: true }),
+        );
+      } else {
+        sessionStorage.removeItem(SELECT_ALL_STORAGE_KEY);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [filterKey, selectAllMatching]);
+
+  // Keep search input in sync when filters come from the URL (e.g. back/forward).
+  useEffect(() => {
+    setSearchDraft(filters.search);
+  }, [filters.search]);
+
+  const selectedCount = selectAllMatching ? total : selected.size;
+  const allSelected =
+    selectAllMatching || (items.length > 0 && items.every((p) => selected.has(p.id)));
+
+  function clearSelection() {
+    setSelected(new Set());
+    setSelectAllMatching(false);
+    try {
+      sessionStorage.removeItem(SELECT_ALL_STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
 
   function pushFilters(patch: Partial<ProductsTableFilters>) {
     const next = { ...filters, ...patch };
@@ -121,16 +194,32 @@ export default function ProductsTable({
   }
 
   function toggleAll() {
-    setSelected(allSelected ? new Set() : new Set(items.map((p) => p.id)));
+    if (allSelected) {
+      clearSelection();
+      return;
+    }
+    // Select every product matching current filters across all pages.
+    setSelectAllMatching(true);
+    setSelected(new Set());
   }
 
   function toggleOne(id: string) {
+    if (selectAllMatching) {
+      // Leave "all matching" mode: keep the current page selected except this row.
+      setSelectAllMatching(false);
+      setSelected(new Set(items.map((p) => p.id).filter((rowId) => rowId !== id)));
+      return;
+    }
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
+  }
+
+  function isRowSelected(id: string) {
+    return selectAllMatching || selected.has(id);
   }
 
   function needsValueInput(op: BulkOpKey | ""): boolean {
@@ -171,7 +260,7 @@ export default function ProductsTable({
   function handleBulkSubmit() {
     setError("");
     setMessage("");
-    if (selected.size === 0) return setError("حداقل یک محصول را انتخاب کنید.");
+    if (selectedCount === 0) return setError("حداقل یک محصول را انتخاب کنید.");
     if (!bulkOp) return setError("یک عملیات گروهی انتخاب کنید.");
     if (needsValueInput(bulkOp) && !bulkValue) {
       return setError("مقدار عملیات را وارد یا انتخاب کنید.");
@@ -193,10 +282,13 @@ export default function ProductsTable({
     }
 
     startTransition(async () => {
-      const result = await bulkUpdateProducts(Array.from(selected), action);
+      const target = selectAllMatching
+        ? { mode: "filters" as const, filters: toAdminProductWhereFilters(filters) }
+        : { mode: "ids" as const, productIds: Array.from(selected) };
+      const result = await bulkUpdateProducts(target, action);
       if (!result.ok) return setError(result.error);
       setMessage(`${result.data.count.toLocaleString("fa-IR")} محصول با موفقیت به‌روزرسانی شد.`);
-      setSelected(new Set());
+      clearSelection();
       setBulkValue("");
       router.refresh();
     });
@@ -226,8 +318,10 @@ export default function ProductsTable({
     <div className="space-y-3">
       <Toolbar tone="accent">
         <span className="text-sm font-semibold text-charcoal">
-          {selected.size > 0
-            ? `${selected.size.toLocaleString("fa-IR")} مورد انتخاب شده`
+          {selectedCount > 0
+            ? selectAllMatching
+              ? `${selectedCount.toLocaleString("fa-IR")} مورد انتخاب شده (همه نتایج فیلتر)`
+              : `${selectedCount.toLocaleString("fa-IR")} مورد انتخاب شده`
             : "عملیات گروهی"}
         </span>
         <Select
@@ -347,6 +441,8 @@ export default function ProductsTable({
                     type="checkbox"
                     checked={allSelected}
                     onChange={toggleAll}
+                    disabled={total === 0}
+                    title="انتخاب همه محصولات فیلترشده در تمام صفحات"
                     className="w-4 h-4 accent-accent"
                   />
                 </th>
@@ -518,12 +614,12 @@ export default function ProductsTable({
                 items.map((p) => (
                   <tr
                     key={p.id}
-                    className={`${tableRowClass} ${selected.has(p.id) ? "bg-amber-50/60" : ""}`}
+                    className={`${tableRowClass} ${isRowSelected(p.id) ? "bg-amber-50/60" : ""}`}
                   >
                     <td className="px-4 py-3">
                       <input
                         type="checkbox"
-                        checked={selected.has(p.id)}
+                        checked={isRowSelected(p.id)}
                         onChange={() => toggleOne(p.id)}
                         className="w-4 h-4 accent-accent"
                       />

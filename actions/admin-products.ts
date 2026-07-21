@@ -15,6 +15,10 @@ import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
 import { saveFile } from '@/src/lib/storage';
+import {
+  buildAdminProductWhere,
+  type AdminProductWhereFilters,
+} from '@/src/lib/admin-product-where';
 import crypto from 'node:crypto';
 
 export interface ProductInput {
@@ -176,7 +180,7 @@ export async function bulkAssignCategory(
   productIds: string[],
   categoryId: number,
 ): Promise<ActionResult<{ count: number }>> {
-  return bulkUpdateProducts(productIds, { op: 'category', categoryId });
+  return bulkUpdateProducts({ mode: 'ids', productIds }, { op: 'category', categoryId });
 }
 
 export type BulkProductOp =
@@ -189,50 +193,71 @@ export type BulkProductOp =
   | { op: 'setActive'; isActive: boolean }
   | { op: 'setOffer'; isOffer: boolean };
 
+/** Either explicit IDs, or every product matching the current list filters (all pages). */
+export type BulkProductTarget =
+  | { mode: 'ids'; productIds: string[] }
+  | { mode: 'filters'; filters: AdminProductWhereFilters };
+
 function clampPct(value: number, min: number, max: number): number | null {
   if (!Number.isFinite(value)) return null;
   if (value < min || value > max) return null;
   return Math.round(value * 100) / 100;
 }
 
-function touchProductTags(productIds: string[]) {
+function touchProductTags(productIds: string[] | 'all-matching') {
   updateTag(tags.products);
+  if (productIds === 'all-matching') return;
   for (const id of productIds) updateTag(tags.product(id));
 }
 
-/** Apply one bulk operation to the selected products. */
+/** Apply one bulk operation to the selected products (by ID list or by list filters). */
 export async function bulkUpdateProducts(
-  productIds: string[],
+  target: BulkProductTarget,
   action: BulkProductOp,
 ): Promise<ActionResult<{ count: number }>> {
   return runMutation('bulkUpdateProducts', async () => {
-    if (productIds.length === 0) return fail('هیچ محصولی انتخاب نشده است.');
-    const ids = [...new Set(productIds)];
+    const where =
+      target.mode === 'ids'
+        ? { id: { in: [...new Set(target.productIds)] } }
+        : buildAdminProductWhere(target.filters);
+
+    if (target.mode === 'ids' && target.productIds.length === 0) {
+      return fail('هیچ محصولی انتخاب نشده است.');
+    }
+
+    const tagScope =
+      target.mode === 'ids' ? [...new Set(target.productIds)] : ('all-matching' as const);
 
     switch (action.op) {
       case 'category': {
         const category = await prisma.category.findUnique({ where: { id: action.categoryId } });
         if (!category) return fail('دسته‌بندی انتخاب‌شده معتبر نیست.');
         const result = await prisma.product.updateMany({
-          where: { id: { in: ids } },
+          where,
           data: { categoryId: action.categoryId },
         });
-        touchProductTags(ids);
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'brand': {
         const brand = await prisma.partsBrand.findUnique({ where: { id: action.partsBrandId } });
         if (!brand) return fail('برند انتخاب‌شده معتبر نیست.');
         const result = await prisma.product.updateMany({
-          where: { id: { in: ids } },
+          where,
           data: { partsBrandId: action.partsBrandId },
         });
-        touchProductTags(ids);
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'vehicleType': {
         const carModel = await prisma.carModel.findUnique({ where: { id: action.carModelId } });
         if (!carModel) return fail('نوع خودرو انتخاب‌شده معتبر نیست.');
+
+        const rows = await prisma.product.findMany({ where, select: { id: true } });
+        const ids = rows.map((r) => r.id);
+        if (ids.length === 0) return fail('هیچ محصولی انتخاب نشده است.');
 
         await prisma.$transaction(async (tx) => {
           await tx.productCompatibility.deleteMany({ where: { productId: { in: ids } } });
@@ -245,53 +270,58 @@ export async function bulkUpdateProducts(
           });
         });
 
-        touchProductTags(ids);
+        touchProductTags(tagScope === 'all-matching' ? 'all-matching' : ids);
         return ok({ count: ids.length });
       }
       case 'wholesaleDiscount': {
         const value = clampPct(action.value, 0, 100);
         if (value === null) return fail('درصد تخفیف عمده باید بین ۰ تا ۱۰۰ باشد.');
         const result = await prisma.product.updateMany({
-          where: { id: { in: ids } },
+          where,
           data: { wholesaleDiscountPct: value },
         });
-        touchProductTags(ids);
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'retailDiscount': {
         const value = clampPct(action.value, 0, 100);
         if (value === null) return fail('درصد تخفیف تک‌فروشی باید بین ۰ تا ۱۰۰ باشد.');
         const result = await prisma.product.updateMany({
-          where: { id: { in: ids } },
+          where,
           data: { retailDiscountPct: value },
         });
-        touchProductTags(ids);
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'retailPriceDiff': {
         const value = clampPct(action.value, 0, 100);
         if (value === null) return fail('درصد اختلاف قیمت باید بین ۰ تا ۱۰۰ باشد.');
         const result = await prisma.product.updateMany({
-          where: { id: { in: ids } },
+          where,
           data: { retailPriceDiffPct: value },
         });
-        touchProductTags(ids);
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'setActive': {
         const result = await prisma.product.updateMany({
-          where: { id: { in: ids } },
+          where,
           data: { isActive: action.isActive },
         });
-        touchProductTags(ids);
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'setOffer': {
         const result = await prisma.product.updateMany({
-          where: { id: { in: ids } },
+          where,
           data: { isOffer: action.isOffer },
         });
-        touchProductTags(ids);
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       default:

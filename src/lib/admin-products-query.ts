@@ -4,6 +4,8 @@
  * build the same query string.
  */
 
+import type { AdminProductWhereFilters } from "@/src/lib/admin-product-where";
+
 export interface ProductsTableFilters {
   search: string;
   categoryId: string;
@@ -13,6 +15,34 @@ export interface ProductsTableFilters {
   offer: string;
   sortBy: string;
   sortDir: string;
+}
+
+/** Filter/search fields only — used to clear selection when the result set changes. */
+export function productsFilterKey(filters: ProductsTableFilters): string {
+  return [
+    filters.search,
+    filters.categoryId,
+    filters.partsBrandId,
+    filters.carModelId,
+    filters.status,
+    filters.offer,
+  ].join("\0");
+}
+
+/** Map UI/URL filter strings to the Prisma where-filter shape for bulk select-all. */
+export function toAdminProductWhereFilters(
+  filters: ProductsTableFilters,
+): AdminProductWhereFilters {
+  return {
+    search: filters.search || undefined,
+    categoryId: filters.categoryId ? Number(filters.categoryId) : undefined,
+    partsBrandId: filters.partsBrandId ? Number(filters.partsBrandId) : undefined,
+    carModelId: filters.carModelId ? Number(filters.carModelId) : undefined,
+    isActive:
+      filters.status === "active" ? true : filters.status === "inactive" ? false : undefined,
+    isOffer:
+      filters.offer === "special" ? true : filters.offer === "normal" ? false : undefined,
+  };
 }
 
 export function buildProductsHref(filters: ProductsTableFilters, page?: number): string {
