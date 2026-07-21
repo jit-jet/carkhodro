@@ -16,7 +16,7 @@ import {
   PAYMENT_STATUS_FA,
 } from "@/src/lib/order-labels";
 import { buildOrdersHref, type OrdersTableFilters } from "@/src/lib/admin-orders-query";
-import { Input, Select } from "@/src/components/admin/AdminUI";
+import { Input, Select, TableShell, Toolbar, tableBodyClass, tableHeadClass, tableRowClass } from "@/src/components/admin/AdminUI";
 import { formatToman, noFormatNumberFa } from "@/src/lib/format";
 import { useCartUI } from "@/src/store/cart-ui";
 import type { OrderStatus, PaymentStatus } from "@/generated/prisma_client";
@@ -106,23 +106,19 @@ export default function OrdersTable({
   return (
     <div className="space-y-3">
       {filters.userId ? (
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-amber-100 bg-amber-50 px-4 py-2.5 text-sm">
-          <p className="text-charcoal">
-            نمایش سفارشات یک کاربر خاص
-          </p>
+        <Toolbar tone="accent" className="justify-between">
+          <p className="text-sm text-charcoal">نمایش سفارشات یک کاربر خاص</p>
           <Link
             href={buildOrdersHref({ ...filters, userId: "" })}
-            className="shrink-0 text-xs font-semibold text-accent-dark hover:underline"
+            className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors"
           >
             حذف فیلتر کاربر
           </Link>
-        </div>
+        </Toolbar>
       ) : null}
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm min-w-[1100px]">
-          <thead className="bg-silver-light text-gray-500">
+      <TableShell minWidth="min-w-[1100px]">
+          <thead className={tableHeadClass}>
             <tr>
               <th className="text-right px-4 py-3 align-bottom">
                 <div className="flex flex-col gap-1.5">
@@ -265,7 +261,7 @@ export default function OrdersTable({
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className={tableBodyClass}>
             {items.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-4 py-12 text-center text-gray-400">
@@ -276,7 +272,7 @@ export default function OrdersTable({
               items.map((o) => {
                 const status = rowStatus[o.id] ?? o.status;
                 return (
-                  <tr key={o.id}>
+                  <tr key={o.id} className={tableRowClass}>
                     <td className="px-4 py-3 font-mono font-semibold text-charcoal text-right" dir="ltr">
                       #{noFormatNumberFa(o.orderNumber)}
                     </td>
@@ -320,7 +316,7 @@ export default function OrdersTable({
                     <td className="px-4 py-3">
                       <Link
                         href={`/admin/orders/${o.id}`}
-                        className="text-accent-dark font-semibold hover:underline text-xs whitespace-nowrap"
+                        className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors whitespace-nowrap"
                       >
                         جزئیات
                       </Link>
@@ -330,9 +326,7 @@ export default function OrdersTable({
               })
             )}
           </tbody>
-        </table>
-      </div>
-      </div>
+      </TableShell>
     </div>
   );
 }

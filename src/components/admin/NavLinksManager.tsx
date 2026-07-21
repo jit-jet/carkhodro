@@ -9,7 +9,7 @@ import {
   type NavLinkInput,
 } from "@/actions/admin-navigation";
 import type { AdminNavLinkVM } from "@/src/lib/serializers";
-import { Badge, Button, Card, EmptyState, FormError, Input } from "@/src/components/admin/AdminUI";
+import { Badge, Button, Card, CardHeader, EmptyState, FormError, Input } from "@/src/components/admin/AdminUI";
 
 const EMPTY_FORM: NavLinkInput = { href: "", label: "", isActive: true };
 
@@ -104,8 +104,9 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
 
   return (
     <div className="space-y-6">
-      <Card className="p-5 sm:p-6">
-        <h2 className="font-bold text-charcoal mb-4">{editingId ? "ویرایش لینک" : "افزودن لینک منو"}</h2>
+      <Card className="overflow-hidden">
+        <CardHeader title={editingId ? "ویرایش لینک" : "افزودن لینک منو"} />
+        <div className="p-5 sm:p-6">
         <form onSubmit={handleSubmit} className="space-y-3">
           <Input
             placeholder="عنوان (مثلاً محصولات)"
@@ -144,13 +145,15 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
             <FormError message={error} />
           </div>
         )}
+        </div>
       </Card>
 
-      <Card className="p-5 sm:p-6">
+      <Card className="overflow-hidden">
+        <CardHeader title="لینک‌های منو" description="با فلش‌ها ترتیب نمایش را تغییر دهید" />
         {sortedLinks.length === 0 ? (
           <EmptyState message="هنوز لینکی ثبت نشده است." />
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-gray-100 px-5 sm:px-6">
             {sortedLinks.map((link, index) => (
               <li key={link.id} className="py-4">
                 <div className="flex items-start justify-between gap-4">
@@ -188,25 +191,27 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </button>
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="sm"
                       onClick={() => {
                         setEditingId(link.id);
                         setForm({ href: link.href, label: link.label, isActive: link.isActive });
                         setError("");
                       }}
-                      className="px-2 py-1 text-accent-dark font-semibold hover:underline text-sm"
                     >
                       ویرایش
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
+                      variant="danger"
+                      size="sm"
                       onClick={() => handleDelete(link.id)}
                       disabled={pending}
-                      className="px-2 py-1 text-red-600 font-semibold hover:underline text-sm disabled:opacity-50"
                     >
                       حذف
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </li>

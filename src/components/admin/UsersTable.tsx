@@ -12,7 +12,7 @@ import { USER_ROLE_FA } from "@/src/lib/user-labels";
 import { ASSIGNABLE_ROLES } from "@/src/lib/admin-options";
 import { buildUsersHref, type UsersTableFilters } from "@/src/lib/admin-users-query";
 import { buildOrdersHref } from "@/src/lib/admin-orders-query";
-import { Input, Select } from "@/src/components/admin/AdminUI";
+import { Badge, Input, Select, TableShell, tableBodyClass, tableHeadClass, tableRowClass } from "@/src/components/admin/AdminUI";
 import { formatToman, noFormatNumberFa } from "@/src/lib/format";
 
 function SortButton({
@@ -69,10 +69,8 @@ export default function UsersTable({
   const headerSelectClass = "!py-1.5 !text-xs !rounded-lg min-w-[120px]";
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm min-w-[920px]">
-          <thead className="bg-silver-light text-gray-500">
+    <TableShell minWidth="min-w-[920px]">
+          <thead className={tableHeadClass}>
             <tr>
               <th className="text-right px-4 py-3 align-bottom">
                 <div className="flex flex-col gap-1.5 items-stretch">
@@ -170,7 +168,7 @@ export default function UsersTable({
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className={tableBodyClass}>
             {items.length === 0 ? (
               <tr>
                 <td colSpan={7} className="px-4 py-12 text-center text-gray-400">
@@ -179,7 +177,7 @@ export default function UsersTable({
               </tr>
             ) : (
               items.map((u) => (
-                <tr key={u.id}>
+                <tr key={u.id} className={tableRowClass}>
                   <td className="px-4 py-3">
                     <p className="font-semibold text-charcoal">{u.fullName || "—"}</p>
                     {u.shopName && <p className="text-xs text-gray-400">{u.shopName}</p>}
@@ -188,9 +186,7 @@ export default function UsersTable({
                     {u.phoneNumber}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="inline-block text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-accent-dark">
-                      {u.roleLabel}
-                    </span>
+                    <Badge tone="warning">{u.roleLabel}</Badge>
                   </td>
                   <td className="px-4 py-3 text-gray-600">{noFormatNumberFa(u.ordersCount)}</td>
                   <td className="px-4 py-3">
@@ -205,7 +201,7 @@ export default function UsersTable({
                         sortBy: "",
                         sortDir: "",
                       })}
-                      className="text-accent-dark font-semibold hover:underline text-xs whitespace-nowrap"
+                      className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors whitespace-nowrap"
                     >
                       مشاهده سفارشات
                     </Link>
@@ -217,7 +213,7 @@ export default function UsersTable({
                     <div className="flex items-center justify-end">
                       <Link
                         href={`/admin/users/${u.id}`}
-                        className="text-accent-dark font-semibold hover:underline text-xs"
+                        className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors"
                       >
                         ویرایش
                       </Link>
@@ -227,8 +223,6 @@ export default function UsersTable({
               ))
             )}
           </tbody>
-        </table>
-      </div>
-    </div>
+    </TableShell>
   );
 }

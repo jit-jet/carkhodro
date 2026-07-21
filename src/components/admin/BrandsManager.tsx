@@ -16,10 +16,15 @@ import type { AdminCarBrandVM, AdminCarModelVM } from "@/actions/brands";
 import {
   Button,
   Card,
+  CardHeader,
   EmptyState,
   FormError,
   Input,
   Select,
+  TableShell,
+  tableBodyClass,
+  tableHeadClass,
+  tableRowClass,
 } from "@/src/components/admin/AdminUI";
 
 type Tab = "car-brands" | "car-models" | "parts-brands";
@@ -43,14 +48,16 @@ export default function BrandsManager({
 
   return (
     <div>
-      <div className="flex gap-2 mb-5 border-b border-gray-200 overflow-x-auto">
+      <div className="flex gap-1 mb-6 p-1 bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-x-auto">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
             className={[
-              "px-4 py-2.5 text-sm font-bold whitespace-nowrap border-b-2 transition-colors",
-              tab === t.id ? "border-accent text-accent-dark" : "border-transparent text-gray-400 hover:text-charcoal",
+              "px-4 py-2.5 text-sm font-bold whitespace-nowrap rounded-xl transition-colors",
+              tab === t.id
+                ? "bg-accent text-charcoal shadow-sm"
+                : "text-gray-500 hover:text-charcoal hover:bg-silver-light",
             ].join(" ")}
           >
             {t.label}
@@ -107,8 +114,9 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
 
   return (
     <div className="space-y-6">
-      <Card className="p-5 sm:p-6">
-        <h2 className="font-bold text-charcoal mb-4">{editingId ? "ویرایش برند خودرو" : "افزودن برند خودرو"}</h2>
+      <Card className="overflow-hidden">
+        <CardHeader title={editingId ? "ویرایش برند خودرو" : "افزودن برند خودرو"} />
+        <div className="p-5 sm:p-6">
         <form onSubmit={handleSubmit} className="grid sm:grid-cols-4 gap-3">
           <Input placeholder="نام (ایران خودرو)" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
           <Input placeholder="اسلاگ (iran-khodro)" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} required />
@@ -119,48 +127,47 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
           </div>
         </form>
         {error && <div className="mt-3"><FormError message={error} /></div>}
+        </div>
       </Card>
 
-      <Card className="overflow-hidden">
-        {items.length === 0 ? (
-          <EmptyState message="هنوز برند خودرویی ثبت نشده است." />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-silver-light text-gray-500">
+      {items.length === 0 ? (
+        <Card><EmptyState message="هنوز برند خودرویی ثبت نشده است." /></Card>
+      ) : (
+        <TableShell>
+              <thead className={tableHeadClass}>
                 <tr>
-                  <th className="text-right px-4 py-3 font-semibold">نام</th>
-                  <th className="text-right px-4 py-3 font-semibold">اسلاگ</th>
-                  <th className="text-right px-4 py-3 font-semibold">تعداد محصول</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">نام</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">اسلاگ</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">تعداد محصول</th>
                   <th className="text-right px-4 py-3 font-semibold"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className={tableBodyClass}>
                 {items.map((b) => (
-                  <tr key={b.id}>
+                  <tr key={b.id} className={tableRowClass}>
                     <td className="px-4 py-3 font-semibold text-charcoal">{b.name}</td>
                     <td className="px-4 py-3 text-gray-500 font-mono">{b.slug}</td>
                     <td className="px-4 py-3 text-gray-500">{b.productCount.toLocaleString("fa-IR")}</td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
                           onClick={() => { setEditingId(b.id); setForm({ name: b.name, slug: b.slug, logoImage: b.logoImage ?? "" }); }}
-                          className="text-accent-dark font-semibold hover:underline"
                         >
                           ویرایش
-                        </button>
-                        <button onClick={() => handleDelete(b.id)} disabled={pending} className="text-red-600 font-semibold hover:underline disabled:opacity-50">
+                        </Button>
+                        <Button type="button" variant="danger" size="sm" onClick={() => handleDelete(b.id)} disabled={pending}>
                           حذف
-                        </button>
+                        </Button>
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
-        )}
-      </Card>
+        </TableShell>
+      )}
     </div>
   );
 }
@@ -221,8 +228,9 @@ function CarModelsTab({
 
   return (
     <div className="space-y-6">
-      <Card className="p-5 sm:p-6">
-        <h2 className="font-bold text-charcoal mb-4">{editingId ? "ویرایش مدل خودرو" : "افزودن مدل خودرو"}</h2>
+      <Card className="overflow-hidden">
+        <CardHeader title={editingId ? "ویرایش مدل خودرو" : "افزودن مدل خودرو"} />
+        <div className="p-5 sm:p-6">
         <form onSubmit={handleSubmit} className="grid sm:grid-cols-5 gap-3">
           <Select value={form.carBrandId} onChange={(e) => setForm({ ...form, carBrandId: Number(e.target.value) })} required>
             {carBrands.map((b) => (
@@ -238,33 +246,35 @@ function CarModelsTab({
           </div>
         </form>
         {error && <div className="mt-3"><FormError message={error} /></div>}
+        </div>
       </Card>
 
-      <Card className="overflow-hidden">
-        {items.length === 0 ? (
-          <EmptyState message="هنوز مدل خودرویی ثبت نشده است." />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-silver-light text-gray-500">
+      {items.length === 0 ? (
+        <Card><EmptyState message="هنوز مدل خودرویی ثبت نشده است." /></Card>
+      ) : (
+        <TableShell>
+              <thead className={tableHeadClass}>
                 <tr>
-                  <th className="text-right px-4 py-3 font-semibold">مدل</th>
-                  <th className="text-right px-4 py-3 font-semibold">برند</th>
-                  <th className="text-right px-4 py-3 font-semibold">سال تولید</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">مدل</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">برند</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">سال تولید</th>
                   <th className="text-right px-4 py-3 font-semibold"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className={tableBodyClass}>
                 {items.map((m) => (
-                  <tr key={m.id}>
+                  <tr key={m.id} className={tableRowClass}>
                     <td className="px-4 py-3 font-semibold text-charcoal">{m.name}</td>
                     <td className="px-4 py-3 text-gray-500">{m.brandName}</td>
                     <td className="px-4 py-3 text-gray-500">
                       {m.yearStart ?? "—"} تا {m.yearEnd ?? "اکنون"}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
                           onClick={() => {
                             setEditingId(m.id);
                             setForm({
@@ -274,22 +284,19 @@ function CarModelsTab({
                               yearEnd: m.yearEnd?.toString() ?? "",
                             });
                           }}
-                          className="text-accent-dark font-semibold hover:underline"
                         >
                           ویرایش
-                        </button>
-                        <button onClick={() => handleDelete(m.id)} disabled={pending} className="text-red-600 font-semibold hover:underline disabled:opacity-50">
+                        </Button>
+                        <Button type="button" variant="danger" size="sm" onClick={() => handleDelete(m.id)} disabled={pending}>
                           حذف
-                        </button>
+                        </Button>
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
-        )}
-      </Card>
+        </TableShell>
+      )}
     </div>
   );
 }
@@ -331,8 +338,9 @@ function PartsBrandsTab({ initial }: { initial: { id: number; name: string }[] }
 
   return (
     <div className="space-y-6">
-      <Card className="p-5 sm:p-6">
-        <h2 className="font-bold text-charcoal mb-4">{editingId ? "ویرایش برند قطعه" : "افزودن برند قطعه"}</h2>
+      <Card className="overflow-hidden">
+        <CardHeader title={editingId ? "ویرایش برند قطعه" : "افزودن برند قطعه"} />
+        <div className="p-5 sm:p-6">
         <form onSubmit={handleSubmit} className="grid sm:grid-cols-4 gap-3">
           <Input placeholder="نام برند (بوش)" value={name} onChange={(e) => setName(e.target.value)} required className="sm:col-span-2" />
           <div className="flex gap-2 sm:col-span-2">
@@ -341,41 +349,38 @@ function PartsBrandsTab({ initial }: { initial: { id: number; name: string }[] }
           </div>
         </form>
         {error && <div className="mt-3"><FormError message={error} /></div>}
+        </div>
       </Card>
 
-      <Card className="overflow-hidden">
-        {items.length === 0 ? (
-          <EmptyState message="هنوز برند قطعه‌ای ثبت نشده است." />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-silver-light text-gray-500">
+      {items.length === 0 ? (
+        <Card><EmptyState message="هنوز برند قطعه‌ای ثبت نشده است." /></Card>
+      ) : (
+        <TableShell>
+              <thead className={tableHeadClass}>
                 <tr>
-                  <th className="text-right px-4 py-3 font-semibold">نام</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">نام</th>
                   <th className="text-right px-4 py-3 font-semibold"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className={tableBodyClass}>
                 {items.map((b) => (
-                  <tr key={b.id}>
+                  <tr key={b.id} className={tableRowClass}>
                     <td className="px-4 py-3 font-semibold text-charcoal">{b.name}</td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => { setEditingId(b.id); setName(b.name); }} className="text-accent-dark font-semibold hover:underline">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button type="button" variant="ghost" size="sm" onClick={() => { setEditingId(b.id); setName(b.name); }}>
                           ویرایش
-                        </button>
-                        <button onClick={() => handleDelete(b.id)} disabled={pending} className="text-red-600 font-semibold hover:underline disabled:opacity-50">
+                        </Button>
+                        <Button type="button" variant="danger" size="sm" onClick={() => handleDelete(b.id)} disabled={pending}>
                           حذف
-                        </button>
+                        </Button>
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
-        )}
-      </Card>
+        </TableShell>
+      )}
     </div>
   );
 }

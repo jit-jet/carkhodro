@@ -10,7 +10,7 @@ import {
 } from "@/actions/admin-social-links";
 import type { AdminSocialLinkVM } from "@/src/lib/serializers";
 import { SocialMediaIcon, SOCIAL_ICON_PRESETS } from "@/src/components/layout/SocialMediaIcon";
-import { Badge, Button, Card, EmptyState, FormError, Input, Label } from "@/src/components/admin/AdminUI";
+import { Badge, Button, Card, CardHeader, EmptyState, FormError, Input, Label } from "@/src/components/admin/AdminUI";
 
 const EMPTY_FORM: SocialLinkInput = { label: "", url: "", icon: "telegram", isActive: true };
 
@@ -112,9 +112,12 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Adm
 
   return (
     <div className="space-y-4">
-      <Card className="p-5 sm:p-6">
-        <h3 className="font-bold text-charcoal mb-1">{editingId ? "ویرایش شبکه اجتماعی" : "افزودن شبکه اجتماعی"}</h3>
-        <p className="text-sm text-gray-500 mb-4">لینک‌ها در فوتر و صفحه تماس با ما نمایش داده می‌شوند.</p>
+      <Card className="overflow-hidden">
+        <CardHeader
+          title={editingId ? "ویرایش شبکه اجتماعی" : "افزودن شبکه اجتماعی"}
+          description="لینک‌ها در فوتر و صفحه تماس با ما نمایش داده می‌شوند."
+        />
+        <div className="p-5 sm:p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
@@ -183,13 +186,15 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Adm
             <FormError message={error} />
           </div>
         )}
+        </div>
       </Card>
 
-      <Card className="p-5 sm:p-6">
+      <Card className="overflow-hidden">
+        <CardHeader title="شبکه‌های اجتماعی" />
         {sortedLinks.length === 0 ? (
           <EmptyState message="هنوز شبکه اجتماعی ثبت نشده است." />
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-gray-100 px-5 sm:px-6">
             {sortedLinks.map((link, index) => (
               <li key={link.id} className="py-4">
                 <div className="flex items-start justify-between gap-4">
@@ -232,8 +237,10 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Adm
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </button>
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="sm"
                       onClick={() => {
                         setEditingId(link.id);
                         setForm({
@@ -244,18 +251,18 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Adm
                         });
                         setError("");
                       }}
-                      className="px-2 py-1 text-accent-dark font-semibold hover:underline text-sm"
                     >
                       ویرایش
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
+                      variant="danger"
+                      size="sm"
                       onClick={() => handleDelete(link.id)}
                       disabled={pending}
-                      className="px-2 py-1 text-red-600 font-semibold hover:underline text-sm disabled:opacity-50"
                     >
                       حذف
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </li>

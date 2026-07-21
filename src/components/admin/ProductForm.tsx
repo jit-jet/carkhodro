@@ -20,6 +20,7 @@ import { useCartUI } from "@/src/store/cart-ui";
 import {
   Button,
   Card,
+  CardHeader,
   FormError,
   FormSuccess,
   Input,
@@ -206,8 +207,9 @@ export default function ProductForm({
       {error && <FormError message={error} />}
       {success && <FormSuccess message={success} />}
 
-      <Card className="p-5 sm:p-6 space-y-4">
-        <h2 className="font-bold text-charcoal">اطلاعات پایه</h2>
+      <Card className="overflow-hidden">
+        <CardHeader title="اطلاعات پایه" />
+        <div className="p-5 sm:p-6 space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <Label>کد کالا (SKU)</Label>
@@ -366,13 +368,15 @@ export default function ProductForm({
           <Label>توضیحات (اختیاری)</Label>
           <Textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
+        </div>
       </Card>
 
-      <Card className="p-5 sm:p-6 space-y-4">
-        <h2 className="font-bold text-charcoal">قیمت‌گذاری</h2>
-        <p className="text-xs text-gray-500 leading-6">
-          قیمت کلی فروشی (عمده) پایه محاسبات است. قیمت تک‌فروشی به‌صورت خودکار از روی درصد اختلاف محاسبه می‌شود.
-        </p>
+      <Card className="overflow-hidden">
+        <CardHeader
+          title="قیمت‌گذاری"
+          description="قیمت کلی فروشی (عمده) پایه محاسبات است. قیمت تک‌فروشی به‌صورت خودکار از روی درصد اختلاف محاسبه می‌شود."
+        />
+        <div className="p-5 sm:p-6 space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <Label>قیمت کلی فروشی — پایه (تومان)</Label>
@@ -417,7 +421,7 @@ export default function ProductForm({
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-3 gap-3 bg-silver-light rounded-xl p-4">
+        <div className="grid sm:grid-cols-3 gap-3 bg-gray-50 rounded-xl border border-gray-100 p-4">
           <PricePreview label="قیمت نهایی همکار (عمده)" value={preview.wholesaleFinal} />
           <PricePreview label="قیمت لیست تک‌فروشی" value={preview.retailPrice} />
           <PricePreview label="قیمت نهایی تک‌فروشی" value={preview.retailFinal} highlight />
@@ -435,9 +439,10 @@ export default function ProductForm({
             </label>
           )}
         </div>
+        </div>
       </Card>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 sticky bottom-4 z-10 bg-white/90 backdrop-blur-sm border border-gray-200/80 rounded-2xl shadow-sm px-4 py-3 w-fit">
         <Button type="submit" disabled={pending || uploading}>
           {pending ? "در حال ذخیره…" : isEditing ? "ذخیره تغییرات" : "افزودن محصول"}
         </Button>

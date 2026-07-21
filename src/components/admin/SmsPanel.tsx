@@ -10,12 +10,17 @@ import {
   Badge,
   Button,
   Card,
+  CardHeader,
   EmptyState,
   FormError,
   FormSuccess,
   Label,
   Select,
   Textarea,
+  TableShell,
+  tableBodyClass,
+  tableHeadClass,
+  tableRowClass,
 } from "@/src/components/admin/AdminUI";
 import { formatNumberFa } from "@/src/lib/format";
 import type { SmsCampaignStatus, SmsTargetRole } from "@/generated/prisma_client";
@@ -102,8 +107,9 @@ export default function SmsPanel({ initialHistory }: { initialHistory: AdminSmsC
 
   return (
     <div className="space-y-6">
-      <Card className="p-5 sm:p-6">
-        <h2 className="font-bold text-charcoal mb-4">ارسال پیامک گروهی جدید</h2>
+      <Card className="overflow-hidden">
+        <CardHeader title="ارسال پیامک گروهی جدید" description="پیامک به کاربران انتخاب‌شده ارسال می‌شود" />
+        <div className="p-5 sm:p-6">
         <form onSubmit={handleSend} className="space-y-4">
           {error && <FormError message={error} />}
           {success && <FormSuccess message={success} />}
@@ -132,27 +138,32 @@ export default function SmsPanel({ initialHistory }: { initialHistory: AdminSmsC
             {sending ? "در حال ارسال…" : "ارسال پیامک گروهی"}
           </Button>
         </form>
+        </div>
       </Card>
 
-      <Card className="overflow-hidden">
-        <div className="px-5 py-3.5 border-b border-gray-100 font-bold text-charcoal">تاریخچه ارسال</div>
-        {history.length === 0 ? (
+      {history.length === 0 ? (
+        <Card>
+          <CardHeader title="تاریخچه ارسال" />
           <EmptyState message="هنوز پیامکی ارسال نشده است." />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[720px]">
-              <thead className="bg-silver-light text-gray-500">
+        </Card>
+      ) : (
+        <div className="space-y-0">
+          <Card className="rounded-b-none border-b-0 overflow-hidden">
+            <CardHeader title="تاریخچه ارسال" />
+          </Card>
+          <TableShell className="rounded-t-none">
+              <thead className={tableHeadClass}>
                 <tr>
-                  <th className="text-right px-4 py-3 font-semibold">متن</th>
-                  <th className="text-right px-4 py-3 font-semibold">گروه هدف</th>
-                  <th className="text-right px-4 py-3 font-semibold">گیرندگان</th>
-                  <th className="text-right px-4 py-3 font-semibold">وضعیت</th>
-                  <th className="text-right px-4 py-3 font-semibold">تاریخ</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">متن</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">گروه هدف</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">گیرندگان</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">وضعیت</th>
+                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">تاریخ</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className={tableBodyClass}>
                 {history.map((c) => (
-                  <tr key={c.id}>
+                  <tr key={c.id} className={tableRowClass}>
                     <td className="px-4 py-3 max-w-xs truncate text-charcoal">{c.body}</td>
                     <td className="px-4 py-3 text-gray-500">{c.targetRoleLabel}</td>
                     <td className="px-4 py-3 text-gray-500">
@@ -165,10 +176,9 @@ export default function SmsPanel({ initialHistory }: { initialHistory: AdminSmsC
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
-        )}
-      </Card>
+          </TableShell>
+        </div>
+      )}
     </div>
   );
 }

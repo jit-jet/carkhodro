@@ -29,7 +29,7 @@ export default function AdminLoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4" dir="rtl">
+    <form onSubmit={handleSubmit} className="space-y-5" dir="rtl">
       <FormError message={error} />
 
       <div>
@@ -55,7 +55,7 @@ export default function AdminLoginForm() {
         />
       </div>
 
-      <Button type="submit" disabled={pending} className="w-full">
+      <Button type="submit" disabled={pending} className="w-full mt-1">
         {pending ? "در حال ورود…" : "ورود به پنل مدیریت"}
       </Button>
     </form>

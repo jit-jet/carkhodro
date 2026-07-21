@@ -19,12 +19,15 @@ import { useCartUI } from "@/src/store/cart-ui";
 import {
   Button,
   Card,
+  CardHeader,
   FormError,
   FormSuccess,
   Input,
   Label,
   Select,
   Textarea,
+  tableBodyClass,
+  tableHeadClass,
 } from "@/src/components/admin/AdminUI";
 import { formatToman, noFormatNumberFa } from "@/src/lib/format";
 import type { OrderStatus, PaymentMethod, PaymentStatus } from "@/generated/prisma_client";
@@ -89,13 +92,12 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
       {error && <FormError message={error} />}
       {success && <FormSuccess message={success} />}
 
-      <Card className="p-5 sm:p-6 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-bold text-charcoal">
-            سفارش #{noFormatNumberFa(order.orderNumber)}
-          </h2>
-          <p className="text-xs text-gray-400">{order.createdAtLabel}</p>
-        </div>
+      <Card className="overflow-hidden">
+        <CardHeader
+          title={`سفارش #${noFormatNumberFa(order.orderNumber)}`}
+          action={<p className="text-xs text-gray-400">{order.createdAtLabel}</p>}
+        />
+        <div className="p-5 sm:p-6 space-y-4">
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div>
@@ -159,19 +161,23 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
           <Label>یادداشت</Label>
           <Textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
         </div>
+        </div>
       </Card>
 
-      <Card className="p-5 sm:p-6 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-bold text-charcoal">اطلاعات مشتری</h2>
-          <Link
-            href={`/admin/users/${order.user.id}`}
-            className="text-xs font-semibold text-accent-dark hover:underline"
-          >
-            صفحه کاربر
-          </Link>
-        </div>
-        <p className="text-xs text-gray-400">نقش: {order.user.roleLabel}</p>
+      <Card className="overflow-hidden">
+        <CardHeader
+          title="اطلاعات مشتری"
+          description={`نقش: ${order.user.roleLabel}`}
+          action={
+            <Link
+              href={`/admin/users/${order.user.id}`}
+              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors"
+            >
+              صفحه کاربر
+            </Link>
+          }
+        />
+        <div className="p-5 sm:p-6 space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <Label>نام</Label>
@@ -196,10 +202,12 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
             <Input value={shopName} onChange={(e) => setShopName(e.target.value)} />
           </div>
         </div>
+        </div>
       </Card>
 
-      <Card className="p-5 sm:p-6 space-y-4">
-        <h2 className="font-bold text-charcoal">آدرس تحویل (اسنپ‌شات سفارش)</h2>
+      <Card className="overflow-hidden">
+        <CardHeader title="آدرس تحویل (اسنپ‌شات سفارش)" />
+        <div className="p-5 sm:p-6 space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <Label>استان</Label>
@@ -223,36 +231,38 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
             />
           </div>
         </div>
+        </div>
       </Card>
 
-      <Card className="p-5 sm:p-6 space-y-3">
-        <h2 className="font-bold text-charcoal">اقلام سفارش</h2>
+      <Card className="overflow-hidden">
+        <CardHeader title="اقلام سفارش" />
+        <div className="p-5 sm:p-6 space-y-3">
         <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-[640px]">
-            <thead className="text-gray-500">
-              <tr className="border-b border-gray-100">
-                <th className="text-right py-2 font-semibold">کالا</th>
-                <th className="text-right py-2 font-semibold">تعداد</th>
-                <th className="text-right py-2 font-semibold">قیمت واحد</th>
-                <th className="text-right py-2 font-semibold">تخفیف</th>
+            <thead className={tableHeadClass}>
+              <tr>
+                <th className="text-right py-2.5 px-2 font-semibold text-xs uppercase tracking-wide text-gray-500">کالا</th>
+                <th className="text-right py-2.5 px-2 font-semibold text-xs uppercase tracking-wide text-gray-500">تعداد</th>
+                <th className="text-right py-2.5 px-2 font-semibold text-xs uppercase tracking-wide text-gray-500">قیمت واحد</th>
+                <th className="text-right py-2.5 px-2 font-semibold text-xs uppercase tracking-wide text-gray-500">تخفیف</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className={tableBodyClass}>
               {order.items.map((it) => (
                 <tr key={it.id}>
-                  <td className="py-2.5">
+                  <td className="py-2.5 px-2">
                     <p className="font-semibold text-charcoal">{it.productName}</p>
                     <p className="text-xs text-gray-400 font-mono">{it.productSku}</p>
                   </td>
-                  <td className="py-2.5">{noFormatNumberFa(it.quantity)}</td>
-                  <td className="py-2.5 whitespace-nowrap">{formatToman(it.unitPriceToman)}</td>
-                  <td className="py-2.5">٪{noFormatNumberFa(it.discountPct)}</td>
+                  <td className="py-2.5 px-2">{noFormatNumberFa(it.quantity)}</td>
+                  <td className="py-2.5 px-2 whitespace-nowrap">{formatToman(it.unitPriceToman)}</td>
+                  <td className="py-2.5 px-2">٪{noFormatNumberFa(it.discountPct)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div className="grid sm:grid-cols-3 gap-3 pt-2 text-sm">
+        <div className="grid sm:grid-cols-3 gap-3 pt-2 text-sm bg-gray-50 rounded-xl border border-gray-100 p-4">
           <p className="text-gray-500">
             جمع جزء: <span className="font-bold text-charcoal">{formatToman(order.subtotalToman)}</span>
           </p>
@@ -264,6 +274,7 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
             قابل پرداخت:{" "}
             <span className="font-extrabold text-accent-dark">{formatToman(order.totalToman)}</span>
           </p>
+        </div>
         </div>
       </Card>
 

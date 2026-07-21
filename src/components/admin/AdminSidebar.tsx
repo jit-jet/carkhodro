@@ -50,7 +50,7 @@ function NavIcon({ icon }: { icon: IconKey }) {
     strokeWidth: 2,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
-    className: "w-5 h-5 shrink-0",
+    className: "w-[18px] h-[18px] shrink-0",
   };
   switch (icon) {
     case "grid":
@@ -156,14 +156,18 @@ export default function AdminSidebar({
   }
 
   return (
-    <aside className="h-full flex flex-col bg-charcoal text-white w-72">
-      <div className="p-5 border-b border-white/10">
-        <p className="text-xs text-white/40 mb-0.5">پنل مدیریت</p>
-        <p className="font-extrabold text-accent">کارخودرو</p>
+    <aside className="h-full flex flex-col bg-charcoal text-white w-72 border-l border-black/20">
+      <div className="px-5 py-5 border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <div className="min-w-0">
+            <p className="text-[11px] text-white/40 mb-0.5">پنل مدیریت</p>
+            <p className="font-extrabold text-accent text-base leading-tight truncate">کارخودرو</p>
+          </div>
+        </div>
       </div>
 
-      <nav className="flex-1 overflow-y-auto p-3" aria-label="منوی مدیریت">
-        <ul className="space-y-1">
+      <nav className="flex-1 overflow-y-auto p-2.5" aria-label="منوی مدیریت">
+        <ul className="space-y-0.5">
           {NAV_ITEMS.map((item) => {
             const active = isActive(item.href);
             return (
@@ -173,12 +177,14 @@ export default function AdminSidebar({
                   onClick={onNavigate}
                   aria-current={active ? "page" : undefined}
                   className={[
-                    "flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold transition-colors",
-                    active ? "bg-accent text-charcoal" : "text-white/70 hover:bg-white/10 hover:text-white",
+                    "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-colors",
+                    active
+                      ? "bg-accent text-charcoal shadow-sm shadow-accent/20"
+                      : "text-white/65 hover:bg-white/8 hover:text-white",
                   ].join(" ")}
                 >
                   <NavIcon icon={item.icon} />
-                  <span className="flex-1">{item.label}</span>
+                  <span className="flex-1 leading-snug">{item.label}</span>
                 </Link>
               </li>
             );
@@ -186,17 +192,25 @@ export default function AdminSidebar({
         </ul>
       </nav>
 
-      <div className="p-3 border-t border-white/10">
-        <div className="px-3.5 py-2 mb-1">
-          <p className="text-xs text-white/40">ورود به عنوان</p>
-          <p className="text-sm font-semibold truncate">{adminName || "مدیر سیستم"}</p>
+      <div className="p-2.5 border-t border-white/10">
+        <div className="px-3 py-2 mb-1 rounded-xl bg-white/5">
+          <p className="text-[11px] text-white/40">ورود به عنوان</p>
+          <p className="text-sm font-semibold truncate text-white/90">{adminName || "مدیر سیستم"}</p>
         </div>
         <button
           onClick={handleLogout}
           disabled={loggingOut}
-          className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-red-300 hover:bg-red-500/10 transition-colors disabled:opacity-50"
+          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-red-300 hover:bg-red-500/15 transition-colors disabled:opacity-50"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-[18px] h-[18px] shrink-0"
+          >
             <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
             <polyline points="16 17 21 12 16 7" />
             <line x1="21" y1="12" x2="9" y2="12" />

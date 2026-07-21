@@ -14,7 +14,19 @@ import type {
   AdminProductSortBy,
   AdminProductSortDir,
 } from "@/actions/products";
-import { Button, FormError, FormSuccess, Input, Select } from "@/src/components/admin/AdminUI";
+import {
+  Badge,
+  Button,
+  FormError,
+  FormSuccess,
+  Input,
+  Select,
+  TableShell,
+  Toolbar,
+  tableBodyClass,
+  tableHeadClass,
+  tableRowClass,
+} from "@/src/components/admin/AdminUI";
 import { formatToman, noFormatNumberFa } from "@/src/lib/format";
 import {
   buildProductsHref,
@@ -212,7 +224,7 @@ export default function ProductsTable({
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-3 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
+      <Toolbar tone="accent">
         <span className="text-sm font-semibold text-charcoal">
           {selected.size > 0
             ? `${selected.size.toLocaleString("fa-IR")} مورد انتخاب شده`
@@ -319,18 +331,16 @@ export default function ProductsTable({
           </label>
         )}
 
-        <Button type="button" onClick={handleBulkSubmit} disabled={pending} className="!py-2">
+        <Button type="button" size="sm" onClick={handleBulkSubmit} disabled={pending}>
           ثبت تغییرات
         </Button>
-      </div>
+      </Toolbar>
 
       {error && <FormError message={error} />}
       {message && <FormSuccess message={message} />}
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[1200px]">
-            <thead className="bg-silver-light text-gray-500">
+      <TableShell minWidth="min-w-[1200px]">
+            <thead className={tableHeadClass}>
               <tr>
                 <th className="px-4 py-3 align-bottom">
                   <input
@@ -497,7 +507,7 @@ export default function ProductsTable({
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className={tableBodyClass}>
               {items.length === 0 ? (
                 <tr>
                   <td colSpan={11} className="px-4 py-12 text-center text-gray-400">
@@ -506,7 +516,10 @@ export default function ProductsTable({
                 </tr>
               ) : (
                 items.map((p) => (
-                  <tr key={p.id} className={selected.has(p.id) ? "bg-amber-50/40" : undefined}>
+                  <tr
+                    key={p.id}
+                    className={`${tableRowClass} ${selected.has(p.id) ? "bg-amber-50/60" : ""}`}
+                  >
                     <td className="px-4 py-3">
                       <input
                         type="checkbox"
@@ -544,49 +557,44 @@ export default function ProductsTable({
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span
-                        className={[
-                          "inline-block text-[11px] font-bold px-2.5 py-1 rounded-full",
-                          p.isActive ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500",
-                        ].join(" ")}
-                      >
+                      <Badge tone={p.isActive ? "success" : "default"}>
                         {p.isActive ? "فعال" : "غیرفعال"}
-                      </span>
+                      </Badge>
                     </td>
                     <td className="px-4 py-3">
-                      <span
-                        className={[
-                          "inline-block text-[11px] font-bold px-2.5 py-1 rounded-full",
-                          p.isOffer ? "bg-amber-50 text-accent-dark" : "bg-gray-100 text-gray-500",
-                        ].join(" ")}
-                      >
+                      <Badge tone={p.isOffer ? "warning" : "default"}>
                         {p.isOffer ? "ویژه" : "عادی"}
-                      </span>
+                      </Badge>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2 whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-1.5 whitespace-nowrap">
                         <Link
                           href={`/admin/products/${p.id}`}
-                          className="text-accent-dark font-semibold hover:underline text-xs"
+                          className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors"
                         >
                           ویرایش
                         </Link>
                         {p.isActive ? (
-                          <button
+                          <Button
+                            type="button"
+                            variant="danger"
+                            size="sm"
                             onClick={() => handleDelete(p.id)}
                             disabled={pending}
-                            className="text-red-600 font-semibold hover:underline text-xs disabled:opacity-50"
                           >
                             غیرفعال
-                          </button>
+                          </Button>
                         ) : (
-                          <button
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
                             onClick={() => handleReactivate(p.id)}
                             disabled={pending}
-                            className="text-green-700 font-semibold hover:underline text-xs disabled:opacity-50"
+                            className="!text-green-700 !border-green-200 hover:!bg-green-50"
                           >
                             فعال‌سازی
-                          </button>
+                          </Button>
                         )}
                       </div>
                     </td>
@@ -594,9 +602,7 @@ export default function ProductsTable({
                 ))
               )}
             </tbody>
-          </table>
-        </div>
-      </div>
+      </TableShell>
     </div>
   );
 }

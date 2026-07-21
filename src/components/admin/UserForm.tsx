@@ -16,6 +16,7 @@ import Avatar from "@/src/components/dashboard/Avatar";
 import {
   Button,
   Card,
+  CardHeader,
   FormError,
   FormSuccess,
   Input,
@@ -172,7 +173,7 @@ export default function UserForm({
       {error && <FormError message={error} />}
       {success && <FormSuccess message={success} />}
 
-      <Card className="p-5 sm:p-6">
+      <Card className="overflow-hidden p-5 sm:p-6">
         <div className="grid lg:grid-cols-[200px_1fr] gap-8">
           <div className="flex flex-col items-center gap-3">
             <Avatar
@@ -191,9 +192,9 @@ export default function UserForm({
               <Button
                 type="button"
                 variant="ghost"
+                size="sm"
                 onClick={() => fileRef.current?.click()}
                 disabled={avatarPending}
-                className="!py-2 !text-xs"
               >
                 انتخاب عکس
               </Button>
@@ -201,9 +202,9 @@ export default function UserForm({
                 <Button
                   type="button"
                   variant="danger"
+                  size="sm"
                   onClick={handleRemoveAvatar}
                   disabled={avatarPending}
-                  className="!py-2 !text-xs"
                 >
                   حذف عکس
                 </Button>
@@ -214,8 +215,8 @@ export default function UserForm({
           </div>
 
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="font-bold text-charcoal">اطلاعات پایه</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-gray-100">
+              <h2 className="text-base font-bold text-charcoal">اطلاعات پایه</h2>
               <p className="text-xs text-gray-400">عضویت: {initial.createdAtLabel}</p>
             </div>
 
@@ -323,8 +324,9 @@ export default function UserForm({
         </div>
       </Card>
 
-      <Card className="p-5 sm:p-6 space-y-4">
-        <h2 className="font-bold text-charcoal">آدرس</h2>
+      <Card className="overflow-hidden">
+        <CardHeader title="آدرس" />
+        <div className="p-5 sm:p-6 space-y-4">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <Label>استان</Label>
@@ -378,9 +380,10 @@ export default function UserForm({
             />
           </div>
         </div>
+        </div>
       </Card>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 sticky bottom-4 z-10 bg-white/90 backdrop-blur-sm border border-gray-200/80 rounded-2xl shadow-sm px-4 py-3 w-fit">
         <Button type="submit" disabled={pending || avatarPending}>
           {pending ? "در حال ذخیره…" : "ذخیره تغییرات"}
         </Button>
