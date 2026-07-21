@@ -112,6 +112,11 @@ export type WishlistItem = $Result.DefaultSelection<Prisma.$WishlistItemPayload>
  */
 export type CompareItem = $Result.DefaultSelection<Prisma.$CompareItemPayload>
 /**
+ * Model PostCategory
+ * Blog post categories — admin-managed taxonomy for /blog filtering.
+ */
+export type PostCategory = $Result.DefaultSelection<Prisma.$PostCategoryPayload>
+/**
  * Model Post
  * Blog posts — authored by admin; displayed on /blog and /blog/[slug].
  */
@@ -610,6 +615,16 @@ export class PrismaClient<
     * ```
     */
   get compareItem(): Prisma.CompareItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.postCategory`: Exposes CRUD operations for the **PostCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PostCategories
+    * const postCategories = await prisma.postCategory.findMany()
+    * ```
+    */
+  get postCategory(): Prisma.PostCategoryDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.post`: Exposes CRUD operations for the **Post** model.
@@ -1183,6 +1198,7 @@ export namespace Prisma {
     CartItem: 'CartItem',
     WishlistItem: 'WishlistItem',
     CompareItem: 'CompareItem',
+    PostCategory: 'PostCategory',
     Post: 'Post',
     Faq: 'Faq',
     SiteSetting: 'SiteSetting',
@@ -1210,7 +1226,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "post" | "faq" | "siteSetting" | "socialLink" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion"
+      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "socialLink" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2620,6 +2636,80 @@ export namespace Prisma {
           }
         }
       }
+      PostCategory: {
+        payload: Prisma.$PostCategoryPayload<ExtArgs>
+        fields: Prisma.PostCategoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PostCategoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PostCategoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload>
+          }
+          findFirst: {
+            args: Prisma.PostCategoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PostCategoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload>
+          }
+          findMany: {
+            args: Prisma.PostCategoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload>[]
+          }
+          create: {
+            args: Prisma.PostCategoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload>
+          }
+          createMany: {
+            args: Prisma.PostCategoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PostCategoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload>[]
+          }
+          delete: {
+            args: Prisma.PostCategoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload>
+          }
+          update: {
+            args: Prisma.PostCategoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.PostCategoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PostCategoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PostCategoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.PostCategoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PostCategoryPayload>
+          }
+          aggregate: {
+            args: Prisma.PostCategoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePostCategory>
+          }
+          groupBy: {
+            args: Prisma.PostCategoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PostCategoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PostCategoryCountArgs<ExtArgs>
+            result: $Utils.Optional<PostCategoryCountAggregateOutputType> | number
+          }
+        }
+      }
       Post: {
         payload: Prisma.$PostPayload<ExtArgs>
         fields: Prisma.PostFieldRefs
@@ -3635,6 +3725,7 @@ export namespace Prisma {
     cartItem?: CartItemOmit
     wishlistItem?: WishlistItemOmit
     compareItem?: CompareItemOmit
+    postCategory?: PostCategoryOmit
     post?: PostOmit
     faq?: FaqOmit
     siteSetting?: SiteSettingOmit
@@ -4173,6 +4264,37 @@ export namespace Prisma {
    */
   export type CartCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CartItemWhereInput
+  }
+
+
+  /**
+   * Count Type PostCategoryCountOutputType
+   */
+
+  export type PostCategoryCountOutputType = {
+    posts: number
+  }
+
+  export type PostCategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    posts?: boolean | PostCategoryCountOutputTypeCountPostsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PostCategoryCountOutputType without action
+   */
+  export type PostCategoryCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategoryCountOutputType
+     */
+    select?: PostCategoryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PostCategoryCountOutputType without action
+   */
+  export type PostCategoryCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PostWhereInput
   }
 
 
@@ -26358,6 +26480,1190 @@ export namespace Prisma {
 
 
   /**
+   * Model PostCategory
+   */
+
+  export type AggregatePostCategory = {
+    _count: PostCategoryCountAggregateOutputType | null
+    _avg: PostCategoryAvgAggregateOutputType | null
+    _sum: PostCategorySumAggregateOutputType | null
+    _min: PostCategoryMinAggregateOutputType | null
+    _max: PostCategoryMaxAggregateOutputType | null
+  }
+
+  export type PostCategoryAvgAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type PostCategorySumAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type PostCategoryMinAggregateOutputType = {
+    id: number | null
+    slug: string | null
+    name: string | null
+    description: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PostCategoryMaxAggregateOutputType = {
+    id: number | null
+    slug: string | null
+    name: string | null
+    description: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PostCategoryCountAggregateOutputType = {
+    id: number
+    slug: number
+    name: number
+    description: number
+    metaTitle: number
+    metaDescription: number
+    sortOrder: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PostCategoryAvgAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type PostCategorySumAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type PostCategoryMinAggregateInputType = {
+    id?: true
+    slug?: true
+    name?: true
+    description?: true
+    metaTitle?: true
+    metaDescription?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PostCategoryMaxAggregateInputType = {
+    id?: true
+    slug?: true
+    name?: true
+    description?: true
+    metaTitle?: true
+    metaDescription?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PostCategoryCountAggregateInputType = {
+    id?: true
+    slug?: true
+    name?: true
+    description?: true
+    metaTitle?: true
+    metaDescription?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PostCategoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PostCategory to aggregate.
+     */
+    where?: PostCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PostCategories to fetch.
+     */
+    orderBy?: PostCategoryOrderByWithRelationInput | PostCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PostCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PostCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PostCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PostCategories
+    **/
+    _count?: true | PostCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PostCategoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PostCategorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PostCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PostCategoryMaxAggregateInputType
+  }
+
+  export type GetPostCategoryAggregateType<T extends PostCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregatePostCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePostCategory[P]>
+      : GetScalarType<T[P], AggregatePostCategory[P]>
+  }
+
+
+
+
+  export type PostCategoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PostCategoryWhereInput
+    orderBy?: PostCategoryOrderByWithAggregationInput | PostCategoryOrderByWithAggregationInput[]
+    by: PostCategoryScalarFieldEnum[] | PostCategoryScalarFieldEnum
+    having?: PostCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PostCategoryCountAggregateInputType | true
+    _avg?: PostCategoryAvgAggregateInputType
+    _sum?: PostCategorySumAggregateInputType
+    _min?: PostCategoryMinAggregateInputType
+    _max?: PostCategoryMaxAggregateInputType
+  }
+
+  export type PostCategoryGroupByOutputType = {
+    id: number
+    slug: string
+    name: string
+    description: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    sortOrder: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: PostCategoryCountAggregateOutputType | null
+    _avg: PostCategoryAvgAggregateOutputType | null
+    _sum: PostCategorySumAggregateOutputType | null
+    _min: PostCategoryMinAggregateOutputType | null
+    _max: PostCategoryMaxAggregateOutputType | null
+  }
+
+  type GetPostCategoryGroupByPayload<T extends PostCategoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PostCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PostCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PostCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], PostCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PostCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    name?: boolean
+    description?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    posts?: boolean | PostCategory$postsArgs<ExtArgs>
+    _count?: boolean | PostCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["postCategory"]>
+
+  export type PostCategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    name?: boolean
+    description?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["postCategory"]>
+
+  export type PostCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    name?: boolean
+    description?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["postCategory"]>
+
+  export type PostCategorySelectScalar = {
+    id?: boolean
+    slug?: boolean
+    name?: boolean
+    description?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PostCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "name" | "description" | "metaTitle" | "metaDescription" | "sortOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["postCategory"]>
+  export type PostCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    posts?: boolean | PostCategory$postsArgs<ExtArgs>
+    _count?: boolean | PostCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PostCategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type PostCategoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $PostCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PostCategory"
+    objects: {
+      posts: Prisma.$PostPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      /**
+       * URL-safe slug, e.g. "maintenance"
+       */
+      slug: string
+      name: string
+      description: string | null
+      /**
+       * Optional SEO overrides for category listing pages.
+       */
+      metaTitle: string | null
+      metaDescription: string | null
+      sortOrder: number
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["postCategory"]>
+    composites: {}
+  }
+
+  type PostCategoryGetPayload<S extends boolean | null | undefined | PostCategoryDefaultArgs> = $Result.GetResult<Prisma.$PostCategoryPayload, S>
+
+  type PostCategoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PostCategoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PostCategoryCountAggregateInputType | true
+    }
+
+  export interface PostCategoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PostCategory'], meta: { name: 'PostCategory' } }
+    /**
+     * Find zero or one PostCategory that matches the filter.
+     * @param {PostCategoryFindUniqueArgs} args - Arguments to find a PostCategory
+     * @example
+     * // Get one PostCategory
+     * const postCategory = await prisma.postCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PostCategoryFindUniqueArgs>(args: SelectSubset<T, PostCategoryFindUniqueArgs<ExtArgs>>): Prisma__PostCategoryClient<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PostCategory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PostCategoryFindUniqueOrThrowArgs} args - Arguments to find a PostCategory
+     * @example
+     * // Get one PostCategory
+     * const postCategory = await prisma.postCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PostCategoryFindUniqueOrThrowArgs>(args: SelectSubset<T, PostCategoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PostCategoryClient<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PostCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostCategoryFindFirstArgs} args - Arguments to find a PostCategory
+     * @example
+     * // Get one PostCategory
+     * const postCategory = await prisma.postCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PostCategoryFindFirstArgs>(args?: SelectSubset<T, PostCategoryFindFirstArgs<ExtArgs>>): Prisma__PostCategoryClient<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PostCategory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostCategoryFindFirstOrThrowArgs} args - Arguments to find a PostCategory
+     * @example
+     * // Get one PostCategory
+     * const postCategory = await prisma.postCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PostCategoryFindFirstOrThrowArgs>(args?: SelectSubset<T, PostCategoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__PostCategoryClient<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PostCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostCategoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PostCategories
+     * const postCategories = await prisma.postCategory.findMany()
+     * 
+     * // Get first 10 PostCategories
+     * const postCategories = await prisma.postCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const postCategoryWithIdOnly = await prisma.postCategory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PostCategoryFindManyArgs>(args?: SelectSubset<T, PostCategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PostCategory.
+     * @param {PostCategoryCreateArgs} args - Arguments to create a PostCategory.
+     * @example
+     * // Create one PostCategory
+     * const PostCategory = await prisma.postCategory.create({
+     *   data: {
+     *     // ... data to create a PostCategory
+     *   }
+     * })
+     * 
+     */
+    create<T extends PostCategoryCreateArgs>(args: SelectSubset<T, PostCategoryCreateArgs<ExtArgs>>): Prisma__PostCategoryClient<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PostCategories.
+     * @param {PostCategoryCreateManyArgs} args - Arguments to create many PostCategories.
+     * @example
+     * // Create many PostCategories
+     * const postCategory = await prisma.postCategory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PostCategoryCreateManyArgs>(args?: SelectSubset<T, PostCategoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PostCategories and returns the data saved in the database.
+     * @param {PostCategoryCreateManyAndReturnArgs} args - Arguments to create many PostCategories.
+     * @example
+     * // Create many PostCategories
+     * const postCategory = await prisma.postCategory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PostCategories and only return the `id`
+     * const postCategoryWithIdOnly = await prisma.postCategory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PostCategoryCreateManyAndReturnArgs>(args?: SelectSubset<T, PostCategoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PostCategory.
+     * @param {PostCategoryDeleteArgs} args - Arguments to delete one PostCategory.
+     * @example
+     * // Delete one PostCategory
+     * const PostCategory = await prisma.postCategory.delete({
+     *   where: {
+     *     // ... filter to delete one PostCategory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PostCategoryDeleteArgs>(args: SelectSubset<T, PostCategoryDeleteArgs<ExtArgs>>): Prisma__PostCategoryClient<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PostCategory.
+     * @param {PostCategoryUpdateArgs} args - Arguments to update one PostCategory.
+     * @example
+     * // Update one PostCategory
+     * const postCategory = await prisma.postCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PostCategoryUpdateArgs>(args: SelectSubset<T, PostCategoryUpdateArgs<ExtArgs>>): Prisma__PostCategoryClient<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PostCategories.
+     * @param {PostCategoryDeleteManyArgs} args - Arguments to filter PostCategories to delete.
+     * @example
+     * // Delete a few PostCategories
+     * const { count } = await prisma.postCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PostCategoryDeleteManyArgs>(args?: SelectSubset<T, PostCategoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PostCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PostCategories
+     * const postCategory = await prisma.postCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PostCategoryUpdateManyArgs>(args: SelectSubset<T, PostCategoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PostCategories and returns the data updated in the database.
+     * @param {PostCategoryUpdateManyAndReturnArgs} args - Arguments to update many PostCategories.
+     * @example
+     * // Update many PostCategories
+     * const postCategory = await prisma.postCategory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PostCategories and only return the `id`
+     * const postCategoryWithIdOnly = await prisma.postCategory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PostCategoryUpdateManyAndReturnArgs>(args: SelectSubset<T, PostCategoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PostCategory.
+     * @param {PostCategoryUpsertArgs} args - Arguments to update or create a PostCategory.
+     * @example
+     * // Update or create a PostCategory
+     * const postCategory = await prisma.postCategory.upsert({
+     *   create: {
+     *     // ... data to create a PostCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PostCategory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PostCategoryUpsertArgs>(args: SelectSubset<T, PostCategoryUpsertArgs<ExtArgs>>): Prisma__PostCategoryClient<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PostCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostCategoryCountArgs} args - Arguments to filter PostCategories to count.
+     * @example
+     * // Count the number of PostCategories
+     * const count = await prisma.postCategory.count({
+     *   where: {
+     *     // ... the filter for the PostCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends PostCategoryCountArgs>(
+      args?: Subset<T, PostCategoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PostCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PostCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PostCategoryAggregateArgs>(args: Subset<T, PostCategoryAggregateArgs>): Prisma.PrismaPromise<GetPostCategoryAggregateType<T>>
+
+    /**
+     * Group by PostCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PostCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PostCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PostCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: PostCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PostCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPostCategoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PostCategory model
+   */
+  readonly fields: PostCategoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PostCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PostCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    posts<T extends PostCategory$postsArgs<ExtArgs> = {}>(args?: Subset<T, PostCategory$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PostCategory model
+   */
+  interface PostCategoryFieldRefs {
+    readonly id: FieldRef<"PostCategory", 'Int'>
+    readonly slug: FieldRef<"PostCategory", 'String'>
+    readonly name: FieldRef<"PostCategory", 'String'>
+    readonly description: FieldRef<"PostCategory", 'String'>
+    readonly metaTitle: FieldRef<"PostCategory", 'String'>
+    readonly metaDescription: FieldRef<"PostCategory", 'String'>
+    readonly sortOrder: FieldRef<"PostCategory", 'Int'>
+    readonly isActive: FieldRef<"PostCategory", 'Boolean'>
+    readonly createdAt: FieldRef<"PostCategory", 'DateTime'>
+    readonly updatedAt: FieldRef<"PostCategory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PostCategory findUnique
+   */
+  export type PostCategoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PostCategory to fetch.
+     */
+    where: PostCategoryWhereUniqueInput
+  }
+
+  /**
+   * PostCategory findUniqueOrThrow
+   */
+  export type PostCategoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PostCategory to fetch.
+     */
+    where: PostCategoryWhereUniqueInput
+  }
+
+  /**
+   * PostCategory findFirst
+   */
+  export type PostCategoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PostCategory to fetch.
+     */
+    where?: PostCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PostCategories to fetch.
+     */
+    orderBy?: PostCategoryOrderByWithRelationInput | PostCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PostCategories.
+     */
+    cursor?: PostCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PostCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PostCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PostCategories.
+     */
+    distinct?: PostCategoryScalarFieldEnum | PostCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * PostCategory findFirstOrThrow
+   */
+  export type PostCategoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PostCategory to fetch.
+     */
+    where?: PostCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PostCategories to fetch.
+     */
+    orderBy?: PostCategoryOrderByWithRelationInput | PostCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PostCategories.
+     */
+    cursor?: PostCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PostCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PostCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PostCategories.
+     */
+    distinct?: PostCategoryScalarFieldEnum | PostCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * PostCategory findMany
+   */
+  export type PostCategoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PostCategories to fetch.
+     */
+    where?: PostCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PostCategories to fetch.
+     */
+    orderBy?: PostCategoryOrderByWithRelationInput | PostCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PostCategories.
+     */
+    cursor?: PostCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PostCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PostCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PostCategories.
+     */
+    distinct?: PostCategoryScalarFieldEnum | PostCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * PostCategory create
+   */
+  export type PostCategoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PostCategory.
+     */
+    data: XOR<PostCategoryCreateInput, PostCategoryUncheckedCreateInput>
+  }
+
+  /**
+   * PostCategory createMany
+   */
+  export type PostCategoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PostCategories.
+     */
+    data: PostCategoryCreateManyInput | PostCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PostCategory createManyAndReturn
+   */
+  export type PostCategoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many PostCategories.
+     */
+    data: PostCategoryCreateManyInput | PostCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PostCategory update
+   */
+  export type PostCategoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PostCategory.
+     */
+    data: XOR<PostCategoryUpdateInput, PostCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which PostCategory to update.
+     */
+    where: PostCategoryWhereUniqueInput
+  }
+
+  /**
+   * PostCategory updateMany
+   */
+  export type PostCategoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PostCategories.
+     */
+    data: XOR<PostCategoryUpdateManyMutationInput, PostCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which PostCategories to update
+     */
+    where?: PostCategoryWhereInput
+    /**
+     * Limit how many PostCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PostCategory updateManyAndReturn
+   */
+  export type PostCategoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to update PostCategories.
+     */
+    data: XOR<PostCategoryUpdateManyMutationInput, PostCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which PostCategories to update
+     */
+    where?: PostCategoryWhereInput
+    /**
+     * Limit how many PostCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PostCategory upsert
+   */
+  export type PostCategoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PostCategory to update in case it exists.
+     */
+    where: PostCategoryWhereUniqueInput
+    /**
+     * In case the PostCategory found by the `where` argument doesn't exist, create a new PostCategory with this data.
+     */
+    create: XOR<PostCategoryCreateInput, PostCategoryUncheckedCreateInput>
+    /**
+     * In case the PostCategory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PostCategoryUpdateInput, PostCategoryUncheckedUpdateInput>
+  }
+
+  /**
+   * PostCategory delete
+   */
+  export type PostCategoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    /**
+     * Filter which PostCategory to delete.
+     */
+    where: PostCategoryWhereUniqueInput
+  }
+
+  /**
+   * PostCategory deleteMany
+   */
+  export type PostCategoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PostCategories to delete
+     */
+    where?: PostCategoryWhereInput
+    /**
+     * Limit how many PostCategories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PostCategory.posts
+   */
+  export type PostCategory$postsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Post
+     */
+    select?: PostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Post
+     */
+    omit?: PostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
+    where?: PostWhereInput
+    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    cursor?: PostWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+  }
+
+  /**
+   * PostCategory without action
+   */
+  export type PostCategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Post
    */
 
@@ -26372,11 +27678,13 @@ export namespace Prisma {
   export type PostAvgAggregateOutputType = {
     id: number | null
     readTime: number | null
+    categoryId: number | null
   }
 
   export type PostSumAggregateOutputType = {
     id: number | null
     readTime: number | null
+    categoryId: number | null
   }
 
   export type PostMinAggregateOutputType = {
@@ -26390,6 +27698,13 @@ export namespace Prisma {
     readTime: number | null
     publishedAt: Date | null
     isPublished: boolean | null
+    categoryId: number | null
+    metaTitle: string | null
+    metaDescription: string | null
+    metaKeywords: string | null
+    ogTitle: string | null
+    ogDescription: string | null
+    ogImage: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -26405,6 +27720,13 @@ export namespace Prisma {
     readTime: number | null
     publishedAt: Date | null
     isPublished: boolean | null
+    categoryId: number | null
+    metaTitle: string | null
+    metaDescription: string | null
+    metaKeywords: string | null
+    ogTitle: string | null
+    ogDescription: string | null
+    ogImage: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -26421,6 +27743,13 @@ export namespace Prisma {
     readTime: number
     publishedAt: number
     isPublished: number
+    categoryId: number
+    metaTitle: number
+    metaDescription: number
+    metaKeywords: number
+    ogTitle: number
+    ogDescription: number
+    ogImage: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -26430,11 +27759,13 @@ export namespace Prisma {
   export type PostAvgAggregateInputType = {
     id?: true
     readTime?: true
+    categoryId?: true
   }
 
   export type PostSumAggregateInputType = {
     id?: true
     readTime?: true
+    categoryId?: true
   }
 
   export type PostMinAggregateInputType = {
@@ -26448,6 +27779,13 @@ export namespace Prisma {
     readTime?: true
     publishedAt?: true
     isPublished?: true
+    categoryId?: true
+    metaTitle?: true
+    metaDescription?: true
+    metaKeywords?: true
+    ogTitle?: true
+    ogDescription?: true
+    ogImage?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -26463,6 +27801,13 @@ export namespace Prisma {
     readTime?: true
     publishedAt?: true
     isPublished?: true
+    categoryId?: true
+    metaTitle?: true
+    metaDescription?: true
+    metaKeywords?: true
+    ogTitle?: true
+    ogDescription?: true
+    ogImage?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -26479,6 +27824,13 @@ export namespace Prisma {
     readTime?: true
     publishedAt?: true
     isPublished?: true
+    categoryId?: true
+    metaTitle?: true
+    metaDescription?: true
+    metaKeywords?: true
+    ogTitle?: true
+    ogDescription?: true
+    ogImage?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -26582,6 +27934,13 @@ export namespace Prisma {
     readTime: number
     publishedAt: Date
     isPublished: boolean
+    categoryId: number | null
+    metaTitle: string | null
+    metaDescription: string | null
+    metaKeywords: string | null
+    ogTitle: string | null
+    ogDescription: string | null
+    ogImage: string | null
     createdAt: Date
     updatedAt: Date
     _count: PostCountAggregateOutputType | null
@@ -26617,8 +27976,16 @@ export namespace Prisma {
     readTime?: boolean
     publishedAt?: boolean
     isPublished?: boolean
+    categoryId?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
+    ogTitle?: boolean
+    ogDescription?: boolean
+    ogImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    category?: boolean | Post$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -26633,8 +28000,16 @@ export namespace Prisma {
     readTime?: boolean
     publishedAt?: boolean
     isPublished?: boolean
+    categoryId?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
+    ogTitle?: boolean
+    ogDescription?: boolean
+    ogImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    category?: boolean | Post$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -26649,8 +28024,16 @@ export namespace Prisma {
     readTime?: boolean
     publishedAt?: boolean
     isPublished?: boolean
+    categoryId?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
+    ogTitle?: boolean
+    ogDescription?: boolean
+    ogImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    category?: boolean | Post$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectScalar = {
@@ -26665,15 +28048,33 @@ export namespace Prisma {
     readTime?: boolean
     publishedAt?: boolean
     isPublished?: boolean
+    categoryId?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
+    ogTitle?: boolean
+    ogDescription?: boolean
+    ogImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "excerpt" | "body" | "coverImage" | "author" | "tags" | "readTime" | "publishedAt" | "isPublished" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
+  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "excerpt" | "body" | "coverImage" | "author" | "tags" | "readTime" | "publishedAt" | "isPublished" | "categoryId" | "metaTitle" | "metaDescription" | "metaKeywords" | "ogTitle" | "ogDescription" | "ogImage" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
+  export type PostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | Post$categoryArgs<ExtArgs>
+  }
+  export type PostIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | Post$categoryArgs<ExtArgs>
+  }
+  export type PostIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | Post$categoryArgs<ExtArgs>
+  }
 
   export type $PostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Post"
-    objects: {}
+    objects: {
+      category: Prisma.$PostCategoryPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       /**
@@ -26695,6 +28096,16 @@ export namespace Prisma {
       readTime: number
       publishedAt: Date
       isPublished: boolean
+      categoryId: number | null
+      metaTitle: string | null
+      metaDescription: string | null
+      metaKeywords: string | null
+      ogTitle: string | null
+      ogDescription: string | null
+      /**
+       * Falls back to coverImage when null.
+       */
+      ogImage: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["post"]>
@@ -27091,6 +28502,7 @@ export namespace Prisma {
    */
   export interface Prisma__PostClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    category<T extends Post$categoryArgs<ExtArgs> = {}>(args?: Subset<T, Post$categoryArgs<ExtArgs>>): Prisma__PostCategoryClient<$Result.GetResult<Prisma.$PostCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -27131,6 +28543,13 @@ export namespace Prisma {
     readonly readTime: FieldRef<"Post", 'Int'>
     readonly publishedAt: FieldRef<"Post", 'DateTime'>
     readonly isPublished: FieldRef<"Post", 'Boolean'>
+    readonly categoryId: FieldRef<"Post", 'Int'>
+    readonly metaTitle: FieldRef<"Post", 'String'>
+    readonly metaDescription: FieldRef<"Post", 'String'>
+    readonly metaKeywords: FieldRef<"Post", 'String'>
+    readonly ogTitle: FieldRef<"Post", 'String'>
+    readonly ogDescription: FieldRef<"Post", 'String'>
+    readonly ogImage: FieldRef<"Post", 'String'>
     readonly createdAt: FieldRef<"Post", 'DateTime'>
     readonly updatedAt: FieldRef<"Post", 'DateTime'>
   }
@@ -27150,6 +28569,10 @@ export namespace Prisma {
      */
     omit?: PostOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
+    /**
      * Filter, which Post to fetch.
      */
     where: PostWhereUniqueInput
@@ -27168,6 +28591,10 @@ export namespace Prisma {
      */
     omit?: PostOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
+    /**
      * Filter, which Post to fetch.
      */
     where: PostWhereUniqueInput
@@ -27185,6 +28612,10 @@ export namespace Prisma {
      * Omit specific fields from the Post
      */
     omit?: PostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
     /**
      * Filter, which Post to fetch.
      */
@@ -27234,6 +28665,10 @@ export namespace Prisma {
      */
     omit?: PostOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
+    /**
      * Filter, which Post to fetch.
      */
     where?: PostWhereInput
@@ -27281,6 +28716,10 @@ export namespace Prisma {
      * Omit specific fields from the Post
      */
     omit?: PostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
     /**
      * Filter, which Posts to fetch.
      */
@@ -27330,6 +28769,10 @@ export namespace Prisma {
      */
     omit?: PostOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
+    /**
      * The data needed to create a Post.
      */
     data: XOR<PostCreateInput, PostUncheckedCreateInput>
@@ -27363,6 +28806,10 @@ export namespace Prisma {
      */
     data: PostCreateManyInput | PostCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -27377,6 +28824,10 @@ export namespace Prisma {
      * Omit specific fields from the Post
      */
     omit?: PostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
     /**
      * The data needed to update a Post.
      */
@@ -27429,6 +28880,10 @@ export namespace Prisma {
      * Limit how many Posts to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -27443,6 +28898,10 @@ export namespace Prisma {
      * Omit specific fields from the Post
      */
     omit?: PostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
     /**
      * The filter to search for the Post to update in case it exists.
      */
@@ -27470,6 +28929,10 @@ export namespace Prisma {
      */
     omit?: PostOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
+    /**
      * Filter which Post to delete.
      */
     where: PostWhereUniqueInput
@@ -27490,6 +28953,25 @@ export namespace Prisma {
   }
 
   /**
+   * Post.category
+   */
+  export type Post$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostCategory
+     */
+    select?: PostCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PostCategory
+     */
+    omit?: PostCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostCategoryInclude<ExtArgs> | null
+    where?: PostCategoryWhereInput
+  }
+
+  /**
    * Post without action
    */
   export type PostDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -27501,6 +28983,10 @@ export namespace Prisma {
      * Omit specific fields from the Post
      */
     omit?: PostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PostInclude<ExtArgs> | null
   }
 
 
@@ -40404,6 +41890,22 @@ export namespace Prisma {
   export type CompareItemScalarFieldEnum = (typeof CompareItemScalarFieldEnum)[keyof typeof CompareItemScalarFieldEnum]
 
 
+  export const PostCategoryScalarFieldEnum: {
+    id: 'id',
+    slug: 'slug',
+    name: 'name',
+    description: 'description',
+    metaTitle: 'metaTitle',
+    metaDescription: 'metaDescription',
+    sortOrder: 'sortOrder',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PostCategoryScalarFieldEnum = (typeof PostCategoryScalarFieldEnum)[keyof typeof PostCategoryScalarFieldEnum]
+
+
   export const PostScalarFieldEnum: {
     id: 'id',
     slug: 'slug',
@@ -40416,6 +41918,13 @@ export namespace Prisma {
     readTime: 'readTime',
     publishedAt: 'publishedAt',
     isPublished: 'isPublished',
+    categoryId: 'categoryId',
+    metaTitle: 'metaTitle',
+    metaDescription: 'metaDescription',
+    metaKeywords: 'metaKeywords',
+    ogTitle: 'ogTitle',
+    ogDescription: 'ogDescription',
+    ogImage: 'ogImage',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -42218,6 +43727,88 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"CompareItem"> | Date | string
   }
 
+  export type PostCategoryWhereInput = {
+    AND?: PostCategoryWhereInput | PostCategoryWhereInput[]
+    OR?: PostCategoryWhereInput[]
+    NOT?: PostCategoryWhereInput | PostCategoryWhereInput[]
+    id?: IntFilter<"PostCategory"> | number
+    slug?: StringFilter<"PostCategory"> | string
+    name?: StringFilter<"PostCategory"> | string
+    description?: StringNullableFilter<"PostCategory"> | string | null
+    metaTitle?: StringNullableFilter<"PostCategory"> | string | null
+    metaDescription?: StringNullableFilter<"PostCategory"> | string | null
+    sortOrder?: IntFilter<"PostCategory"> | number
+    isActive?: BoolFilter<"PostCategory"> | boolean
+    createdAt?: DateTimeFilter<"PostCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"PostCategory"> | Date | string
+    posts?: PostListRelationFilter
+  }
+
+  export type PostCategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    posts?: PostOrderByRelationAggregateInput
+  }
+
+  export type PostCategoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    slug?: string
+    AND?: PostCategoryWhereInput | PostCategoryWhereInput[]
+    OR?: PostCategoryWhereInput[]
+    NOT?: PostCategoryWhereInput | PostCategoryWhereInput[]
+    name?: StringFilter<"PostCategory"> | string
+    description?: StringNullableFilter<"PostCategory"> | string | null
+    metaTitle?: StringNullableFilter<"PostCategory"> | string | null
+    metaDescription?: StringNullableFilter<"PostCategory"> | string | null
+    sortOrder?: IntFilter<"PostCategory"> | number
+    isActive?: BoolFilter<"PostCategory"> | boolean
+    createdAt?: DateTimeFilter<"PostCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"PostCategory"> | Date | string
+    posts?: PostListRelationFilter
+  }, "id" | "slug">
+
+  export type PostCategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PostCategoryCountOrderByAggregateInput
+    _avg?: PostCategoryAvgOrderByAggregateInput
+    _max?: PostCategoryMaxOrderByAggregateInput
+    _min?: PostCategoryMinOrderByAggregateInput
+    _sum?: PostCategorySumOrderByAggregateInput
+  }
+
+  export type PostCategoryScalarWhereWithAggregatesInput = {
+    AND?: PostCategoryScalarWhereWithAggregatesInput | PostCategoryScalarWhereWithAggregatesInput[]
+    OR?: PostCategoryScalarWhereWithAggregatesInput[]
+    NOT?: PostCategoryScalarWhereWithAggregatesInput | PostCategoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"PostCategory"> | number
+    slug?: StringWithAggregatesFilter<"PostCategory"> | string
+    name?: StringWithAggregatesFilter<"PostCategory"> | string
+    description?: StringNullableWithAggregatesFilter<"PostCategory"> | string | null
+    metaTitle?: StringNullableWithAggregatesFilter<"PostCategory"> | string | null
+    metaDescription?: StringNullableWithAggregatesFilter<"PostCategory"> | string | null
+    sortOrder?: IntWithAggregatesFilter<"PostCategory"> | number
+    isActive?: BoolWithAggregatesFilter<"PostCategory"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"PostCategory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PostCategory"> | Date | string
+  }
+
   export type PostWhereInput = {
     AND?: PostWhereInput | PostWhereInput[]
     OR?: PostWhereInput[]
@@ -42233,8 +43824,16 @@ export namespace Prisma {
     readTime?: IntFilter<"Post"> | number
     publishedAt?: DateTimeFilter<"Post"> | Date | string
     isPublished?: BoolFilter<"Post"> | boolean
+    categoryId?: IntNullableFilter<"Post"> | number | null
+    metaTitle?: StringNullableFilter<"Post"> | string | null
+    metaDescription?: StringNullableFilter<"Post"> | string | null
+    metaKeywords?: StringNullableFilter<"Post"> | string | null
+    ogTitle?: StringNullableFilter<"Post"> | string | null
+    ogDescription?: StringNullableFilter<"Post"> | string | null
+    ogImage?: StringNullableFilter<"Post"> | string | null
     createdAt?: DateTimeFilter<"Post"> | Date | string
     updatedAt?: DateTimeFilter<"Post"> | Date | string
+    category?: XOR<PostCategoryNullableScalarRelationFilter, PostCategoryWhereInput> | null
   }
 
   export type PostOrderByWithRelationInput = {
@@ -42249,8 +43848,16 @@ export namespace Prisma {
     readTime?: SortOrder
     publishedAt?: SortOrder
     isPublished?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    metaKeywords?: SortOrderInput | SortOrder
+    ogTitle?: SortOrderInput | SortOrder
+    ogDescription?: SortOrderInput | SortOrder
+    ogImage?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    category?: PostCategoryOrderByWithRelationInput
   }
 
   export type PostWhereUniqueInput = Prisma.AtLeast<{
@@ -42268,8 +43875,16 @@ export namespace Prisma {
     readTime?: IntFilter<"Post"> | number
     publishedAt?: DateTimeFilter<"Post"> | Date | string
     isPublished?: BoolFilter<"Post"> | boolean
+    categoryId?: IntNullableFilter<"Post"> | number | null
+    metaTitle?: StringNullableFilter<"Post"> | string | null
+    metaDescription?: StringNullableFilter<"Post"> | string | null
+    metaKeywords?: StringNullableFilter<"Post"> | string | null
+    ogTitle?: StringNullableFilter<"Post"> | string | null
+    ogDescription?: StringNullableFilter<"Post"> | string | null
+    ogImage?: StringNullableFilter<"Post"> | string | null
     createdAt?: DateTimeFilter<"Post"> | Date | string
     updatedAt?: DateTimeFilter<"Post"> | Date | string
+    category?: XOR<PostCategoryNullableScalarRelationFilter, PostCategoryWhereInput> | null
   }, "id" | "slug">
 
   export type PostOrderByWithAggregationInput = {
@@ -42284,6 +43899,13 @@ export namespace Prisma {
     readTime?: SortOrder
     publishedAt?: SortOrder
     isPublished?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    metaKeywords?: SortOrderInput | SortOrder
+    ogTitle?: SortOrderInput | SortOrder
+    ogDescription?: SortOrderInput | SortOrder
+    ogImage?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PostCountOrderByAggregateInput
@@ -42308,6 +43930,13 @@ export namespace Prisma {
     readTime?: IntWithAggregatesFilter<"Post"> | number
     publishedAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
     isPublished?: BoolWithAggregatesFilter<"Post"> | boolean
+    categoryId?: IntNullableWithAggregatesFilter<"Post"> | number | null
+    metaTitle?: StringNullableWithAggregatesFilter<"Post"> | string | null
+    metaDescription?: StringNullableWithAggregatesFilter<"Post"> | string | null
+    metaKeywords?: StringNullableWithAggregatesFilter<"Post"> | string | null
+    ogTitle?: StringNullableWithAggregatesFilter<"Post"> | string | null
+    ogDescription?: StringNullableWithAggregatesFilter<"Post"> | string | null
+    ogImage?: StringNullableWithAggregatesFilter<"Post"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
   }
@@ -44638,6 +46267,98 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PostCategoryCreateInput = {
+    slug: string
+    name: string
+    description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    posts?: PostCreateNestedManyWithoutCategoryInput
+  }
+
+  export type PostCategoryUncheckedCreateInput = {
+    id?: number
+    slug: string
+    name: string
+    description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    posts?: PostUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type PostCategoryUpdateInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    posts?: PostUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type PostCategoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    posts?: PostUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type PostCategoryCreateManyInput = {
+    id?: number
+    slug: string
+    name: string
+    description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PostCategoryUpdateManyMutationInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PostCategoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PostCreateInput = {
     slug: string
     title: string
@@ -44649,8 +46370,15 @@ export namespace Prisma {
     readTime: number
     publishedAt: Date | string
     isPublished?: boolean
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    ogTitle?: string | null
+    ogDescription?: string | null
+    ogImage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    category?: PostCategoryCreateNestedOneWithoutPostsInput
   }
 
   export type PostUncheckedCreateInput = {
@@ -44665,6 +46393,13 @@ export namespace Prisma {
     readTime: number
     publishedAt: Date | string
     isPublished?: boolean
+    categoryId?: number | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    ogTitle?: string | null
+    ogDescription?: string | null
+    ogImage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -44680,8 +46415,15 @@ export namespace Prisma {
     readTime?: IntFieldUpdateOperationsInput | number
     publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    ogDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: PostCategoryUpdateOneWithoutPostsNestedInput
   }
 
   export type PostUncheckedUpdateInput = {
@@ -44696,6 +46438,13 @@ export namespace Prisma {
     readTime?: IntFieldUpdateOperationsInput | number
     publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    ogDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -44712,6 +46461,13 @@ export namespace Prisma {
     readTime: number
     publishedAt: Date | string
     isPublished?: boolean
+    categoryId?: number | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    ogTitle?: string | null
+    ogDescription?: string | null
+    ogImage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -44727,6 +46483,12 @@ export namespace Prisma {
     readTime?: IntFieldUpdateOperationsInput | number
     publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    ogDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -44743,6 +46505,13 @@ export namespace Prisma {
     readTime?: IntFieldUpdateOperationsInput | number
     publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    categoryId?: NullableIntFieldUpdateOperationsInput | number | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    ogDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46934,12 +48703,87 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type PostListRelationFilter = {
+    every?: PostWhereInput
+    some?: PostWhereInput
+    none?: PostWhereInput
+  }
+
+  export type PostOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PostCategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PostCategoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type PostCategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PostCategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PostCategorySumOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+  }
+
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
     hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
     hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
     isEmpty?: boolean
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type PostCategoryNullableScalarRelationFilter = {
+    is?: PostCategoryWhereInput | null
+    isNot?: PostCategoryWhereInput | null
   }
 
   export type PostCountOrderByAggregateInput = {
@@ -46954,6 +48798,13 @@ export namespace Prisma {
     readTime?: SortOrder
     publishedAt?: SortOrder
     isPublished?: SortOrder
+    categoryId?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    metaKeywords?: SortOrder
+    ogTitle?: SortOrder
+    ogDescription?: SortOrder
+    ogImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -46961,6 +48812,7 @@ export namespace Prisma {
   export type PostAvgOrderByAggregateInput = {
     id?: SortOrder
     readTime?: SortOrder
+    categoryId?: SortOrder
   }
 
   export type PostMaxOrderByAggregateInput = {
@@ -46974,6 +48826,13 @@ export namespace Prisma {
     readTime?: SortOrder
     publishedAt?: SortOrder
     isPublished?: SortOrder
+    categoryId?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    metaKeywords?: SortOrder
+    ogTitle?: SortOrder
+    ogDescription?: SortOrder
+    ogImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -46989,6 +48848,13 @@ export namespace Prisma {
     readTime?: SortOrder
     publishedAt?: SortOrder
     isPublished?: SortOrder
+    categoryId?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    metaKeywords?: SortOrder
+    ogTitle?: SortOrder
+    ogDescription?: SortOrder
+    ogImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -46996,6 +48862,23 @@ export namespace Prisma {
   export type PostSumOrderByAggregateInput = {
     id?: SortOrder
     readTime?: SortOrder
+    categoryId?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type FaqCountOrderByAggregateInput = {
@@ -49108,13 +50991,79 @@ export namespace Prisma {
     update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutComparedByInput, ProductUpdateWithoutComparedByInput>, ProductUncheckedUpdateWithoutComparedByInput>
   }
 
+  export type PostCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<PostCreateWithoutCategoryInput, PostUncheckedCreateWithoutCategoryInput> | PostCreateWithoutCategoryInput[] | PostUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PostCreateOrConnectWithoutCategoryInput | PostCreateOrConnectWithoutCategoryInput[]
+    createMany?: PostCreateManyCategoryInputEnvelope
+    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+  }
+
+  export type PostUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<PostCreateWithoutCategoryInput, PostUncheckedCreateWithoutCategoryInput> | PostCreateWithoutCategoryInput[] | PostUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PostCreateOrConnectWithoutCategoryInput | PostCreateOrConnectWithoutCategoryInput[]
+    createMany?: PostCreateManyCategoryInputEnvelope
+    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+  }
+
+  export type PostUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<PostCreateWithoutCategoryInput, PostUncheckedCreateWithoutCategoryInput> | PostCreateWithoutCategoryInput[] | PostUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PostCreateOrConnectWithoutCategoryInput | PostCreateOrConnectWithoutCategoryInput[]
+    upsert?: PostUpsertWithWhereUniqueWithoutCategoryInput | PostUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: PostCreateManyCategoryInputEnvelope
+    set?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    disconnect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    delete?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    update?: PostUpdateWithWhereUniqueWithoutCategoryInput | PostUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: PostUpdateManyWithWhereWithoutCategoryInput | PostUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
+  }
+
+  export type PostUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<PostCreateWithoutCategoryInput, PostUncheckedCreateWithoutCategoryInput> | PostCreateWithoutCategoryInput[] | PostUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PostCreateOrConnectWithoutCategoryInput | PostCreateOrConnectWithoutCategoryInput[]
+    upsert?: PostUpsertWithWhereUniqueWithoutCategoryInput | PostUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: PostCreateManyCategoryInputEnvelope
+    set?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    disconnect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    delete?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+    update?: PostUpdateWithWhereUniqueWithoutCategoryInput | PostUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: PostUpdateManyWithWhereWithoutCategoryInput | PostUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
+  }
+
   export type PostCreatetagsInput = {
     set: string[]
+  }
+
+  export type PostCategoryCreateNestedOneWithoutPostsInput = {
+    create?: XOR<PostCategoryCreateWithoutPostsInput, PostCategoryUncheckedCreateWithoutPostsInput>
+    connectOrCreate?: PostCategoryCreateOrConnectWithoutPostsInput
+    connect?: PostCategoryWhereUniqueInput
   }
 
   export type PostUpdatetagsInput = {
     set?: string[]
     push?: string | string[]
+  }
+
+  export type PostCategoryUpdateOneWithoutPostsNestedInput = {
+    create?: XOR<PostCategoryCreateWithoutPostsInput, PostCategoryUncheckedCreateWithoutPostsInput>
+    connectOrCreate?: PostCategoryCreateOrConnectWithoutPostsInput
+    upsert?: PostCategoryUpsertWithoutPostsInput
+    disconnect?: PostCategoryWhereInput | boolean
+    delete?: PostCategoryWhereInput | boolean
+    connect?: PostCategoryWhereUniqueInput
+    update?: XOR<XOR<PostCategoryUpdateToOneWithWhereWithoutPostsInput, PostCategoryUpdateWithoutPostsInput>, PostCategoryUncheckedUpdateWithoutPostsInput>
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type UserCreateNestedOneWithoutSmsCampaignsInput = {
@@ -49715,6 +51664,33 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumSmsTargetRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.SmsTargetRole | EnumSmsTargetRoleFieldRefInput<$PrismaModel>
     in?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
@@ -49842,17 +51818,6 @@ export namespace Prisma {
     _sum?: NestedBigIntNullableFilter<$PrismaModel>
     _min?: NestedBigIntNullableFilter<$PrismaModel>
     _max?: NestedBigIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumMessageDirectionFilter<$PrismaModel = never> = {
@@ -53624,6 +55589,167 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
+  export type PostCreateWithoutCategoryInput = {
+    slug: string
+    title: string
+    excerpt: string
+    body: string
+    coverImage: string
+    author: string
+    tags?: PostCreatetagsInput | string[]
+    readTime: number
+    publishedAt: Date | string
+    isPublished?: boolean
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    ogTitle?: string | null
+    ogDescription?: string | null
+    ogImage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PostUncheckedCreateWithoutCategoryInput = {
+    id?: number
+    slug: string
+    title: string
+    excerpt: string
+    body: string
+    coverImage: string
+    author: string
+    tags?: PostCreatetagsInput | string[]
+    readTime: number
+    publishedAt: Date | string
+    isPublished?: boolean
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    ogTitle?: string | null
+    ogDescription?: string | null
+    ogImage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PostCreateOrConnectWithoutCategoryInput = {
+    where: PostWhereUniqueInput
+    create: XOR<PostCreateWithoutCategoryInput, PostUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type PostCreateManyCategoryInputEnvelope = {
+    data: PostCreateManyCategoryInput | PostCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PostUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: PostWhereUniqueInput
+    update: XOR<PostUpdateWithoutCategoryInput, PostUncheckedUpdateWithoutCategoryInput>
+    create: XOR<PostCreateWithoutCategoryInput, PostUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type PostUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: PostWhereUniqueInput
+    data: XOR<PostUpdateWithoutCategoryInput, PostUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type PostUpdateManyWithWhereWithoutCategoryInput = {
+    where: PostScalarWhereInput
+    data: XOR<PostUpdateManyMutationInput, PostUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type PostScalarWhereInput = {
+    AND?: PostScalarWhereInput | PostScalarWhereInput[]
+    OR?: PostScalarWhereInput[]
+    NOT?: PostScalarWhereInput | PostScalarWhereInput[]
+    id?: IntFilter<"Post"> | number
+    slug?: StringFilter<"Post"> | string
+    title?: StringFilter<"Post"> | string
+    excerpt?: StringFilter<"Post"> | string
+    body?: StringFilter<"Post"> | string
+    coverImage?: StringFilter<"Post"> | string
+    author?: StringFilter<"Post"> | string
+    tags?: StringNullableListFilter<"Post">
+    readTime?: IntFilter<"Post"> | number
+    publishedAt?: DateTimeFilter<"Post"> | Date | string
+    isPublished?: BoolFilter<"Post"> | boolean
+    categoryId?: IntNullableFilter<"Post"> | number | null
+    metaTitle?: StringNullableFilter<"Post"> | string | null
+    metaDescription?: StringNullableFilter<"Post"> | string | null
+    metaKeywords?: StringNullableFilter<"Post"> | string | null
+    ogTitle?: StringNullableFilter<"Post"> | string | null
+    ogDescription?: StringNullableFilter<"Post"> | string | null
+    ogImage?: StringNullableFilter<"Post"> | string | null
+    createdAt?: DateTimeFilter<"Post"> | Date | string
+    updatedAt?: DateTimeFilter<"Post"> | Date | string
+  }
+
+  export type PostCategoryCreateWithoutPostsInput = {
+    slug: string
+    name: string
+    description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PostCategoryUncheckedCreateWithoutPostsInput = {
+    id?: number
+    slug: string
+    name: string
+    description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PostCategoryCreateOrConnectWithoutPostsInput = {
+    where: PostCategoryWhereUniqueInput
+    create: XOR<PostCategoryCreateWithoutPostsInput, PostCategoryUncheckedCreateWithoutPostsInput>
+  }
+
+  export type PostCategoryUpsertWithoutPostsInput = {
+    update: XOR<PostCategoryUpdateWithoutPostsInput, PostCategoryUncheckedUpdateWithoutPostsInput>
+    create: XOR<PostCategoryCreateWithoutPostsInput, PostCategoryUncheckedCreateWithoutPostsInput>
+    where?: PostCategoryWhereInput
+  }
+
+  export type PostCategoryUpdateToOneWithWhereWithoutPostsInput = {
+    where?: PostCategoryWhereInput
+    data: XOR<PostCategoryUpdateWithoutPostsInput, PostCategoryUncheckedUpdateWithoutPostsInput>
+  }
+
+  export type PostCategoryUpdateWithoutPostsInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PostCategoryUncheckedUpdateWithoutPostsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutSmsCampaignsInput = {
     id?: string
     phoneNumber: string
@@ -56398,6 +58524,93 @@ export namespace Prisma {
     productId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     addedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PostCreateManyCategoryInput = {
+    id?: number
+    slug: string
+    title: string
+    excerpt: string
+    body: string
+    coverImage: string
+    author: string
+    tags?: PostCreatetagsInput | string[]
+    readTime: number
+    publishedAt: Date | string
+    isPublished?: boolean
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    ogTitle?: string | null
+    ogDescription?: string | null
+    ogImage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PostUpdateWithoutCategoryInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    excerpt?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    coverImage?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
+    tags?: PostUpdatetagsInput | string[]
+    readTime?: IntFieldUpdateOperationsInput | number
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    ogDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PostUncheckedUpdateWithoutCategoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    excerpt?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    coverImage?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
+    tags?: PostUpdatetagsInput | string[]
+    readTime?: IntFieldUpdateOperationsInput | number
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    ogDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PostUncheckedUpdateManyWithoutCategoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    excerpt?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    coverImage?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
+    tags?: PostUpdatetagsInput | string[]
+    readTime?: IntFieldUpdateOperationsInput | number
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    ogDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderCreateManyShippingOptionInput = {

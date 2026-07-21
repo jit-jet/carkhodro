@@ -1,11 +1,16 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import { getPosts } from '@/actions/posts';
+import { getPostCategories } from '@/actions/post-categories';
 import type { PostVM } from '@/src/lib/serializers';
 import BlogSearch from '@/src/components/blog/BlogSearch';
 
-const PAGE_SIZE = 12;
+export const metadata: Metadata = {
+  title: 'وبلاگ کارخودرو',
+  description: 'راهنماها، نکات فنی و اخبار دنیای خودرو',
+};
 
 const TAG_COLORS: Record<string, string> = {
   'ایمنی':         'bg-red-100 text-red-700',
@@ -38,9 +43,15 @@ function tagClass(t: string) {
   return TAG_COLORS[t] ?? 'bg-accent/10 text-accent-dark';
 }
 
-// ── Post card ───────────────────────────────────────────────────────────────
-
-function PostCard({ post, activeTag }: { post: PostVM; activeTag: string }) {
+function PostCard({
+  post,
+  activeTag,
+  activeCategory,
+}: {
+  post: PostVM;
+  activeTag: string;
+  activeCategory: string;
+}) {
   return (
     <article className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col">
       <Link href={`/blog/${post.slug}`} className="block relative aspect-video overflow-hidden bg-silver-light">
@@ -54,7 +65,23 @@ function PostCard({ post, activeTag }: { post: PostVM; activeTag: string }) {
       </Link>
 
       <div className="p-5 flex flex-col flex-1 gap-3">
-        {/* Tags */}
+        {post.categoryName && post.categorySlug && (
+          <Link
+            href={
+              activeCategory === post.categorySlug
+                ? '/blog'
+                : `/blog?category=${encodeURIComponent(post.categorySlug)}&page=1`
+            }
+            className={`text-xs font-bold w-fit px-2 py-0.5 rounded-lg transition-opacity hover:opacity-75 ${
+              activeCategory === post.categorySlug
+                ? 'bg-accent text-charcoal ring-2 ring-offset-1 ring-accent'
+                : 'bg-charcoal/5 text-charcoal'
+            }`}
+          >
+            {post.categoryName}
+          </Link>
+        )}
+
         <div className="flex flex-wrap gap-1.5">
           {post.tags.slice(0, 3).map(t => (
             <Link
@@ -67,19 +94,16 @@ function PostCard({ post, activeTag }: { post: PostVM; activeTag: string }) {
           ))}
         </div>
 
-        {/* Title */}
         <Link href={`/blog/${post.slug}`}>
           <h2 className="font-bold text-charcoal leading-7 hover:text-accent-dark transition-colors line-clamp-2">
             {post.title}
           </h2>
         </Link>
 
-        {/* Excerpt */}
         <p className="text-xs text-gray-500 leading-6 line-clamp-2 flex-1">
           {post.excerpt}
         </p>
 
-        {/* Footer */}
         <div className="flex items-center justify-between pt-2 border-t border-gray-50 text-xs text-gray-400">
           <span>{post.author}</span>
           <div className="flex items-center gap-2">
@@ -93,23 +117,24 @@ function PostCard({ post, activeTag }: { post: PostVM; activeTag: string }) {
   );
 }
 
-// ── Pagination ──────────────────────────────────────────────────────────────
-
 function Pagination({
   current,
   total,
   q,
   tag,
+  category,
 }: {
   current: number;
   total: number;
   q: string;
   tag: string;
+  category: string;
 }) {
   function href(p: number) {
     const params = new URLSearchParams();
-    if (q)   params.set('q', q);
+    if (q) params.set('q', q);
     if (tag) params.set('tag', tag);
+    if (category) params.set('category', category);
     params.set('page', String(p));
     return `/blog?${params.toString()}`;
   }
@@ -166,27 +191,26 @@ function Pagination({
   );
 }
 
-// ── Page ────────────────────────────────────────────────────────────────────
-
 interface Props {
-  searchParams: Promise<{ page?: string; q?: string; tag?: string }>;
+  searchParams: Promise<{ page?: string; q?: string; tag?: string; category?: string }>;
 }
 
 async function BlogContent({ searchParams }: Props) {
-  const { page = '1', q = '', tag = '' } = await searchParams;
+  const { page = '1', q = '', tag = '', category = '' } = await searchParams;
   const pageNum = Math.max(1, parseInt(page, 10) || 1);
 
-  const { posts, total, pages } = await getPosts(pageNum, q, tag);
+  const [{ posts, total, pages }, categories] = await Promise.all([
+    getPosts(pageNum, q, tag, category),
+    getPostCategories(),
+  ]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-black text-charcoal mb-2">وبلاگ کارخودرو</h1>
         <p className="text-gray-500 text-sm">راهنماها، نکات فنی و اخبار دنیای خودرو</p>
       </div>
 
-      {/* Search row */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <Suspense fallback={<div className="h-10 w-72 bg-gray-200 rounded-xl animate-pulse" />}>
           <BlogSearch defaultValue={q} />
@@ -201,25 +225,74 @@ async function BlogContent({ searchParams }: Props) {
             <span className="text-base leading-none">×</span>
           </Link>
         )}
+
+        {category && (
+          <Link
+            href={q ? `/blog?q=${encodeURIComponent(q)}&page=1` : '/blog'}
+            className="flex items-center gap-1.5 bg-charcoal/5 text-charcoal text-sm font-medium px-3 py-2 rounded-xl hover:bg-charcoal/10 transition-colors"
+          >
+            <span>
+              {categories.find((c) => c.slug === category)?.name ?? category}
+            </span>
+            <span className="text-base leading-none">×</span>
+          </Link>
+        )}
       </div>
 
-      {/* Count */}
+      {categories.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          <Link
+            href={q ? `/blog?q=${encodeURIComponent(q)}&page=1` : '/blog'}
+            className={`text-xs font-bold px-3 py-1.5 rounded-xl transition-colors ${
+              !category
+                ? 'bg-accent text-charcoal'
+                : 'bg-white border border-gray-200 text-gray-600 hover:border-accent'
+            }`}
+          >
+            همه
+          </Link>
+          {categories.map((c) => (
+            <Link
+              key={c.id}
+              href={`/blog?category=${encodeURIComponent(c.slug)}${q ? `&q=${encodeURIComponent(q)}` : ''}&page=1`}
+              className={`text-xs font-bold px-3 py-1.5 rounded-xl transition-colors ${
+                category === c.slug
+                  ? 'bg-accent text-charcoal'
+                  : 'bg-white border border-gray-200 text-gray-600 hover:border-accent'
+              }`}
+            >
+              {c.name}
+            </Link>
+          ))}
+        </div>
+      )}
+
       <p className="text-sm text-gray-500 mb-6">
         {total.toLocaleString('fa-IR')} مقاله
-        {(q || tag) && ' یافت شد'}
+        {(q || tag || category) && ' یافت شد'}
       </p>
 
-      {/* Grid */}
       {posts.length > 0 ? (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {posts.map(post => (
-              <PostCard key={post.id} post={post} activeTag={tag} />
+              <PostCard
+                key={post.id}
+                post={post}
+                activeTag={tag}
+                activeCategory={category}
+              />
             ))}
           </div>
 
           {pages > 1 && (
-            <Pagination current={pageNum} total={pages} q={q} tag={tag} />
+            <Pagination
+              current={pageNum}
+              total={pages}
+              q={q}
+              tag={tag}
+              category={category}
+            />
           )}
         </>
       ) : (
@@ -262,7 +335,6 @@ function BlogContentSkeleton() {
 export default function BlogPage({ searchParams }: Props) {
   return (
     <div className="bg-silver-light min-h-screen" dir="rtl">
-      {/* Breadcrumb — static, no data needed */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <nav className="flex items-center gap-2 text-sm text-gray-500">

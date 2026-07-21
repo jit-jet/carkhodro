@@ -318,6 +318,19 @@ exports.Prisma.CompareItemScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PostCategoryScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PostScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
@@ -330,6 +343,13 @@ exports.Prisma.PostScalarFieldEnum = {
   readTime: 'readTime',
   publishedAt: 'publishedAt',
   isPublished: 'isPublished',
+  categoryId: 'categoryId',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  metaKeywords: 'metaKeywords',
+  ogTitle: 'ogTitle',
+  ogDescription: 'ogDescription',
+  ogImage: 'ogImage',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -558,6 +578,7 @@ exports.Prisma.ModelName = {
   CartItem: 'CartItem',
   WishlistItem: 'WishlistItem',
   CompareItem: 'CompareItem',
+  PostCategory: 'PostCategory',
   Post: 'Post',
   Faq: 'Faq',
   SiteSetting: 'SiteSetting',

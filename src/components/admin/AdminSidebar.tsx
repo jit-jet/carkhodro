@@ -21,7 +21,8 @@ type IconKey =
   | "sms"
   | "settings"
   | "faq"
-  | "menu";
+  | "menu"
+  | "blog";
 
 interface NavItem {
   href: string;
@@ -35,6 +36,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/admin/orders", label: "سفارشات و فاکتورها", icon: "orders" },
   { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: "category" },
   { href: "/admin/brands", label: "برندها و خودروها", icon: "car" },
+  { href: "/admin/posts", label: "مقالات وبلاگ", icon: "blog" },
   { href: "/admin/users", label: "کاربران", icon: "users" },
   { href: "/admin/sms", label: "پیامک گروهی", icon: "sms" },
   { href: "/admin/navigation", label: "منوی سایت", icon: "menu" },
@@ -120,6 +122,16 @@ function NavIcon({ icon }: { icon: IconKey }) {
           <path d="M9.09 9a3 3 0 115.83 1c0 2-3 3-3 3M12 17h.01" />
         </svg>
       );
+    case "blog":
+      return (
+        <svg {...common}>
+          <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+          <line x1="8" y1="7" x2="16" y2="7" />
+          <line x1="8" y1="11" x2="16" y2="11" />
+          <line x1="8" y1="15" x2="12" y2="15" />
+        </svg>
+      );
     case "menu":
       return (
         <svg {...common}>
@@ -144,6 +156,13 @@ export default function AdminSidebar({
 
   function isActive(href: string): boolean {
     if (href === "/admin") return pathname === "/admin";
+    if (href === "/admin/posts") {
+      return (
+        pathname === href ||
+        pathname.startsWith(`${href}/`) ||
+        pathname.startsWith("/admin/post-categories")
+      );
+    }
     return pathname === href || pathname.startsWith(`${href}/`);
   }
 

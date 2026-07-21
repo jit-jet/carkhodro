@@ -17,7 +17,7 @@ const ALLOWED_IMAGE_TYPES: Record<string, string> = {
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 
-const TAXONOMY_FOLDERS = ['categories', 'brands', 'cars'] as const;
+const TAXONOMY_FOLDERS = ['categories', 'brands', 'cars', 'posts'] as const;
 export type TaxonomyImageFolder = (typeof TAXONOMY_FOLDERS)[number];
 
 function isTaxonomyFolder(folder: string): folder is TaxonomyImageFolder {

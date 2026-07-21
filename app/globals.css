@@ -372,3 +372,22 @@ html {
   color: #713f12;
   font-style: italic;
 }
+
+/* ── Admin TipTap editor (mirrors .blog-body) ───────────── */
+.rich-text-editor.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: right;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+.rich-text-editor.ProseMirror:focus {
+  outline: none;
+}
+.rich-text-editor.ProseMirror ul,
+.rich-text-editor.ProseMirror ol {
+  padding-inline-start: 1.5rem;
+}
+.rich-text-editor.ProseMirror a {
+  cursor: pointer;
+}

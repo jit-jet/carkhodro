@@ -174,10 +174,19 @@ export interface PostVM {
   tags: string[];
   readTime: number;
   publishedAt: string; // Persian locale date
+  categoryId: number | null;
+  categorySlug: string | null;
+  categoryName: string | null;
 }
 
 export interface PostDetailVM extends PostVM {
   body: string; // HTML — admin-authored
+  metaTitle: string | null;
+  metaDescription: string | null;
+  metaKeywords: string | null;
+  ogTitle: string | null;
+  ogDescription: string | null;
+  ogImage: string | null;
 }
 
 export interface CartItemVM {
@@ -582,6 +591,8 @@ type PostRow = {
   tags: string[];
   readTime: number;
   publishedAt: Date;
+  categoryId?: number | null;
+  category?: { id: number; slug: string; name: string } | null;
 };
 
 export function toPostVM(p: PostRow): PostVM {
@@ -595,11 +606,33 @@ export function toPostVM(p: PostRow): PostVM {
     tags: p.tags,
     readTime: p.readTime,
     publishedAt: persianDate(p.publishedAt),
+    categoryId: p.categoryId ?? p.category?.id ?? null,
+    categorySlug: p.category?.slug ?? null,
+    categoryName: p.category?.name ?? null,
   };
 }
 
-export function toPostDetailVM(p: PostRow & { body: string }): PostDetailVM {
-  return { ...toPostVM(p), body: p.body };
+export function toPostDetailVM(
+  p: PostRow & {
+    body: string;
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaKeywords?: string | null;
+    ogTitle?: string | null;
+    ogDescription?: string | null;
+    ogImage?: string | null;
+  },
+): PostDetailVM {
+  return {
+    ...toPostVM(p),
+    body: p.body,
+    metaTitle: p.metaTitle ?? null,
+    metaDescription: p.metaDescription ?? null,
+    metaKeywords: p.metaKeywords ?? null,
+    ogTitle: p.ogTitle ?? null,
+    ogDescription: p.ogDescription ?? null,
+    ogImage: p.ogImage ?? null,
+  };
 }
 
 // ── Cart ────────────────────────────────────────────────────────────────────

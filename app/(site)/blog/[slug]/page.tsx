@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPostBySlug } from '@/actions/posts';
 import type { PostDetailVM } from '@/src/lib/serializers';
@@ -36,6 +37,40 @@ function tagClass(t: string) {
   return TAG_COLORS[t] ?? 'bg-accent/10 text-accent-dark';
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  if (!post) return { title: 'مقاله یافت نشد' };
+
+  const title = post.metaTitle || post.title;
+  const description = post.metaDescription || post.excerpt;
+  const ogTitle = post.ogTitle || title;
+  const ogDescription = post.ogDescription || description;
+  const ogImage = post.ogImage || post.coverImage;
+
+  return {
+    title,
+    description,
+    keywords: post.metaKeywords || undefined,
+    openGraph: {
+      title: ogTitle,
+      description: ogDescription,
+      images: ogImage ? [{ url: ogImage }] : undefined,
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: ogTitle,
+      description: ogDescription,
+      images: ogImage ? [ogImage] : undefined,
+    },
+  };
+}
+
 // ── Inner component (suspendable) ───────────────────────────────────────────
 
 async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
@@ -52,6 +87,17 @@ async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
             <Link href="/" className="hover:text-accent transition-colors">خانه</Link>
             <span className="text-gray-300">/</span>
             <Link href="/blog" className="hover:text-accent transition-colors">وبلاگ</Link>
+            {post.categorySlug && post.categoryName && (
+              <>
+                <span className="text-gray-300">/</span>
+                <Link
+                  href={`/blog?category=${encodeURIComponent(post.categorySlug)}`}
+                  className="hover:text-accent transition-colors"
+                >
+                  {post.categoryName}
+                </Link>
+              </>
+            )}
             <span className="text-gray-300">/</span>
             <span className="text-charcoal font-medium line-clamp-1">{post.title}</span>
           </nav>
@@ -84,6 +130,15 @@ async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
 
         {/* Meta */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 mb-6">
+          {post.categoryName && post.categorySlug && (
+            <Link
+              href={`/blog?category=${encodeURIComponent(post.categorySlug)}`}
+              className="inline-block text-xs font-bold bg-charcoal/5 text-charcoal px-2.5 py-1 rounded-lg mb-4 hover:bg-charcoal/10 transition-colors"
+            >
+              {post.categoryName}
+            </Link>
+          )}
+
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-4">
             {post.tags.map(t => (
