@@ -220,7 +220,7 @@ export default function CompareView({ initial, loggedIn }: Props) {
     },
     {
       key: 'carType',
-      label: 'نام ماشین',
+      label: 'مدل خودرو',
       cell: (p) => <div className="py-3 px-4 text-sm text-charcoal">{p.carType}</div>,
     },
     {

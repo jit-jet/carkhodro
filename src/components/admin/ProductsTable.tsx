@@ -48,7 +48,7 @@ type BulkOpKey =
 const BULK_OPTIONS: { value: BulkOpKey; label: string }[] = [
   { value: "category", label: "تغییر دسته‌بندی" },
   { value: "brand", label: "تغییر برند" },
-  { value: "vehicleType", label: "تغییر نوع خودرو" },
+  { value: "vehicleType", label: "تغییر مدل خودرو" },
   { value: "wholesaleDiscount", label: "تنظیم تخفیف عمده (%)" },
   { value: "retailDiscount", label: "تنظیم تخفیف تک‌فروشی (%)" },
   { value: "retailPriceDiff", label: "تنظیم اختلاف عمده/تک‌فروشی (%)" },
@@ -377,7 +377,7 @@ export default function ProductsTable({
             onChange={(e) => setBulkValue(e.target.value)}
             className="w-auto min-w-[200px]"
           >
-            <option value="">انتخاب نوع خودرو…</option>
+            <option value="">انتخاب مدل خودرو…</option>
             {carModels.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.brandName} — {m.name}
@@ -518,7 +518,7 @@ export default function ProductsTable({
                 </th>
                 <th className="text-right px-4 py-3 align-bottom">
                   <div className="flex flex-col gap-1.5">
-                    <span className="font-semibold text-gray-500">نوع خودرو</span>
+                    <span className="font-semibold text-gray-500">مدل خودرو</span>
                     <Select
                       value={filters.carModelId}
                       onChange={(e) => pushFilters({ carModelId: e.target.value })}
@@ -527,7 +527,7 @@ export default function ProductsTable({
                       <option value="">همه</option>
                       {carModels.map((m) => (
                         <option key={m.id} value={m.id}>
-                          {m.name}
+                          {m.brandName} — {m.name}
                         </option>
                       ))}
                     </Select>

@@ -26,7 +26,7 @@ export default function CarModelsSlider({
           title="جستجو بر اساس مدل خودرو"
           subtitle="خودرو خود را انتخاب کنید و قطعات مرتبط را بیابید"
           linkHref="/products"
-          linkLabel="همه مدل‌ها"
+          linkLabel="همه خودروها"
         />
 
         {/* Brand filter pills */}

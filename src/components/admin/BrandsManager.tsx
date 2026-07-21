@@ -35,8 +35,8 @@ import ImageUploadField, { AdminThumb } from "@/src/components/admin/ImageUpload
 type Tab = "car-brands" | "car-models" | "parts-brands";
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: "car-brands", label: "مدل خودرو" },
-  { id: "car-models", label: "نام خودرو" },
+  { id: "car-brands", label: "برند خودرو" },
+  { id: "car-models", label: "مدل خودرو" },
   { id: "parts-brands", label: "برند قطعه" },
 ];
 
@@ -130,12 +130,12 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
   return (
     <div className="space-y-6">
       <Card className="overflow-hidden">
-        <CardHeader title={editingId ? "ویرایش مدل خودرو" : "افزودن مدل خودرو"} />
+        <CardHeader title={editingId ? "ویرایش برند خودرو" : "افزودن برند خودرو"} />
         <div className="p-5 sm:p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid sm:grid-cols-3 gap-3">
               <Input
-                placeholder="نام (ایران خودرو)"
+                placeholder="نام برند خودرو (ایران خودرو)"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
@@ -159,7 +159,7 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
             </div>
             <ImageUploadField
               folder="brands"
-              label="لوگوی برند"
+              label="لوگوی برند خودرو"
               value={form.logoImage}
               onChange={(url) => setForm({ ...form, logoImage: url })}
             />
@@ -174,7 +174,7 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
 
       {items.length === 0 ? (
         <Card>
-          <EmptyState message="هنوز مدل خودرویی ثبت نشده است." />
+          <EmptyState message="هنوز برند خودرویی ثبت نشده است." />
         </Card>
       ) : (
         <TableShell>
@@ -184,7 +184,7 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
                 تصویر
               </th>
               <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
-                نام
+                برند خودرو
               </th>
               <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
                 اسلاگ
@@ -312,7 +312,7 @@ function CarModelsTab({
   return (
     <div className="space-y-6">
       <Card className="overflow-hidden">
-        <CardHeader title={editingId ? "ویرایش نام خودرو" : "افزودن نام خودرو"} />
+        <CardHeader title={editingId ? "ویرایش مدل خودرو" : "افزودن مدل خودرو"} />
         <div className="p-5 sm:p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid sm:grid-cols-3 gap-3">
@@ -320,6 +320,7 @@ function CarModelsTab({
                 value={form.carBrandId}
                 onChange={(e) => setForm({ ...form, carBrandId: Number(e.target.value) })}
                 required
+                aria-label="برند خودرو"
               >
                 {carBrands.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -328,7 +329,7 @@ function CarModelsTab({
                 ))}
               </Select>
               <Input
-                placeholder="نام مدل (پژو ۲۰۶)"
+                placeholder="مدل خودرو (پژو ۲۰۶)"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
@@ -371,10 +372,10 @@ function CarModelsTab({
                 تصویر
               </th>
               <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
-                مدل
+                مدل خودرو
               </th>
               <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
-                برند
+                برند خودرو
               </th>
               <th className="text-right px-4 py-3 font-semibold"></th>
             </tr>

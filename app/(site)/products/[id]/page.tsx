@@ -77,7 +77,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
     ['تعداد در کارتن', `${product.cartonQuantity.toLocaleString('fa-IR')} عدد`],
     ['دسته‌های کالا',  product.categoryLabel],
     ['نام برند',       product.brand],
-    ['نام ماشین',      product.carType],
+    ['مدل خودرو',      product.carType],
     ['اصلی',           product.isOriginal ? 'بله' : 'خیر'],
     ['کشور سازنده',    `${flag} ${product.origin}`],
   ];

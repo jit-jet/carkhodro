@@ -26,7 +26,7 @@ export interface ProductInput {
   name: string;
   partsBrandId: number;
   categoryId: number;
-  /** Compatible car model (“نوع خودرو”). Null clears compatibility. */
+  /** Compatible car model (“مدل خودرو”). Null clears compatibility. */
   carModelId?: number | null;
   wholesalePrice: number;
   wholesaleDiscountPct?: number;
@@ -72,7 +72,7 @@ export async function createProduct(
     }
     if (input.carModelId != null) {
       const carModel = await prisma.carModel.findUnique({ where: { id: input.carModelId } });
-      if (!carModel) return fail('نوع خودرو انتخاب‌شده معتبر نیست.');
+      if (!carModel) return fail('مدل خودرو انتخاب‌شده معتبر نیست.');
     }
     const created = await prisma.product.create({
       data: {
@@ -106,7 +106,7 @@ export async function updateProduct(
   return runMutation('updateProduct', async () => {
     if (input.carModelId != null) {
       const carModel = await prisma.carModel.findUnique({ where: { id: input.carModelId } });
-      if (!carModel) return fail('نوع خودرو انتخاب‌شده معتبر نیست.');
+      if (!carModel) return fail('مدل خودرو انتخاب‌شده معتبر نیست.');
     }
     const updated = await prisma.product.update({
       where: { id },
@@ -253,7 +253,7 @@ export async function bulkUpdateProducts(
       }
       case 'vehicleType': {
         const carModel = await prisma.carModel.findUnique({ where: { id: action.carModelId } });
-        if (!carModel) return fail('نوع خودرو انتخاب‌شده معتبر نیست.');
+        if (!carModel) return fail('مدل خودرو انتخاب‌شده معتبر نیست.');
 
         const rows = await prisma.product.findMany({ where, select: { id: true } });
         const ids = rows.map((r) => r.id);

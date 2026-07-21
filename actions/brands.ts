@@ -19,7 +19,7 @@ import {
 import { safeQuery } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
 
-// ── Car brands (manufacturers) ───────────────────────────────────────────────
+// ── Car brands / برند خودرو ───────────────────────────────────────────────────
 
 export async function getCarBrands(): Promise<CarBrandVM[]> {
   'use cache';
@@ -32,7 +32,7 @@ export async function getCarBrands(): Promise<CarBrandVM[]> {
   }, []);
 }
 
-// ── Car models ───────────────────────────────────────────────────────────────
+// ── Car models / مدل خودرو ───────────────────────────────────────────────────
 
 export async function getCarModels(): Promise<CarModelVM[]> {
   'use cache';
@@ -106,6 +106,7 @@ export async function getPartsBrandsAdmin(): Promise<AdminPartsBrandVM[]> {
 
 // ── Admin-panel raw shapes (include fields the storefront VMs drop, e.g. slug) ─
 
+/** Vehicle brand (“برند خودرو”) for admin CRUD. */
 export interface AdminCarBrandVM {
   id: number;
   name: string;
@@ -127,6 +128,7 @@ export async function getCarBrandsAdmin(): Promise<AdminCarBrandVM[]> {
   }, []);
 }
 
+/** Vehicle model (“مدل خودرو”) for admin CRUD. */
 export interface AdminCarModelVM {
   id: number;
   carBrandId: number;

@@ -141,11 +141,14 @@ export default function PriceListForm({
         onToggle={(id) => toggle(brandIds, setBrandIds, id)}
       />
 
-      {/* Cars */}
+      {/* Vehicle models (CarModel) */}
       <CheckboxGroup
-        title="ماشین‌ها را انتخاب کنید"
-        hint="اگر خالی باشد همه ماشین‌ها"
-        options={cars.map((c) => ({ id: c.id, label: c.name }))}
+        title="مدل خودرو را انتخاب کنید"
+        hint="اگر خالی باشد همه مدل‌ها"
+        options={cars.map((c) => ({
+          id: c.id,
+          label: c.brandName ? `${c.brandName} — ${c.name}` : c.name,
+        }))}
         selected={carIds}
         onToggle={(id) => toggle(carIds, setCarIds, id)}
       />

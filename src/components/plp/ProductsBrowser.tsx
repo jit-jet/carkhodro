@@ -119,7 +119,7 @@ function openPDFWindow(products: Product[]) {
           <th>کد</th>
           <th>نام قطعه</th>
           <th>برند</th>
-          <th>خودرو</th>
+          <th>مدل خودرو</th>
           <th class="center">قیمت (ریال)</th>
         </tr>
       </thead>

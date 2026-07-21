@@ -219,9 +219,9 @@ export interface AdminProductListItemVM {
   partsBrandId: number;
   /** Parts brand name — shown as “نوع برند”. */
   partsBrandName: string;
-  /** First compatible car model id — used as “نوع خودرو”. */
+  /** First compatible car model id — used as “مدل خودرو”. */
   carModelId: number | null;
-  /** First compatible car model name — “نوع خودرو”. */
+  /** First compatible car model name — “مدل خودرو”. */
   carType: string;
   wholesalePrice: number;
   wholesaleDiscountPct: number;

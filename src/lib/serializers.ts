@@ -65,7 +65,7 @@ export interface ProductVM {
   reviewCount: number;
   brand: string; // partsBrand.name (display)
   brandSlug: string; // partsBrand.slug (URL / filter)
-  carType: string; // first compatible car model name
+  carType: string; // first compatible car model name (“مدل خودرو”)
   category: string; // category.key (filter slug)
   categoryLabel: string; // category.name (display)
 }
@@ -94,6 +94,7 @@ export interface CategoryVM {
   count: number;
 }
 
+/** Vehicle brand (“برند خودرو”) — parent taxonomy, e.g. ایران خودرو. */
 export interface CarBrandVM {
   id: number;
   name: string;
@@ -101,6 +102,7 @@ export interface CarBrandVM {
   count: number;
 }
 
+/** Vehicle model (“مدل خودرو”) — specific fitment, e.g. پژو ۲۰۶. */
 export interface CarModelVM {
   id: number;
   brandId: number;

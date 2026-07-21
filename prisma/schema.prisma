@@ -226,7 +226,7 @@ model Address {
 // CATALOGUE — CAR TAXONOMY
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Automobile manufacturers: ایران‌خودرو, سایپا, تویوتا, …
+/// Automobile manufacturers / vehicle brands (“برند خودرو”): ایران‌خودرو, سایپا, تویوتا, …
 model CarBrand {
   id           Int      @id @default(autoincrement())
   name         String   @unique
@@ -243,7 +243,7 @@ model CarBrand {
   @@map("car_brands")
 }
 
-/// Specific car models — FK carBrandId → car_brands.id
+/// Specific vehicle models (“مدل خودرو”) — FK carBrandId → car_brands.id
 model CarModel {
   id         Int      @id @default(autoincrement())
   carBrandId Int      @map("car_brand_id")

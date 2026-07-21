@@ -83,7 +83,7 @@ async function ListContent({ params }: { params: Promise<{ id: string }> }) {
                   <th className="py-2.5 px-2 font-semibold text-right">کد</th>
                   <th className="py-2.5 px-2 font-semibold text-right">نام قطعه</th>
                   <th className="py-2.5 px-2 font-semibold text-right">برند</th>
-                  <th className="py-2.5 px-2 font-semibold text-right">خودرو</th>
+                  <th className="py-2.5 px-2 font-semibold text-right">مدل خودرو</th>
                   <th className="py-2.5 px-2 font-semibold">قیمت (ریال)</th>
                 </tr>
               </thead>

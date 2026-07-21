@@ -22,7 +22,7 @@ export async function createCarBrand(input: {
 }): Promise<ActionResult<{ id: number }>> {
   return runMutation('createCarBrand', async () => {
     if (!input.name?.trim() || !input.slug?.trim()) {
-      return fail('نام و اسلاگ برند الزامی است.');
+      return fail('نام و اسلاگ برند خودرو الزامی است.');
     }
     const created = await prisma.carBrand.create({
       data: {
@@ -60,7 +60,7 @@ export async function deleteCarBrand(id: number): Promise<ActionResult> {
   return runMutation('deleteCarBrand', async () => {
     const modelCount = await prisma.carModel.count({ where: { carBrandId: id } });
     if (modelCount > 0) {
-      return fail('این برند دارای مدل خودرو است. ابتدا مدل‌ها را حذف کنید.');
+      return fail('این برند خودرو دارای مدل خودرو است. ابتدا مدل‌ها را حذف کنید.');
     }
     await prisma.carBrand.delete({ where: { id } });
     updateTag(tags.carBrands);
@@ -76,7 +76,7 @@ export async function createCarModel(input: {
   image?: string | null;
 }): Promise<ActionResult<{ id: number }>> {
   return runMutation('createCarModel', async () => {
-    if (!input.name?.trim()) return fail('نام مدل الزامی است.');
+    if (!input.name?.trim()) return fail('مدل خودرو الزامی است.');
     const created = await prisma.carModel.create({
       data: {
         carBrandId: input.carBrandId,
@@ -117,7 +117,7 @@ export async function deleteCarModel(id: number): Promise<ActionResult> {
   return runMutation('deleteCarModel', async () => {
     const compatCount = await prisma.productCompatibility.count({ where: { carModelId: id } });
     if (compatCount > 0) {
-      return fail('این مدل به محصولاتی متصل است. ابتدا اتصال آن‌ها را حذف کنید.');
+      return fail('این مدل خودرو به محصولاتی متصل است. ابتدا اتصال آن‌ها را حذف کنید.');
     }
     await prisma.carModel.delete({ where: { id } });
     updateTag(tags.carModels);

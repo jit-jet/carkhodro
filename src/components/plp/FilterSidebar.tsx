@@ -197,8 +197,8 @@ export default function FilterSidebar({
         ))}
       </AccordionSection>
 
-      {/* Car Type */}
-      <AccordionSection title="نوع خودرو">
+      {/* Vehicle model (CarModel) */}
+      <AccordionSection title="مدل خودرو">
         {allCarTypes.map(ct => (
           <CheckItem
             key={ct}

@@ -236,7 +236,7 @@ export default function ProductForm({
             </Select>
           </div>
           <div>
-            <Label>نوع خودرو</Label>
+            <Label>مدل خودرو</Label>
             <Select
               value={carModelId}
               onChange={(e) => setCarModelId(e.target.value ? Number(e.target.value) : "")}
