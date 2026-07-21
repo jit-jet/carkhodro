@@ -29,7 +29,7 @@ interface FilterSidebarProps {
 function AccordionSection({
   title,
   children,
-  defaultOpen = true,
+  defaultOpen = false,
 }: {
   title: string;
   children: React.ReactNode;
