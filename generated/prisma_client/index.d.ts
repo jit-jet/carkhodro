@@ -13558,23 +13558,17 @@ export namespace Prisma {
   export type CarModelAvgAggregateOutputType = {
     id: number | null
     carBrandId: number | null
-    yearStart: number | null
-    yearEnd: number | null
   }
 
   export type CarModelSumAggregateOutputType = {
     id: number | null
     carBrandId: number | null
-    yearStart: number | null
-    yearEnd: number | null
   }
 
   export type CarModelMinAggregateOutputType = {
     id: number | null
     carBrandId: number | null
     name: string | null
-    yearStart: number | null
-    yearEnd: number | null
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -13584,8 +13578,6 @@ export namespace Prisma {
     id: number | null
     carBrandId: number | null
     name: string | null
-    yearStart: number | null
-    yearEnd: number | null
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -13595,8 +13587,6 @@ export namespace Prisma {
     id: number
     carBrandId: number
     name: number
-    yearStart: number
-    yearEnd: number
     image: number
     createdAt: number
     updatedAt: number
@@ -13607,23 +13597,17 @@ export namespace Prisma {
   export type CarModelAvgAggregateInputType = {
     id?: true
     carBrandId?: true
-    yearStart?: true
-    yearEnd?: true
   }
 
   export type CarModelSumAggregateInputType = {
     id?: true
     carBrandId?: true
-    yearStart?: true
-    yearEnd?: true
   }
 
   export type CarModelMinAggregateInputType = {
     id?: true
     carBrandId?: true
     name?: true
-    yearStart?: true
-    yearEnd?: true
     image?: true
     createdAt?: true
     updatedAt?: true
@@ -13633,8 +13617,6 @@ export namespace Prisma {
     id?: true
     carBrandId?: true
     name?: true
-    yearStart?: true
-    yearEnd?: true
     image?: true
     createdAt?: true
     updatedAt?: true
@@ -13644,8 +13626,6 @@ export namespace Prisma {
     id?: true
     carBrandId?: true
     name?: true
-    yearStart?: true
-    yearEnd?: true
     image?: true
     createdAt?: true
     updatedAt?: true
@@ -13742,8 +13722,6 @@ export namespace Prisma {
     id: number
     carBrandId: number
     name: string
-    yearStart: number | null
-    yearEnd: number | null
     image: string | null
     createdAt: Date
     updatedAt: Date
@@ -13772,8 +13750,6 @@ export namespace Prisma {
     id?: boolean
     carBrandId?: boolean
     name?: boolean
-    yearStart?: boolean
-    yearEnd?: boolean
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -13786,8 +13762,6 @@ export namespace Prisma {
     id?: boolean
     carBrandId?: boolean
     name?: boolean
-    yearStart?: boolean
-    yearEnd?: boolean
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -13798,8 +13772,6 @@ export namespace Prisma {
     id?: boolean
     carBrandId?: boolean
     name?: boolean
-    yearStart?: boolean
-    yearEnd?: boolean
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -13810,14 +13782,12 @@ export namespace Prisma {
     id?: boolean
     carBrandId?: boolean
     name?: boolean
-    yearStart?: boolean
-    yearEnd?: boolean
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CarModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "carBrandId" | "name" | "yearStart" | "yearEnd" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["carModel"]>
+  export type CarModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "carBrandId" | "name" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["carModel"]>
   export type CarModelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     carBrand?: boolean | CarBrandDefaultArgs<ExtArgs>
     compatibilities?: boolean | CarModel$compatibilitiesArgs<ExtArgs>
@@ -13840,14 +13810,6 @@ export namespace Prisma {
       id: number
       carBrandId: number
       name: string
-      /**
-       * Gregorian year production began (null = unknown)
-       */
-      yearStart: number | null
-      /**
-       * Gregorian year production ended (null = still in production)
-       */
-      yearEnd: number | null
       image: string | null
       createdAt: Date
       updatedAt: Date
@@ -14279,8 +14241,6 @@ export namespace Prisma {
     readonly id: FieldRef<"CarModel", 'Int'>
     readonly carBrandId: FieldRef<"CarModel", 'Int'>
     readonly name: FieldRef<"CarModel", 'String'>
-    readonly yearStart: FieldRef<"CarModel", 'Int'>
-    readonly yearEnd: FieldRef<"CarModel", 'Int'>
     readonly image: FieldRef<"CarModel", 'String'>
     readonly createdAt: FieldRef<"CarModel", 'DateTime'>
     readonly updatedAt: FieldRef<"CarModel", 'DateTime'>
@@ -14750,6 +14710,7 @@ export namespace Prisma {
   export type PartsBrandMinAggregateOutputType = {
     id: number | null
     name: string | null
+    slug: string | null
     logoImage: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -14758,6 +14719,7 @@ export namespace Prisma {
   export type PartsBrandMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    slug: string | null
     logoImage: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -14766,6 +14728,7 @@ export namespace Prisma {
   export type PartsBrandCountAggregateOutputType = {
     id: number
     name: number
+    slug: number
     logoImage: number
     createdAt: number
     updatedAt: number
@@ -14784,6 +14747,7 @@ export namespace Prisma {
   export type PartsBrandMinAggregateInputType = {
     id?: true
     name?: true
+    slug?: true
     logoImage?: true
     createdAt?: true
     updatedAt?: true
@@ -14792,6 +14756,7 @@ export namespace Prisma {
   export type PartsBrandMaxAggregateInputType = {
     id?: true
     name?: true
+    slug?: true
     logoImage?: true
     createdAt?: true
     updatedAt?: true
@@ -14800,6 +14765,7 @@ export namespace Prisma {
   export type PartsBrandCountAggregateInputType = {
     id?: true
     name?: true
+    slug?: true
     logoImage?: true
     createdAt?: true
     updatedAt?: true
@@ -14895,6 +14861,7 @@ export namespace Prisma {
   export type PartsBrandGroupByOutputType = {
     id: number
     name: string
+    slug: string
     logoImage: string | null
     createdAt: Date
     updatedAt: Date
@@ -14922,6 +14889,7 @@ export namespace Prisma {
   export type PartsBrandSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    slug?: boolean
     logoImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14932,6 +14900,7 @@ export namespace Prisma {
   export type PartsBrandSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    slug?: boolean
     logoImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14940,6 +14909,7 @@ export namespace Prisma {
   export type PartsBrandSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    slug?: boolean
     logoImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -14948,12 +14918,13 @@ export namespace Prisma {
   export type PartsBrandSelectScalar = {
     id?: boolean
     name?: boolean
+    slug?: boolean
     logoImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PartsBrandOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "logoImage" | "createdAt" | "updatedAt", ExtArgs["result"]["partsBrand"]>
+  export type PartsBrandOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "logoImage" | "createdAt" | "updatedAt", ExtArgs["result"]["partsBrand"]>
   export type PartsBrandInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | PartsBrand$productsArgs<ExtArgs>
     _count?: boolean | PartsBrandCountOutputTypeDefaultArgs<ExtArgs>
@@ -14969,6 +14940,10 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
+      /**
+       * URL / filter slug, e.g. "bosch", "ngk"
+       */
+      slug: string
       logoImage: string | null
       createdAt: Date
       updatedAt: Date
@@ -15398,6 +15373,7 @@ export namespace Prisma {
   interface PartsBrandFieldRefs {
     readonly id: FieldRef<"PartsBrand", 'Int'>
     readonly name: FieldRef<"PartsBrand", 'String'>
+    readonly slug: FieldRef<"PartsBrand", 'String'>
     readonly logoImage: FieldRef<"PartsBrand", 'String'>
     readonly createdAt: FieldRef<"PartsBrand", 'DateTime'>
     readonly updatedAt: FieldRef<"PartsBrand", 'DateTime'>
@@ -40230,8 +40206,6 @@ export namespace Prisma {
     id: 'id',
     carBrandId: 'carBrandId',
     name: 'name',
-    yearStart: 'yearStart',
-    yearEnd: 'yearEnd',
     image: 'image',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -40243,6 +40217,7 @@ export namespace Prisma {
   export const PartsBrandScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    slug: 'slug',
     logoImage: 'logoImage',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -41379,8 +41354,6 @@ export namespace Prisma {
     id?: IntFilter<"CarModel"> | number
     carBrandId?: IntFilter<"CarModel"> | number
     name?: StringFilter<"CarModel"> | string
-    yearStart?: IntNullableFilter<"CarModel"> | number | null
-    yearEnd?: IntNullableFilter<"CarModel"> | number | null
     image?: StringNullableFilter<"CarModel"> | string | null
     createdAt?: DateTimeFilter<"CarModel"> | Date | string
     updatedAt?: DateTimeFilter<"CarModel"> | Date | string
@@ -41392,8 +41365,6 @@ export namespace Prisma {
     id?: SortOrder
     carBrandId?: SortOrder
     name?: SortOrder
-    yearStart?: SortOrderInput | SortOrder
-    yearEnd?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -41408,8 +41379,6 @@ export namespace Prisma {
     NOT?: CarModelWhereInput | CarModelWhereInput[]
     carBrandId?: IntFilter<"CarModel"> | number
     name?: StringFilter<"CarModel"> | string
-    yearStart?: IntNullableFilter<"CarModel"> | number | null
-    yearEnd?: IntNullableFilter<"CarModel"> | number | null
     image?: StringNullableFilter<"CarModel"> | string | null
     createdAt?: DateTimeFilter<"CarModel"> | Date | string
     updatedAt?: DateTimeFilter<"CarModel"> | Date | string
@@ -41421,8 +41390,6 @@ export namespace Prisma {
     id?: SortOrder
     carBrandId?: SortOrder
     name?: SortOrder
-    yearStart?: SortOrderInput | SortOrder
-    yearEnd?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -41440,8 +41407,6 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"CarModel"> | number
     carBrandId?: IntWithAggregatesFilter<"CarModel"> | number
     name?: StringWithAggregatesFilter<"CarModel"> | string
-    yearStart?: IntNullableWithAggregatesFilter<"CarModel"> | number | null
-    yearEnd?: IntNullableWithAggregatesFilter<"CarModel"> | number | null
     image?: StringNullableWithAggregatesFilter<"CarModel"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CarModel"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CarModel"> | Date | string
@@ -41453,6 +41418,7 @@ export namespace Prisma {
     NOT?: PartsBrandWhereInput | PartsBrandWhereInput[]
     id?: IntFilter<"PartsBrand"> | number
     name?: StringFilter<"PartsBrand"> | string
+    slug?: StringFilter<"PartsBrand"> | string
     logoImage?: StringNullableFilter<"PartsBrand"> | string | null
     createdAt?: DateTimeFilter<"PartsBrand"> | Date | string
     updatedAt?: DateTimeFilter<"PartsBrand"> | Date | string
@@ -41462,6 +41428,7 @@ export namespace Prisma {
   export type PartsBrandOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
     logoImage?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -41471,6 +41438,7 @@ export namespace Prisma {
   export type PartsBrandWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     name?: string
+    slug?: string
     AND?: PartsBrandWhereInput | PartsBrandWhereInput[]
     OR?: PartsBrandWhereInput[]
     NOT?: PartsBrandWhereInput | PartsBrandWhereInput[]
@@ -41478,11 +41446,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"PartsBrand"> | Date | string
     updatedAt?: DateTimeFilter<"PartsBrand"> | Date | string
     products?: ProductListRelationFilter
-  }, "id" | "name">
+  }, "id" | "name" | "slug">
 
   export type PartsBrandOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
     logoImage?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -41499,6 +41468,7 @@ export namespace Prisma {
     NOT?: PartsBrandScalarWhereWithAggregatesInput | PartsBrandScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"PartsBrand"> | number
     name?: StringWithAggregatesFilter<"PartsBrand"> | string
+    slug?: StringWithAggregatesFilter<"PartsBrand"> | string
     logoImage?: StringNullableWithAggregatesFilter<"PartsBrand"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"PartsBrand"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PartsBrand"> | Date | string
@@ -43755,8 +43725,6 @@ export namespace Prisma {
 
   export type CarModelCreateInput = {
     name: string
-    yearStart?: number | null
-    yearEnd?: number | null
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43768,8 +43736,6 @@ export namespace Prisma {
     id?: number
     carBrandId: number
     name: string
-    yearStart?: number | null
-    yearEnd?: number | null
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43778,8 +43744,6 @@ export namespace Prisma {
 
   export type CarModelUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    yearStart?: NullableIntFieldUpdateOperationsInput | number | null
-    yearEnd?: NullableIntFieldUpdateOperationsInput | number | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43791,8 +43755,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     carBrandId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    yearStart?: NullableIntFieldUpdateOperationsInput | number | null
-    yearEnd?: NullableIntFieldUpdateOperationsInput | number | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43803,8 +43765,6 @@ export namespace Prisma {
     id?: number
     carBrandId: number
     name: string
-    yearStart?: number | null
-    yearEnd?: number | null
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43812,8 +43772,6 @@ export namespace Prisma {
 
   export type CarModelUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    yearStart?: NullableIntFieldUpdateOperationsInput | number | null
-    yearEnd?: NullableIntFieldUpdateOperationsInput | number | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43823,8 +43781,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     carBrandId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    yearStart?: NullableIntFieldUpdateOperationsInput | number | null
-    yearEnd?: NullableIntFieldUpdateOperationsInput | number | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43832,6 +43788,7 @@ export namespace Prisma {
 
   export type PartsBrandCreateInput = {
     name: string
+    slug: string
     logoImage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43841,6 +43798,7 @@ export namespace Prisma {
   export type PartsBrandUncheckedCreateInput = {
     id?: number
     name: string
+    slug: string
     logoImage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43849,6 +43807,7 @@ export namespace Prisma {
 
   export type PartsBrandUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43858,6 +43817,7 @@ export namespace Prisma {
   export type PartsBrandUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43867,6 +43827,7 @@ export namespace Prisma {
   export type PartsBrandCreateManyInput = {
     id?: number
     name: string
+    slug: string
     logoImage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43874,6 +43835,7 @@ export namespace Prisma {
 
   export type PartsBrandUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43882,6 +43844,7 @@ export namespace Prisma {
   export type PartsBrandUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46290,17 +46253,6 @@ export namespace Prisma {
     productCount?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type CarBrandScalarRelationFilter = {
     is?: CarBrandWhereInput
     isNot?: CarBrandWhereInput
@@ -46320,8 +46272,6 @@ export namespace Prisma {
     id?: SortOrder
     carBrandId?: SortOrder
     name?: SortOrder
-    yearStart?: SortOrder
-    yearEnd?: SortOrder
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -46330,16 +46280,12 @@ export namespace Prisma {
   export type CarModelAvgOrderByAggregateInput = {
     id?: SortOrder
     carBrandId?: SortOrder
-    yearStart?: SortOrder
-    yearEnd?: SortOrder
   }
 
   export type CarModelMaxOrderByAggregateInput = {
     id?: SortOrder
     carBrandId?: SortOrder
     name?: SortOrder
-    yearStart?: SortOrder
-    yearEnd?: SortOrder
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -46349,8 +46295,6 @@ export namespace Prisma {
     id?: SortOrder
     carBrandId?: SortOrder
     name?: SortOrder
-    yearStart?: SortOrder
-    yearEnd?: SortOrder
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -46359,24 +46303,6 @@ export namespace Prisma {
   export type CarModelSumOrderByAggregateInput = {
     id?: SortOrder
     carBrandId?: SortOrder
-    yearStart?: SortOrder
-    yearEnd?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type ProductListRelationFilter = {
@@ -46392,6 +46318,7 @@ export namespace Prisma {
   export type PartsBrandCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
     logoImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -46404,6 +46331,7 @@ export namespace Prisma {
   export type PartsBrandMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
     logoImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -46412,6 +46340,7 @@ export namespace Prisma {
   export type PartsBrandMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
     logoImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -48401,14 +48330,6 @@ export namespace Prisma {
     connect?: ProductCompatibilityWhereUniqueInput | ProductCompatibilityWhereUniqueInput[]
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type CarBrandUpdateOneRequiredWithoutCarModelsNestedInput = {
     create?: XOR<CarBrandCreateWithoutCarModelsInput, CarBrandUncheckedCreateWithoutCarModelsInput>
     connectOrCreate?: CarBrandCreateOrConnectWithoutCarModelsInput
@@ -49651,33 +49572,6 @@ export namespace Prisma {
     _max?: NestedBigIntFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -49832,6 +49726,17 @@ export namespace Prisma {
     _sum?: NestedBigIntNullableFilter<$PrismaModel>
     _min?: NestedBigIntNullableFilter<$PrismaModel>
     _max?: NestedBigIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumMessageDirectionFilter<$PrismaModel = never> = {
@@ -51118,8 +51023,6 @@ export namespace Prisma {
 
   export type CarModelCreateWithoutCarBrandInput = {
     name: string
-    yearStart?: number | null
-    yearEnd?: number | null
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51129,8 +51032,6 @@ export namespace Prisma {
   export type CarModelUncheckedCreateWithoutCarBrandInput = {
     id?: number
     name: string
-    yearStart?: number | null
-    yearEnd?: number | null
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51170,8 +51071,6 @@ export namespace Prisma {
     id?: IntFilter<"CarModel"> | number
     carBrandId?: IntFilter<"CarModel"> | number
     name?: StringFilter<"CarModel"> | string
-    yearStart?: IntNullableFilter<"CarModel"> | number | null
-    yearEnd?: IntNullableFilter<"CarModel"> | number | null
     image?: StringNullableFilter<"CarModel"> | string | null
     createdAt?: DateTimeFilter<"CarModel"> | Date | string
     updatedAt?: DateTimeFilter<"CarModel"> | Date | string
@@ -51507,6 +51406,7 @@ export namespace Prisma {
 
   export type PartsBrandCreateWithoutProductsInput = {
     name: string
+    slug: string
     logoImage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51515,6 +51415,7 @@ export namespace Prisma {
   export type PartsBrandUncheckedCreateWithoutProductsInput = {
     id?: number
     name: string
+    slug: string
     logoImage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51738,6 +51639,7 @@ export namespace Prisma {
 
   export type PartsBrandUpdateWithoutProductsInput = {
     name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51746,6 +51648,7 @@ export namespace Prisma {
   export type PartsBrandUncheckedUpdateWithoutProductsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52171,8 +52074,6 @@ export namespace Prisma {
 
   export type CarModelCreateWithoutCompatibilitiesInput = {
     name: string
-    yearStart?: number | null
-    yearEnd?: number | null
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -52183,8 +52084,6 @@ export namespace Prisma {
     id?: number
     carBrandId: number
     name: string
-    yearStart?: number | null
-    yearEnd?: number | null
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -52291,8 +52190,6 @@ export namespace Prisma {
 
   export type CarModelUpdateWithoutCompatibilitiesInput = {
     name?: StringFieldUpdateOperationsInput | string
-    yearStart?: NullableIntFieldUpdateOperationsInput | number | null
-    yearEnd?: NullableIntFieldUpdateOperationsInput | number | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52303,8 +52200,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     carBrandId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    yearStart?: NullableIntFieldUpdateOperationsInput | number | null
-    yearEnd?: NullableIntFieldUpdateOperationsInput | number | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55820,8 +55715,6 @@ export namespace Prisma {
   export type CarModelCreateManyCarBrandInput = {
     id?: number
     name: string
-    yearStart?: number | null
-    yearEnd?: number | null
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55829,8 +55722,6 @@ export namespace Prisma {
 
   export type CarModelUpdateWithoutCarBrandInput = {
     name?: StringFieldUpdateOperationsInput | string
-    yearStart?: NullableIntFieldUpdateOperationsInput | number | null
-    yearEnd?: NullableIntFieldUpdateOperationsInput | number | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55840,8 +55731,6 @@ export namespace Prisma {
   export type CarModelUncheckedUpdateWithoutCarBrandInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    yearStart?: NullableIntFieldUpdateOperationsInput | number | null
-    yearEnd?: NullableIntFieldUpdateOperationsInput | number | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55851,8 +55740,6 @@ export namespace Prisma {
   export type CarModelUncheckedUpdateManyWithoutCarBrandInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    yearStart?: NullableIntFieldUpdateOperationsInput | number | null
-    yearEnd?: NullableIntFieldUpdateOperationsInput | number | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

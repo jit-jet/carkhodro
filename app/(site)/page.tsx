@@ -5,12 +5,13 @@ import NewArrivalsSlider from "@/src/components/home/NewArrivalsSlider";
 import SpecialOffersSlider from "@/src/components/home/SpecialOffersSlider";
 import CategoriesSlider from "@/src/components/home/CategoriesSlider";
 import AnimatedSection from "@/src/components/ui/AnimatedSection";
-import { getCarBrands, getCarModels } from "@/actions/brands";
+import { getCarBrands, getCarModels, getPartsBrandsHome } from "@/actions/brands";
 
 export default async function HomePage() {
-  const [spareBrands, carModels] = await Promise.all([
+  const [spareBrands, carModels, partsBrands] = await Promise.all([
     getCarBrands(),
     getCarModels(),
+    getPartsBrandsHome(),
   ]);
 
   return (
@@ -23,7 +24,7 @@ export default async function HomePage() {
       </AnimatedSection>
 
       <AnimatedSection delay={60}>
-        <BrandsSlider spareBrands={spareBrands} />
+        <BrandsSlider brands={partsBrands} />
       </AnimatedSection>
 
       <AnimatedSection delay={40}>

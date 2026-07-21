@@ -63,7 +63,8 @@ export interface ProductVM {
   isNew: boolean; // true when added within the last 3 days (computed server-side)
   rating: number;
   reviewCount: number;
-  brand: string; // partsBrand.name
+  brand: string; // partsBrand.name (display)
+  brandSlug: string; // partsBrand.slug (URL / filter)
   carType: string; // first compatible car model name
   category: string; // category.key (filter slug)
   categoryLabel: string; // category.name (display)
@@ -105,7 +106,6 @@ export interface CarModelVM {
   brandId: number;
   brandName: string;
   name: string;
-  years: string;
   image: string;
 }
 
@@ -295,11 +295,6 @@ export interface CheckoutProfileVM extends CheckoutContact {
 
 const FALLBACK_IMAGE = '/logo.png';
 
-/** Convert latin digits to Persian for display strings built from numbers. */
-function toFa(n: number): string {
-  return n.toLocaleString('fa-IR', { useGrouping: false });
-}
-
 function persianDate(d: Date): string {
   return d.toLocaleDateString('fa-IR');
 }
@@ -386,6 +381,7 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     rating: Number(p.ratingAvg),
     reviewCount: p.reviewCount,
     brand: p.partsBrand.name,
+    brandSlug: p.partsBrand.slug,
     carType: firstModel?.name ?? '',
     category: p.category.key,
     categoryLabel: p.category.name,
@@ -458,19 +454,14 @@ export function toCarModelVM(m: {
   id: number;
   carBrandId: number;
   name: string;
-  yearStart: number | null;
-  yearEnd: number | null;
   image: string | null;
   carBrand: { name: string };
 }): CarModelVM {
-  const start = m.yearStart != null ? toFa(m.yearStart) : '';
-  const end = m.yearEnd != null ? toFa(m.yearEnd) : 'اکنون';
   return {
     id: m.id,
     brandId: m.carBrandId,
     brandName: m.carBrand.name,
     name: m.name,
-    years: start ? `${start} - ${end}` : '',
     image: m.image ?? FALLBACK_IMAGE,
   };
 }

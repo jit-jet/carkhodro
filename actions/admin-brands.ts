@@ -11,6 +11,7 @@ import { updateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
+import { normalizeSlug } from '@/src/lib/slug';
 
 // ── Car brands ───────────────────────────────────────────────────────────────
 
@@ -72,8 +73,6 @@ export async function deleteCarBrand(id: number): Promise<ActionResult> {
 export async function createCarModel(input: {
   carBrandId: number;
   name: string;
-  yearStart?: number | null;
-  yearEnd?: number | null;
   image?: string | null;
 }): Promise<ActionResult<{ id: number }>> {
   return runMutation('createCarModel', async () => {
@@ -82,8 +81,6 @@ export async function createCarModel(input: {
       data: {
         carBrandId: input.carBrandId,
         name: input.name.trim(),
-        yearStart: input.yearStart ?? null,
-        yearEnd: input.yearEnd ?? null,
         image: input.image ?? null,
       },
       select: { id: true },
@@ -98,8 +95,6 @@ export async function updateCarModel(
   input: {
     carBrandId?: number;
     name?: string;
-    yearStart?: number | null;
-    yearEnd?: number | null;
     image?: string | null;
   },
 ): Promise<ActionResult<{ id: number }>> {
@@ -109,8 +104,6 @@ export async function updateCarModel(
       data: {
         ...(input.carBrandId !== undefined ? { carBrandId: input.carBrandId } : {}),
         ...(input.name !== undefined ? { name: input.name.trim() } : {}),
-        ...(input.yearStart !== undefined ? { yearStart: input.yearStart } : {}),
-        ...(input.yearEnd !== undefined ? { yearEnd: input.yearEnd } : {}),
         ...(input.image !== undefined ? { image: input.image } : {}),
       },
       select: { id: true },
@@ -134,13 +127,21 @@ export async function deleteCarModel(id: number): Promise<ActionResult> {
 
 // ── Parts brands ──────────────────────────────────────────────────────────────
 
-export async function createPartsBrand(
-  name: string,
-): Promise<ActionResult<{ id: number }>> {
+export async function createPartsBrand(input: {
+  name: string;
+  slug: string;
+  logoImage?: string | null;
+}): Promise<ActionResult<{ id: number }>> {
   return runMutation('createPartsBrand', async () => {
-    if (!name?.trim()) return fail('نام برند الزامی است.');
+    if (!input.name?.trim()) return fail('نام برند الزامی است.');
+    const slug = normalizeSlug(input.slug ?? '');
+    if (!slug) return fail('اسلاگ برند الزامی است (فقط حروف انگلیسی، عدد و خط تیره).');
     const created = await prisma.partsBrand.create({
-      data: { name: name.trim() },
+      data: {
+        name: input.name.trim(),
+        slug,
+        logoImage: input.logoImage ?? null,
+      },
       select: { id: true },
     });
     updateTag(tags.partsBrands);
@@ -150,13 +151,19 @@ export async function createPartsBrand(
 
 export async function updatePartsBrand(
   id: number,
-  input: { name?: string; logoImage?: string | null },
+  input: { name?: string; slug?: string; logoImage?: string | null },
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updatePartsBrand', async () => {
+    let slug: string | undefined;
+    if (input.slug !== undefined) {
+      slug = normalizeSlug(input.slug);
+      if (!slug) return fail('اسلاگ برند الزامی است (فقط حروف انگلیسی، عدد و خط تیره).');
+    }
     const updated = await prisma.partsBrand.update({
       where: { id },
       data: {
         ...(input.name !== undefined ? { name: input.name.trim() } : {}),
+        ...(slug !== undefined ? { slug } : {}),
         ...(input.logoImage !== undefined ? { logoImage: input.logoImage } : {}),
       },
       select: { id: true },

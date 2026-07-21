@@ -205,8 +205,6 @@ exports.Prisma.CarModelScalarFieldEnum = {
   id: 'id',
   carBrandId: 'carBrandId',
   name: 'name',
-  yearStart: 'yearStart',
-  yearEnd: 'yearEnd',
   image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -215,6 +213,7 @@ exports.Prisma.CarModelScalarFieldEnum = {
 exports.Prisma.PartsBrandScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  slug: 'slug',
   logoImage: 'logoImage',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -16,7 +16,7 @@ interface FilterSidebarProps {
   onClearAll: () => void;
   onRemoveFilter: (type: string, value: string) => void;
   onExportPDF: () => void;
-  allBrands: string[];
+  allBrands: { slug: string; name: string }[];
   allCarTypes: string[];
   allCategories: { key: string; label: string }[];
   activeFilterCount: number;
@@ -111,7 +111,7 @@ export default function FilterSidebar({
   onBrandToggle,
   selectedCarTypes,
   onCarTypeToggle,
-  selectedCategories,
+  selectedCategories, 
   onCategoryToggle,
   onClearAll,
   onRemoveFilter,
@@ -189,10 +189,10 @@ export default function FilterSidebar({
       <AccordionSection title="برند">
         {allBrands.map(brand => (
           <CheckItem
-            key={brand}
-            label={brand}
-            checked={selectedBrands.includes(brand)}
-            onChange={() => onBrandToggle(brand)}
+            key={brand.slug}
+            label={brand.name}
+            checked={selectedBrands.includes(brand.slug)}
+            onChange={() => onBrandToggle(brand.slug)}
           />
         ))}
       </AccordionSection>

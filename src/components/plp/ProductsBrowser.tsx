@@ -153,7 +153,7 @@ function toggleValue(arr: string[], value: string): string[] {
 
 interface Props {
   products: Product[];
-  allBrands: string[];
+  allBrands: { slug: string; name: string }[];
   allCarTypes: string[];
   allCategories: { key: string; label: string }[];
 }
@@ -240,7 +240,7 @@ export default function ProductsBrowser({
     // full catalogue passed from the server.
     let result = searchQuery.trim() ? (searchResults ?? []) : products;
 
-    if (selectedBrands.length)     result = result.filter(p => selectedBrands.includes(p.brand));
+    if (selectedBrands.length)     result = result.filter(p => selectedBrands.includes(p.brandSlug));
     if (selectedCarTypes.length)   result = result.filter(p => selectedCarTypes.includes(p.carType));
     if (selectedCategories.length) result = result.filter(p => selectedCategories.includes(p.category));
 
@@ -284,7 +284,11 @@ export default function ProductsBrowser({
 
   type AppliedFilter = { type: string; value: string; label: string };
   const appliedFilters: AppliedFilter[] = [
-    ...selectedBrands.map(b     => ({ type: 'brand',    value: b,  label: b })),
+    ...selectedBrands.map(b     => ({
+      type: 'brand',
+      value: b,
+      label: allBrands.find(a => a.slug === b)?.name ?? b,
+    })),
     ...selectedCarTypes.map(c   => ({ type: 'car',      value: c,  label: c })),
     ...selectedCategories.map(c => ({
       type: 'category',

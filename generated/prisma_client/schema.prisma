@@ -248,10 +248,6 @@ model CarModel {
   id         Int      @id @default(autoincrement())
   carBrandId Int      @map("car_brand_id")
   name       String
-  /// Gregorian year production began (null = unknown)
-  yearStart  Int?     @map("year_start")
-  /// Gregorian year production ended (null = still in production)
-  yearEnd    Int?     @map("year_end")
   image      String?
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
@@ -272,6 +268,8 @@ model CarModel {
 model PartsBrand {
   id        Int      @id @default(autoincrement())
   name      String   @unique
+  /// URL / filter slug, e.g. "bosch", "ngk"
+  slug      String   @unique
   logoImage String?  @map("logo_image")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

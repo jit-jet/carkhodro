@@ -81,7 +81,6 @@ export default function CarModelsSlider({
               <h3 className="font-bold text-charcoal text-sm group-hover:text-accent-dark transition-colors">
                 {model.name}
               </h3>
-              <p className="text-xs text-gray-400 mt-0.5">{model.years}</p>
 
               <div className="mt-3 text-xs text-accent-dark font-semibold flex items-center gap-1">
                 مشاهده قطعات

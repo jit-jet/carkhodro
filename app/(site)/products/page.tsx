@@ -72,7 +72,11 @@ export default async function ProductsPage({ searchParams }: Props) {
   );
 }
 
-type Filters = { brands: string[]; carTypes: string[]; categories: { key: string; label: string }[] };
+type Filters = {
+  brands: { slug: string; name: string }[];
+  carTypes: string[];
+  categories: { key: string; label: string }[];
+};
 
 async function FilteredBrowser({
   filters,

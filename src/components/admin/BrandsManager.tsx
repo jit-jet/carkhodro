@@ -12,7 +12,11 @@ import {
   updatePartsBrand,
   deletePartsBrand,
 } from "@/actions/admin-brands";
-import type { AdminCarBrandVM, AdminCarModelVM } from "@/actions/brands";
+import type {
+  AdminCarBrandVM,
+  AdminCarModelVM,
+  AdminPartsBrandVM,
+} from "@/actions/brands";
 import {
   Button,
   Card,
@@ -26,12 +30,13 @@ import {
   tableHeadClass,
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
+import ImageUploadField, { AdminThumb } from "@/src/components/admin/ImageUploadField";
 
 type Tab = "car-brands" | "car-models" | "parts-brands";
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: "car-brands", label: "برند خودرو" },
-  { id: "car-models", label: "مدل خودرو" },
+  { id: "car-brands", label: "مدل خودرو" },
+  { id: "car-models", label: "نام خودرو" },
   { id: "parts-brands", label: "برند قطعه" },
 ];
 
@@ -42,7 +47,7 @@ export default function BrandsManager({
 }: {
   initialCarBrands: AdminCarBrandVM[];
   initialCarModels: AdminCarModelVM[];
-  initialPartsBrands: { id: number; name: string }[];
+  initialPartsBrands: AdminPartsBrandVM[];
 }) {
   const [tab, setTab] = useState<Tab>("car-brands");
 
@@ -91,14 +96,24 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
     e.preventDefault();
     setError("");
     startTransition(async () => {
+      const payload = {
+        name: form.name,
+        slug: form.slug,
+        logoImage: form.logoImage || null,
+      };
       if (editingId) {
-        const result = await updateCarBrand(editingId, form);
+        const result = await updateCarBrand(editingId, payload);
         if (!result.ok) return setError(result.error);
-        setItems((prev) => prev.map((b) => (b.id === editingId ? { ...b, ...form } : b)));
+        setItems((prev) =>
+          prev.map((b) => (b.id === editingId ? { ...b, ...payload } : b)),
+        );
       } else {
-        const result = await createCarBrand(form);
+        const result = await createCarBrand(payload);
         if (!result.ok) return setError(result.error);
-        setItems((prev) => [...prev, { id: result.data.id, ...form, productCount: 0 }]);
+        setItems((prev) => [
+          ...prev,
+          { id: result.data.id, ...payload, productCount: 0 },
+        ]);
       }
       reset();
     });
@@ -115,57 +130,113 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
   return (
     <div className="space-y-6">
       <Card className="overflow-hidden">
-        <CardHeader title={editingId ? "ویرایش برند خودرو" : "افزودن برند خودرو"} />
+        <CardHeader title={editingId ? "ویرایش مدل خودرو" : "افزودن مدل خودرو"} />
         <div className="p-5 sm:p-6">
-        <form onSubmit={handleSubmit} className="grid sm:grid-cols-4 gap-3">
-          <Input placeholder="نام (ایران خودرو)" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <Input placeholder="اسلاگ (iran-khodro)" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} required />
-          <Input placeholder="آدرس لوگو (اختیاری)" value={form.logoImage} onChange={(e) => setForm({ ...form, logoImage: e.target.value })} />
-          <div className="flex gap-2">
-            <Button type="submit" disabled={pending} className="flex-1">{editingId ? "ذخیره" : "افزودن"}</Button>
-            {editingId && <Button type="button" variant="ghost" onClick={reset}>انصراف</Button>}
-          </div>
-        </form>
-        {error && <div className="mt-3"><FormError message={error} /></div>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid sm:grid-cols-3 gap-3">
+              <Input
+                placeholder="نام (ایران خودرو)"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
+              />
+              <Input
+                placeholder="اسلاگ (iran-khodro)"
+                value={form.slug}
+                onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                required
+              />
+              <div className="flex gap-2">
+                <Button type="submit" disabled={pending} className="flex-1">
+                  {editingId ? "ذخیره" : "افزودن"}
+                </Button>
+                {editingId && (
+                  <Button type="button" variant="ghost" onClick={reset}>
+                    انصراف
+                  </Button>
+                )}
+              </div>
+            </div>
+            <ImageUploadField
+              folder="brands"
+              label="لوگوی برند"
+              value={form.logoImage}
+              onChange={(url) => setForm({ ...form, logoImage: url })}
+            />
+          </form>
+          {error && (
+            <div className="mt-3">
+              <FormError message={error} />
+            </div>
+          )}
         </div>
       </Card>
 
       {items.length === 0 ? (
-        <Card><EmptyState message="هنوز برند خودرویی ثبت نشده است." /></Card>
+        <Card>
+          <EmptyState message="هنوز مدل خودرویی ثبت نشده است." />
+        </Card>
       ) : (
         <TableShell>
-              <thead className={tableHeadClass}>
-                <tr>
-                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">نام</th>
-                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">اسلاگ</th>
-                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">تعداد محصول</th>
-                  <th className="text-right px-4 py-3 font-semibold"></th>
-                </tr>
-              </thead>
-              <tbody className={tableBodyClass}>
-                {items.map((b) => (
-                  <tr key={b.id} className={tableRowClass}>
-                    <td className="px-4 py-3 font-semibold text-charcoal">{b.name}</td>
-                    <td className="px-4 py-3 text-gray-500 font-mono">{b.slug}</td>
-                    <td className="px-4 py-3 text-gray-500">{b.productCount.toLocaleString("fa-IR")}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => { setEditingId(b.id); setForm({ name: b.name, slug: b.slug, logoImage: b.logoImage ?? "" }); }}
-                        >
-                          ویرایش
-                        </Button>
-                        <Button type="button" variant="danger" size="sm" onClick={() => handleDelete(b.id)} disabled={pending}>
-                          حذف
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+          <thead className={tableHeadClass}>
+            <tr>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                تصویر
+              </th>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                نام
+              </th>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                اسلاگ
+              </th>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                تعداد محصول
+              </th>
+              <th className="text-right px-4 py-3 font-semibold"></th>
+            </tr>
+          </thead>
+          <tbody className={tableBodyClass}>
+            {items.map((b) => (
+              <tr key={b.id} className={tableRowClass}>
+                <td className="px-4 py-3">
+                  <AdminThumb src={b.logoImage} alt={b.name} />
+                </td>
+                <td className="px-4 py-3 font-semibold text-charcoal">{b.name}</td>
+                <td className="px-4 py-3 text-gray-500 font-mono">{b.slug}</td>
+                <td className="px-4 py-3 text-gray-500">
+                  {b.productCount.toLocaleString("fa-IR")}
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center justify-end gap-1.5">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setEditingId(b.id);
+                        setForm({
+                          name: b.name,
+                          slug: b.slug,
+                          logoImage: b.logoImage ?? "",
+                        });
+                      }}
+                    >
+                      ویرایش
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDelete(b.id)}
+                      disabled={pending}
+                    >
+                      حذف
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </TableShell>
       )}
     </div>
@@ -182,14 +253,22 @@ function CarModelsTab({
   carBrands: AdminCarBrandVM[];
 }) {
   const [items, setItems] = useState(initial);
-  const [form, setForm] = useState({ carBrandId: carBrands[0]?.id ?? 0, name: "", yearStart: "", yearEnd: "" });
+  const [form, setForm] = useState({
+    carBrandId: carBrands[0]?.id ?? 0,
+    name: "",
+    image: "",
+  });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
 
   function reset() {
     setEditingId(null);
-    setForm({ carBrandId: carBrands[0]?.id ?? 0, name: "", yearStart: "", yearEnd: "" });
+    setForm({
+      carBrandId: carBrands[0]?.id ?? 0,
+      name: "",
+      image: "",
+    });
     setError("");
   }
 
@@ -199,20 +278,24 @@ function CarModelsTab({
     const payload = {
       carBrandId: Number(form.carBrandId),
       name: form.name,
-      yearStart: form.yearStart ? Number(form.yearStart) : null,
-      yearEnd: form.yearEnd ? Number(form.yearEnd) : null,
+      image: form.image || null,
     };
     startTransition(async () => {
       if (editingId) {
         const result = await updateCarModel(editingId, payload);
         if (!result.ok) return setError(result.error);
         const brandName = carBrands.find((b) => b.id === payload.carBrandId)?.name ?? "";
-        setItems((prev) => prev.map((m) => (m.id === editingId ? { ...m, ...payload, brandName } : m)));
+        setItems((prev) =>
+          prev.map((m) => (m.id === editingId ? { ...m, ...payload, brandName } : m)),
+        );
       } else {
         const result = await createCarModel(payload);
         if (!result.ok) return setError(result.error);
         const brandName = carBrands.find((b) => b.id === payload.carBrandId)?.name ?? "";
-        setItems((prev) => [...prev, { id: result.data.id, ...payload, brandName, image: null }]);
+        setItems((prev) => [
+          ...prev,
+          { id: result.data.id, ...payload, brandName },
+        ]);
       }
       reset();
     });
@@ -229,72 +312,112 @@ function CarModelsTab({
   return (
     <div className="space-y-6">
       <Card className="overflow-hidden">
-        <CardHeader title={editingId ? "ویرایش مدل خودرو" : "افزودن مدل خودرو"} />
+        <CardHeader title={editingId ? "ویرایش نام خودرو" : "افزودن نام خودرو"} />
         <div className="p-5 sm:p-6">
-        <form onSubmit={handleSubmit} className="grid sm:grid-cols-5 gap-3">
-          <Select value={form.carBrandId} onChange={(e) => setForm({ ...form, carBrandId: Number(e.target.value) })} required>
-            {carBrands.map((b) => (
-              <option key={b.id} value={b.id}>{b.name}</option>
-            ))}
-          </Select>
-          <Input placeholder="نام مدل (پژو ۲۰۶)" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <Input placeholder="سال شروع" inputMode="numeric" value={form.yearStart} onChange={(e) => setForm({ ...form, yearStart: e.target.value })} />
-          <Input placeholder="سال پایان (خالی=فعلی)" inputMode="numeric" value={form.yearEnd} onChange={(e) => setForm({ ...form, yearEnd: e.target.value })} />
-          <div className="flex gap-2">
-            <Button type="submit" disabled={pending} className="flex-1">{editingId ? "ذخیره" : "افزودن"}</Button>
-            {editingId && <Button type="button" variant="ghost" onClick={reset}>انصراف</Button>}
-          </div>
-        </form>
-        {error && <div className="mt-3"><FormError message={error} /></div>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid sm:grid-cols-3 gap-3">
+              <Select
+                value={form.carBrandId}
+                onChange={(e) => setForm({ ...form, carBrandId: Number(e.target.value) })}
+                required
+              >
+                {carBrands.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </Select>
+              <Input
+                placeholder="نام مدل (پژو ۲۰۶)"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
+              />
+              <div className="flex gap-2">
+                <Button type="submit" disabled={pending} className="flex-1">
+                  {editingId ? "ذخیره" : "افزودن"}
+                </Button>
+                {editingId && (
+                  <Button type="button" variant="ghost" onClick={reset}>
+                    انصراف
+                  </Button>
+                )}
+              </div>
+            </div>
+            <ImageUploadField
+              folder="cars"
+              label="تصویر خودرو"
+              value={form.image}
+              onChange={(url) => setForm({ ...form, image: url })}
+            />
+          </form>
+          {error && (
+            <div className="mt-3">
+              <FormError message={error} />
+            </div>
+          )}
         </div>
       </Card>
 
       {items.length === 0 ? (
-        <Card><EmptyState message="هنوز مدل خودرویی ثبت نشده است." /></Card>
+        <Card>
+          <EmptyState message="هنوز مدل خودرویی ثبت نشده است." />
+        </Card>
       ) : (
         <TableShell>
-              <thead className={tableHeadClass}>
-                <tr>
-                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">مدل</th>
-                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">برند</th>
-                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">سال تولید</th>
-                  <th className="text-right px-4 py-3 font-semibold"></th>
-                </tr>
-              </thead>
-              <tbody className={tableBodyClass}>
-                {items.map((m) => (
-                  <tr key={m.id} className={tableRowClass}>
-                    <td className="px-4 py-3 font-semibold text-charcoal">{m.name}</td>
-                    <td className="px-4 py-3 text-gray-500">{m.brandName}</td>
-                    <td className="px-4 py-3 text-gray-500">
-                      {m.yearStart ?? "—"} تا {m.yearEnd ?? "اکنون"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setEditingId(m.id);
-                            setForm({
-                              carBrandId: m.carBrandId,
-                              name: m.name,
-                              yearStart: m.yearStart?.toString() ?? "",
-                              yearEnd: m.yearEnd?.toString() ?? "",
-                            });
-                          }}
-                        >
-                          ویرایش
-                        </Button>
-                        <Button type="button" variant="danger" size="sm" onClick={() => handleDelete(m.id)} disabled={pending}>
-                          حذف
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+          <thead className={tableHeadClass}>
+            <tr>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                تصویر
+              </th>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                مدل
+              </th>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                برند
+              </th>
+              <th className="text-right px-4 py-3 font-semibold"></th>
+            </tr>
+          </thead>
+          <tbody className={tableBodyClass}>
+            {items.map((m) => (
+              <tr key={m.id} className={tableRowClass}>
+                <td className="px-4 py-3">
+                  <AdminThumb src={m.image} alt={m.name} />
+                </td>
+                <td className="px-4 py-3 font-semibold text-charcoal">{m.name}</td>
+                <td className="px-4 py-3 text-gray-500">{m.brandName}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center justify-end gap-1.5">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setEditingId(m.id);
+                        setForm({
+                          carBrandId: m.carBrandId,
+                          name: m.name,
+                          image: m.image ?? "",
+                        });
+                      }}
+                    >
+                      ویرایش
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDelete(m.id)}
+                      disabled={pending}
+                    >
+                      حذف
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </TableShell>
       )}
     </div>
@@ -303,28 +426,40 @@ function CarModelsTab({
 
 // ── Parts brands ──────────────────────────────────────────────────────────────
 
-function PartsBrandsTab({ initial }: { initial: { id: number; name: string }[] }) {
+function PartsBrandsTab({ initial }: { initial: AdminPartsBrandVM[] }) {
   const [items, setItems] = useState(initial);
-  const [name, setName] = useState("");
+  const [form, setForm] = useState({ name: "", slug: "", logoImage: "" });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
+
+  function reset() {
+    setEditingId(null);
+    setForm({ name: "", slug: "", logoImage: "" });
+    setError("");
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     startTransition(async () => {
+      const payload = {
+        name: form.name,
+        slug: form.slug,
+        logoImage: form.logoImage || null,
+      };
       if (editingId) {
-        const result = await updatePartsBrand(editingId, { name });
+        const result = await updatePartsBrand(editingId, payload);
         if (!result.ok) return setError(result.error);
-        setItems((prev) => prev.map((b) => (b.id === editingId ? { ...b, name } : b)));
+        setItems((prev) =>
+          prev.map((b) => (b.id === editingId ? { ...b, ...payload } : b)),
+        );
       } else {
-        const result = await createPartsBrand(name);
+        const result = await createPartsBrand(payload);
         if (!result.ok) return setError(result.error);
-        setItems((prev) => [...prev, { id: result.data.id, name }]);
+        setItems((prev) => [...prev, { id: result.data.id, ...payload }]);
       }
-      setEditingId(null);
-      setName("");
+      reset();
     });
   }
 
@@ -341,44 +476,105 @@ function PartsBrandsTab({ initial }: { initial: { id: number; name: string }[] }
       <Card className="overflow-hidden">
         <CardHeader title={editingId ? "ویرایش برند قطعه" : "افزودن برند قطعه"} />
         <div className="p-5 sm:p-6">
-        <form onSubmit={handleSubmit} className="grid sm:grid-cols-4 gap-3">
-          <Input placeholder="نام برند (بوش)" value={name} onChange={(e) => setName(e.target.value)} required className="sm:col-span-2" />
-          <div className="flex gap-2 sm:col-span-2">
-            <Button type="submit" disabled={pending} className="flex-1">{editingId ? "ذخیره" : "افزودن"}</Button>
-            {editingId && <Button type="button" variant="ghost" onClick={() => { setEditingId(null); setName(""); }}>انصراف</Button>}
-          </div>
-        </form>
-        {error && <div className="mt-3"><FormError message={error} /></div>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid sm:grid-cols-3 gap-3">
+              <Input
+                placeholder="نام برند (بوش)"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
+              />
+              <Input
+                placeholder="اسلاگ (bosch)"
+                value={form.slug}
+                onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                required
+              />
+              <div className="flex gap-2">
+                <Button type="submit" disabled={pending} className="flex-1">
+                  {editingId ? "ذخیره" : "افزودن"}
+                </Button>
+                {editingId && (
+                  <Button type="button" variant="ghost" onClick={reset}>
+                    انصراف
+                  </Button>
+                )}
+              </div>
+            </div>
+            <ImageUploadField
+              folder="brands"
+              label="لوگوی برند"
+              value={form.logoImage}
+              onChange={(url) => setForm({ ...form, logoImage: url })}
+            />
+          </form>
+          {error && (
+            <div className="mt-3">
+              <FormError message={error} />
+            </div>
+          )}
         </div>
       </Card>
 
       {items.length === 0 ? (
-        <Card><EmptyState message="هنوز برند قطعه‌ای ثبت نشده است." /></Card>
+        <Card>
+          <EmptyState message="هنوز برند قطعه‌ای ثبت نشده است." />
+        </Card>
       ) : (
         <TableShell>
-              <thead className={tableHeadClass}>
-                <tr>
-                  <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">نام</th>
-                  <th className="text-right px-4 py-3 font-semibold"></th>
-                </tr>
-              </thead>
-              <tbody className={tableBodyClass}>
-                {items.map((b) => (
-                  <tr key={b.id} className={tableRowClass}>
-                    <td className="px-4 py-3 font-semibold text-charcoal">{b.name}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <Button type="button" variant="ghost" size="sm" onClick={() => { setEditingId(b.id); setName(b.name); }}>
-                          ویرایش
-                        </Button>
-                        <Button type="button" variant="danger" size="sm" onClick={() => handleDelete(b.id)} disabled={pending}>
-                          حذف
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+          <thead className={tableHeadClass}>
+            <tr>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                تصویر
+              </th>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                نام
+              </th>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                اسلاگ
+              </th>
+              <th className="text-right px-4 py-3 font-semibold"></th>
+            </tr>
+          </thead>
+          <tbody className={tableBodyClass}>
+            {items.map((b) => (
+              <tr key={b.id} className={tableRowClass}>
+                <td className="px-4 py-3">
+                  <AdminThumb src={b.logoImage} alt={b.name} />
+                </td>
+                <td className="px-4 py-3 font-semibold text-charcoal">{b.name}</td>
+                <td className="px-4 py-3 text-gray-500 font-mono">{b.slug}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center justify-end gap-1.5">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setEditingId(b.id);
+                        setForm({
+                          name: b.name,
+                          slug: b.slug,
+                          logoImage: b.logoImage ?? "",
+                        });
+                      }}
+                    >
+                      ویرایش
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDelete(b.id)}
+                      disabled={pending}
+                    >
+                      حذف
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </TableShell>
       )}
     </div>

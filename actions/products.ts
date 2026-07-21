@@ -155,7 +155,7 @@ export async function getAllProductIds(): Promise<string[]> {
 
 /** Distinct filter option lists for the PLP sidebar. */
 export async function getProductFilters(): Promise<{
-  brands: string[];
+  brands: { slug: string; name: string }[];
   carTypes: string[];
   categories: { key: string; label: string }[];
 }> {
@@ -181,7 +181,7 @@ export async function getProductFilters(): Promise<{
         }),
       ]);
       return {
-        brands: partsBrands.map((b) => b.name),
+        brands: partsBrands.map((b) => ({ slug: b.slug, name: b.name })),
         carTypes: [...new Set(models.map((m) => m.name))],
         categories: categories.map((c) => ({ key: c.key, label: c.name })),
       };
@@ -345,7 +345,23 @@ export async function getProductsAdmin(
   return safeQuery(
     'getProductsAdmin',
     async () => {
-      const where = buildAdminProductWhere(filters);
+      const where = {
+        ...(filters.search
+          ? {
+              OR: [
+                { name: { contains: filters.search, mode: 'insensitive' as const } },
+                { sku: { contains: filters.search, mode: 'insensitive' as const } },
+              ],
+            }
+          : {}),
+        ...(filters.categoryId ? { categoryId: filters.categoryId } : {}),
+        ...(filters.partsBrandId ? { partsBrandId: filters.partsBrandId } : {}),
+        ...(filters.carModelId
+          ? { compatibilities: { some: { carModelId: filters.carModelId } } }
+          : {}),
+        ...(filters.isActive !== undefined ? { isActive: filters.isActive } : {}),
+        ...(filters.isOffer !== undefined ? { isOffer: filters.isOffer } : {}),
+      };
 
       const orderBy = adminProductOrderBy(filters.sortBy, filters.sortDir);
 

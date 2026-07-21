@@ -20,6 +20,7 @@ import {
   tableHeadClass,
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
+import ImageUploadField, { AdminThumb } from "@/src/components/admin/ImageUploadField";
 
 const EMPTY_FORM: CategoryInput = { key: "", name: "", image: "", sortOrder: 0 };
 
@@ -87,34 +88,37 @@ export default function CategoriesManager({ initialCategories }: { initialCatego
       <Card className="overflow-hidden">
         <CardHeader title={editingId ? "ویرایش دسته‌بندی" : "افزودن دسته‌بندی جدید"} />
         <div className="p-5 sm:p-6">
-          <form onSubmit={handleSubmit} className="grid sm:grid-cols-4 gap-3">
-            <Input
-              placeholder="کلید (engine)"
-              value={form.key}
-              onChange={(e) => setForm({ ...form, key: e.target.value })}
-              required
-            />
-            <Input
-              placeholder="نام نمایشی"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              required
-            />
-            <Input
-              placeholder="آدرس تصویر (اختیاری)"
-              value={form.image ?? ""}
-              onChange={(e) => setForm({ ...form, image: e.target.value })}
-            />
-            <div className="flex gap-2">
-              <Button type="submit" disabled={pending} className="flex-1">
-                {editingId ? "ذخیره" : "افزودن"}
-              </Button>
-              {editingId && (
-                <Button type="button" variant="ghost" onClick={cancelEdit}>
-                  انصراف
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid sm:grid-cols-3 gap-3">
+              <Input
+                placeholder="کلید (engine)"
+                value={form.key}
+                onChange={(e) => setForm({ ...form, key: e.target.value })}
+                required
+              />
+              <Input
+                placeholder="نام نمایشی"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
+              />
+              <div className="flex gap-2">
+                <Button type="submit" disabled={pending} className="flex-1">
+                  {editingId ? "ذخیره" : "افزودن"}
                 </Button>
-              )}
+                {editingId && (
+                  <Button type="button" variant="ghost" onClick={cancelEdit}>
+                    انصراف
+                  </Button>
+                )}
+              </div>
             </div>
+            <ImageUploadField
+              folder="categories"
+              label="تصویر دسته‌بندی"
+              value={form.image ?? ""}
+              onChange={(url) => setForm({ ...form, image: url })}
+            />
           </form>
           {error && (
             <div className="mt-3">
@@ -133,6 +137,9 @@ export default function CategoriesManager({ initialCategories }: { initialCatego
           <thead className={tableHeadClass}>
             <tr>
               <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
+                تصویر
+              </th>
+              <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
                 نام
               </th>
               <th className="text-right px-4 py-3 font-semibold text-xs uppercase tracking-wide text-gray-500">
@@ -147,6 +154,9 @@ export default function CategoriesManager({ initialCategories }: { initialCatego
           <tbody className={tableBodyClass}>
             {categories.map((c) => (
               <tr key={c.id} className={tableRowClass}>
+                <td className="px-4 py-3">
+                  <AdminThumb src={c.image} alt={c.name} />
+                </td>
                 <td className="px-4 py-3 font-semibold text-charcoal">{c.name}</td>
                 <td className="px-4 py-3 text-gray-500 font-mono">{c.key}</td>
                 <td className="px-4 py-3 text-gray-500">{c.count.toLocaleString("fa-IR")}</td>

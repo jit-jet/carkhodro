@@ -32,6 +32,7 @@ import type { HesabfaItem } from './types';
 const FALLBACK_CATEGORY_KEY = 'uncategorized';
 const FALLBACK_CATEGORY_NAME = 'دسته‌بندی نشده';
 const FALLBACK_BRAND_NAME = 'نامشخص';
+const FALLBACK_BRAND_SLUG = 'unknown';
 
 export interface SyncStats {
   created: number;
@@ -79,7 +80,7 @@ async function getFallbackBrandId(): Promise<number> {
   const brand = await prisma.partsBrand.upsert({
     where: { name: FALLBACK_BRAND_NAME },
     update: {},
-    create: { name: FALLBACK_BRAND_NAME },
+    create: { name: FALLBACK_BRAND_NAME, slug: FALLBACK_BRAND_SLUG },
     select: { id: true },
   });
   return brand.id;

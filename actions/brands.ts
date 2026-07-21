@@ -50,14 +50,57 @@ export async function getCarModels(): Promise<CarModelVM[]> {
 
 // ── Parts brands (suppliers) ─────────────────────────────────────────────────
 
-export async function getPartsBrands(): Promise<{ id: number; name: string }[]> {
+export async function getPartsBrands(): Promise<{ id: number; name: string; slug: string }[]> {
   'use cache';
   cacheLife('days');
   cacheTag(tags.partsBrands);
 
   return safeQuery('getPartsBrands', async () => {
     const rows = await prisma.partsBrand.findMany({ orderBy: { name: 'asc' } });
-    return rows.map((b) => ({ id: b.id, name: b.name }));
+    return rows.map((b) => ({ id: b.id, name: b.name, slug: b.slug }));
+  }, []);
+}
+
+/** Parts brands for the home slider — includes logo + active product counts. */
+export async function getPartsBrandsHome(): Promise<
+  { id: number; name: string; slug: string; image: string; count: number }[]
+> {
+  'use cache';
+  cacheLife('days');
+  cacheTag(tags.partsBrands, tags.products);
+
+  return safeQuery('getPartsBrandsHome', async () => {
+    const rows = await prisma.partsBrand.findMany({
+      where: { products: { some: { isActive: true } } },
+      orderBy: { name: 'asc' },
+      include: { _count: { select: { products: { where: { isActive: true } } } } },
+    });
+    return rows.map((b) => ({
+      id: b.id,
+      name: b.name,
+      slug: b.slug,
+      image: b.logoImage ?? '/logo.png',
+      count: b._count.products,
+    }));
+  }, []);
+}
+
+export interface AdminPartsBrandVM {
+  id: number;
+  name: string;
+  slug: string;
+  logoImage: string | null;
+}
+
+export async function getPartsBrandsAdmin(): Promise<AdminPartsBrandVM[]> {
+  return safeQuery('getPartsBrandsAdmin', async () => {
+    const rows = await prisma.partsBrand.findMany({ orderBy: { name: 'asc' } });
+    return rows.map((b) => ({
+      id: b.id,
+      name: b.name,
+      slug: b.slug,
+      logoImage: b.logoImage,
+    }));
   }, []);
 }
 
@@ -89,8 +132,6 @@ export interface AdminCarModelVM {
   carBrandId: number;
   brandName: string;
   name: string;
-  yearStart: number | null;
-  yearEnd: number | null;
   image: string | null;
 }
 
@@ -105,8 +146,6 @@ export async function getCarModelsAdmin(): Promise<AdminCarModelVM[]> {
       carBrandId: m.carBrandId,
       brandName: m.carBrand.name,
       name: m.name,
-      yearStart: m.yearStart,
-      yearEnd: m.yearEnd,
       image: m.image,
     }));
   }, []);

@@ -548,25 +548,24 @@ async function main() {
   const cbId = (mockId: number) => carBrands[mockId - 1].id;
 
   // ── Car Models ─────────────────────────────────────────────────────────────
-  // yearStart/yearEnd are Gregorian (Jalali + 621)
   const carModelsInput = [
-    { carBrandId: cbId(1), name: 'پژو ۲۰۶',   yearStart: 2001, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(1), name: 'پژو ۴۰۵',   yearStart: 1991, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(1), name: 'سمند',       yearStart: 2002, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(1), name: 'دنا',        yearStart: 2012, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(1), name: 'پارس',       yearStart: 1998, yearEnd: 2022 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(2), name: 'پراید',      yearStart: 1989, yearEnd: 2021 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(2), name: 'تیبا',       yearStart: 2010, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(2), name: 'ساینا',      yearStart: 2015, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(2), name: 'شاهین',      yearStart: 2021, yearEnd: null,                  image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(3), name: 'کرولا',      yearStart: 2006, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(3), name: 'کمری',       yearStart: 2001, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(3), name: 'لندکروزر',   yearStart: 1996, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(4), name: 'آکسنت',      yearStart: 2009, yearEnd: 2022 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(4), name: 'النترا',     yearStart: 2006, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(4), name: 'توسان',      yearStart: 2013, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(5), name: 'ریو',        yearStart: 2009, yearEnd: 2022 as number | null, image: '/tempt/quick.jpg' },
-    { carBrandId: cbId(5), name: 'سراتو',      yearStart: 2011, yearEnd: 2023 as number | null, image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(1), name: 'پژو ۲۰۶',   image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(1), name: 'پژو ۴۰۵',   image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(1), name: 'سمند',       image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(1), name: 'دنا',        image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(1), name: 'پارس',       image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(2), name: 'پراید',      image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(2), name: 'تیبا',       image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(2), name: 'ساینا',      image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(2), name: 'شاهین',      image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(3), name: 'کرولا',      image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(3), name: 'کمری',       image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(3), name: 'لندکروزر',   image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(4), name: 'آکسنت',      image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(4), name: 'النترا',     image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(4), name: 'توسان',      image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(5), name: 'ریو',        image: '/tempt/quick.jpg' },
+    { carBrandId: cbId(5), name: 'سراتو',      image: '/tempt/quick.jpg' },
   ];
   const carModels = await prisma.$transaction(
     carModelsInput.map(m => prisma.carModel.create({ data: m })),
@@ -576,14 +575,14 @@ async function main() {
 
   // ── Parts Brands ───────────────────────────────────────────────────────────
   const partsBrandsInput = [
-    { name: 'بوش' },       // 1
-    { name: 'ایساکو' },    // 2
-    { name: 'NGK' },       // 3
-    { name: 'واریان' },    // 4
-    { name: 'کیان‌پارت' }, // 5
-    { name: 'تکنو' },      // 6
-    { name: 'مپکو' },      // 7
-    { name: 'فدک' },       // 8
+    { name: 'بوش',       slug: 'bosch' },
+    { name: 'ایساکو',    slug: 'isaco' },
+    { name: 'NGK',       slug: 'ngk' },
+    { name: 'واریان',    slug: 'varian' },
+    { name: 'کیان‌پارت', slug: 'kian-part' },
+    { name: 'تکنو',      slug: 'techno' },
+    { name: 'مپکو',      slug: 'mapco' },
+    { name: 'فدک',       slug: 'fadak' },
   ];
   const partsBrands = await prisma.$transaction(
     partsBrandsInput.map(b => prisma.partsBrand.create({ data: b })),
