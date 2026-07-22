@@ -434,6 +434,11 @@ model Review {
   text               String   @db.Text
   /// true only when the author has a completed order containing this product
   isVerifiedPurchase Boolean  @default(false) @map("is_verified_purchase")
+  /// Admin-side read flag for the communications inbox (defaults unread for new reviews).
+  isRead             Boolean  @default(false) @map("is_read")
+  /// Optional public reply from the shop, shown under the review on the PDP.
+  adminReply         String?  @db.Text @map("admin_reply")
+  repliedAt          DateTime? @map("replied_at")
   createdAt          DateTime @default(now()) @map("created_at")
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -441,6 +446,7 @@ model Review {
 
   @@index([productId])
   @@index([userId])
+  @@index([isRead])
   @@map("reviews")
 }
 
@@ -770,13 +776,17 @@ model SupportMessage {
   direction MessageDirection
   subject   String
   body      String           @db.Text
+  /// Partner-side read flag (INBOUND messages in the partner inbox).
   isRead    Boolean          @default(false) @map("is_read")
+  /// Admin-side read flag for partner OUTBOUND messages in the admin inbox.
+  adminIsRead Boolean        @default(false) @map("admin_is_read")
   isDeleted Boolean          @default(false) @map("is_deleted")
   createdAt DateTime         @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, direction, isDeleted])
+  @@index([adminIsRead, direction, isDeleted])
   @@map("support_messages")
 }
 
@@ -822,18 +832,20 @@ model PriceListRequest {
 }
 
 /// Wholesale partner suggestion to add a product to the shop catalogue
-/// (درخواست تأمین کالا). Admin review comes later; for now this is append-only
-/// storage keyed to the submitting user.
+/// (درخواست تأمین کالا). Admins review these in the communications panel.
 model ProductSuggestion {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
   /// Free-text description of the product the partner wants stocked.
   body      String   @db.Text
+  /// Admin-side read flag for the communications inbox.
+  isRead    Boolean  @default(false) @map("is_read")
   createdAt DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([isRead])
   @@map("product_suggestions")
 }
 

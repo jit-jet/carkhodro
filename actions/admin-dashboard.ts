@@ -15,6 +15,9 @@ export interface AdminDashboardStatsVM {
   retailCount: number;
   pendingOrderCount: number;
   smsCampaignCount: number;
+  unreadReviews: number;
+  unreadSupport: number;
+  unreadSuggestions: number;
 }
 
 export async function getAdminDashboardStats(): Promise<AdminDashboardStatsVM> {
@@ -30,6 +33,9 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStatsVM> {
         retailCount,
         pendingOrderCount,
         smsCampaignCount,
+        unreadReviews,
+        unreadSupport,
+        unreadSuggestions,
       ] = await Promise.all([
         prisma.product.count(),
         prisma.product.count({ where: { isActive: true } }),
@@ -41,6 +47,11 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStatsVM> {
           where: { status: { in: ['NEW', 'AWAITING_CONFIRMATION', 'CONFIRMED_AWAITING_PAYMENT'] } },
         }),
         prisma.smsCampaign.count(),
+        prisma.review.count({ where: { isRead: false } }),
+        prisma.supportMessage.count({
+          where: { direction: 'OUTBOUND', isDeleted: false, adminIsRead: false },
+        }),
+        prisma.productSuggestion.count({ where: { isRead: false } }),
       ]);
 
       return {
@@ -52,6 +63,9 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStatsVM> {
         retailCount,
         pendingOrderCount,
         smsCampaignCount,
+        unreadReviews,
+        unreadSupport,
+        unreadSuggestions,
       };
     },
     {
@@ -63,6 +77,9 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStatsVM> {
       retailCount: 0,
       pendingOrderCount: 0,
       smsCampaignCount: 0,
+      unreadReviews: 0,
+      unreadSupport: 0,
+      unreadSuggestions: 0,
     },
   );
 }

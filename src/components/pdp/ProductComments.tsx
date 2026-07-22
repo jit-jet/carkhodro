@@ -311,6 +311,19 @@ export default function ProductComments({ description, comments: initial, produc
                     <StarRow rating={comment.rating} size="sm" />
                   </div>
                   <p className="text-sm text-gray-700 leading-7">{comment.text}</p>
+                  {comment.adminReply && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      <div className="rounded-xl bg-amber-50/80 border border-amber-100 px-4 py-3">
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                          <span className="text-xs font-bold text-accent-dark">پاسخ کارخودرو</span>
+                          {comment.adminReplyDate && (
+                            <span className="text-[11px] text-gray-400">{comment.adminReplyDate}</span>
+                          )}
+                        </div>
+                        <p className="text-sm text-charcoal leading-7">{comment.adminReply}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

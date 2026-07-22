@@ -185,8 +185,7 @@ export type PriceListRequest = $Result.DefaultSelection<Prisma.$PriceListRequest
 /**
  * Model ProductSuggestion
  * Wholesale partner suggestion to add a product to the shop catalogue
- * (درخواست تأمین کالا). Admin review comes later; for now this is append-only
- * storage keyed to the submitting user.
+ * (درخواست تأمین کالا). Admins review these in the communications panel.
  */
 export type ProductSuggestion = $Result.DefaultSelection<Prisma.$ProductSuggestionPayload>
 
@@ -21034,6 +21033,9 @@ export namespace Prisma {
     rating: number | null
     text: string | null
     isVerifiedPurchase: boolean | null
+    isRead: boolean | null
+    adminReply: string | null
+    repliedAt: Date | null
     createdAt: Date | null
   }
 
@@ -21045,6 +21047,9 @@ export namespace Prisma {
     rating: number | null
     text: string | null
     isVerifiedPurchase: boolean | null
+    isRead: boolean | null
+    adminReply: string | null
+    repliedAt: Date | null
     createdAt: Date | null
   }
 
@@ -21056,6 +21061,9 @@ export namespace Prisma {
     rating: number
     text: number
     isVerifiedPurchase: number
+    isRead: number
+    adminReply: number
+    repliedAt: number
     createdAt: number
     _all: number
   }
@@ -21077,6 +21085,9 @@ export namespace Prisma {
     rating?: true
     text?: true
     isVerifiedPurchase?: true
+    isRead?: true
+    adminReply?: true
+    repliedAt?: true
     createdAt?: true
   }
 
@@ -21088,6 +21099,9 @@ export namespace Prisma {
     rating?: true
     text?: true
     isVerifiedPurchase?: true
+    isRead?: true
+    adminReply?: true
+    repliedAt?: true
     createdAt?: true
   }
 
@@ -21099,6 +21113,9 @@ export namespace Prisma {
     rating?: true
     text?: true
     isVerifiedPurchase?: true
+    isRead?: true
+    adminReply?: true
+    repliedAt?: true
     createdAt?: true
     _all?: true
   }
@@ -21197,6 +21214,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase: boolean
+    isRead: boolean
+    adminReply: string | null
+    repliedAt: Date | null
     createdAt: Date
     _count: ReviewCountAggregateOutputType | null
     _avg: ReviewAvgAggregateOutputType | null
@@ -21227,6 +21247,9 @@ export namespace Prisma {
     rating?: boolean
     text?: boolean
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: boolean
+    repliedAt?: boolean
     createdAt?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
     user?: boolean | Review$userArgs<ExtArgs>
@@ -21240,6 +21263,9 @@ export namespace Prisma {
     rating?: boolean
     text?: boolean
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: boolean
+    repliedAt?: boolean
     createdAt?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
     user?: boolean | Review$userArgs<ExtArgs>
@@ -21253,6 +21279,9 @@ export namespace Prisma {
     rating?: boolean
     text?: boolean
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: boolean
+    repliedAt?: boolean
     createdAt?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
     user?: boolean | Review$userArgs<ExtArgs>
@@ -21266,10 +21295,13 @@ export namespace Prisma {
     rating?: boolean
     text?: boolean
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: boolean
+    repliedAt?: boolean
     createdAt?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "userId" | "authorName" | "rating" | "text" | "isVerifiedPurchase" | "createdAt", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "userId" | "authorName" | "rating" | "text" | "isVerifiedPurchase" | "isRead" | "adminReply" | "repliedAt" | "createdAt", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     user?: boolean | Review$userArgs<ExtArgs>
@@ -21306,6 +21338,15 @@ export namespace Prisma {
        * true only when the author has a completed order containing this product
        */
       isVerifiedPurchase: boolean
+      /**
+       * Admin-side read flag for the communications inbox (defaults unread for new reviews).
+       */
+      isRead: boolean
+      /**
+       * Optional public reply from the shop, shown under the review on the PDP.
+       */
+      adminReply: string | null
+      repliedAt: Date | null
       createdAt: Date
     }, ExtArgs["result"]["review"]>
     composites: {}
@@ -21739,6 +21780,9 @@ export namespace Prisma {
     readonly rating: FieldRef<"Review", 'Int'>
     readonly text: FieldRef<"Review", 'String'>
     readonly isVerifiedPurchase: FieldRef<"Review", 'Boolean'>
+    readonly isRead: FieldRef<"Review", 'Boolean'>
+    readonly adminReply: FieldRef<"Review", 'String'>
+    readonly repliedAt: FieldRef<"Review", 'DateTime'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
   }
     
@@ -37226,6 +37270,7 @@ export namespace Prisma {
     subject: string | null
     body: string | null
     isRead: boolean | null
+    adminIsRead: boolean | null
     isDeleted: boolean | null
     createdAt: Date | null
   }
@@ -37237,6 +37282,7 @@ export namespace Prisma {
     subject: string | null
     body: string | null
     isRead: boolean | null
+    adminIsRead: boolean | null
     isDeleted: boolean | null
     createdAt: Date | null
   }
@@ -37248,6 +37294,7 @@ export namespace Prisma {
     subject: number
     body: number
     isRead: number
+    adminIsRead: number
     isDeleted: number
     createdAt: number
     _all: number
@@ -37261,6 +37308,7 @@ export namespace Prisma {
     subject?: true
     body?: true
     isRead?: true
+    adminIsRead?: true
     isDeleted?: true
     createdAt?: true
   }
@@ -37272,6 +37320,7 @@ export namespace Prisma {
     subject?: true
     body?: true
     isRead?: true
+    adminIsRead?: true
     isDeleted?: true
     createdAt?: true
   }
@@ -37283,6 +37332,7 @@ export namespace Prisma {
     subject?: true
     body?: true
     isRead?: true
+    adminIsRead?: true
     isDeleted?: true
     createdAt?: true
     _all?: true
@@ -37367,6 +37417,7 @@ export namespace Prisma {
     subject: string
     body: string
     isRead: boolean
+    adminIsRead: boolean
     isDeleted: boolean
     createdAt: Date
     _count: SupportMessageCountAggregateOutputType | null
@@ -37395,6 +37446,7 @@ export namespace Prisma {
     subject?: boolean
     body?: boolean
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -37407,6 +37459,7 @@ export namespace Prisma {
     subject?: boolean
     body?: boolean
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -37419,6 +37472,7 @@ export namespace Prisma {
     subject?: boolean
     body?: boolean
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -37431,11 +37485,12 @@ export namespace Prisma {
     subject?: boolean
     body?: boolean
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: boolean
   }
 
-  export type SupportMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "direction" | "subject" | "body" | "isRead" | "isDeleted" | "createdAt", ExtArgs["result"]["supportMessage"]>
+  export type SupportMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "direction" | "subject" | "body" | "isRead" | "adminIsRead" | "isDeleted" | "createdAt", ExtArgs["result"]["supportMessage"]>
   export type SupportMessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -37457,7 +37512,14 @@ export namespace Prisma {
       direction: $Enums.MessageDirection
       subject: string
       body: string
+      /**
+       * Partner-side read flag (INBOUND messages in the partner inbox).
+       */
       isRead: boolean
+      /**
+       * Admin-side read flag for partner OUTBOUND messages in the admin inbox.
+       */
+      adminIsRead: boolean
       isDeleted: boolean
       createdAt: Date
     }, ExtArgs["result"]["supportMessage"]>
@@ -37890,6 +37952,7 @@ export namespace Prisma {
     readonly subject: FieldRef<"SupportMessage", 'String'>
     readonly body: FieldRef<"SupportMessage", 'String'>
     readonly isRead: FieldRef<"SupportMessage", 'Boolean'>
+    readonly adminIsRead: FieldRef<"SupportMessage", 'Boolean'>
     readonly isDeleted: FieldRef<"SupportMessage", 'Boolean'>
     readonly createdAt: FieldRef<"SupportMessage", 'DateTime'>
   }
@@ -40582,6 +40645,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     body: string | null
+    isRead: boolean | null
     createdAt: Date | null
   }
 
@@ -40589,6 +40653,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     body: string | null
+    isRead: boolean | null
     createdAt: Date | null
   }
 
@@ -40596,6 +40661,7 @@ export namespace Prisma {
     id: number
     userId: number
     body: number
+    isRead: number
     createdAt: number
     _all: number
   }
@@ -40605,6 +40671,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     body?: true
+    isRead?: true
     createdAt?: true
   }
 
@@ -40612,6 +40679,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     body?: true
+    isRead?: true
     createdAt?: true
   }
 
@@ -40619,6 +40687,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     body?: true
+    isRead?: true
     createdAt?: true
     _all?: true
   }
@@ -40699,6 +40768,7 @@ export namespace Prisma {
     id: string
     userId: string
     body: string
+    isRead: boolean
     createdAt: Date
     _count: ProductSuggestionCountAggregateOutputType | null
     _min: ProductSuggestionMinAggregateOutputType | null
@@ -40723,6 +40793,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     body?: boolean
+    isRead?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["productSuggestion"]>
@@ -40731,6 +40802,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     body?: boolean
+    isRead?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["productSuggestion"]>
@@ -40739,6 +40811,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     body?: boolean
+    isRead?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["productSuggestion"]>
@@ -40747,10 +40820,11 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     body?: boolean
+    isRead?: boolean
     createdAt?: boolean
   }
 
-  export type ProductSuggestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "body" | "createdAt", ExtArgs["result"]["productSuggestion"]>
+  export type ProductSuggestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "body" | "isRead" | "createdAt", ExtArgs["result"]["productSuggestion"]>
   export type ProductSuggestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -40773,6 +40847,10 @@ export namespace Prisma {
        * Free-text description of the product the partner wants stocked.
        */
       body: string
+      /**
+       * Admin-side read flag for the communications inbox.
+       */
+      isRead: boolean
       createdAt: Date
     }, ExtArgs["result"]["productSuggestion"]>
     composites: {}
@@ -41201,6 +41279,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ProductSuggestion", 'String'>
     readonly userId: FieldRef<"ProductSuggestion", 'String'>
     readonly body: FieldRef<"ProductSuggestion", 'String'>
+    readonly isRead: FieldRef<"ProductSuggestion", 'Boolean'>
     readonly createdAt: FieldRef<"ProductSuggestion", 'DateTime'>
   }
     
@@ -41843,6 +41922,9 @@ export namespace Prisma {
     rating: 'rating',
     text: 'text',
     isVerifiedPurchase: 'isVerifiedPurchase',
+    isRead: 'isRead',
+    adminReply: 'adminReply',
+    repliedAt: 'repliedAt',
     createdAt: 'createdAt'
   };
 
@@ -42057,6 +42139,7 @@ export namespace Prisma {
     subject: 'subject',
     body: 'body',
     isRead: 'isRead',
+    adminIsRead: 'adminIsRead',
     isDeleted: 'isDeleted',
     createdAt: 'createdAt'
   };
@@ -42095,6 +42178,7 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     body: 'body',
+    isRead: 'isRead',
     createdAt: 'createdAt'
   };
 
@@ -43441,6 +43525,9 @@ export namespace Prisma {
     rating?: IntFilter<"Review"> | number
     text?: StringFilter<"Review"> | string
     isVerifiedPurchase?: BoolFilter<"Review"> | boolean
+    isRead?: BoolFilter<"Review"> | boolean
+    adminReply?: StringNullableFilter<"Review"> | string | null
+    repliedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -43454,6 +43541,9 @@ export namespace Prisma {
     rating?: SortOrder
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
+    isRead?: SortOrder
+    adminReply?: SortOrderInput | SortOrder
+    repliedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     product?: ProductOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
@@ -43470,6 +43560,9 @@ export namespace Prisma {
     rating?: IntFilter<"Review"> | number
     text?: StringFilter<"Review"> | string
     isVerifiedPurchase?: BoolFilter<"Review"> | boolean
+    isRead?: BoolFilter<"Review"> | boolean
+    adminReply?: StringNullableFilter<"Review"> | string | null
+    repliedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -43483,6 +43576,9 @@ export namespace Prisma {
     rating?: SortOrder
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
+    isRead?: SortOrder
+    adminReply?: SortOrderInput | SortOrder
+    repliedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: ReviewCountOrderByAggregateInput
     _avg?: ReviewAvgOrderByAggregateInput
@@ -43502,6 +43598,9 @@ export namespace Prisma {
     rating?: IntWithAggregatesFilter<"Review"> | number
     text?: StringWithAggregatesFilter<"Review"> | string
     isVerifiedPurchase?: BoolWithAggregatesFilter<"Review"> | boolean
+    isRead?: BoolWithAggregatesFilter<"Review"> | boolean
+    adminReply?: StringNullableWithAggregatesFilter<"Review"> | string | null
+    repliedAt?: DateTimeNullableWithAggregatesFilter<"Review"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
   }
 
@@ -44561,6 +44660,7 @@ export namespace Prisma {
     subject?: StringFilter<"SupportMessage"> | string
     body?: StringFilter<"SupportMessage"> | string
     isRead?: BoolFilter<"SupportMessage"> | boolean
+    adminIsRead?: BoolFilter<"SupportMessage"> | boolean
     isDeleted?: BoolFilter<"SupportMessage"> | boolean
     createdAt?: DateTimeFilter<"SupportMessage"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -44573,6 +44673,7 @@ export namespace Prisma {
     subject?: SortOrder
     body?: SortOrder
     isRead?: SortOrder
+    adminIsRead?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -44588,6 +44689,7 @@ export namespace Prisma {
     subject?: StringFilter<"SupportMessage"> | string
     body?: StringFilter<"SupportMessage"> | string
     isRead?: BoolFilter<"SupportMessage"> | boolean
+    adminIsRead?: BoolFilter<"SupportMessage"> | boolean
     isDeleted?: BoolFilter<"SupportMessage"> | boolean
     createdAt?: DateTimeFilter<"SupportMessage"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -44600,6 +44702,7 @@ export namespace Prisma {
     subject?: SortOrder
     body?: SortOrder
     isRead?: SortOrder
+    adminIsRead?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     _count?: SupportMessageCountOrderByAggregateInput
@@ -44617,6 +44720,7 @@ export namespace Prisma {
     subject?: StringWithAggregatesFilter<"SupportMessage"> | string
     body?: StringWithAggregatesFilter<"SupportMessage"> | string
     isRead?: BoolWithAggregatesFilter<"SupportMessage"> | boolean
+    adminIsRead?: BoolWithAggregatesFilter<"SupportMessage"> | boolean
     isDeleted?: BoolWithAggregatesFilter<"SupportMessage"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"SupportMessage"> | Date | string
   }
@@ -44770,6 +44874,7 @@ export namespace Prisma {
     id?: StringFilter<"ProductSuggestion"> | string
     userId?: StringFilter<"ProductSuggestion"> | string
     body?: StringFilter<"ProductSuggestion"> | string
+    isRead?: BoolFilter<"ProductSuggestion"> | boolean
     createdAt?: DateTimeFilter<"ProductSuggestion"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -44778,6 +44883,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     body?: SortOrder
+    isRead?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
   }
@@ -44789,6 +44895,7 @@ export namespace Prisma {
     NOT?: ProductSuggestionWhereInput | ProductSuggestionWhereInput[]
     userId?: StringFilter<"ProductSuggestion"> | string
     body?: StringFilter<"ProductSuggestion"> | string
+    isRead?: BoolFilter<"ProductSuggestion"> | boolean
     createdAt?: DateTimeFilter<"ProductSuggestion"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -44797,6 +44904,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     body?: SortOrder
+    isRead?: SortOrder
     createdAt?: SortOrder
     _count?: ProductSuggestionCountOrderByAggregateInput
     _max?: ProductSuggestionMaxOrderByAggregateInput
@@ -44810,6 +44918,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ProductSuggestion"> | string
     userId?: StringWithAggregatesFilter<"ProductSuggestion"> | string
     body?: StringWithAggregatesFilter<"ProductSuggestion"> | string
+    isRead?: BoolWithAggregatesFilter<"ProductSuggestion"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ProductSuggestion"> | Date | string
   }
 
@@ -45998,6 +46107,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: string | null
+    repliedAt?: Date | string | null
     createdAt?: Date | string
     product: ProductCreateNestedOneWithoutReviewsInput
     user?: UserCreateNestedOneWithoutReviewsInput
@@ -46011,6 +46123,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: string | null
+    repliedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -46020,6 +46135,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: ProductUpdateOneRequiredWithoutReviewsNestedInput
     user?: UserUpdateOneWithoutReviewsNestedInput
@@ -46033,6 +46151,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -46044,6 +46165,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: string | null
+    repliedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -46053,6 +46177,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -46064,6 +46191,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -47199,6 +47329,7 @@ export namespace Prisma {
     subject: string
     body: string
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutSupportMessagesInput
@@ -47211,6 +47342,7 @@ export namespace Prisma {
     subject: string
     body: string
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
   }
@@ -47221,6 +47353,7 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminIsRead?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutSupportMessagesNestedInput
@@ -47233,6 +47366,7 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminIsRead?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47244,6 +47378,7 @@ export namespace Prisma {
     subject: string
     body: string
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
   }
@@ -47254,6 +47389,7 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminIsRead?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47265,6 +47401,7 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminIsRead?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47416,6 +47553,7 @@ export namespace Prisma {
   export type ProductSuggestionCreateInput = {
     id?: string
     body: string
+    isRead?: boolean
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutProductSuggestionsInput
   }
@@ -47424,12 +47562,14 @@ export namespace Prisma {
     id?: string
     userId: string
     body: string
+    isRead?: boolean
     createdAt?: Date | string
   }
 
   export type ProductSuggestionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProductSuggestionsNestedInput
   }
@@ -47438,6 +47578,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -47445,12 +47586,14 @@ export namespace Prisma {
     id?: string
     userId: string
     body: string
+    isRead?: boolean
     createdAt?: Date | string
   }
 
   export type ProductSuggestionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -47458,6 +47601,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48555,6 +48699,9 @@ export namespace Prisma {
     rating?: SortOrder
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
+    isRead?: SortOrder
+    adminReply?: SortOrder
+    repliedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -48570,6 +48717,9 @@ export namespace Prisma {
     rating?: SortOrder
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
+    isRead?: SortOrder
+    adminReply?: SortOrder
+    repliedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -48581,6 +48731,9 @@ export namespace Prisma {
     rating?: SortOrder
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
+    isRead?: SortOrder
+    adminReply?: SortOrder
+    repliedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -49415,6 +49568,7 @@ export namespace Prisma {
     subject?: SortOrder
     body?: SortOrder
     isRead?: SortOrder
+    adminIsRead?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
   }
@@ -49426,6 +49580,7 @@ export namespace Prisma {
     subject?: SortOrder
     body?: SortOrder
     isRead?: SortOrder
+    adminIsRead?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
   }
@@ -49437,6 +49592,7 @@ export namespace Prisma {
     subject?: SortOrder
     body?: SortOrder
     isRead?: SortOrder
+    adminIsRead?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
   }
@@ -49534,6 +49690,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     body?: SortOrder
+    isRead?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -49541,6 +49698,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     body?: SortOrder
+    isRead?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -49548,6 +49706,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     body?: SortOrder
+    isRead?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -52118,6 +52277,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: string | null
+    repliedAt?: Date | string | null
     createdAt?: Date | string
     product: ProductCreateNestedOneWithoutReviewsInput
   }
@@ -52129,6 +52291,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: string | null
+    repliedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -52211,6 +52376,7 @@ export namespace Prisma {
     subject: string
     body: string
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
   }
@@ -52221,6 +52387,7 @@ export namespace Prisma {
     subject: string
     body: string
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
   }
@@ -52296,12 +52463,14 @@ export namespace Prisma {
   export type ProductSuggestionCreateWithoutUserInput = {
     id?: string
     body: string
+    isRead?: boolean
     createdAt?: Date | string
   }
 
   export type ProductSuggestionUncheckedCreateWithoutUserInput = {
     id?: string
     body: string
+    isRead?: boolean
     createdAt?: Date | string
   }
 
@@ -52467,6 +52636,9 @@ export namespace Prisma {
     rating?: IntFilter<"Review"> | number
     text?: StringFilter<"Review"> | string
     isVerifiedPurchase?: BoolFilter<"Review"> | boolean
+    isRead?: BoolFilter<"Review"> | boolean
+    adminReply?: StringNullableFilter<"Review"> | string | null
+    repliedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
   }
 
@@ -52573,6 +52745,7 @@ export namespace Prisma {
     subject?: StringFilter<"SupportMessage"> | string
     body?: StringFilter<"SupportMessage"> | string
     isRead?: BoolFilter<"SupportMessage"> | boolean
+    adminIsRead?: BoolFilter<"SupportMessage"> | boolean
     isDeleted?: BoolFilter<"SupportMessage"> | boolean
     createdAt?: DateTimeFilter<"SupportMessage"> | Date | string
   }
@@ -52659,6 +52832,7 @@ export namespace Prisma {
     id?: StringFilter<"ProductSuggestion"> | string
     userId?: StringFilter<"ProductSuggestion"> | string
     body?: StringFilter<"ProductSuggestion"> | string
+    isRead?: BoolFilter<"ProductSuggestion"> | boolean
     createdAt?: DateTimeFilter<"ProductSuggestion"> | Date | string
   }
 
@@ -53594,6 +53768,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: string | null
+    repliedAt?: Date | string | null
     createdAt?: Date | string
     user?: UserCreateNestedOneWithoutReviewsInput
   }
@@ -53605,6 +53782,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: string | null
+    repliedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -57449,6 +57629,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: string | null
+    repliedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -57470,6 +57653,7 @@ export namespace Prisma {
     subject: string
     body: string
     isRead?: boolean
+    adminIsRead?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
   }
@@ -57496,6 +57680,7 @@ export namespace Prisma {
   export type ProductSuggestionCreateManyUserInput = {
     id?: string
     body: string
+    isRead?: boolean
     createdAt?: Date | string
   }
 
@@ -57657,6 +57842,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: ProductUpdateOneRequiredWithoutReviewsNestedInput
   }
@@ -57668,6 +57856,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -57678,6 +57869,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -57723,6 +57917,7 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminIsRead?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -57733,6 +57928,7 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminIsRead?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -57743,6 +57939,7 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminIsRead?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -57807,18 +58004,21 @@ export namespace Prisma {
   export type ProductSuggestionUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductSuggestionUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductSuggestionUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -58309,6 +58509,9 @@ export namespace Prisma {
     rating: number
     text: string
     isVerifiedPurchase?: boolean
+    isRead?: boolean
+    adminReply?: string | null
+    repliedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -58384,6 +58587,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutReviewsNestedInput
   }
@@ -58395,6 +58601,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -58405,6 +58614,9 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    adminReply?: NullableStringFieldUpdateOperationsInput | string | null
+    repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { getAdminDashboardStats } from "@/actions/admin-dashboard";
 import { Card, CardHeader, PageHeader } from "@/src/components/admin/AdminUI";
 import { formatNumberFa } from "@/src/lib/format";
@@ -19,6 +20,8 @@ export default function AdminHomePage() {
 }
 
 async function AdminHomeContent() {
+  // Opt into request-time rendering before Prisma (which uses `new Date()` internally).
+  await connection();
   const stats = await getAdminDashboardStats();
 
   const cards = [
@@ -78,10 +81,32 @@ async function AdminHomeContent() {
       tone: "text-charcoal",
       bar: "bg-gray-300",
     },
+    {
+      label: "نظرات خوانده‌نشده",
+      value: stats.unreadReviews,
+      href: "/admin/communications?tab=reviews&unread=1",
+      tone: "text-amber-600",
+      bar: "bg-amber-400",
+    },
+    {
+      label: "پیام پشتیبانی جدید",
+      value: stats.unreadSupport,
+      href: "/admin/communications?tab=support&unread=1",
+      tone: "text-red-600",
+      bar: "bg-red-400",
+    },
+    {
+      label: "پیشنهاد کالای جدید",
+      value: stats.unreadSuggestions,
+      href: "/admin/communications?tab=suggestions&unread=1",
+      tone: "text-accent-dark",
+      bar: "bg-accent-dark",
+    },
   ];
 
   const quickLinks = [
     { href: "/admin/products/new", label: "افزودن محصول جدید" },
+    { href: "/admin/communications", label: "مدیریت ارتباطات" },
     { href: "/admin/sms", label: "ارسال پیامک گروهی" },
     { href: "/admin/orders", label: "سفارشات و فاکتورها" },
     { href: "/admin/users", label: "مدیریت نقش همکاران" },
@@ -126,7 +151,7 @@ async function AdminHomeContent() {
 function StatsSkeleton() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-      {Array.from({ length: 8 }, (_, i) => (
+      {Array.from({ length: 11 }, (_, i) => (
         <div key={i} className="h-24 bg-white rounded-2xl border border-gray-200/80 animate-pulse" />
       ))}
     </div>

@@ -286,6 +286,9 @@ exports.Prisma.ReviewScalarFieldEnum = {
   rating: 'rating',
   text: 'text',
   isVerifiedPurchase: 'isVerifiedPurchase',
+  isRead: 'isRead',
+  adminReply: 'adminReply',
+  repliedAt: 'repliedAt',
   createdAt: 'createdAt'
 };
 
@@ -458,6 +461,7 @@ exports.Prisma.SupportMessageScalarFieldEnum = {
   subject: 'subject',
   body: 'body',
   isRead: 'isRead',
+  adminIsRead: 'adminIsRead',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt'
 };
@@ -487,6 +491,7 @@ exports.Prisma.ProductSuggestionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   body: 'body',
+  isRead: 'isRead',
   createdAt: 'createdAt'
 };
 

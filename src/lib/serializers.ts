@@ -81,6 +81,9 @@ export interface ReviewVM {
   rating: number;
   text: string;
   verified: boolean;
+  /** Public shop reply shown under the review on the PDP, if any. */
+  adminReply: string | null;
+  adminReplyDate: string | null;
 }
 
 export interface PDPProductVM extends ProductVM {
@@ -424,6 +427,8 @@ export function toReviewVM(r: {
   text: string;
   isVerifiedPurchase: boolean;
   createdAt: Date;
+  adminReply?: string | null;
+  repliedAt?: Date | null;
 }): ReviewVM {
   return {
     id: r.id,
@@ -432,6 +437,8 @@ export function toReviewVM(r: {
     rating: r.rating,
     text: r.text,
     verified: r.isVerifiedPurchase,
+    adminReply: r.adminReply ?? null,
+    adminReplyDate: r.repliedAt ? persianDate(r.repliedAt) : null,
   };
 }
 
