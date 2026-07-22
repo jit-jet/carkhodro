@@ -22,6 +22,10 @@ import { ZIBAL_RESULT_OK } from '@/src/lib/zibal/types';
 import { tags } from '@/actions/cache-tags';
 import { resolveProductPriceBigInt, netLineTotalBigInt } from '@/src/lib/pricing';
 import { pricingRoleFromUser, canUseRetailCheckout } from '@/src/lib/user-role';
+import {
+  resolveDiscountForCheckout,
+  incrementDiscountUsage,
+} from '@/actions/discount-checkout';
 import type { OrderStatus, Prisma } from '@/generated/prisma_client';
 import type {
   OrderSummaryVM,
@@ -30,6 +34,7 @@ import type {
   CheckoutInput,
   CheckoutContact,
 } from '@/src/lib/serializers';
+import type { DiscountCartLine } from '@/src/lib/apply-discount-code';
 
 /**
  * VAT / tax rate applied to the order subtotal at checkout. Kept at 0 so totals
@@ -134,6 +139,8 @@ export async function getOrderReceipt(id: string): Promise<OrderReceiptVM | null
       subtotal: Number(order.subtotal),
       shippingCost: Number(order.shippingCost),
       taxAmount: Number(order.taxAmount),
+      discountAmount: Number(order.discountAmount),
+      discountCode: order.discountCode,
       totalAmount: Number(order.totalAmount),
     };
   }, null);
@@ -194,7 +201,31 @@ export async function submitCheckout(
     const [cart, shipping] = await Promise.all([
       prisma.cart.findUnique({
         where: { userId: user.id },
-        include: { items: { include: { product: true } } },
+        include: {
+          items: {
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  sku: true,
+                  categoryId: true,
+                  partsBrandId: true,
+                  wholesalePrice: true,
+                  wholesaleDiscountPct: true,
+                  retailPriceDiffPct: true,
+                  retailDiscountPct: true,
+                  compatibilities: {
+                    select: {
+                      carModelId: true,
+                      carModel: { select: { carBrandId: true } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       }),
       prisma.shippingOption.findUnique({ where: { id: input.shippingOptionId } }),
     ]);
@@ -227,6 +258,27 @@ export async function submitCheckout(
       };
     });
 
+    const discountLines: DiscountCartLine[] = cart.items.map((item, idx) => {
+      const carModelIds = item.product.compatibilities.map((c) => c.carModelId);
+      const carBrandIds = [
+        ...new Set(item.product.compatibilities.map((c) => c.carModel.carBrandId)),
+      ];
+      return {
+        productId: item.product.id,
+        categoryId: item.product.categoryId,
+        partsBrandId: item.product.partsBrandId,
+        carBrandIds,
+        carModelIds,
+        lineTotal: Number(
+          netLineTotalBigInt(
+            lineItems[idx].priceAtPurchase,
+            lineItems[idx].quantity,
+            lineItems[idx].discountPct,
+          ),
+        ),
+      };
+    });
+
     const subtotal = lineItems.reduce(
       (sum, l) => sum + netLineTotalBigInt(l.priceAtPurchase, l.quantity, l.discountPct),
       BigInt(0),
@@ -236,7 +288,19 @@ export async function submitCheckout(
       TAX_RATE > 0
         ? (subtotal * BigInt(Math.round(TAX_RATE * 10000))) / BigInt(10000)
         : BigInt(0);
-    const totalAmount = subtotal + shippingCost + taxAmount;
+
+    const discountResult = await resolveDiscountForCheckout(
+      input.discountCode,
+      discountLines,
+      shippingCost,
+      subtotal,
+      user.id,
+    );
+    if (!discountResult.ok) return fail(discountResult.error);
+    const applied = discountResult.data;
+    const discountAmount = applied ? BigInt(applied.discountAmount) : BigInt(0);
+    const totalAmount = subtotal + shippingCost + taxAmount - discountAmount;
+    if (totalAmount < BigInt(0)) return fail('مبلغ نهایی سفارش نامعتبر است.');
 
     const order = await prisma.$transaction(async (tx) => {
       // 1. Persist the buyer's profile + delivery address (fill-or-update).
@@ -281,12 +345,19 @@ export async function submitCheckout(
           subtotal,
           shippingCost,
           taxAmount,
+          discountAmount,
+          discountCode: applied?.code ?? null,
+          discountCodeId: applied?.discountCodeId ?? null,
           totalAmount,
           notes: input.notes ?? null,
           items: { create: lineItems },
         },
-        select: { id: true, totalAmount: true },
+        select: { id: true, totalAmount: true, discountCodeId: true },
       });
+
+      if (applied) {
+        await incrementDiscountUsage(tx, applied.discountCodeId);
+      }
 
       for (const item of cart.items) {
         await tx.product.update({
@@ -336,6 +407,12 @@ export async function submitCheckout(
                 stock: { increment: item.quantity },
                 saleCount: { decrement: item.quantity },
               },
+            });
+          }
+          if (pending.discountCodeId) {
+            await tx.discountCode.update({
+              where: { id: pending.discountCodeId },
+              data: { usedCount: { decrement: 1 } },
             });
           }
           await tx.order.update({

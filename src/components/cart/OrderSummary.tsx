@@ -8,6 +8,10 @@ interface Props {
   shippingCost: number | null;
   /** VAT / fees. Omit or 0 to hide the row. */
   taxAmount?: number;
+  /** Applied coupon discount in Toman. */
+  discountAmount?: number;
+  /** Applied coupon code label (shown next to the discount row). */
+  discountCode?: string | null;
   total: number;
   itemCount: number;
   /** CTA label, e.g. "ادامه و تسویه حساب" (cart) or "ثبت و پرداخت سفارش" (checkout). */
@@ -15,18 +19,31 @@ interface Props {
   onPlaceOrder: () => void;
   disabled?: boolean;
   busy?: boolean;
+  /** Optional coupon UI — only rendered on checkout when handlers are provided. */
+  coupon?: {
+    draft: string;
+    onDraftChange: (value: string) => void;
+    onApply: () => void;
+    onClear: () => void;
+    appliedCode: string | null;
+    applying?: boolean;
+    error?: string;
+  };
 }
 
 export default function OrderSummary({
   subtotal,
   shippingCost,
   taxAmount = 0,
+  discountAmount = 0,
+  discountCode = null,
   total,
   itemCount,
   ctaLabel,
   onPlaceOrder,
   disabled = false,
   busy = false,
+  coupon,
 }: Props) {
   return (
     <aside className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -48,6 +65,52 @@ export default function OrderSummary({
       </div>
 
       <div className="p-5 space-y-5">
+        {coupon && (
+          <div className="space-y-2">
+            <p className="text-sm font-semibold text-charcoal">کد تخفیف</p>
+            {coupon.appliedCode ? (
+              <div className="flex items-center justify-between gap-2 rounded-xl bg-green-50 border border-green-100 px-3 py-2.5">
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-green-800 tracking-wide" dir="ltr">
+                    {coupon.appliedCode}
+                  </p>
+                  <p className="text-xs text-green-700 mt-0.5">اعمال شد</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={coupon.onClear}
+                  className="text-xs font-semibold text-green-800 hover:text-red-600 shrink-0"
+                >
+                  حذف
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <input
+                  value={coupon.draft}
+                  onChange={(e) => coupon.onDraftChange(e.target.value.toUpperCase())}
+                  placeholder="وارد کردن کد"
+                  dir="ltr"
+                  className="flex-1 min-w-0 rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-left tracking-wide placeholder:text-gray-400 focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={coupon.onApply}
+                  disabled={coupon.applying || !coupon.draft.trim()}
+                  className="shrink-0 rounded-xl bg-charcoal text-white px-3.5 py-2.5 text-sm font-bold hover:bg-charcoal/90 disabled:opacity-50"
+                >
+                  {coupon.applying ? '…' : 'اعمال'}
+                </button>
+              </div>
+            )}
+            {coupon.error && (
+              <p className="text-xs text-red-600" role="alert">
+                {coupon.error}
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Line items */}
         <div className="space-y-3">
           <Row
@@ -67,6 +130,13 @@ export default function OrderSummary({
           />
           {taxAmount > 0 && (
             <Row label="مالیات بر ارزش افزوده" value={formatPrice(taxAmount)} />
+          )}
+          {discountAmount > 0 && (
+            <Row
+              label={discountCode ? `تخفیف (${discountCode})` : 'تخفیف'}
+              value={`− ${formatPrice(discountAmount)}`}
+              accent
+            />
           )}
         </div>
 
@@ -115,11 +185,29 @@ export default function OrderSummary({
   );
 }
 
-function Row({ label, value, muted = false }: { label: string; value: string; muted?: boolean }) {
+function Row({
+  label,
+  value,
+  muted = false,
+  accent = false,
+}: {
+  label: string;
+  value: string;
+  muted?: boolean;
+  accent?: boolean;
+}) {
   return (
     <div className="flex items-center justify-between text-sm">
       <span className="text-gray-500">{label}</span>
-      <span className={muted ? 'text-xs text-gray-400' : 'font-medium text-charcoal'}>
+      <span
+        className={
+          muted
+            ? 'text-xs text-gray-400'
+            : accent
+              ? 'font-bold text-green-700'
+              : 'font-medium text-charcoal'
+        }
+      >
         {value}
       </span>
     </div>

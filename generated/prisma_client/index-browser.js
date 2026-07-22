@@ -430,6 +430,9 @@ exports.Prisma.OrderScalarFieldEnum = {
   subtotal: 'subtotal',
   shippingCost: 'shippingCost',
   taxAmount: 'taxAmount',
+  discountAmount: 'discountAmount',
+  discountCode: 'discountCode',
+  discountCodeId: 'discountCodeId',
   totalAmount: 'totalAmount',
   notes: 'notes',
   trackingCode: 'trackingCode',
@@ -493,6 +496,27 @@ exports.Prisma.ProductSuggestionScalarFieldEnum = {
   body: 'body',
   isRead: 'isRead',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.DiscountCodeScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  type: 'type',
+  value: 'value',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  scopeType: 'scopeType',
+  scopeIds: 'scopeIds',
+  perCustomerLimit: 'perCustomerLimit',
+  totalUsageLimit: 'totalUsageLimit',
+  usedCount: 'usedCount',
+  minCartAmount: 'minCartAmount',
+  maxDiscountAmount: 'maxDiscountAmount',
+  firstOrderOnly: 'firstOrderOnly',
+  minPreviousOrders: 'minPreviousOrders',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -563,6 +587,20 @@ exports.MessageDirection = exports.$Enums.MessageDirection = {
   OUTBOUND: 'OUTBOUND'
 };
 
+exports.DiscountType = exports.$Enums.DiscountType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED_AMOUNT: 'FIXED_AMOUNT',
+  FREE_SHIPPING: 'FREE_SHIPPING'
+};
+
+exports.DiscountScopeType = exports.$Enums.DiscountScopeType = {
+  CATEGORY: 'CATEGORY',
+  BRAND: 'BRAND',
+  CAR_BRAND: 'CAR_BRAND',
+  CAR_MODEL: 'CAR_MODEL',
+  PRODUCT: 'PRODUCT'
+};
+
 exports.Prisma.ModelName = {
   Province: 'Province',
   City: 'City',
@@ -595,7 +633,8 @@ exports.Prisma.ModelName = {
   SupportMessage: 'SupportMessage',
   OrderSurvey: 'OrderSurvey',
   PriceListRequest: 'PriceListRequest',
-  ProductSuggestion: 'ProductSuggestion'
+  ProductSuggestion: 'ProductSuggestion',
+  DiscountCode: 'DiscountCode'
 };
 
 /**

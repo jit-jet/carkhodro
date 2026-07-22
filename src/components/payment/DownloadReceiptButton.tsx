@@ -109,6 +109,7 @@ function buildReceiptHtml(receipt: OrderReceiptVM): string {
     <div><span>جمع کالاها:</span><span dir="ltr">${toman(receipt.subtotal)}</span></div>
     <div><span>هزینه ارسال:</span><span dir="ltr">${toman(receipt.shippingCost)}</span></div>
     ${receipt.taxAmount > 0 ? `<div><span>مالیات:</span><span dir="ltr">${toman(receipt.taxAmount)}</span></div>` : ''}
+    ${receipt.discountAmount > 0 ? `<div><span>تخفیف${receipt.discountCode ? ` (${receipt.discountCode})` : ''}:</span><span dir="ltr">− ${toman(receipt.discountAmount)}</span></div>` : ''}
     <div class="grand"><span>مبلغ کل:</span><span dir="ltr">${toman(receipt.totalAmount)}</span></div>
   </div>
 

@@ -23,7 +23,8 @@ type IconKey =
   | "faq"
   | "menu"
   | "blog"
-  | "comms";
+  | "comms"
+  | "discount";
 
 interface NavItem {
   href: string;
@@ -34,6 +35,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { href: "/admin", label: "داشبورد", icon: "grid" },
   { href: "/admin/products", label: "محصولات و قیمت‌گذاری", icon: "box" },
+  { href: "/admin/discount-codes", label: "کد تخفیف", icon: "discount" },
   { href: "/admin/orders", label: "سفارشات و فاکتورها", icon: "orders" },
   { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: "category" },
   { href: "/admin/brands", label: "برندها و خودروها", icon: "car" },
@@ -147,6 +149,13 @@ function NavIcon({ icon }: { icon: IconKey }) {
           <line x1="3" y1="6" x2="21" y2="6" />
           <line x1="3" y1="12" x2="21" y2="12" />
           <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      );
+    case "discount":
+      return (
+        <svg {...common}>
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+          <line x1="7" y1="7" x2="7.01" y2="7" />
         </svg>
       );
   }

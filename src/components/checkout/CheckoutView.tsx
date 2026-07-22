@@ -23,6 +23,7 @@ import PaymentSelector from '@/src/components/cart/PaymentSelector';
 import OrderSummary from '@/src/components/cart/OrderSummary';
 import CheckoutInfoForm from '@/src/components/checkout/CheckoutInfoForm';
 import { submitCheckout } from '@/actions/orders';
+import { previewDiscountCode } from '@/actions/discount-checkout';
 import { useCartUI } from '@/src/store/cart-ui';
 import type {
   CartVM,
@@ -75,12 +76,45 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
 
   const [shippingId, setShippingId] = useState(shippingOptions[0]?.id ?? '');
 
+  const [couponDraft, setCouponDraft] = useState('');
+  const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+  const [couponPending, startCoupon] = useTransition();
+
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState('');
 
   const subtotal = cart.subtotal;
   const shippingCost = shippingOptions.find((s) => s.id === shippingId)?.cost ?? 0;
-  const total = subtotal + shippingCost;
+  const total = Math.max(0, subtotal + shippingCost - discountAmount);
+
+  function clearCoupon() {
+    setAppliedCode(null);
+    setDiscountAmount(0);
+    setCouponError('');
+    setCouponDraft('');
+  }
+
+  function applyCoupon() {
+    setCouponError('');
+    if (!shippingId) {
+      setCouponError('ابتدا روش ارسال را انتخاب کنید.');
+      return;
+    }
+    startCoupon(async () => {
+      const result = await previewDiscountCode(couponDraft, shippingId);
+      if (!result.ok) {
+        setAppliedCode(null);
+        setDiscountAmount(0);
+        setCouponError(result.error);
+        return;
+      }
+      setAppliedCode(result.data.code);
+      setDiscountAmount(result.data.discountAmount);
+      setCouponError('');
+    });
+  }
 
   function patchInfo(patch: Partial<CheckoutContact>) {
     setInfo((prev) => ({ ...prev, ...patch }));
@@ -111,6 +145,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
         shippingOptionId: shippingId,
         paymentMethod: 'ONLINE',
         contact: info,
+        discountCode: appliedCode ?? undefined,
       });
       if (result.ok) {
         if (result.data.gatewayUrl) {
@@ -181,7 +216,15 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
           provinces={provinces}
         />
 
-        <ShippingSelector options={shippingOptions} selected={shippingId} onChange={setShippingId} />
+        <ShippingSelector
+          options={shippingOptions}
+          selected={shippingId}
+          onChange={(id) => {
+            setShippingId(id);
+            // Shipping-dependent codes (free shipping) need re-validation.
+            if (appliedCode) clearCoupon();
+          }}
+        />
 
         <PaymentSelector selected="ONLINE" onChange={() => {}} allowedMethods={['ONLINE']} />
       </div>
@@ -192,11 +235,22 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
           <OrderSummary
             subtotal={subtotal}
             shippingCost={shippingCost}
+            discountAmount={discountAmount}
+            discountCode={appliedCode}
             total={total}
             itemCount={cart.totalItems}
             ctaLabel="پرداخت و ثبت سفارش"
             onPlaceOrder={placeOrder}
             busy={pending}
+            coupon={{
+              draft: couponDraft,
+              onDraftChange: setCouponDraft,
+              onApply: applyCoupon,
+              onClear: clearCoupon,
+              appliedCode,
+              applying: couponPending,
+              error: couponError,
+            }}
           />
           {pending && (
             <p className="text-center text-xs text-gray-400 mt-3">در حال ثبت سفارش…</p>

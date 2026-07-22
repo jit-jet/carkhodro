@@ -76,6 +76,22 @@ enum ShippingMethod {
   EXPRESS // 1-2 business days
 }
 
+/// How a redeemable coupon reduces the order total.
+enum DiscountType {
+  PERCENTAGE // درصدی — value is 0–100
+  FIXED_AMOUNT // مبلغی — value is Toman
+  FREE_SHIPPING // ارسال رایگان — value ignored
+}
+
+/// What catalogue slice a discount code applies to. Empty `scopeIds` = all products.
+enum DiscountScopeType {
+  CATEGORY // دسته‌بندی — scopeIds are Category.id as strings
+  BRAND // برند قطعه — scopeIds are PartsBrand.id as strings
+  CAR_BRAND // برند خودرو — scopeIds are CarBrand.id as strings
+  CAR_MODEL // مدل خودرو — scopeIds are CarModel.id as strings
+  PRODUCT // محصول — scopeIds are Product.id (cuid)
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // REFERENCE DATA
 // ─────────────────────────────────────────────────────────────────────────────
@@ -702,12 +718,17 @@ model Order {
   snapshotPostalCode String @map("snapshot_postal_code")
 
   // ── Financials ─────────────────────────────────────────────────────────────
-  subtotal     BigInt @map("subtotal")
-  shippingCost BigInt @map("shipping_cost")
+  subtotal       BigInt  @map("subtotal")
+  shippingCost   BigInt  @map("shipping_cost")
   /// VAT or other applicable tax collected on this order
-  taxAmount    BigInt @default(0) @map("tax_amount")
-  /// subtotal + shippingCost + taxAmount (stored to prevent drift)
-  totalAmount  BigInt @map("total_amount")
+  taxAmount      BigInt  @default(0) @map("tax_amount")
+  /// Coupon discount applied at checkout (Toman). 0 when no code was used.
+  discountAmount BigInt  @default(0) @map("discount_amount")
+  /// Snapshot of the redeemed code string (kept even if the code row is deleted).
+  discountCode   String? @map("discount_code")
+  discountCodeId String? @map("discount_code_id")
+  /// subtotal + shippingCost + taxAmount − discountAmount (stored to prevent drift)
+  totalAmount    BigInt  @map("total_amount")
 
   notes        String?
   trackingCode String? @map("tracking_code")
@@ -726,6 +747,7 @@ model Order {
   user           User           @relation(fields: [userId], references: [id])
   address        Address        @relation(fields: [addressId], references: [id])
   shippingOption ShippingOption @relation(fields: [shippingOptionId], references: [id])
+  coupon         DiscountCode?  @relation(fields: [discountCodeId], references: [id], onDelete: SetNull)
   items          OrderItem[]
   survey         OrderSurvey?
 
@@ -733,6 +755,7 @@ model Order {
   @@index([status])
   @@index([paymentStatus])
   @@index([createdAt])
+  @@index([discountCodeId])
   @@map("orders")
 }
 
@@ -847,4 +870,54 @@ model ProductSuggestion {
   @@index([userId])
   @@index([isRead])
   @@map("product_suggestions")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DISCOUNT CODES / کد تخفیف
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Redeemable coupon managed in the admin panel («کد تخفیف»).
+/// Checkout application is wired separately; this model stores the code rules.
+model DiscountCode {
+  id   String @id @default(cuid())
+  /// Case-insensitive unique code the customer enters (stored uppercase).
+  code String @unique
+
+  type  DiscountType
+  /// Percent (0–100) or fixed Toman amount depending on `type`. Null for FREE_SHIPPING.
+  value Decimal?     @db.Decimal(12, 2)
+
+  startsAt DateTime  @map("starts_at")
+  endsAt   DateTime? @map("ends_at")
+
+  scopeType DiscountScopeType @default(CATEGORY) @map("scope_type")
+  /// Target ids for `scopeType`. Empty = applies to all products.
+  scopeIds  String[]          @default([]) @map("scope_ids")
+
+  /// Max redemptions per customer. Null = unlimited.
+  perCustomerLimit Int? @map("per_customer_limit")
+  /// Max total redemptions across all customers. Null = unlimited.
+  totalUsageLimit  Int? @map("total_usage_limit")
+  /// How many times this code has been successfully redeemed.
+  usedCount        Int  @default(0) @map("used_count")
+
+  /// Minimum cart subtotal (Toman) required to apply the code.
+  minCartAmount     BigInt? @map("min_cart_amount")
+  /// Cap on the discounted amount in Toman (mainly for PERCENTAGE).
+  maxDiscountAmount BigInt? @map("max_discount_amount")
+  /// When true, only customers with zero prior successful orders may use it.
+  firstOrderOnly    Boolean @default(false) @map("first_order_only")
+  /// Require at least this many prior completed/paid orders. Null = no requirement.
+  minPreviousOrders Int?    @map("min_previous_orders")
+
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orders Order[]
+
+  @@index([isActive])
+  @@index([startsAt])
+  @@index([endsAt])
+  @@map("discount_codes")
 }

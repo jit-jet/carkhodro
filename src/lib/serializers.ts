@@ -262,6 +262,8 @@ export interface OrderReceiptVM {
   subtotal: number;
   shippingCost: number;
   taxAmount: number;
+  discountAmount: number;
+  discountCode: string | null;
   totalAmount: number;
 }
 
@@ -297,6 +299,8 @@ export interface CheckoutInput {
   paymentMethod: PaymentMethod;
   contact: CheckoutContact;
   notes?: string;
+  /** Optional redeemable coupon code entered at checkout. */
+  discountCode?: string;
 }
 
 /** Pre-fill payload for the checkout form — the user's saved profile/address. */

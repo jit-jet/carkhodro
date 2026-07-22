@@ -49,6 +49,13 @@ async function failUnpaidOrder(orderId: string): Promise<void> {
       });
     }
 
+    if (order.discountCodeId) {
+      await tx.discountCode.update({
+        where: { id: order.discountCodeId },
+        data: { usedCount: { decrement: 1 } },
+      });
+    }
+
     await tx.order.update({
       where: { id: orderId },
       data: {
