@@ -30,6 +30,7 @@ export async function getCurrentAdmin(): Promise<User | null> {
     });
     if (!session || session.expiresAt.getTime() < Date.now()) return null;
     if (session.user.role !== 'ADMIN') return null;
+    if (!session.user.isActive) return null;
     return session.user;
   } catch (err) {
     console.error('[admin-session:getCurrentAdmin]', err);

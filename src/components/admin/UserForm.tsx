@@ -34,6 +34,7 @@ export interface UserFormInitial {
   lastName: string;
   role: UserRole;
   isVerified: boolean;
+  isActive: boolean;
   shopName: string | null;
   referredBy: string | null;
   activityField: string | null;
@@ -72,6 +73,7 @@ export default function UserForm({
     ASSIGNABLE_ROLES.includes(initial.role) ? initial.role : "RETAIL",
   );
   const [isVerified, setIsVerified] = useState(initial.isVerified);
+  const [isActive, setIsActive] = useState(initial.isActive);
   const [shopName, setShopName] = useState(initial.shopName ?? "");
   const [referredBy, setReferredBy] = useState(initial.referredBy ?? "");
   const [activityField, setActivityField] = useState(initial.activityField ?? "");
@@ -142,6 +144,7 @@ export default function UserForm({
       lastName,
       role,
       isVerified,
+      isActive,
       shopName: shopName || null,
       referredBy: referredBy || null,
       activityField: activityField || null,
@@ -311,15 +314,41 @@ export default function UserForm({
               </div>
             </div>
 
-            <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
-              <input
-                type="checkbox"
-                checked={isVerified}
-                onChange={(e) => setIsVerified(e.target.checked)}
-                className="w-4 h-4 accent-accent"
-              />
-              تأیید شده
-            </label>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
+              <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isVerified}
+                  onChange={(e) => setIsVerified(e.target.checked)}
+                  className="w-4 h-4 accent-accent"
+                />
+                تأیید شده
+              </label>
+              <fieldset className="flex items-center gap-4">
+                <legend className="sr-only">وضعیت حساب</legend>
+                <span className="text-sm font-semibold text-charcoal">وضعیت:</span>
+                <label className="flex items-center gap-1.5 text-sm text-charcoal cursor-pointer">
+                  <input
+                    type="radio"
+                    name="user-status"
+                    checked={isActive}
+                    onChange={() => setIsActive(true)}
+                    className="accent-accent"
+                  />
+                  فعال
+                </label>
+                <label className="flex items-center gap-1.5 text-sm text-charcoal cursor-pointer">
+                  <input
+                    type="radio"
+                    name="user-status"
+                    checked={!isActive}
+                    onChange={() => setIsActive(false)}
+                    className="accent-accent"
+                  />
+                  غیرفعال
+                </label>
+              </fieldset>
+            </div>
           </div>
         </div>
       </Card>

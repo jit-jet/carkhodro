@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  setUserActive,
   type AdminUserListItemVM,
   type AdminUserSortBy,
   type AdminUserSortDir,
@@ -12,7 +13,17 @@ import { USER_ROLE_FA } from "@/src/lib/user-labels";
 import { ASSIGNABLE_ROLES } from "@/src/lib/admin-options";
 import { buildUsersHref, type UsersTableFilters } from "@/src/lib/admin-users-query";
 import { buildOrdersHref } from "@/src/lib/admin-orders-query";
-import { Badge, Input, Select, TableShell, tableBodyClass, tableHeadClass, tableRowClass } from "@/src/components/admin/AdminUI";
+import { useCartUI } from "@/src/store/cart-ui";
+import {
+  Badge,
+  Button,
+  Input,
+  Select,
+  TableShell,
+  tableBodyClass,
+  tableHeadClass,
+  tableRowClass,
+} from "@/src/components/admin/AdminUI";
 import { formatToman, noFormatNumberFa } from "@/src/lib/format";
 
 function SortButton({
@@ -53,6 +64,8 @@ export default function UsersTable({
   filters: UsersTableFilters;
 }) {
   const router = useRouter();
+  const notify = useCartUI((s) => s.notify);
+  const [pending, startTransition] = useTransition();
   const [searchDraft, setSearchDraft] = useState(filters.search);
   const [phoneDraft, setPhoneDraft] = useState(filters.phone);
 
@@ -66,10 +79,28 @@ export default function UsersTable({
     pushFilters({ sortBy: column, sortDir: nextDir });
   }
 
+  function handleToggleActive(id: string, next: boolean) {
+    startTransition(async () => {
+      const result = await setUserActive(id, next);
+      if (!result.ok) {
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
+      notify({
+        variant: "success",
+        title: next ? "کاربر فعال شد" : "کاربر غیرفعال شد",
+        description: next
+          ? "کاربر می‌تواند وارد حساب شود."
+          : "ورود این کاربر مسدود شد.",
+      });
+      router.refresh();
+    });
+  }
+
   const headerSelectClass = "!py-1.5 !text-xs !rounded-lg min-w-[120px]";
 
   return (
-    <TableShell minWidth="min-w-[920px]">
+    <TableShell minWidth="min-w-[1040px]">
           <thead className={tableHeadClass}>
             <tr>
               <th className="text-right px-4 py-3 align-bottom">
@@ -145,6 +176,20 @@ export default function UsersTable({
                 </div>
               </th>
               <th className="text-right px-4 py-3 align-bottom">
+                <div className="flex flex-col gap-1.5">
+                  <span className="font-semibold text-gray-500">وضعیت</span>
+                  <Select
+                    value={filters.status}
+                    onChange={(e) => pushFilters({ status: e.target.value })}
+                    className={headerSelectClass}
+                  >
+                    <option value="">همه</option>
+                    <option value="active">فعال</option>
+                    <option value="inactive">غیرفعال</option>
+                  </Select>
+                </div>
+              </th>
+              <th className="text-right px-4 py-3 align-bottom">
                 <SortButton
                   label="سفارشات"
                   column="orders"
@@ -171,7 +216,7 @@ export default function UsersTable({
           <tbody className={tableBodyClass}>
             {items.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-12 text-center text-gray-400">
+                <td colSpan={8} className="px-4 py-12 text-center text-gray-400">
                   کاربری با این فیلترها یافت نشد.
                 </td>
               </tr>
@@ -187,6 +232,11 @@ export default function UsersTable({
                   </td>
                   <td className="px-4 py-3">
                     <Badge tone="warning">{u.roleLabel}</Badge>
+                  </td>
+                  <td className="px-4 py-3">
+                    <Badge tone={u.isActive ? "success" : "default"}>
+                      {u.isActive ? "فعال" : "غیرفعال"}
+                    </Badge>
                   </td>
                   <td className="px-4 py-3 text-gray-600">{noFormatNumberFa(u.ordersCount)}</td>
                   <td className="px-4 py-3">
@@ -210,7 +260,16 @@ export default function UsersTable({
                     {formatToman(u.accountBalanceToman)}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center justify-end">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        disabled={pending}
+                        onClick={() => handleToggleActive(u.id, !u.isActive)}
+                      >
+                        {u.isActive ? "غیرفعال" : "فعال"}
+                      </Button>
                       <Link
                         href={`/admin/users/${u.id}`}
                         className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors"

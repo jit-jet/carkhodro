@@ -8,6 +8,7 @@ export interface UsersTableFilters {
   search: string;
   phone: string;
   role: string;
+  status: string;
   sortBy: string;
   sortDir: string;
 }
@@ -17,6 +18,7 @@ export function buildUsersHref(filters: UsersTableFilters, page?: number): strin
   if (filters.search) params.set("search", filters.search);
   if (filters.phone) params.set("phone", filters.phone);
   if (filters.role) params.set("role", filters.role);
+  if (filters.status) params.set("status", filters.status);
   if (filters.sortBy) params.set("sortBy", filters.sortBy);
   if (filters.sortDir) params.set("sortDir", filters.sortDir);
   if (page && page > 1) params.set("page", String(page));

@@ -7806,6 +7806,7 @@ export namespace Prisma {
     lastName: string | null
     role: $Enums.UserRole | null
     isVerified: boolean | null
+    isActive: boolean | null
     shopName: string | null
     birthDate: Date | null
     profileImage: string | null
@@ -7826,6 +7827,7 @@ export namespace Prisma {
     lastName: string | null
     role: $Enums.UserRole | null
     isVerified: boolean | null
+    isActive: boolean | null
     shopName: string | null
     birthDate: Date | null
     profileImage: string | null
@@ -7846,6 +7848,7 @@ export namespace Prisma {
     lastName: number
     role: number
     isVerified: number
+    isActive: number
     shopName: number
     birthDate: number
     profileImage: number
@@ -7876,6 +7879,7 @@ export namespace Prisma {
     lastName?: true
     role?: true
     isVerified?: true
+    isActive?: true
     shopName?: true
     birthDate?: true
     profileImage?: true
@@ -7896,6 +7900,7 @@ export namespace Prisma {
     lastName?: true
     role?: true
     isVerified?: true
+    isActive?: true
     shopName?: true
     birthDate?: true
     profileImage?: true
@@ -7916,6 +7921,7 @@ export namespace Prisma {
     lastName?: true
     role?: true
     isVerified?: true
+    isActive?: true
     shopName?: true
     birthDate?: true
     profileImage?: true
@@ -8023,6 +8029,7 @@ export namespace Prisma {
     lastName: string
     role: $Enums.UserRole
     isVerified: boolean
+    isActive: boolean
     shopName: string | null
     birthDate: Date | null
     profileImage: string | null
@@ -8062,6 +8069,7 @@ export namespace Prisma {
     lastName?: boolean
     role?: boolean
     isVerified?: boolean
+    isActive?: boolean
     shopName?: boolean
     birthDate?: boolean
     profileImage?: boolean
@@ -8095,6 +8103,7 @@ export namespace Prisma {
     lastName?: boolean
     role?: boolean
     isVerified?: boolean
+    isActive?: boolean
     shopName?: boolean
     birthDate?: boolean
     profileImage?: boolean
@@ -8115,6 +8124,7 @@ export namespace Prisma {
     lastName?: boolean
     role?: boolean
     isVerified?: boolean
+    isActive?: boolean
     shopName?: boolean
     birthDate?: boolean
     profileImage?: boolean
@@ -8135,6 +8145,7 @@ export namespace Prisma {
     lastName?: boolean
     role?: boolean
     isVerified?: boolean
+    isActive?: boolean
     shopName?: boolean
     birthDate?: boolean
     profileImage?: boolean
@@ -8148,7 +8159,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "isActive" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addresses?: boolean | User$addressesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -8196,6 +8207,10 @@ export namespace Prisma {
        * Set to true after the first successful OTP verification
        */
       isVerified: boolean
+      /**
+       * When false, the user cannot log in (storefront OTP or admin password).
+       */
+      isActive: boolean
       /**
        * Wholesale customers must supply a shop/business name
        */
@@ -8672,6 +8687,7 @@ export namespace Prisma {
     readonly lastName: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRole'>
     readonly isVerified: FieldRef<"User", 'Boolean'>
+    readonly isActive: FieldRef<"User", 'Boolean'>
     readonly shopName: FieldRef<"User", 'String'>
     readonly birthDate: FieldRef<"User", 'DateTime'>
     readonly profileImage: FieldRef<"User", 'String'>
@@ -43308,6 +43324,7 @@ export namespace Prisma {
     lastName: 'lastName',
     role: 'role',
     isVerified: 'isVerified',
+    isActive: 'isActive',
     shopName: 'shopName',
     birthDate: 'birthDate',
     profileImage: 'profileImage',
@@ -44207,6 +44224,7 @@ export namespace Prisma {
     lastName?: StringFilter<"User"> | string
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     isVerified?: BoolFilter<"User"> | boolean
+    isActive?: BoolFilter<"User"> | boolean
     shopName?: StringNullableFilter<"User"> | string | null
     birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
     profileImage?: StringNullableFilter<"User"> | string | null
@@ -44239,6 +44257,7 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isVerified?: SortOrder
+    isActive?: SortOrder
     shopName?: SortOrderInput | SortOrder
     birthDate?: SortOrderInput | SortOrder
     profileImage?: SortOrderInput | SortOrder
@@ -44276,6 +44295,7 @@ export namespace Prisma {
     lastName?: StringFilter<"User"> | string
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     isVerified?: BoolFilter<"User"> | boolean
+    isActive?: BoolFilter<"User"> | boolean
     shopName?: StringNullableFilter<"User"> | string | null
     birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
     profileImage?: StringNullableFilter<"User"> | string | null
@@ -44306,6 +44326,7 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isVerified?: SortOrder
+    isActive?: SortOrder
     shopName?: SortOrderInput | SortOrder
     birthDate?: SortOrderInput | SortOrder
     profileImage?: SortOrderInput | SortOrder
@@ -44334,6 +44355,7 @@ export namespace Prisma {
     lastName?: StringWithAggregatesFilter<"User"> | string
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
     isVerified?: BoolWithAggregatesFilter<"User"> | boolean
+    isActive?: BoolWithAggregatesFilter<"User"> | boolean
     shopName?: StringNullableWithAggregatesFilter<"User"> | string | null
     birthDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     profileImage?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -46838,6 +46860,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -46870,6 +46893,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -46902,6 +46926,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46934,6 +46959,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46966,6 +46992,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -46986,6 +47013,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47006,6 +47034,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49912,6 +49941,7 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isVerified?: SortOrder
+    isActive?: SortOrder
     shopName?: SortOrder
     birthDate?: SortOrder
     profileImage?: SortOrder
@@ -49936,6 +49966,7 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isVerified?: SortOrder
+    isActive?: SortOrder
     shopName?: SortOrder
     birthDate?: SortOrder
     profileImage?: SortOrder
@@ -49956,6 +49987,7 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isVerified?: SortOrder
+    isActive?: SortOrder
     shopName?: SortOrder
     birthDate?: SortOrder
     profileImage?: SortOrder
@@ -55107,6 +55139,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -55138,6 +55171,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -55185,6 +55219,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55216,6 +55251,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55247,6 +55283,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -55278,6 +55315,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -55419,6 +55457,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55450,6 +55489,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56807,6 +56847,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -56838,6 +56879,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -56968,6 +57010,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56999,6 +57042,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57030,6 +57074,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -57061,6 +57106,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -57132,6 +57178,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57163,6 +57210,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57414,6 +57462,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -57445,6 +57494,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -57569,6 +57619,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57600,6 +57651,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57714,6 +57766,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -57745,6 +57798,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -57869,6 +57923,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57900,6 +57955,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58175,6 +58231,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -58206,6 +58263,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -58253,6 +58311,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58284,6 +58343,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58407,6 +58467,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -58438,6 +58499,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -58643,6 +58705,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58674,6 +58737,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59178,6 +59242,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -59209,6 +59274,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -59256,6 +59322,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59287,6 +59354,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59389,6 +59457,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -59420,6 +59489,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -59543,6 +59613,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59574,6 +59645,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59605,6 +59677,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -59636,6 +59709,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -59683,6 +59757,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59714,6 +59789,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59745,6 +59821,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -59776,6 +59853,7 @@ export namespace Prisma {
     lastName: string
     role?: $Enums.UserRole
     isVerified?: boolean
+    isActive?: boolean
     shopName?: string | null
     birthDate?: Date | string | null
     profileImage?: string | null
@@ -59823,6 +59901,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59854,6 +59933,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null

@@ -148,6 +148,8 @@ model User {
   role           UserRole  @default(RETAIL)
   /// Set to true after the first successful OTP verification
   isVerified     Boolean   @default(false) @map("is_verified")
+  /// When false, the user cannot log in (storefront OTP or admin password).
+  isActive       Boolean   @default(true) @map("is_active")
   /// Wholesale customers must supply a shop/business name
   shopName       String?   @map("shop_name")
   birthDate      DateTime? @map("birth_date")
@@ -184,6 +186,7 @@ model User {
   smsCampaigns       SmsCampaign[]
 
   @@index([phoneNumber])
+  @@index([isActive])
   @@map("users")
 }
 

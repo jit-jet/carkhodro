@@ -31,6 +31,7 @@ export interface AdminUserListItemVM {
   shopName: string | null;
   partnerCode: string | null;
   isVerified: boolean;
+  isActive: boolean;
   accountBalanceToman: number;
   ordersCount: number;
   createdAtLabel: string;
@@ -50,6 +51,8 @@ export interface AdminUserFilters {
   search?: string;
   phone?: string;
   role?: UserRole;
+  /** `active` | `inactive` — omit for all */
+  status?: 'active' | 'inactive';
   sortBy?: AdminUserSortBy;
   sortDir?: AdminUserSortDir;
   page?: number;
@@ -98,6 +101,11 @@ export async function getUsersAdmin(filters: AdminUserFilters = {}): Promise<Adm
       const phone = filters.phone?.trim();
       const where = {
         ...(filters.role ? { role: filters.role } : { role: { not: 'ADMIN' as const } }),
+        ...(filters.status === 'active'
+          ? { isActive: true }
+          : filters.status === 'inactive'
+            ? { isActive: false }
+            : {}),
         ...(search
           ? {
               OR: [
@@ -133,6 +141,7 @@ export async function getUsersAdmin(filters: AdminUserFilters = {}): Promise<Adm
           shopName: u.shopName,
           partnerCode: u.partnerCode,
           isVerified: u.isVerified,
+          isActive: u.isActive,
           accountBalanceToman: Number(u.accountBalance),
           ordersCount: u._count.orders,
           createdAtLabel: formatJalaliDate(u.createdAt),
@@ -174,6 +183,7 @@ export async function getUserAdminById(id: string) {
         lastName: u.lastName,
         role: u.role,
         isVerified: u.isVerified,
+        isActive: u.isActive,
         shopName: u.shopName,
         referredBy: u.referredBy,
         activityField: u.activityField,
@@ -200,6 +210,7 @@ export interface AdminUserUpdateInput {
   lastName: string;
   role: UserRole;
   isVerified: boolean;
+  isActive: boolean;
   shopName?: string | null;
   referredBy?: string | null;
   activityField?: string | null;
@@ -222,7 +233,10 @@ export async function updateUser(
     const admin = await getCurrentAdmin();
     if (!admin) return fail('دسترسی مجاز نیست.');
 
-    const target = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } });
+    const target = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true, isActive: true },
+    });
     if (!target) return fail('کاربر پیدا نشد.');
     if (target.role === 'ADMIN' || target.role === 'SUPPORT') {
       return fail('اطلاعات مدیران از این بخش قابل تغییر نیست.');
@@ -274,6 +288,8 @@ export async function updateUser(
       cityId = resolved.city.id;
     }
 
+    const deactivating = target.isActive && !input.isActive;
+
     await prisma.$transaction(async (tx) => {
       await tx.user.update({
         where: { id: userId },
@@ -282,6 +298,7 @@ export async function updateUser(
           lastName: input.lastName.trim(),
           role: input.role,
           isVerified: input.isVerified,
+          isActive: input.isActive,
           shopName: input.shopName?.trim() || null,
           referredBy: input.referredBy?.trim() || null,
           activityField: input.activityField?.trim() || null,
@@ -292,6 +309,10 @@ export async function updateUser(
             : {}),
         },
       });
+
+      if (deactivating) {
+        await tx.session.deleteMany({ where: { userId } });
+      }
 
       if (fullAddress && cityId !== null) {
         const existing = await tx.address.findFirst({
@@ -312,6 +333,34 @@ export async function updateUser(
       } else if (!anyAddress) {
         // Clear address when admin empties all address fields.
         await tx.address.deleteMany({ where: { userId } });
+      }
+    });
+
+    return ok(undefined);
+  });
+}
+
+export async function setUserActive(
+  userId: string,
+  isActive: boolean,
+): Promise<ActionResult> {
+  return runMutation('setUserActive', async () => {
+    const admin = await getCurrentAdmin();
+    if (!admin) return fail('دسترسی مجاز نیست.');
+
+    const target = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true, isActive: true },
+    });
+    if (!target) return fail('کاربر پیدا نشد.');
+    if (target.role === 'ADMIN' || target.role === 'SUPPORT') {
+      return fail('وضعیت مدیران از این بخش قابل تغییر نیست.');
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({ where: { id: userId }, data: { isActive } });
+      if (!isActive) {
+        await tx.session.deleteMany({ where: { userId } });
       }
     });
 

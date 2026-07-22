@@ -54,16 +54,20 @@ async function UsersContent({ searchParams }: Props) {
   const search = pick(sp.search);
   const phone = pick(sp.phone);
   const role = pick(sp.role) as UserRole | "";
+  const statusRaw = pick(sp.status);
+  const status =
+    statusRaw === "active" || statusRaw === "inactive" ? statusRaw : "";
   const sortBy = pick(sp.sortBy);
   const sortDir = pick(sp.sortDir);
   const page = Number(pick(sp.page)) || 1;
 
-  const filters = { search, phone, role, sortBy, sortDir };
+  const filters = { search, phone, role, status, sortBy, sortDir };
 
   const data = await getUsersAdmin({
     search: search || undefined,
     phone: phone || undefined,
     role: role || undefined,
+    status: status || undefined,
     sortBy: parseSortBy(sortBy),
     sortDir: parseSortDir(sortDir),
     page,

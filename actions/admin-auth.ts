@@ -36,6 +36,10 @@ export async function adminLogin(
       return fail('نام کاربری یا رمز عبور اشتباه است.');
     }
 
+    if (!user.isActive) {
+      return fail('حساب کاربری شما غیرفعال شده است. لطفاً با ادمین در ارتباط باشید.');
+    }
+
     await createAdminSession(user.id);
     return ok({ id: user.id });
   });

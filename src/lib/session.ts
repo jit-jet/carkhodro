@@ -27,6 +27,7 @@ export async function getCurrentUser(): Promise<User | null> {
       include: { user: true },
     });
     if (!session || session.expiresAt.getTime() < Date.now()) return null;
+    if (!session.user.isActive) return null;
     return session.user;
   } catch (err) {
     console.error('[session:getCurrentUser]', err);

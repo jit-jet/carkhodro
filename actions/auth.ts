@@ -73,6 +73,9 @@ export interface RegisterInput {
 
 // ── 1. Request OTP ───────────────────────────────────────────────────────────
 
+const ACCOUNT_DEACTIVATED_MESSAGE =
+  'حساب کاربری شما غیرفعال شده است. لطفاً با ادمین در ارتباط باشید.';
+
 export async function requestOtp(
   phoneNumber: string,
 ): Promise<ActionResult<RequestOtpData>> {
@@ -80,6 +83,14 @@ export async function requestOtp(
     const phone = phoneNumber.trim();
     if (!PHONE_RE.test(phone)) {
       return fail('شماره موبایل معتبر نیست (مثال: ۰۹۱۲۳۴۵۶۷۸۹).');
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: { phoneNumber: phone },
+      select: { isActive: true },
+    });
+    if (existingUser && !existingUser.isActive) {
+      return fail(ACCOUNT_DEACTIVATED_MESSAGE);
     }
 
     // Rate-limit: block a resend that arrives inside the cooldown window.
@@ -156,6 +167,9 @@ export async function verifyOtp(
     const user = await prisma.user.findUnique({ where: { phoneNumber: phone } });
 
     if (user) {
+      if (!user.isActive) {
+        return fail(ACCOUNT_DEACTIVATED_MESSAGE);
+      }
       // Existing account → log in immediately and absorb any guest cart.
       if (!user.isVerified) {
         await prisma.user.update({ where: { id: user.id }, data: { isVerified: true } });
@@ -210,6 +224,9 @@ export async function registerUser(
     // Idempotency: if the account already exists, just sign them in.
     const existing = await prisma.user.findUnique({ where: { phoneNumber: phone } });
     if (existing) {
+      if (!existing.isActive) {
+        return fail(ACCOUNT_DEACTIVATED_MESSAGE);
+      }
       await createSession(existing.id);
       (await cookies()).delete(VERIFIED_PHONE_COOKIE);
       await mergeGuestCartIntoUser(existing.id);
