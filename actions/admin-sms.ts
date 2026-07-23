@@ -29,8 +29,9 @@ const STATUS_FA: Record<SmsCampaignStatus, string> = {
 };
 
 function roleWhereClause(target: SmsTargetRole): Prisma.UserWhereInput {
-  if (target === 'ALL') return { role: { in: ['RETAIL', 'WHOLESALE'] } };
-  return { role: target };
+  const active: Prisma.UserWhereInput = { isActive: true };
+  if (target === 'ALL') return { ...active, role: { in: ['RETAIL', 'WHOLESALE'] } };
+  return { ...active, role: target };
 }
 
 /** Preview how many users a given target filter currently matches. */
