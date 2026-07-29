@@ -176,7 +176,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
             <CartActions product={product} />
 
             {/* Wishlist + Compare */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-stretch gap-2 sm:gap-3">
               <WishlistButton productId={product.id} productName={product.name} variant="full" />
               <CompareButton productId={product.id} productName={product.name} variant="full" />
             </div>

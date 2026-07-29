@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 
 interface Props {
@@ -12,6 +12,16 @@ export default function ImageGallery({ images, name }: Props) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [origin, setOrigin] = useState('50% 50%');
+  /** Hover-zoom only on devices with a fine pointer (desktop), never on mobile/touch. */
+  const [canZoom, setCanZoom] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const sync = () => setCanZoom(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
 
   const hasMultiple = images.length > 1;
 
@@ -21,21 +31,25 @@ export default function ImageGallery({ images, name }: Props) {
     : [...images, ...Array<string>(4 - images.length).fill(images[0] ?? '')];
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!canZoom) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setOrigin(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
-  }, []);
+  }, [canZoom]);
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-3">
-      {/* ── Main image with hover zoom ────────────────────────── */}
+      {/* ── Main image with hover zoom (desktop only) ──────────── */}
       <div
-        className="relative rounded-xl overflow-hidden cursor-zoom-in select-none"
+        className={[
+          'relative rounded-xl overflow-hidden select-none',
+          canZoom ? 'cursor-zoom-in' : '',
+        ].join(' ')}
         style={{ height: 380 }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsZoomed(true)}
-        onMouseLeave={() => { setIsZoomed(false); setOrigin('50% 50%'); }}
+        onMouseMove={canZoom ? handleMouseMove : undefined}
+        onMouseEnter={canZoom ? () => setIsZoomed(true) : undefined}
+        onMouseLeave={canZoom ? () => { setIsZoomed(false); setOrigin('50% 50%'); } : undefined}
       >
         <Image
           src={thumbs[activeIdx] ?? ''}
@@ -46,15 +60,15 @@ export default function ImageGallery({ images, name }: Props) {
           className="object-contain p-6"
           style={{
             transformOrigin: origin,
-            transform: isZoomed ? 'scale(2.3)' : 'scale(1)',
+            transform: canZoom && isZoomed ? 'scale(2.3)' : 'scale(1)',
             // Instant tracking while zoomed; smooth scale-out on leave
-            transition: isZoomed ? 'none' : 'transform 0.35s ease',
+            transition: canZoom && isZoomed ? 'none' : 'transform 0.35s ease',
           }}
         />
 
         {/* Zoom hint — fades out when zoomed */}
         <div
-          className="absolute bottom-3 inset-s-3 flex items-center gap-1.5 bg-black/40 text-white text-xs px-2.5 py-1.5 rounded-lg backdrop-blur-sm pointer-events-none transition-opacity duration-200"
+          className="absolute bottom-3 inset-s-3 flex items-center gap-1.5 bg-black/40 text-white text-xs px-2.5 py-1.5 rounded-lg backdrop-blur-sm pointer-events-none transition-opacity duration-200 max-md:hidden "
           style={{ opacity: isZoomed ? 0 : 1 }}
         >
           {/* magnify icon */}
@@ -69,26 +83,27 @@ export default function ImageGallery({ images, name }: Props) {
       </div>
 
       {/* ── Thumbnail strip (only when more than one image) ─────── */}
-      {hasMultiple && <div className="flex gap-2 overflow-x-auto pb-0.5" dir="ltr">
-        {thumbs.map((img, idx) => (
-          <button
-            key={idx}
-            onClick={() => setActiveIdx(idx)}
-            className={[
-              'shrink-0 w-16 h-16 rounded-xl border-2 overflow-hidden transition-all duration-150',
-              activeIdx === idx
-                ? 'border-accent shadow-md'
-                : 'border-gray-200 hover:border-gray-300 opacity-70 hover:opacity-100',
-            ].join(' ')}
-            aria-label={`تصویر ${idx + 1}`}
-          >
-            <div className="relative w-full h-full">
-              <Image src={img} alt={`${name} - تصویر ${idx + 1}`} fill className="object-contain p-1" />
-            </div>
-          </button>
-        ))}
-      </div>
-      }
+      {hasMultiple && (
+        <div className="flex gap-2 overflow-x-auto pb-0.5" dir="ltr">
+          {thumbs.map((img, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveIdx(idx)}
+              className={[
+                'shrink-0 w-16 h-16 rounded-xl border-2 overflow-hidden transition-all duration-150',
+                activeIdx === idx
+                  ? 'border-accent shadow-md'
+                  : 'border-gray-200 hover:border-gray-300 opacity-70 hover:opacity-100',
+              ].join(' ')}
+              aria-label={`تصویر ${idx + 1}`}
+            >
+              <div className="relative w-full h-full">
+                <Image src={img} alt={`${name} - تصویر ${idx + 1}`} fill className="object-contain p-1" />
+              </div>
+            </button>
+          ))}
         </div>
+      )}
+    </div>
   );
 }

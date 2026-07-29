@@ -133,15 +133,19 @@ export default function CompareButton({ productId, productName, variant = 'icon'
       onClick={toggle}
       disabled={pending}
       aria-pressed={active}
+      aria-label={active ? 'حذف از لیست مقایسه' : 'افزودن به لیست مقایسه'}
       className={[
-        'flex-1 flex items-center justify-center gap-2 font-semibold text-sm py-2.5 rounded-xl border-2 transition-all duration-150 active:scale-95 disabled:opacity-60',
+        'flex-1 min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 font-semibold text-xs sm:text-sm py-2.5 px-2 sm:px-3 rounded-xl border-2 transition-all duration-150 active:scale-95 disabled:opacity-60',
         active
           ? 'border-blue-600 bg-blue-50 text-blue-700'
           : 'border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-600',
       ].join(' ')}
     >
       {pending ? <Spinner /> : <CompareIcon />}
-      {active ? 'در لیست مقایسه' : 'افزودن به مقایسه'}
+      <span className="truncate">
+        <span className="sm:hidden">مقایسه</span>
+        <span className="hidden sm:inline">{active ? 'در لیست مقایسه' : 'افزودن به مقایسه'}</span>
+      </span>
     </button>
   );
 }
