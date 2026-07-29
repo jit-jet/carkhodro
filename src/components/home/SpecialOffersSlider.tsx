@@ -34,7 +34,7 @@ async function SpecialOffersSliderContent() {
         <SectionTitle
           title="پیشنهادات شگفت‌انگیز"
           subtitle="بهترین تخفیف‌ها تا پایان این هفته"
-          linkHref="/offers"
+          linkHref="/products?offer=1"
           linkLabel="همه پیشنهادات"
         />
         <SliderWrapper className="py-2">

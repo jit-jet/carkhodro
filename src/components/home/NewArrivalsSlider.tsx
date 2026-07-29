@@ -27,7 +27,7 @@ async function NewArrivalsSliderContent() {
         <SectionTitle
           title="جدیدترین محصولات"
           subtitle="تازه‌وارد‌های فروشگاه کارخودرو"
-          linkHref="/new-arrivals"
+          linkHref="/products?sort=newest"
           linkLabel="همه محصولات جدید"
         />
         <SliderWrapper className="py-2">

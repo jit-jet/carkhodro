@@ -15,6 +15,8 @@ interface FilterSidebarProps {
   onCarTypeToggle: (carType: string) => void;
   selectedCategories: string[];
   onCategoryToggle: (cat: string) => void;
+  offerOnly: boolean;
+  onOfferToggle: () => void;
   onClearAll: () => void;
   onRemoveFilter: (type: string, value: string) => void;
   onExportPDF: () => void;
@@ -118,6 +120,8 @@ export default function FilterSidebar({
   onCarTypeToggle,
   selectedCategories,
   onCategoryToggle,
+  offerOnly,
+  onOfferToggle,
   onClearAll,
   onRemoveFilter,
   onExportPDF,
@@ -190,6 +194,15 @@ export default function FilterSidebar({
       </div>
 
       <div className="h-px bg-gray-100 mb-1" />
+
+      {/* Special offers */}
+      <div className="py-3 border-b border-gray-100">
+        <CheckItem
+          label="پیشنهاد ویژه"
+          checked={offerOnly}
+          onChange={onOfferToggle}
+        />
+      </div>
 
       {/* Parts brand */}
       <AccordionSection title="برند قطعه">
