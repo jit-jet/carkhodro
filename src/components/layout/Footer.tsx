@@ -81,13 +81,8 @@ export default function Footer({
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { icon: "🛡️", title: "ضمانت اصالت کالا", desc: "تمام محصولات اصلی" },
-              { icon: "🚚", title: "ارسال سریع", desc: "به سراسر کشور" },
-              { icon: "↩️", title: "بازگشت آسان", desc: "تا ۷ روز ضمانت برگشت" },
-              { icon: "🎧", title: "پشتیبانی ۲۴/۷", desc: "همیشه در کنار شما" },
-            ].map((item) => (
-              <div key={item.title} className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+            {settings.footerTrustBadges.map((item, index) => (
+              <div key={`${item.title}-${index}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
                 <span className="text-2xl flex-shrink-0">{item.icon}</span>
                 <div>
                   <p className="font-semibold text-sm">{item.title}</p>

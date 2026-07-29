@@ -30283,6 +30283,18 @@ export namespace Prisma {
     headerPromo1: string | null
     headerPromo2: string | null
     aboutText: string | null
+    footerTrust1Icon: string | null
+    footerTrust1Title: string | null
+    footerTrust1Desc: string | null
+    footerTrust2Icon: string | null
+    footerTrust2Title: string | null
+    footerTrust2Desc: string | null
+    footerTrust3Icon: string | null
+    footerTrust3Title: string | null
+    footerTrust3Desc: string | null
+    footerTrust4Icon: string | null
+    footerTrust4Title: string | null
+    footerTrust4Desc: string | null
     updatedAt: Date | null
   }
 
@@ -30296,6 +30308,18 @@ export namespace Prisma {
     headerPromo1: string | null
     headerPromo2: string | null
     aboutText: string | null
+    footerTrust1Icon: string | null
+    footerTrust1Title: string | null
+    footerTrust1Desc: string | null
+    footerTrust2Icon: string | null
+    footerTrust2Title: string | null
+    footerTrust2Desc: string | null
+    footerTrust3Icon: string | null
+    footerTrust3Title: string | null
+    footerTrust3Desc: string | null
+    footerTrust4Icon: string | null
+    footerTrust4Title: string | null
+    footerTrust4Desc: string | null
     updatedAt: Date | null
   }
 
@@ -30309,6 +30333,18 @@ export namespace Prisma {
     headerPromo1: number
     headerPromo2: number
     aboutText: number
+    footerTrust1Icon: number
+    footerTrust1Title: number
+    footerTrust1Desc: number
+    footerTrust2Icon: number
+    footerTrust2Title: number
+    footerTrust2Desc: number
+    footerTrust3Icon: number
+    footerTrust3Title: number
+    footerTrust3Desc: number
+    footerTrust4Icon: number
+    footerTrust4Title: number
+    footerTrust4Desc: number
     updatedAt: number
     _all: number
   }
@@ -30332,6 +30368,18 @@ export namespace Prisma {
     headerPromo1?: true
     headerPromo2?: true
     aboutText?: true
+    footerTrust1Icon?: true
+    footerTrust1Title?: true
+    footerTrust1Desc?: true
+    footerTrust2Icon?: true
+    footerTrust2Title?: true
+    footerTrust2Desc?: true
+    footerTrust3Icon?: true
+    footerTrust3Title?: true
+    footerTrust3Desc?: true
+    footerTrust4Icon?: true
+    footerTrust4Title?: true
+    footerTrust4Desc?: true
     updatedAt?: true
   }
 
@@ -30345,6 +30393,18 @@ export namespace Prisma {
     headerPromo1?: true
     headerPromo2?: true
     aboutText?: true
+    footerTrust1Icon?: true
+    footerTrust1Title?: true
+    footerTrust1Desc?: true
+    footerTrust2Icon?: true
+    footerTrust2Title?: true
+    footerTrust2Desc?: true
+    footerTrust3Icon?: true
+    footerTrust3Title?: true
+    footerTrust3Desc?: true
+    footerTrust4Icon?: true
+    footerTrust4Title?: true
+    footerTrust4Desc?: true
     updatedAt?: true
   }
 
@@ -30358,6 +30418,18 @@ export namespace Prisma {
     headerPromo1?: true
     headerPromo2?: true
     aboutText?: true
+    footerTrust1Icon?: true
+    footerTrust1Title?: true
+    footerTrust1Desc?: true
+    footerTrust2Icon?: true
+    footerTrust2Title?: true
+    footerTrust2Desc?: true
+    footerTrust3Icon?: true
+    footerTrust3Title?: true
+    footerTrust3Desc?: true
+    footerTrust4Icon?: true
+    footerTrust4Title?: true
+    footerTrust4Desc?: true
     updatedAt?: true
     _all?: true
   }
@@ -30458,6 +30530,18 @@ export namespace Prisma {
     headerPromo1: string | null
     headerPromo2: string | null
     aboutText: string | null
+    footerTrust1Icon: string | null
+    footerTrust1Title: string | null
+    footerTrust1Desc: string | null
+    footerTrust2Icon: string | null
+    footerTrust2Title: string | null
+    footerTrust2Desc: string | null
+    footerTrust3Icon: string | null
+    footerTrust3Title: string | null
+    footerTrust3Desc: string | null
+    footerTrust4Icon: string | null
+    footerTrust4Title: string | null
+    footerTrust4Desc: string | null
     updatedAt: Date
     _count: SiteSettingCountAggregateOutputType | null
     _avg: SiteSettingAvgAggregateOutputType | null
@@ -30490,6 +30574,18 @@ export namespace Prisma {
     headerPromo1?: boolean
     headerPromo2?: boolean
     aboutText?: boolean
+    footerTrust1Icon?: boolean
+    footerTrust1Title?: boolean
+    footerTrust1Desc?: boolean
+    footerTrust2Icon?: boolean
+    footerTrust2Title?: boolean
+    footerTrust2Desc?: boolean
+    footerTrust3Icon?: boolean
+    footerTrust3Title?: boolean
+    footerTrust3Desc?: boolean
+    footerTrust4Icon?: boolean
+    footerTrust4Title?: boolean
+    footerTrust4Desc?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
@@ -30503,6 +30599,18 @@ export namespace Prisma {
     headerPromo1?: boolean
     headerPromo2?: boolean
     aboutText?: boolean
+    footerTrust1Icon?: boolean
+    footerTrust1Title?: boolean
+    footerTrust1Desc?: boolean
+    footerTrust2Icon?: boolean
+    footerTrust2Title?: boolean
+    footerTrust2Desc?: boolean
+    footerTrust3Icon?: boolean
+    footerTrust3Title?: boolean
+    footerTrust3Desc?: boolean
+    footerTrust4Icon?: boolean
+    footerTrust4Title?: boolean
+    footerTrust4Desc?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
@@ -30516,6 +30624,18 @@ export namespace Prisma {
     headerPromo1?: boolean
     headerPromo2?: boolean
     aboutText?: boolean
+    footerTrust1Icon?: boolean
+    footerTrust1Title?: boolean
+    footerTrust1Desc?: boolean
+    footerTrust2Icon?: boolean
+    footerTrust2Title?: boolean
+    footerTrust2Desc?: boolean
+    footerTrust3Icon?: boolean
+    footerTrust3Title?: boolean
+    footerTrust3Desc?: boolean
+    footerTrust4Icon?: boolean
+    footerTrust4Title?: boolean
+    footerTrust4Desc?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
@@ -30529,10 +30649,22 @@ export namespace Prisma {
     headerPromo1?: boolean
     headerPromo2?: boolean
     aboutText?: boolean
+    footerTrust1Icon?: boolean
+    footerTrust1Title?: boolean
+    footerTrust1Desc?: boolean
+    footerTrust2Icon?: boolean
+    footerTrust2Title?: boolean
+    footerTrust2Desc?: boolean
+    footerTrust3Icon?: boolean
+    footerTrust3Title?: boolean
+    footerTrust3Desc?: boolean
+    footerTrust4Icon?: boolean
+    footerTrust4Title?: boolean
+    footerTrust4Desc?: boolean
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "secondaryPhone" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "aboutText" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "secondaryPhone" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
@@ -30550,6 +30682,21 @@ export namespace Prisma {
       headerPromo1: string | null
       headerPromo2: string | null
       aboutText: string | null
+      /**
+       * Footer trust badges (icon / title / description) — four fixed slots.
+       */
+      footerTrust1Icon: string | null
+      footerTrust1Title: string | null
+      footerTrust1Desc: string | null
+      footerTrust2Icon: string | null
+      footerTrust2Title: string | null
+      footerTrust2Desc: string | null
+      footerTrust3Icon: string | null
+      footerTrust3Title: string | null
+      footerTrust3Desc: string | null
+      footerTrust4Icon: string | null
+      footerTrust4Title: string | null
+      footerTrust4Desc: string | null
       updatedAt: Date
     }, ExtArgs["result"]["siteSetting"]>
     composites: {}
@@ -30983,6 +31130,18 @@ export namespace Prisma {
     readonly headerPromo1: FieldRef<"SiteSetting", 'String'>
     readonly headerPromo2: FieldRef<"SiteSetting", 'String'>
     readonly aboutText: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust1Icon: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust1Title: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust1Desc: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust2Icon: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust2Title: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust2Desc: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust3Icon: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust3Title: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust3Desc: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust4Icon: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust4Title: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust4Desc: FieldRef<"SiteSetting", 'String'>
     readonly updatedAt: FieldRef<"SiteSetting", 'DateTime'>
   }
     
@@ -43637,6 +43796,18 @@ export namespace Prisma {
     headerPromo1: 'headerPromo1',
     headerPromo2: 'headerPromo2',
     aboutText: 'aboutText',
+    footerTrust1Icon: 'footerTrust1Icon',
+    footerTrust1Title: 'footerTrust1Title',
+    footerTrust1Desc: 'footerTrust1Desc',
+    footerTrust2Icon: 'footerTrust2Icon',
+    footerTrust2Title: 'footerTrust2Title',
+    footerTrust2Desc: 'footerTrust2Desc',
+    footerTrust3Icon: 'footerTrust3Icon',
+    footerTrust3Title: 'footerTrust3Title',
+    footerTrust3Desc: 'footerTrust3Desc',
+    footerTrust4Icon: 'footerTrust4Icon',
+    footerTrust4Title: 'footerTrust4Title',
+    footerTrust4Desc: 'footerTrust4Desc',
     updatedAt: 'updatedAt'
   };
 
@@ -45784,6 +45955,18 @@ export namespace Prisma {
     headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Desc?: StringNullableFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }
 
@@ -45797,6 +45980,18 @@ export namespace Prisma {
     headerPromo1?: SortOrderInput | SortOrder
     headerPromo2?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
+    footerTrust1Icon?: SortOrderInput | SortOrder
+    footerTrust1Title?: SortOrderInput | SortOrder
+    footerTrust1Desc?: SortOrderInput | SortOrder
+    footerTrust2Icon?: SortOrderInput | SortOrder
+    footerTrust2Title?: SortOrderInput | SortOrder
+    footerTrust2Desc?: SortOrderInput | SortOrder
+    footerTrust3Icon?: SortOrderInput | SortOrder
+    footerTrust3Title?: SortOrderInput | SortOrder
+    footerTrust3Desc?: SortOrderInput | SortOrder
+    footerTrust4Icon?: SortOrderInput | SortOrder
+    footerTrust4Title?: SortOrderInput | SortOrder
+    footerTrust4Desc?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
   }
 
@@ -45813,6 +46008,18 @@ export namespace Prisma {
     headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Desc?: StringNullableFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }, "id">
 
@@ -45826,6 +46033,18 @@ export namespace Prisma {
     headerPromo1?: SortOrderInput | SortOrder
     headerPromo2?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
+    footerTrust1Icon?: SortOrderInput | SortOrder
+    footerTrust1Title?: SortOrderInput | SortOrder
+    footerTrust1Desc?: SortOrderInput | SortOrder
+    footerTrust2Icon?: SortOrderInput | SortOrder
+    footerTrust2Title?: SortOrderInput | SortOrder
+    footerTrust2Desc?: SortOrderInput | SortOrder
+    footerTrust3Icon?: SortOrderInput | SortOrder
+    footerTrust3Title?: SortOrderInput | SortOrder
+    footerTrust3Desc?: SortOrderInput | SortOrder
+    footerTrust4Icon?: SortOrderInput | SortOrder
+    footerTrust4Title?: SortOrderInput | SortOrder
+    footerTrust4Desc?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: SiteSettingCountOrderByAggregateInput
     _avg?: SiteSettingAvgOrderByAggregateInput
@@ -45847,6 +46066,18 @@ export namespace Prisma {
     headerPromo1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust1Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust1Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust1Desc?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust2Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust2Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust2Desc?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust3Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust3Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust3Desc?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust4Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust4Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust4Desc?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSetting"> | Date | string
   }
 
@@ -48538,6 +48769,18 @@ export namespace Prisma {
     headerPromo1?: string | null
     headerPromo2?: string | null
     aboutText?: string | null
+    footerTrust1Icon?: string | null
+    footerTrust1Title?: string | null
+    footerTrust1Desc?: string | null
+    footerTrust2Icon?: string | null
+    footerTrust2Title?: string | null
+    footerTrust2Desc?: string | null
+    footerTrust3Icon?: string | null
+    footerTrust3Title?: string | null
+    footerTrust3Desc?: string | null
+    footerTrust4Icon?: string | null
+    footerTrust4Title?: string | null
+    footerTrust4Desc?: string | null
     updatedAt?: Date | string
   }
 
@@ -48551,6 +48794,18 @@ export namespace Prisma {
     headerPromo1?: string | null
     headerPromo2?: string | null
     aboutText?: string | null
+    footerTrust1Icon?: string | null
+    footerTrust1Title?: string | null
+    footerTrust1Desc?: string | null
+    footerTrust2Icon?: string | null
+    footerTrust2Title?: string | null
+    footerTrust2Desc?: string | null
+    footerTrust3Icon?: string | null
+    footerTrust3Title?: string | null
+    footerTrust3Desc?: string | null
+    footerTrust4Icon?: string | null
+    footerTrust4Title?: string | null
+    footerTrust4Desc?: string | null
     updatedAt?: Date | string
   }
 
@@ -48564,6 +48819,18 @@ export namespace Prisma {
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48577,6 +48844,18 @@ export namespace Prisma {
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48590,6 +48869,18 @@ export namespace Prisma {
     headerPromo1?: string | null
     headerPromo2?: string | null
     aboutText?: string | null
+    footerTrust1Icon?: string | null
+    footerTrust1Title?: string | null
+    footerTrust1Desc?: string | null
+    footerTrust2Icon?: string | null
+    footerTrust2Title?: string | null
+    footerTrust2Desc?: string | null
+    footerTrust3Icon?: string | null
+    footerTrust3Title?: string | null
+    footerTrust3Desc?: string | null
+    footerTrust4Icon?: string | null
+    footerTrust4Title?: string | null
+    footerTrust4Desc?: string | null
     updatedAt?: Date | string
   }
 
@@ -48603,6 +48894,18 @@ export namespace Prisma {
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48616,6 +48919,18 @@ export namespace Prisma {
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -51088,6 +51403,18 @@ export namespace Prisma {
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
     aboutText?: SortOrder
+    footerTrust1Icon?: SortOrder
+    footerTrust1Title?: SortOrder
+    footerTrust1Desc?: SortOrder
+    footerTrust2Icon?: SortOrder
+    footerTrust2Title?: SortOrder
+    footerTrust2Desc?: SortOrder
+    footerTrust3Icon?: SortOrder
+    footerTrust3Title?: SortOrder
+    footerTrust3Desc?: SortOrder
+    footerTrust4Icon?: SortOrder
+    footerTrust4Title?: SortOrder
+    footerTrust4Desc?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -51105,6 +51432,18 @@ export namespace Prisma {
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
     aboutText?: SortOrder
+    footerTrust1Icon?: SortOrder
+    footerTrust1Title?: SortOrder
+    footerTrust1Desc?: SortOrder
+    footerTrust2Icon?: SortOrder
+    footerTrust2Title?: SortOrder
+    footerTrust2Desc?: SortOrder
+    footerTrust3Icon?: SortOrder
+    footerTrust3Title?: SortOrder
+    footerTrust3Desc?: SortOrder
+    footerTrust4Icon?: SortOrder
+    footerTrust4Title?: SortOrder
+    footerTrust4Desc?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -51118,6 +51457,18 @@ export namespace Prisma {
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
     aboutText?: SortOrder
+    footerTrust1Icon?: SortOrder
+    footerTrust1Title?: SortOrder
+    footerTrust1Desc?: SortOrder
+    footerTrust2Icon?: SortOrder
+    footerTrust2Title?: SortOrder
+    footerTrust2Desc?: SortOrder
+    footerTrust3Icon?: SortOrder
+    footerTrust3Title?: SortOrder
+    footerTrust3Desc?: SortOrder
+    footerTrust4Icon?: SortOrder
+    footerTrust4Title?: SortOrder
+    footerTrust4Desc?: SortOrder
     updatedAt?: SortOrder
   }
 

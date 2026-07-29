@@ -631,17 +631,30 @@ model Faq {
 /// Dynamic site info shown across the storefront (footer/contact/etc). Always a
 /// single row — the app upserts `id = 1`.
 model SiteSetting {
-  id             Int      @id @default(1)
-  phone          String?
-  secondaryPhone String?  @map("secondary_phone")
-  email          String?
-  address        String?  @db.Text
-  workingHours   String?  @map("working_hours")
+  id                Int      @id @default(1)
+  phone             String?
+  secondaryPhone    String?  @map("secondary_phone")
+  email             String?
+  address           String?  @db.Text
+  workingHours      String?  @map("working_hours")
   /// Short promo lines shown in the header top bar (e.g. trust badges).
-  headerPromo1   String?  @map("header_promo_1")
-  headerPromo2   String?  @map("header_promo_2")
-  aboutText      String?  @map("about_text") @db.Text
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  headerPromo1      String?  @map("header_promo_1")
+  headerPromo2      String?  @map("header_promo_2")
+  aboutText         String?  @map("about_text") @db.Text
+  /// Footer trust badges (icon / title / description) — four fixed slots.
+  footerTrust1Icon  String?  @map("footer_trust_1_icon")
+  footerTrust1Title String?  @map("footer_trust_1_title")
+  footerTrust1Desc  String?  @map("footer_trust_1_desc")
+  footerTrust2Icon  String?  @map("footer_trust_2_icon")
+  footerTrust2Title String?  @map("footer_trust_2_title")
+  footerTrust2Desc  String?  @map("footer_trust_2_desc")
+  footerTrust3Icon  String?  @map("footer_trust_3_icon")
+  footerTrust3Title String?  @map("footer_trust_3_title")
+  footerTrust3Desc  String?  @map("footer_trust_3_desc")
+  footerTrust4Icon  String?  @map("footer_trust_4_icon")
+  footerTrust4Title String?  @map("footer_trust_4_title")
+  footerTrust4Desc  String?  @map("footer_trust_4_desc")
+  updatedAt         DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")
 }

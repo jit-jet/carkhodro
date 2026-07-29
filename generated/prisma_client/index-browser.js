@@ -376,6 +376,18 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   headerPromo1: 'headerPromo1',
   headerPromo2: 'headerPromo2',
   aboutText: 'aboutText',
+  footerTrust1Icon: 'footerTrust1Icon',
+  footerTrust1Title: 'footerTrust1Title',
+  footerTrust1Desc: 'footerTrust1Desc',
+  footerTrust2Icon: 'footerTrust2Icon',
+  footerTrust2Title: 'footerTrust2Title',
+  footerTrust2Desc: 'footerTrust2Desc',
+  footerTrust3Icon: 'footerTrust3Icon',
+  footerTrust3Title: 'footerTrust3Title',
+  footerTrust3Desc: 'footerTrust3Desc',
+  footerTrust4Icon: 'footerTrust4Icon',
+  footerTrust4Title: 'footerTrust4Title',
+  footerTrust4Desc: 'footerTrust4Desc',
   updatedAt: 'updatedAt'
 };
 
