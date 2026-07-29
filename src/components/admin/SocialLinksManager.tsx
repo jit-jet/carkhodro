@@ -11,6 +11,7 @@ import {
 import type { AdminSocialLinkVM } from "@/src/lib/serializers";
 import { SocialMediaIcon, SOCIAL_ICON_PRESETS } from "@/src/components/layout/SocialMediaIcon";
 import { Badge, Button, Card, CardHeader, EmptyState, FormError, Input, Label } from "@/src/components/admin/AdminUI";
+import { useCartUI } from "@/src/store/cart-ui";
 
 const EMPTY_FORM: SocialLinkInput = { label: "", url: "", icon: "telegram", isActive: true };
 
@@ -19,6 +20,7 @@ function sortLinks(links: AdminSocialLinkVM[]): AdminSocialLinkVM[] {
 }
 
 export default function SocialLinksManager({ initialLinks }: { initialLinks: AdminSocialLinkVM[] }) {
+  const notify = useCartUI((s) => s.notify);
   const [links, setLinks] = useState(() => sortLinks(initialLinks));
   const [form, setForm] = useState<SocialLinkInput>(EMPTY_FORM);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -37,7 +39,11 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Adm
     startTransition(async () => {
       if (editingId) {
         const result = await updateSocialLink(editingId, form);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         setLinks((prev) =>
           sortLinks(
             prev.map((link) =>
@@ -53,9 +59,18 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Adm
             ),
           ),
         );
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "شبکه اجتماعی با موفقیت به‌روزرسانی شد.",
+        });
       } else {
         const result = await createSocialLink(form);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         const nextOrder = links.length > 0 ? Math.max(...links.map((l) => l.order)) + 1 : 0;
         setLinks((prev) =>
           sortLinks([
@@ -70,6 +85,11 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Adm
             },
           ]),
         );
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "شبکه اجتماعی با موفقیت افزوده شد.",
+        });
       }
       reset();
     });
@@ -79,8 +99,17 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Adm
     setError("");
     startTransition(async () => {
       const result = await deleteSocialLink(id);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
       setLinks((prev) => prev.filter((link) => link.id !== id));
+      notify({
+        variant: "success",
+        title: "حذف موفق",
+        description: "شبکه اجتماعی با موفقیت حذف شد.",
+      });
     });
   }
 
@@ -104,7 +133,14 @@ export default function SocialLinksManager({ initialLinks }: { initialLinks: Adm
       if (!result.ok) {
         setError(result.error);
         setLinks(previous);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
       }
+      notify({
+        variant: "success",
+        title: "ترتیب به‌روز شد",
+        description: "ترتیب شبکه‌های اجتماعی ذخیره شد.",
+      });
     });
   }
 

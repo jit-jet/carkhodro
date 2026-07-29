@@ -5,6 +5,7 @@ import {
   uploadAdminImage,
   type TaxonomyImageFolder,
 } from "@/actions/admin-uploads";
+import { useCartUI } from "@/src/store/cart-ui";
 
 type ImageUploadFieldProps = {
   folder: TaxonomyImageFolder;
@@ -24,6 +25,7 @@ export default function ImageUploadField({
   label = "تصویر",
   className = "",
 }: ImageUploadFieldProps) {
+  const notify = useCartUI((s) => s.notify);
   const fileRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [uploading, startUpload] = useTransition();
@@ -38,9 +40,15 @@ export default function ImageUploadField({
       const result = await uploadAdminImage(folder, form);
       if (!result.ok) {
         setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
       onChange(result.data.url);
+      notify({
+        variant: "success",
+        title: "آپلود موفق",
+        description: "تصویر با موفقیت آپلود شد.",
+      });
     });
   }
 

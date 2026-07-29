@@ -79,7 +79,11 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
 
     startTransition(async () => {
       const result = await updateOrderAdmin(order.id, input);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
       const message = "اطلاعات سفارش با موفقیت ذخیره شد.";
       setSuccess(message);
       notify({ variant: "success", title: "ذخیره موفق", description: message });

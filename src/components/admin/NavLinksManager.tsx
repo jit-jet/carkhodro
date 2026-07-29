@@ -10,6 +10,7 @@ import {
 } from "@/actions/admin-navigation";
 import type { AdminNavLinkVM } from "@/src/lib/serializers";
 import { Badge, Button, Card, CardHeader, EmptyState, FormError, Input } from "@/src/components/admin/AdminUI";
+import { useCartUI } from "@/src/store/cart-ui";
 
 const EMPTY_FORM: NavLinkInput = { href: "", label: "", isActive: true };
 
@@ -18,6 +19,7 @@ function sortLinks(links: AdminNavLinkVM[]): AdminNavLinkVM[] {
 }
 
 export default function NavLinksManager({ initialLinks }: { initialLinks: AdminNavLinkVM[] }) {
+  const notify = useCartUI((s) => s.notify);
   const [links, setLinks] = useState(() => sortLinks(initialLinks));
   const [form, setForm] = useState<NavLinkInput>(EMPTY_FORM);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -36,7 +38,11 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
     startTransition(async () => {
       if (editingId) {
         const result = await updateNavLink(editingId, form);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         setLinks((prev) =>
           sortLinks(
             prev.map((link) =>
@@ -46,9 +52,18 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
             ),
           ),
         );
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "لینک منو با موفقیت به‌روزرسانی شد.",
+        });
       } else {
         const result = await createNavLink(form);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         const nextOrder = links.length > 0 ? Math.max(...links.map((l) => l.order)) + 1 : 0;
         setLinks((prev) =>
           sortLinks([
@@ -62,6 +77,11 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
             },
           ]),
         );
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "لینک منو با موفقیت افزوده شد.",
+        });
       }
       reset();
     });
@@ -71,8 +91,17 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
     setError("");
     startTransition(async () => {
       const result = await deleteNavLink(id);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
       setLinks((prev) => prev.filter((link) => link.id !== id));
+      notify({
+        variant: "success",
+        title: "حذف موفق",
+        description: "لینک منو با موفقیت حذف شد.",
+      });
     });
   }
 
@@ -96,7 +125,14 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
       if (!result.ok) {
         setError(result.error);
         setLinks(previous);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
       }
+      notify({
+        variant: "success",
+        title: "ترتیب به‌روز شد",
+        description: "ترتیب لینک‌های منو ذخیره شد.",
+      });
     });
   }
 

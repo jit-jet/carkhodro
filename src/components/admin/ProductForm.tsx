@@ -118,7 +118,9 @@ export default function ProductForm({
 
     const remaining = MAX_GALLERY_IMAGES - images.length;
     if (remaining <= 0) {
-      setImageError(`حداکثر ${MAX_GALLERY_IMAGES.toLocaleString("fa-IR")} تصویر مجاز است.`);
+      const msg = `حداکثر ${MAX_GALLERY_IMAGES.toLocaleString("fa-IR")} تصویر مجاز است.`;
+      setImageError(msg);
+      notify({ variant: "error", title: "خطا", description: msg });
       return;
     }
 
@@ -131,13 +133,23 @@ export default function ProductForm({
         const result = await uploadProductImage(form);
         if (!result.ok) {
           setImageError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
           break;
         }
         uploaded.push(result.data.url);
       }
       addUploadedUrls(uploaded);
+      if (uploaded.length > 0) {
+        notify({
+          variant: "success",
+          title: "آپلود موفق",
+          description: `${uploaded.length.toLocaleString("fa-IR")} تصویر افزوده شد.`,
+        });
+      }
       if (list.length > remaining) {
-        setImageError(`فقط ${remaining.toLocaleString("fa-IR")} تصویر دیگر قابل افزودن بود.`);
+        const msg = `فقط ${remaining.toLocaleString("fa-IR")} تصویر دیگر قابل افزودن بود.`;
+        setImageError(msg);
+        notify({ variant: "error", title: "محدودیت تصویر", description: msg });
       }
     });
   }
@@ -188,7 +200,11 @@ export default function ProductForm({
       const result = isEditing
         ? await updateProduct(initial.id!, { ...input, isActive })
         : await createProduct(input);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
 
       const successMessage = isEditing
         ? "محصول با موفقیت به‌روزرسانی شد."

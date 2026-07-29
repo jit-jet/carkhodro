@@ -22,6 +22,7 @@ import {
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
 import ImageUploadField, { AdminThumb } from "@/src/components/admin/ImageUploadField";
+import { useCartUI } from "@/src/store/cart-ui";
 
 const EMPTY_FORM: CategoryInput = {
   key: "",
@@ -36,6 +37,7 @@ export default function CategoriesManager({
 }: {
   initialCategories: AdminCategoryVM[];
 }) {
+  const notify = useCartUI((s) => s.notify);
   const [categories, setCategories] = useState(initialCategories);
   const [form, setForm] = useState<CategoryInput>(EMPTY_FORM);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -71,7 +73,11 @@ export default function CategoriesManager({
       };
       if (editingId) {
         const result = await updateCategory(editingId, payload);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         setCategories((prev) =>
           prev.map((c) =>
             c.id === editingId
@@ -85,10 +91,19 @@ export default function CategoriesManager({
               : c,
           ),
         );
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "دسته‌بندی با موفقیت به‌روزرسانی شد.",
+        });
         cancelEdit();
       } else {
         const result = await createCategory(payload);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         setCategories((prev) => [
           ...prev,
           {
@@ -100,6 +115,11 @@ export default function CategoriesManager({
             isActive: payload.isActive ?? true,
           },
         ]);
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "دسته‌بندی با موفقیت افزوده شد.",
+        });
         setForm(EMPTY_FORM);
       }
     });
@@ -111,9 +131,15 @@ export default function CategoriesManager({
       const result = await deleteCategory(id);
       if (!result.ok) {
         setRowError({ id, message: result.error });
+        notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
       setCategories((prev) => prev.filter((c) => c.id !== id));
+      notify({
+        variant: "success",
+        title: "حذف موفق",
+        description: "دسته‌بندی با موفقیت حذف شد.",
+      });
     });
   }
 

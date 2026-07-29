@@ -23,6 +23,7 @@ import {
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
 import { formatNumberFa } from "@/src/lib/format";
+import { useCartUI } from "@/src/store/cart-ui";
 import type { SmsCampaignStatus, SmsTargetRole } from "@/generated/prisma_client";
 
 const TARGET_OPTIONS: { value: SmsTargetRole; label: string }[] = [
@@ -44,6 +45,7 @@ const STATUS_TONE: Record<SmsCampaignStatus, "success" | "warning" | "danger" | 
 };
 
 export default function SmsPanel({ initialHistory }: { initialHistory: AdminSmsCampaignVM[] }) {
+  const notify = useCartUI((s) => s.notify);
   const [targetRole, setTargetRole] = useState<SmsTargetRole>("ALL");
   const [body, setBody] = useState("");
   const [recipientCount, setRecipientCount] = useState<number | null>(null);
@@ -65,7 +67,9 @@ export default function SmsPanel({ initialHistory }: { initialHistory: AdminSmsC
     setError("");
     setSuccess("");
     if (!body.trim()) {
-      setError("متن پیامک را وارد کنید.");
+      const msg = "متن پیامک را وارد کنید.";
+      setError(msg);
+      notify({ variant: "error", title: "خطا", description: msg });
       return;
     }
     if (
@@ -80,11 +84,17 @@ export default function SmsPanel({ initialHistory }: { initialHistory: AdminSmsC
       const result = await sendMarketingSms({ body, targetRole });
       if (!result.ok) {
         setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
-      setSuccess(
-        `پیامک برای ${result.data.successCount.toLocaleString("fa-IR")} از ${result.data.recipientCount.toLocaleString("fa-IR")} کاربر ارسال شد.`,
-      );
+      const successMessage = `پیامک برای ${result.data.successCount.toLocaleString("fa-IR")} از ${result.data.recipientCount.toLocaleString("fa-IR")} کاربر ارسال شد.`;
+      setSuccess(successMessage);
+      const isPartial = result.data.successCount !== result.data.recipientCount;
+      notify({
+        variant: isPartial ? "error" : "success",
+        title: isPartial ? "ارسال ناقص" : "ارسال موفق",
+        description: successMessage,
+      });
       setBody("");
       setHistory((prev) => [
         {

@@ -34,6 +34,7 @@ import {
   toAdminProductWhereFilters,
   type ProductsTableFilters,
 } from "@/src/lib/admin-products-query";
+import { useCartUI } from "@/src/store/cart-ui";
 
 type BulkOpKey =
   | "category"
@@ -104,6 +105,7 @@ export default function ProductsTable({
   carModels: { id: number; name: string; brandName: string }[];
 }) {
   const router = useRouter();
+  const notify = useCartUI((s) => s.notify);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   /** When true, every product matching current filters (all pages) is selected. */
   const [selectAllMatching, setSelectAllMatching] = useState(false);
@@ -260,14 +262,32 @@ export default function ProductsTable({
   function handleBulkSubmit() {
     setError("");
     setMessage("");
-    if (selectedCount === 0) return setError("حداقل یک محصول را انتخاب کنید.");
-    if (!bulkOp) return setError("یک عملیات گروهی انتخاب کنید.");
+    if (selectedCount === 0) {
+      const msg = "حداقل یک محصول را انتخاب کنید.";
+      setError(msg);
+      notify({ variant: "error", title: "خطا", description: msg });
+      return;
+    }
+    if (!bulkOp) {
+      const msg = "یک عملیات گروهی انتخاب کنید.";
+      setError(msg);
+      notify({ variant: "error", title: "خطا", description: msg });
+      return;
+    }
     if (needsValueInput(bulkOp) && !bulkValue) {
-      return setError("مقدار عملیات را وارد یا انتخاب کنید.");
+      const msg = "مقدار عملیات را وارد یا انتخاب کنید.";
+      setError(msg);
+      notify({ variant: "error", title: "خطا", description: msg });
+      return;
     }
 
     const action = buildBulkAction();
-    if (!action) return setError("عملیات گروهی نامعتبر است.");
+    if (!action) {
+      const msg = "عملیات گروهی نامعتبر است.";
+      setError(msg);
+      notify({ variant: "error", title: "خطا", description: msg });
+      return;
+    }
     if (
       (action.op === "category" || action.op === "brand" || action.op === "vehicleType") &&
       !Number.isFinite(
@@ -278,7 +298,10 @@ export default function ProductsTable({
             : action.carModelId,
       )
     ) {
-      return setError("گزینه انتخاب‌شده معتبر نیست.");
+      const msg = "گزینه انتخاب‌شده معتبر نیست.";
+      setError(msg);
+      notify({ variant: "error", title: "خطا", description: msg });
+      return;
     }
 
     startTransition(async () => {
@@ -286,8 +309,14 @@ export default function ProductsTable({
         ? { mode: "filters" as const, filters: toAdminProductWhereFilters(filters) }
         : { mode: "ids" as const, productIds: Array.from(selected) };
       const result = await bulkUpdateProducts(target, action);
-      if (!result.ok) return setError(result.error);
-      setMessage(`${result.data.count.toLocaleString("fa-IR")} محصول با موفقیت به‌روزرسانی شد.`);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
+      const successMessage = `${result.data.count.toLocaleString("fa-IR")} محصول با موفقیت به‌روزرسانی شد.`;
+      setMessage(successMessage);
+      notify({ variant: "success", title: "ذخیره موفق", description: successMessage });
       clearSelection();
       setBulkValue("");
       router.refresh();
@@ -298,7 +327,16 @@ export default function ProductsTable({
     setError("");
     startTransition(async () => {
       const result = await deleteProduct(id);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
+      notify({
+        variant: "success",
+        title: "غیرفعال شد",
+        description: "محصول با موفقیت غیرفعال شد.",
+      });
       router.refresh();
     });
   }
@@ -307,7 +345,16 @@ export default function ProductsTable({
     setError("");
     startTransition(async () => {
       const result = await reactivateProduct(id);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
+      notify({
+        variant: "success",
+        title: "فعال‌سازی موفق",
+        description: "محصول با موفقیت فعال شد.",
+      });
       router.refresh();
     });
   }

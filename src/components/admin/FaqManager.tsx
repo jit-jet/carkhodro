@@ -12,10 +12,12 @@ import {
   Input,
   Textarea,
 } from "@/src/components/admin/AdminUI";
+import { useCartUI } from "@/src/store/cart-ui";
 
 const EMPTY_FORM: FaqInput = { question: "", answer: "", sortOrder: 0 };
 
 export default function FaqManager({ initialFaqs }: { initialFaqs: FaqVM[] }) {
+  const notify = useCartUI((s) => s.notify);
   const [faqs, setFaqs] = useState(initialFaqs);
   const [form, setForm] = useState<FaqInput>(EMPTY_FORM);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -34,17 +36,35 @@ export default function FaqManager({ initialFaqs }: { initialFaqs: FaqVM[] }) {
     startTransition(async () => {
       if (editingId) {
         const result = await updateFaq(editingId, form);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         setFaqs((prev) =>
           prev.map((f) => (f.id === editingId ? { ...f, question: form.question, answer: form.answer } : f)),
         );
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "سوال با موفقیت به‌روزرسانی شد.",
+        });
       } else {
         const result = await createFaq(form);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         setFaqs((prev) => [
           ...prev,
           { id: result.data.id, question: form.question, answer: form.answer, sortOrder: form.sortOrder ?? 0 },
         ]);
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "سوال با موفقیت افزوده شد.",
+        });
       }
       reset();
     });
@@ -53,8 +73,17 @@ export default function FaqManager({ initialFaqs }: { initialFaqs: FaqVM[] }) {
   function handleDelete(id: number) {
     startTransition(async () => {
       const result = await deleteFaq(id);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
       setFaqs((prev) => prev.filter((f) => f.id !== id));
+      notify({
+        variant: "success",
+        title: "حذف موفق",
+        description: "سوال با موفقیت حذف شد.",
+      });
     });
   }
 

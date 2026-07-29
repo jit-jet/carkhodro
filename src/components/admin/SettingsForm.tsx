@@ -14,6 +14,7 @@ import {
   Label,
   Textarea,
 } from "@/src/components/admin/AdminUI";
+import { useCartUI } from "@/src/store/cart-ui";
 
 export default function SettingsForm({
   initial,
@@ -22,6 +23,7 @@ export default function SettingsForm({
   initial: SiteSettingVM;
   initialSocialLinks: AdminSocialLinkVM[];
 }) {
+  const notify = useCartUI((s) => s.notify);
   const [form, setForm] = useState(initial);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -37,8 +39,17 @@ export default function SettingsForm({
     setSuccess(false);
     startTransition(async () => {
       const result = await updateSiteSettings(form);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
       setSuccess(true);
+      notify({
+        variant: "success",
+        title: "ذخیره موفق",
+        description: "اطلاعات با موفقیت ذخیره شد.",
+      });
     });
   }
 

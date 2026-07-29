@@ -4,10 +4,12 @@ import { useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { adminLogin } from "@/actions/admin-auth";
 import { Button, FormError, Input, Label } from "@/src/components/admin/AdminUI";
+import { useCartUI } from "@/src/store/cart-ui";
 
 export default function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const notify = useCartUI((s) => s.notify);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,8 +22,14 @@ export default function AdminLoginForm() {
       const result = await adminLogin(username, password);
       if (!result.ok) {
         setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
+      notify({
+        variant: "success",
+        title: "ورود موفق",
+        description: "به پنل مدیریت خوش آمدید.",
+      });
       const redirect = searchParams.get("redirect");
       router.push(redirect && redirect.startsWith("/admin") ? redirect : "/admin");
       router.refresh();

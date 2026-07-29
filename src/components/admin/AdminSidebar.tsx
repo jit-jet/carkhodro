@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { adminLogout } from "@/actions/admin-auth";
+import { useCartUI } from "@/src/store/cart-ui";
 
 type IconKey =
   | "grid"
@@ -170,6 +171,7 @@ export default function AdminSidebar({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const notify = useCartUI((s) => s.notify);
   const [loggingOut, startLogout] = useTransition();
 
   function isActive(href: string): boolean {
@@ -187,6 +189,11 @@ export default function AdminSidebar({
   function handleLogout() {
     startLogout(async () => {
       await adminLogout();
+      notify({
+        variant: "success",
+        title: "خروج موفق",
+        description: "با موفقیت از پنل خارج شدید.",
+      });
       router.push("/admin/login");
       router.refresh();
     });
