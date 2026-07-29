@@ -287,6 +287,7 @@ export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
 
 
 export const DiscountScopeType: {
+  ALL: 'ALL',
   CATEGORY: 'CATEGORY',
   BRAND: 'BRAND',
   CAR_BRAND: 'CAR_BRAND',

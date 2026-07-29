@@ -146,7 +146,7 @@ async function resolveScopeLabels(
   scopeType: DiscountScopeType,
   scopeIds: string[],
 ): Promise<{ id: string; label: string }[]> {
-  if (scopeIds.length === 0) return [];
+  if (scopeType === 'ALL' || scopeIds.length === 0) return [];
 
   if (scopeType === 'CATEGORY') {
     const ids = scopeIds.map(Number).filter((n) => Number.isFinite(n));

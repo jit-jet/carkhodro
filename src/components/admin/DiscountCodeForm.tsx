@@ -61,6 +61,7 @@ const DISCOUNT_TYPES: { value: DiscountType; label: string }[] = [
 ];
 
 const SCOPE_TYPES: { value: DiscountScopeType; label: string }[] = [
+  { value: "ALL", label: "همه محصولات" },
   { value: "CATEGORY", label: "دسته‌بندی" },
   { value: "BRAND", label: "برند قطعه" },
   { value: "CAR_BRAND", label: "برند خودرو" },
@@ -195,6 +196,7 @@ export default function DiscountCodeForm({
   const [searching, startSearch] = useTransition();
 
   const catalogOptions: ScopeOption[] = useMemo(() => {
+    if (scopeType === "ALL") return [];
     if (scopeType === "CATEGORY") {
       return categories.map((c) => ({ id: String(c.id), label: c.name }));
     }
@@ -282,7 +284,7 @@ export default function DiscountCodeForm({
       startsAt: startsAt ?? "",
       endsAt,
       scopeType,
-      scopeIds: selected.map((s) => s.id),
+      scopeIds: scopeType === "ALL" ? [] : selected.map((s) => s.id),
       targetUserType,
       perCustomerLimit: numOrNull(perCustomerLimit),
       totalUsageLimit: numOrNull(totalUsageLimit),
@@ -347,6 +349,8 @@ export default function DiscountCodeForm({
           : scopeType === "CAR_MODEL"
             ? "جستجوی مدل خودرو"
             : "جستجوی محصول";
+
+  const showScopePicker = scopeType !== "ALL";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -468,63 +472,67 @@ export default function DiscountCodeForm({
                 </p>
               </div>
 
-              <div>
-                <Label>{scopeLabel}</Label>
-                {selected.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-2">
-                    {selected.map((s) => (
-                      <span
-                        key={s.id}
-                        className="inline-flex items-center gap-1 rounded-lg bg-accent/20 text-charcoal text-xs font-semibold px-2.5 py-1"
-                      >
-                        {s.label}
-                        <button
-                          type="button"
-                          onClick={() => removeScope(s.id)}
-                          className="text-charcoal/60 hover:text-red-600"
-                          aria-label="حذف"
+              {showScopePicker && (
+                <div>
+                  <Label>{scopeLabel}</Label>
+                  {selected.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      {selected.map((s) => (
+                        <span
+                          key={s.id}
+                          className="inline-flex items-center gap-1 rounded-lg bg-accent/20 text-charcoal text-xs font-semibold px-2.5 py-1"
                         >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <div className="relative z-30" ref={scopeBoxRef}>
-                  <Input
-                    value={scopeQuery}
-                    onChange={(e) => {
-                      setScopeQuery(e.target.value);
-                      setScopeOpen(true);
-                    }}
-                    onFocus={() => setScopeOpen(true)}
-                    placeholder={scopePlaceholder}
-                  />
-                  {scopeOpen && (filteredOptions.length > 0 || searching) && (
-                    <div className="absolute z-50 mt-1 w-full rounded-xl border border-gray-200 bg-white shadow-lg max-h-72 overflow-y-auto">
-                      {searching && scopeType === "PRODUCT" && (
-                        <p className="px-3 py-2 text-xs text-gray-400">در حال جستجو…</p>
-                      )}
-                      {filteredOptions.map((opt) => (
-                        <button
-                          key={opt.id}
-                          type="button"
-                          onClick={() => addScope(opt)}
-                          className="w-full text-right px-3 py-2.5 text-sm hover:bg-accent/15 transition-colors"
-                        >
-                          {opt.label}
-                        </button>
+                          {s.label}
+                          <button
+                            type="button"
+                            onClick={() => removeScope(s.id)}
+                            className="text-charcoal/60 hover:text-red-600"
+                            aria-label="حذف"
+                          >
+                            ×
+                          </button>
+                        </span>
                       ))}
-                      {!searching && filteredOptions.length === 0 && scopeQuery && (
-                        <p className="px-3 py-2 text-xs text-gray-400">موردی یافت نشد.</p>
-                      )}
                     </div>
                   )}
+                  <div className="relative z-30" ref={scopeBoxRef}>
+                    <Input
+                      value={scopeQuery}
+                      onChange={(e) => {
+                        setScopeQuery(e.target.value);
+                        setScopeOpen(true);
+                      }}
+                      onFocus={() => setScopeOpen(true)}
+                      placeholder={scopePlaceholder}
+                    />
+                    {scopeOpen && (filteredOptions.length > 0 || searching) && (
+                      <div className="absolute z-50 mt-1 w-full rounded-xl border border-gray-200 bg-white shadow-lg max-h-72 overflow-y-auto">
+                        {searching && scopeType === "PRODUCT" && (
+                          <p className="px-3 py-2 text-xs text-gray-400">در حال جستجو…</p>
+                        )}
+                        {filteredOptions.map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => addScope(opt)}
+                            className="w-full text-right px-3 py-2.5 text-sm hover:bg-accent/15 transition-colors"
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                        {!searching && filteredOptions.length === 0 && scopeQuery && (
+                          <p className="px-3 py-2 text-xs text-gray-400">موردی یافت نشد.</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="rounded-xl bg-sky-50 border border-sky-100 px-4 py-3 text-sm text-sky-900 leading-relaxed">
-                در صورت خالی بودن این بخش، کد تخفیف برای همه محصولات قابل استفاده است.
+                {scopeType === "ALL"
+                  ? "این کد تخفیف برای همه محصولات سبد خرید قابل استفاده است."
+                  : "در صورت خالی بودن این بخش، کد تخفیف برای همه محصولات قابل استفاده است."}
               </div>
             </div>
           </Card>

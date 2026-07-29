@@ -121,7 +121,10 @@ function toDbData(input: DiscountCodeInput) {
     startsAt,
     endsAt,
     scopeType: input.scopeType,
-    scopeIds: [...new Set(input.scopeIds.map((id) => String(id).trim()).filter(Boolean))],
+    scopeIds:
+      input.scopeType === 'ALL'
+        ? []
+        : [...new Set(input.scopeIds.map((id) => String(id).trim()).filter(Boolean))],
     targetUserType: input.targetUserType,
     perCustomerLimit: parseOptionalInt(input.perCustomerLimit),
     totalUsageLimit: parseOptionalInt(input.totalUsageLimit),

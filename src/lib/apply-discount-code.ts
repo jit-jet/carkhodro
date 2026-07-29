@@ -83,6 +83,7 @@ function isProductInScope(
   scopeType: DiscountScopeType,
   scopeIds: string[],
 ): boolean {
+  if (scopeType === 'ALL') return true;
   if (scopeIds.length === 0) return true;
   if (scopeType === 'PRODUCT') return scopeIds.includes(line.productId);
   if (scopeType === 'CATEGORY') return scopeIds.includes(String(line.categoryId));

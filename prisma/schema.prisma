@@ -83,8 +83,10 @@ enum DiscountType {
   FREE_SHIPPING  // ارسال رایگان — value ignored
 }
 
-/// What catalogue slice a discount code applies to. Empty `scopeIds` = all products.
+/// What catalogue slice a discount code applies to.
+/// ALL ignores `scopeIds`. For other types, empty `scopeIds` also means all products.
 enum DiscountScopeType {
+  ALL       // همه محصولات — scopeIds ignored / stored empty
   CATEGORY  // دسته‌بندی — scopeIds are Category.id as strings
   BRAND     // برند قطعه — scopeIds are PartsBrand.id as strings
   CAR_BRAND // برند خودرو — scopeIds are CarBrand.id as strings

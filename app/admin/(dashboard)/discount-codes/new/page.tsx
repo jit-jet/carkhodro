@@ -43,7 +43,7 @@ export default async function NewDiscountCodePage() {
           value: null,
           startsAt: now.toISOString(),
           endsAt: null,
-          scopeType: "BRAND",
+          scopeType: "ALL",
           scopeIds: [],
           scopeLabels: [],
           targetUserType: "BOTH",

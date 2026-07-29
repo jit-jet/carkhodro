@@ -596,6 +596,7 @@ exports.DiscountType = exports.$Enums.DiscountType = {
 };
 
 exports.DiscountScopeType = exports.$Enums.DiscountScopeType = {
+  ALL: 'ALL',
   CATEGORY: 'CATEGORY',
   BRAND: 'BRAND',
   CAR_BRAND: 'CAR_BRAND',
