@@ -360,6 +360,8 @@ export async function getInvoiceAdmin(id: string): Promise<InvoiceVM | null> {
         totalItems: lines.reduce((s, l) => s + l.quantity, 0),
         subtotalToman,
         discountToman: subtotalToman - Number(order.subtotal),
+        couponDiscountToman: Number(order.discountAmount),
+        discountCode: order.discountCode,
         payableToman: Number(order.totalAmount),
         previousBalanceToman: Number(order.user.accountBalance),
         isRetail: order.user.role === 'RETAIL',

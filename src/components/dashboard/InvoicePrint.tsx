@@ -28,10 +28,11 @@ export default function InvoicePrint({ invoice }: Props) {
     .filter(Boolean)
     .join('، ');
 
-  const discountToman = invoice.lines.reduce(
+  const lineDiscountToman = invoice.lines.reduce(
     (sum, line) => sum + (line.lineGrossToman - line.lineNetToman),
     0,
   );
+  const discountToman = lineDiscountToman + invoice.couponDiscountToman;
   const balanceWithInvoice = invoice.previousBalanceToman + invoice.payableToman;
 
   return (
@@ -170,7 +171,10 @@ export default function InvoicePrint({ invoice }: Props) {
             <span>{rialAmt(invoice.subtotalToman)} ریال</span>
           </div>
           <div className="inv-totals-row">
-            <span>تخفیف</span>
+            <span>
+              تخفیف
+              {invoice.discountCode ? ` (${invoice.discountCode})` : ''}
+            </span>
             <span>{rialAmt(discountToman)} ریال</span>
           </div>
           <div className="inv-totals-row inv-totals-final">

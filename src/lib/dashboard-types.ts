@@ -113,7 +113,12 @@ export interface InvoiceVM {
   lines: InvoiceLineVM[];
   totalItems: number;
   subtotalToman: number; // gross
+  /** Sum of per-line % discounts (gross − net merchandise). */
   discountToman: number;
+  /** Redeemable coupon amount in Toman (0 when none). */
+  couponDiscountToman: number;
+  /** Applied coupon code, if any. */
+  discountCode: string | null;
   payableToman: number; // net
   previousBalanceToman: number;
   isRetail: boolean;
