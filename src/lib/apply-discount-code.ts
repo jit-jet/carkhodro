@@ -3,7 +3,13 @@
  * Server actions load the DB row + usage counts, then call these functions.
  */
 
-import type { DiscountScopeType, DiscountType } from '@/generated/prisma_client';
+import type {
+  DiscountScopeType,
+  DiscountTargetUserType,
+  DiscountType,
+  UserRole,
+} from '@/generated/prisma_client';
+import { isWholesaleUser } from '@/src/lib/user-role';
 
 export interface DiscountCartLine {
   productId: string;
@@ -26,6 +32,7 @@ export interface DiscountCodeRule {
   endsAt: Date | null;
   scopeType: DiscountScopeType;
   scopeIds: string[];
+  targetUserType: DiscountTargetUserType;
   perCustomerLimit: number | null;
   totalUsageLimit: number | null;
   usedCount: number;
@@ -41,6 +48,8 @@ export interface DiscountUsageContext {
   previousSuccessfulOrders: number;
   /** How many times this user has already redeemed this code. */
   userRedemptionCount: number;
+  /** Caller's account role; guests pass null (treated as retail). */
+  userRole: UserRole | null;
   now?: Date;
 }
 
@@ -57,6 +66,17 @@ export interface AppliedDiscount {
 export type DiscountEvalResult =
   | { ok: true; data: AppliedDiscount }
   | { ok: false; error: string };
+
+/** Whether the caller's role may redeem a code with the given audience target. */
+export function matchesDiscountTargetUserType(
+  target: DiscountTargetUserType,
+  userRole: UserRole | null,
+): boolean {
+  if (target === 'BOTH') return true;
+  if (target === 'WHOLESALE') return isWholesaleUser(userRole);
+  // RETAIL — guests, retail customers, and staff using retail checkout.
+  return !isWholesaleUser(userRole);
+}
 
 function isProductInScope(
   line: DiscountCartLine,
@@ -101,6 +121,15 @@ export function evaluateDiscountCode(
 
   if (!rule.isActive) {
     return { ok: false, error: 'این کد تخفیف غیرفعال است.' };
+  }
+  if (!matchesDiscountTargetUserType(rule.targetUserType, usage.userRole)) {
+    return {
+      ok: false,
+      error:
+        rule.targetUserType === 'WHOLESALE'
+          ? 'این کد تخفیف فقط برای همکاران (عمده) قابل استفاده است.'
+          : 'این کد تخفیف فقط برای مشتریان تک‌فروش قابل استفاده است.',
+    };
   }
   if (rule.startsAt.getTime() > now.getTime()) {
     return { ok: false, error: 'زمان استفاده از این کد هنوز شروع نشده است.' };

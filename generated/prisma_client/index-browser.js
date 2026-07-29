@@ -508,6 +508,7 @@ exports.Prisma.DiscountCodeScalarFieldEnum = {
   endsAt: 'endsAt',
   scopeType: 'scopeType',
   scopeIds: 'scopeIds',
+  targetUserType: 'targetUserType',
   perCustomerLimit: 'perCustomerLimit',
   totalUsageLimit: 'totalUsageLimit',
   usedCount: 'usedCount',
@@ -600,6 +601,12 @@ exports.DiscountScopeType = exports.$Enums.DiscountScopeType = {
   CAR_BRAND: 'CAR_BRAND',
   CAR_MODEL: 'CAR_MODEL',
   PRODUCT: 'PRODUCT'
+};
+
+exports.DiscountTargetUserType = exports.$Enums.DiscountTargetUserType = {
+  RETAIL: 'RETAIL',
+  WHOLESALE: 'WHOLESALE',
+  BOTH: 'BOTH'
 };
 
 exports.Prisma.ModelName = {

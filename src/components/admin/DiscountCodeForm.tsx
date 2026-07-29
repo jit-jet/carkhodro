@@ -15,7 +15,11 @@ import {
   searchProductsForDiscount,
   type DiscountCodeInput,
 } from "@/actions/admin-discount-codes";
-import type { DiscountScopeType, DiscountType } from "@/generated/prisma_client";
+import type {
+  DiscountScopeType,
+  DiscountTargetUserType,
+  DiscountType,
+} from "@/generated/prisma_client";
 import {
   Button,
   Card,
@@ -38,6 +42,7 @@ export interface DiscountCodeFormInitial {
   scopeType: DiscountScopeType;
   scopeIds: string[];
   scopeLabels: { id: string; label: string }[];
+  targetUserType: DiscountTargetUserType;
   perCustomerLimit: number | null;
   totalUsageLimit: number | null;
   minCartAmount: number | null;
@@ -61,6 +66,12 @@ const SCOPE_TYPES: { value: DiscountScopeType; label: string }[] = [
   { value: "CAR_BRAND", label: "برند خودرو" },
   { value: "CAR_MODEL", label: "مدل خودرو" },
   { value: "PRODUCT", label: "محصول" },
+];
+
+const TARGET_USER_TYPES: { value: DiscountTargetUserType; label: string }[] = [
+  { value: "BOTH", label: "هر دو (عمده و تک‌فروش)" },
+  { value: "WHOLESALE", label: "فقط همکاران (عمده)" },
+  { value: "RETAIL", label: "فقط مشتریان تک‌فروش" },
 ];
 
 function CheckIcon() {
@@ -156,6 +167,9 @@ export default function DiscountCodeForm({
   const [productHits, setProductHits] = useState<ScopeOption[]>([]);
   const [scopeOpen, setScopeOpen] = useState(false);
   const scopeBoxRef = useRef<HTMLDivElement>(null);
+  const [targetUserType, setTargetUserType] = useState<DiscountTargetUserType>(
+    initial.targetUserType,
+  );
 
   const [perCustomerLimit, setPerCustomerLimit] = useState(
     initial.perCustomerLimit == null ? "" : String(initial.perCustomerLimit),
@@ -269,6 +283,7 @@ export default function DiscountCodeForm({
       endsAt,
       scopeType,
       scopeIds: selected.map((s) => s.id),
+      targetUserType,
       perCustomerLimit: numOrNull(perCustomerLimit),
       totalUsageLimit: numOrNull(totalUsageLimit),
       minCartAmount: numOrNull(minCartAmount),
@@ -432,6 +447,25 @@ export default function DiscountCodeForm({
                     </option>
                   ))}
                 </Select>
+              </div>
+
+              <div>
+                <Label>نوع کاربر هدف</Label>
+                <Select
+                  value={targetUserType}
+                  onChange={(e) =>
+                    setTargetUserType(e.target.value as DiscountTargetUserType)
+                  }
+                >
+                  {TARGET_USER_TYPES.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
+                </Select>
+                <p className="text-xs text-gray-500 mt-1.5">
+                  مشخص می‌کند کد برای مشتریان تک‌فروش، همکاران عمده، یا هر دو قابل استفاده باشد.
+                </p>
               </div>
 
               <div>

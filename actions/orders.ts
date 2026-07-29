@@ -295,6 +295,7 @@ export async function submitCheckout(
       shippingCost,
       subtotal,
       user.id,
+      user.role,
     );
     if (!discountResult.ok) return fail(discountResult.error);
     const applied = discountResult.data;

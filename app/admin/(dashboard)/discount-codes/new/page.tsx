@@ -46,6 +46,7 @@ export default async function NewDiscountCodePage() {
           scopeType: "BRAND",
           scopeIds: [],
           scopeLabels: [],
+          targetUserType: "BOTH",
           perCustomerLimit: null,
           totalUsageLimit: null,
           minCartAmount: null,

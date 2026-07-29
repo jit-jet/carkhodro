@@ -296,6 +296,15 @@ export const DiscountScopeType: {
 
 export type DiscountScopeType = (typeof DiscountScopeType)[keyof typeof DiscountScopeType]
 
+
+export const DiscountTargetUserType: {
+  RETAIL: 'RETAIL',
+  WHOLESALE: 'WHOLESALE',
+  BOTH: 'BOTH'
+};
+
+export type DiscountTargetUserType = (typeof DiscountTargetUserType)[keyof typeof DiscountTargetUserType]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -337,6 +346,10 @@ export const DiscountType: typeof $Enums.DiscountType
 export type DiscountScopeType = $Enums.DiscountScopeType
 
 export const DiscountScopeType: typeof $Enums.DiscountScopeType
+
+export type DiscountTargetUserType = $Enums.DiscountTargetUserType
+
+export const DiscountTargetUserType: typeof $Enums.DiscountTargetUserType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -41983,6 +41996,7 @@ export namespace Prisma {
     startsAt: Date | null
     endsAt: Date | null
     scopeType: $Enums.DiscountScopeType | null
+    targetUserType: $Enums.DiscountTargetUserType | null
     perCustomerLimit: number | null
     totalUsageLimit: number | null
     usedCount: number | null
@@ -42003,6 +42017,7 @@ export namespace Prisma {
     startsAt: Date | null
     endsAt: Date | null
     scopeType: $Enums.DiscountScopeType | null
+    targetUserType: $Enums.DiscountTargetUserType | null
     perCustomerLimit: number | null
     totalUsageLimit: number | null
     usedCount: number | null
@@ -42024,6 +42039,7 @@ export namespace Prisma {
     endsAt: number
     scopeType: number
     scopeIds: number
+    targetUserType: number
     perCustomerLimit: number
     totalUsageLimit: number
     usedCount: number
@@ -42066,6 +42082,7 @@ export namespace Prisma {
     startsAt?: true
     endsAt?: true
     scopeType?: true
+    targetUserType?: true
     perCustomerLimit?: true
     totalUsageLimit?: true
     usedCount?: true
@@ -42086,6 +42103,7 @@ export namespace Prisma {
     startsAt?: true
     endsAt?: true
     scopeType?: true
+    targetUserType?: true
     perCustomerLimit?: true
     totalUsageLimit?: true
     usedCount?: true
@@ -42107,6 +42125,7 @@ export namespace Prisma {
     endsAt?: true
     scopeType?: true
     scopeIds?: true
+    targetUserType?: true
     perCustomerLimit?: true
     totalUsageLimit?: true
     usedCount?: true
@@ -42215,6 +42234,7 @@ export namespace Prisma {
     endsAt: Date | null
     scopeType: $Enums.DiscountScopeType
     scopeIds: string[]
+    targetUserType: $Enums.DiscountTargetUserType
     perCustomerLimit: number | null
     totalUsageLimit: number | null
     usedCount: number
@@ -42255,6 +42275,7 @@ export namespace Prisma {
     endsAt?: boolean
     scopeType?: boolean
     scopeIds?: boolean
+    targetUserType?: boolean
     perCustomerLimit?: boolean
     totalUsageLimit?: boolean
     usedCount?: boolean
@@ -42278,6 +42299,7 @@ export namespace Prisma {
     endsAt?: boolean
     scopeType?: boolean
     scopeIds?: boolean
+    targetUserType?: boolean
     perCustomerLimit?: boolean
     totalUsageLimit?: boolean
     usedCount?: boolean
@@ -42299,6 +42321,7 @@ export namespace Prisma {
     endsAt?: boolean
     scopeType?: boolean
     scopeIds?: boolean
+    targetUserType?: boolean
     perCustomerLimit?: boolean
     totalUsageLimit?: boolean
     usedCount?: boolean
@@ -42320,6 +42343,7 @@ export namespace Prisma {
     endsAt?: boolean
     scopeType?: boolean
     scopeIds?: boolean
+    targetUserType?: boolean
     perCustomerLimit?: boolean
     totalUsageLimit?: boolean
     usedCount?: boolean
@@ -42332,7 +42356,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type DiscountCodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "type" | "value" | "startsAt" | "endsAt" | "scopeType" | "scopeIds" | "perCustomerLimit" | "totalUsageLimit" | "usedCount" | "minCartAmount" | "maxDiscountAmount" | "firstOrderOnly" | "minPreviousOrders" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["discountCode"]>
+  export type DiscountCodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "type" | "value" | "startsAt" | "endsAt" | "scopeType" | "scopeIds" | "targetUserType" | "perCustomerLimit" | "totalUsageLimit" | "usedCount" | "minCartAmount" | "maxDiscountAmount" | "firstOrderOnly" | "minPreviousOrders" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["discountCode"]>
   export type DiscountCodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | DiscountCode$ordersArgs<ExtArgs>
     _count?: boolean | DiscountCodeCountOutputTypeDefaultArgs<ExtArgs>
@@ -42363,6 +42387,10 @@ export namespace Prisma {
        * Target ids for `scopeType`. Empty = applies to all products.
        */
       scopeIds: string[]
+      /**
+       * Who may redeem this code: retail, wholesale, or both.
+       */
+      targetUserType: $Enums.DiscountTargetUserType
       /**
        * Max redemptions per customer. Null = unlimited.
        */
@@ -42826,6 +42854,7 @@ export namespace Prisma {
     readonly endsAt: FieldRef<"DiscountCode", 'DateTime'>
     readonly scopeType: FieldRef<"DiscountCode", 'DiscountScopeType'>
     readonly scopeIds: FieldRef<"DiscountCode", 'String[]'>
+    readonly targetUserType: FieldRef<"DiscountCode", 'DiscountTargetUserType'>
     readonly perCustomerLimit: FieldRef<"DiscountCode", 'Int'>
     readonly totalUsageLimit: FieldRef<"DiscountCode", 'Int'>
     readonly usedCount: FieldRef<"DiscountCode", 'Int'>
@@ -43769,6 +43798,7 @@ export namespace Prisma {
     endsAt: 'endsAt',
     scopeType: 'scopeType',
     scopeIds: 'scopeIds',
+    targetUserType: 'targetUserType',
     perCustomerLimit: 'perCustomerLimit',
     totalUsageLimit: 'totalUsageLimit',
     usedCount: 'usedCount',
@@ -44027,6 +44057,20 @@ export namespace Prisma {
    * Reference to a field of type 'DiscountScopeType[]'
    */
   export type ListEnumDiscountScopeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountScopeType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiscountTargetUserType'
+   */
+  export type EnumDiscountTargetUserTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountTargetUserType'>
+    
+
+
+  /**
+   * Reference to a field of type 'DiscountTargetUserType[]'
+   */
+  export type ListEnumDiscountTargetUserTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountTargetUserType[]'>
     
 
 
@@ -46584,6 +46628,7 @@ export namespace Prisma {
     endsAt?: DateTimeNullableFilter<"DiscountCode"> | Date | string | null
     scopeType?: EnumDiscountScopeTypeFilter<"DiscountCode"> | $Enums.DiscountScopeType
     scopeIds?: StringNullableListFilter<"DiscountCode">
+    targetUserType?: EnumDiscountTargetUserTypeFilter<"DiscountCode"> | $Enums.DiscountTargetUserType
     perCustomerLimit?: IntNullableFilter<"DiscountCode"> | number | null
     totalUsageLimit?: IntNullableFilter<"DiscountCode"> | number | null
     usedCount?: IntFilter<"DiscountCode"> | number
@@ -46606,6 +46651,7 @@ export namespace Prisma {
     endsAt?: SortOrderInput | SortOrder
     scopeType?: SortOrder
     scopeIds?: SortOrder
+    targetUserType?: SortOrder
     perCustomerLimit?: SortOrderInput | SortOrder
     totalUsageLimit?: SortOrderInput | SortOrder
     usedCount?: SortOrder
@@ -46631,6 +46677,7 @@ export namespace Prisma {
     endsAt?: DateTimeNullableFilter<"DiscountCode"> | Date | string | null
     scopeType?: EnumDiscountScopeTypeFilter<"DiscountCode"> | $Enums.DiscountScopeType
     scopeIds?: StringNullableListFilter<"DiscountCode">
+    targetUserType?: EnumDiscountTargetUserTypeFilter<"DiscountCode"> | $Enums.DiscountTargetUserType
     perCustomerLimit?: IntNullableFilter<"DiscountCode"> | number | null
     totalUsageLimit?: IntNullableFilter<"DiscountCode"> | number | null
     usedCount?: IntFilter<"DiscountCode"> | number
@@ -46653,6 +46700,7 @@ export namespace Prisma {
     endsAt?: SortOrderInput | SortOrder
     scopeType?: SortOrder
     scopeIds?: SortOrder
+    targetUserType?: SortOrder
     perCustomerLimit?: SortOrderInput | SortOrder
     totalUsageLimit?: SortOrderInput | SortOrder
     usedCount?: SortOrder
@@ -46682,6 +46730,7 @@ export namespace Prisma {
     endsAt?: DateTimeNullableWithAggregatesFilter<"DiscountCode"> | Date | string | null
     scopeType?: EnumDiscountScopeTypeWithAggregatesFilter<"DiscountCode"> | $Enums.DiscountScopeType
     scopeIds?: StringNullableListFilter<"DiscountCode">
+    targetUserType?: EnumDiscountTargetUserTypeWithAggregatesFilter<"DiscountCode"> | $Enums.DiscountTargetUserType
     perCustomerLimit?: IntNullableWithAggregatesFilter<"DiscountCode"> | number | null
     totalUsageLimit?: IntNullableWithAggregatesFilter<"DiscountCode"> | number | null
     usedCount?: IntWithAggregatesFilter<"DiscountCode"> | number
@@ -49413,6 +49462,7 @@ export namespace Prisma {
     endsAt?: Date | string | null
     scopeType?: $Enums.DiscountScopeType
     scopeIds?: DiscountCodeCreatescopeIdsInput | string[]
+    targetUserType?: $Enums.DiscountTargetUserType
     perCustomerLimit?: number | null
     totalUsageLimit?: number | null
     usedCount?: number
@@ -49435,6 +49485,7 @@ export namespace Prisma {
     endsAt?: Date | string | null
     scopeType?: $Enums.DiscountScopeType
     scopeIds?: DiscountCodeCreatescopeIdsInput | string[]
+    targetUserType?: $Enums.DiscountTargetUserType
     perCustomerLimit?: number | null
     totalUsageLimit?: number | null
     usedCount?: number
@@ -49457,6 +49508,7 @@ export namespace Prisma {
     endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     scopeType?: EnumDiscountScopeTypeFieldUpdateOperationsInput | $Enums.DiscountScopeType
     scopeIds?: DiscountCodeUpdatescopeIdsInput | string[]
+    targetUserType?: EnumDiscountTargetUserTypeFieldUpdateOperationsInput | $Enums.DiscountTargetUserType
     perCustomerLimit?: NullableIntFieldUpdateOperationsInput | number | null
     totalUsageLimit?: NullableIntFieldUpdateOperationsInput | number | null
     usedCount?: IntFieldUpdateOperationsInput | number
@@ -49479,6 +49531,7 @@ export namespace Prisma {
     endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     scopeType?: EnumDiscountScopeTypeFieldUpdateOperationsInput | $Enums.DiscountScopeType
     scopeIds?: DiscountCodeUpdatescopeIdsInput | string[]
+    targetUserType?: EnumDiscountTargetUserTypeFieldUpdateOperationsInput | $Enums.DiscountTargetUserType
     perCustomerLimit?: NullableIntFieldUpdateOperationsInput | number | null
     totalUsageLimit?: NullableIntFieldUpdateOperationsInput | number | null
     usedCount?: IntFieldUpdateOperationsInput | number
@@ -49501,6 +49554,7 @@ export namespace Prisma {
     endsAt?: Date | string | null
     scopeType?: $Enums.DiscountScopeType
     scopeIds?: DiscountCodeCreatescopeIdsInput | string[]
+    targetUserType?: $Enums.DiscountTargetUserType
     perCustomerLimit?: number | null
     totalUsageLimit?: number | null
     usedCount?: number
@@ -49522,6 +49576,7 @@ export namespace Prisma {
     endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     scopeType?: EnumDiscountScopeTypeFieldUpdateOperationsInput | $Enums.DiscountScopeType
     scopeIds?: DiscountCodeUpdatescopeIdsInput | string[]
+    targetUserType?: EnumDiscountTargetUserTypeFieldUpdateOperationsInput | $Enums.DiscountTargetUserType
     perCustomerLimit?: NullableIntFieldUpdateOperationsInput | number | null
     totalUsageLimit?: NullableIntFieldUpdateOperationsInput | number | null
     usedCount?: IntFieldUpdateOperationsInput | number
@@ -49543,6 +49598,7 @@ export namespace Prisma {
     endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     scopeType?: EnumDiscountScopeTypeFieldUpdateOperationsInput | $Enums.DiscountScopeType
     scopeIds?: DiscountCodeUpdatescopeIdsInput | string[]
+    targetUserType?: EnumDiscountTargetUserTypeFieldUpdateOperationsInput | $Enums.DiscountTargetUserType
     perCustomerLimit?: NullableIntFieldUpdateOperationsInput | number | null
     totalUsageLimit?: NullableIntFieldUpdateOperationsInput | number | null
     usedCount?: IntFieldUpdateOperationsInput | number
@@ -51704,6 +51760,13 @@ export namespace Prisma {
     not?: NestedEnumDiscountScopeTypeFilter<$PrismaModel> | $Enums.DiscountScopeType
   }
 
+  export type EnumDiscountTargetUserTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountTargetUserType | EnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountTargetUserType[] | ListEnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountTargetUserType[] | ListEnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTargetUserTypeFilter<$PrismaModel> | $Enums.DiscountTargetUserType
+  }
+
   export type DiscountCodeCountOrderByAggregateInput = {
     id?: SortOrder
     code?: SortOrder
@@ -51713,6 +51776,7 @@ export namespace Prisma {
     endsAt?: SortOrder
     scopeType?: SortOrder
     scopeIds?: SortOrder
+    targetUserType?: SortOrder
     perCustomerLimit?: SortOrder
     totalUsageLimit?: SortOrder
     usedCount?: SortOrder
@@ -51743,6 +51807,7 @@ export namespace Prisma {
     startsAt?: SortOrder
     endsAt?: SortOrder
     scopeType?: SortOrder
+    targetUserType?: SortOrder
     perCustomerLimit?: SortOrder
     totalUsageLimit?: SortOrder
     usedCount?: SortOrder
@@ -51763,6 +51828,7 @@ export namespace Prisma {
     startsAt?: SortOrder
     endsAt?: SortOrder
     scopeType?: SortOrder
+    targetUserType?: SortOrder
     perCustomerLimit?: SortOrder
     totalUsageLimit?: SortOrder
     usedCount?: SortOrder
@@ -51819,6 +51885,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDiscountScopeTypeFilter<$PrismaModel>
     _max?: NestedEnumDiscountScopeTypeFilter<$PrismaModel>
+  }
+
+  export type EnumDiscountTargetUserTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountTargetUserType | EnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountTargetUserType[] | ListEnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountTargetUserType[] | ListEnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTargetUserTypeWithAggregatesFilter<$PrismaModel> | $Enums.DiscountTargetUserType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscountTargetUserTypeFilter<$PrismaModel>
+    _max?: NestedEnumDiscountTargetUserTypeFilter<$PrismaModel>
   }
 
   export type CityCreateNestedManyWithoutProvinceInput = {
@@ -53744,6 +53820,10 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type EnumDiscountTargetUserTypeFieldUpdateOperationsInput = {
+    set?: $Enums.DiscountTargetUserType
+  }
+
   export type OrderUpdateManyWithoutCouponNestedInput = {
     create?: XOR<OrderCreateWithoutCouponInput, OrderUncheckedCreateWithoutCouponInput> | OrderCreateWithoutCouponInput[] | OrderUncheckedCreateWithoutCouponInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCouponInput | OrderCreateOrConnectWithoutCouponInput[]
@@ -54215,6 +54295,13 @@ export namespace Prisma {
     not?: NestedEnumDiscountScopeTypeFilter<$PrismaModel> | $Enums.DiscountScopeType
   }
 
+  export type NestedEnumDiscountTargetUserTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountTargetUserType | EnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountTargetUserType[] | ListEnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountTargetUserType[] | ListEnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTargetUserTypeFilter<$PrismaModel> | $Enums.DiscountTargetUserType
+  }
+
   export type NestedEnumDiscountTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.DiscountType | EnumDiscountTypeFieldRefInput<$PrismaModel>
     in?: $Enums.DiscountType[] | ListEnumDiscountTypeFieldRefInput<$PrismaModel>
@@ -54249,6 +54336,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDiscountScopeTypeFilter<$PrismaModel>
     _max?: NestedEnumDiscountScopeTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDiscountTargetUserTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DiscountTargetUserType | EnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DiscountTargetUserType[] | ListEnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DiscountTargetUserType[] | ListEnumDiscountTargetUserTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDiscountTargetUserTypeWithAggregatesFilter<$PrismaModel> | $Enums.DiscountTargetUserType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDiscountTargetUserTypeFilter<$PrismaModel>
+    _max?: NestedEnumDiscountTargetUserTypeFilter<$PrismaModel>
   }
 
   export type CityCreateWithoutProvinceInput = {
@@ -58592,6 +58689,7 @@ export namespace Prisma {
     endsAt?: Date | string | null
     scopeType?: $Enums.DiscountScopeType
     scopeIds?: DiscountCodeCreatescopeIdsInput | string[]
+    targetUserType?: $Enums.DiscountTargetUserType
     perCustomerLimit?: number | null
     totalUsageLimit?: number | null
     usedCount?: number
@@ -58613,6 +58711,7 @@ export namespace Prisma {
     endsAt?: Date | string | null
     scopeType?: $Enums.DiscountScopeType
     scopeIds?: DiscountCodeCreatescopeIdsInput | string[]
+    targetUserType?: $Enums.DiscountTargetUserType
     perCustomerLimit?: number | null
     totalUsageLimit?: number | null
     usedCount?: number
@@ -58848,6 +58947,7 @@ export namespace Prisma {
     endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     scopeType?: EnumDiscountScopeTypeFieldUpdateOperationsInput | $Enums.DiscountScopeType
     scopeIds?: DiscountCodeUpdatescopeIdsInput | string[]
+    targetUserType?: EnumDiscountTargetUserTypeFieldUpdateOperationsInput | $Enums.DiscountTargetUserType
     perCustomerLimit?: NullableIntFieldUpdateOperationsInput | number | null
     totalUsageLimit?: NullableIntFieldUpdateOperationsInput | number | null
     usedCount?: IntFieldUpdateOperationsInput | number
@@ -58869,6 +58969,7 @@ export namespace Prisma {
     endsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     scopeType?: EnumDiscountScopeTypeFieldUpdateOperationsInput | $Enums.DiscountScopeType
     scopeIds?: DiscountCodeUpdatescopeIdsInput | string[]
+    targetUserType?: EnumDiscountTargetUserTypeFieldUpdateOperationsInput | $Enums.DiscountTargetUserType
     perCustomerLimit?: NullableIntFieldUpdateOperationsInput | number | null
     totalUsageLimit?: NullableIntFieldUpdateOperationsInput | number | null
     usedCount?: IntFieldUpdateOperationsInput | number

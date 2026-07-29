@@ -6,7 +6,11 @@
 
 import { prisma } from '@/src/lib/prisma';
 import { safeQuery } from '@/src/lib/result';
-import type { DiscountScopeType, DiscountType } from '@/generated/prisma_client';
+import type {
+  DiscountScopeType,
+  DiscountTargetUserType,
+  DiscountType,
+} from '@/generated/prisma_client';
 
 export interface AdminDiscountCodeListItemVM {
   id: string;
@@ -17,6 +21,7 @@ export interface AdminDiscountCodeListItemVM {
   endsAt: string | null;
   scopeType: DiscountScopeType;
   scopeCount: number;
+  targetUserType: DiscountTargetUserType;
   usedCount: number;
   totalUsageLimit: number | null;
   isActive: boolean;
@@ -34,6 +39,7 @@ export interface AdminDiscountCodeDetailVM {
   scopeIds: string[];
   /** Resolved labels for selected scope targets (for edit form chips). */
   scopeLabels: { id: string; label: string }[];
+  targetUserType: DiscountTargetUserType;
   perCustomerLimit: number | null;
   totalUsageLimit: number | null;
   usedCount: number;
@@ -69,6 +75,7 @@ function toListItem(row: {
   endsAt: Date | null;
   scopeType: DiscountScopeType;
   scopeIds: string[];
+  targetUserType: DiscountTargetUserType;
   usedCount: number;
   totalUsageLimit: number | null;
   isActive: boolean;
@@ -83,6 +90,7 @@ function toListItem(row: {
     endsAt: row.endsAt ? row.endsAt.toISOString() : null,
     scopeType: row.scopeType,
     scopeCount: row.scopeIds.length,
+    targetUserType: row.targetUserType,
     usedCount: row.usedCount,
     totalUsageLimit: row.totalUsageLimit,
     isActive: row.isActive,
@@ -209,6 +217,7 @@ export async function getDiscountCodeAdminById(
         scopeType: row.scopeType,
         scopeIds: row.scopeIds,
         scopeLabels,
+        targetUserType: row.targetUserType,
         perCustomerLimit: row.perCustomerLimit,
         totalUsageLimit: row.totalUsageLimit,
         usedCount: row.usedCount,

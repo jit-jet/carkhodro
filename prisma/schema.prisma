@@ -92,6 +92,14 @@ enum DiscountScopeType {
   PRODUCT   // محصول — scopeIds are Product.id (cuid)
 }
 
+/// Which storefront audience may redeem a discount code.
+/// BOTH = retail customers and wholesale partners.
+enum DiscountTargetUserType {
+  RETAIL
+  WHOLESALE
+  BOTH
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // REFERENCE DATA
 // ─────────────────────────────────────────────────────────────────────────────
@@ -896,6 +904,9 @@ model DiscountCode {
   scopeType DiscountScopeType @default(CATEGORY) @map("scope_type")
   /// Target ids for `scopeType`. Empty = applies to all products.
   scopeIds  String[]          @default([]) @map("scope_ids")
+
+  /// Who may redeem this code: retail, wholesale, or both.
+  targetUserType DiscountTargetUserType @default(BOTH) @map("target_user_type")
 
   /// Max redemptions per customer. Null = unlimited.
   perCustomerLimit Int? @map("per_customer_limit")

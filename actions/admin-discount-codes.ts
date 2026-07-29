@@ -11,7 +11,13 @@ import { prisma } from '@/src/lib/prisma';
 import { getCurrentAdmin } from '@/src/lib/admin-session';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
-import type { DiscountScopeType, DiscountType } from '@/generated/prisma_client';
+import type {
+  DiscountScopeType,
+  DiscountTargetUserType,
+  DiscountType,
+} from '@/generated/prisma_client';
+
+const TARGET_USER_TYPES: DiscountTargetUserType[] = ['RETAIL', 'WHOLESALE', 'BOTH'];
 
 export interface DiscountCodeInput {
   code: string;
@@ -21,6 +27,7 @@ export interface DiscountCodeInput {
   endsAt: string | null;
   scopeType: DiscountScopeType;
   scopeIds: string[];
+  targetUserType: DiscountTargetUserType;
   perCustomerLimit: number | null;
   totalUsageLimit: number | null;
   minCartAmount: number | null;
@@ -89,6 +96,10 @@ function validateInput(input: DiscountCodeInput): string | null {
     return '«فقط اولین سفارش» با حداقل سفارش قبلی همزمان قابل تنظیم نیست.';
   }
 
+  if (!TARGET_USER_TYPES.includes(input.targetUserType)) {
+    return 'نوع کاربر هدف نامعتبر است.';
+  }
+
   return null;
 }
 
@@ -111,6 +122,7 @@ function toDbData(input: DiscountCodeInput) {
     endsAt,
     scopeType: input.scopeType,
     scopeIds: [...new Set(input.scopeIds.map((id) => String(id).trim()).filter(Boolean))],
+    targetUserType: input.targetUserType,
     perCustomerLimit: parseOptionalInt(input.perCustomerLimit),
     totalUsageLimit: parseOptionalInt(input.totalUsageLimit),
     minCartAmount: parseOptionalAmount(input.minCartAmount),

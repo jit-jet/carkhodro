@@ -12,7 +12,7 @@ import {
   setDiscountCodeActive,
 } from "@/actions/admin-discount-codes";
 import type { AdminDiscountCodeListItemVM } from "@/actions/discount-codes";
-import type { DiscountType } from "@/generated/prisma_client";
+import type { DiscountTargetUserType, DiscountType } from "@/generated/prisma_client";
 import {
   Badge,
   Button,
@@ -31,6 +31,12 @@ const TYPE_LABELS: Record<DiscountType, string> = {
   PERCENTAGE: "درصدی",
   FIXED_AMOUNT: "مبلغی",
   FREE_SHIPPING: "ارسال رایگان",
+};
+
+const TARGET_LABELS: Record<DiscountTargetUserType, string> = {
+  BOTH: "هر دو",
+  WHOLESALE: "عمده",
+  RETAIL: "تک‌فروش",
 };
 
 function buildHref(filters: {
@@ -155,6 +161,7 @@ export default function DiscountCodesTable({
               <th className="text-right px-4 py-3 font-semibold">کد</th>
               <th className="text-right px-4 py-3 font-semibold">نوع</th>
               <th className="text-right px-4 py-3 font-semibold hidden sm:table-cell">مقدار</th>
+              <th className="text-right px-4 py-3 font-semibold hidden md:table-cell">کاربر هدف</th>
               <th className="text-right px-4 py-3 font-semibold hidden lg:table-cell">اعتبار</th>
               <th className="text-right px-4 py-3 font-semibold hidden md:table-cell">استفاده</th>
               <th className="text-right px-4 py-3 font-semibold">وضعیت</th>
@@ -175,6 +182,9 @@ export default function DiscountCodesTable({
                 <td className="px-4 py-3 text-sm">{TYPE_LABELS[row.type]}</td>
                 <td className="px-4 py-3 text-sm hidden sm:table-cell">
                   {formatValue(row.type, row.value)}
+                </td>
+                <td className="px-4 py-3 text-sm hidden md:table-cell">
+                  {TARGET_LABELS[row.targetUserType]}
                 </td>
                 <td className="px-4 py-3 text-xs text-gray-600 hidden lg:table-cell">
                   <div>{formatJalaliDateTime(row.startsAt)}</div>

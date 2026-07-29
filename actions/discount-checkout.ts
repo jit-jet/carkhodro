@@ -17,7 +17,7 @@ import {
   type DiscountCartLine,
   type DiscountCodeRule,
 } from '@/src/lib/apply-discount-code';
-import type { DiscountCode, OrderStatus, PaymentStatus, Prisma } from '@/generated/prisma_client';
+import type { DiscountCode, OrderStatus, PaymentStatus, Prisma, UserRole } from '@/generated/prisma_client';
 
 const SUCCESSFUL_STATUSES: OrderStatus[] = ['PAID', 'SHIPPED', 'COMPLETED'];
 const ACTIVE_REDEMPTION_PAYMENT: PaymentStatus[] = ['PENDING', 'PAID'];
@@ -32,6 +32,7 @@ function toRule(row: DiscountCode): DiscountCodeRule {
     endsAt: row.endsAt,
     scopeType: row.scopeType,
     scopeIds: row.scopeIds,
+    targetUserType: row.targetUserType,
     perCustomerLimit: row.perCustomerLimit,
     totalUsageLimit: row.totalUsageLimit,
     usedCount: row.usedCount,
@@ -43,7 +44,11 @@ function toRule(row: DiscountCode): DiscountCodeRule {
   };
 }
 
-async function loadUsageContext(userId: string, discountCodeId: string) {
+async function loadUsageContext(
+  userId: string,
+  discountCodeId: string,
+  userRole: UserRole | null,
+) {
   const [previousSuccessfulOrders, userRedemptionCount] = await Promise.all([
     prisma.order.count({
       where: {
@@ -63,7 +68,7 @@ async function loadUsageContext(userId: string, discountCodeId: string) {
       },
     }),
   ]);
-  return { previousSuccessfulOrders, userRedemptionCount };
+  return { previousSuccessfulOrders, userRedemptionCount, userRole };
 }
 
 export interface PreviewDiscountResult {
@@ -154,7 +159,7 @@ export async function previewDiscountCode(
 
     const cartSubtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
     const shippingCost = Number(shipping.cost);
-    const usage = await loadUsageContext(user.id, row.id);
+    const usage = await loadUsageContext(user.id, row.id, user.role);
     const evaluated = evaluateDiscountCode(
       toRule(row),
       lines,
@@ -183,6 +188,7 @@ export async function resolveDiscountForCheckout(
   shippingCost: bigint,
   cartSubtotal: bigint,
   userId: string,
+  userRole: UserRole,
 ): Promise<ActionResult<AppliedDiscount | null>> {
   const normalized = (code ?? '').trim().toUpperCase();
   if (!normalized) return ok(null);
@@ -190,7 +196,7 @@ export async function resolveDiscountForCheckout(
   const row = await prisma.discountCode.findUnique({ where: { code: normalized } });
   if (!row) return fail('کد تخفیف یافت نشد.');
 
-  const usage = await loadUsageContext(userId, row.id);
+  const usage = await loadUsageContext(userId, row.id, userRole);
   const evaluated = evaluateDiscountCode(
     toRule(row),
     lines,
