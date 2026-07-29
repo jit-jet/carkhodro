@@ -4,6 +4,7 @@ import type { OrderStatus } from '../generated/prisma_client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { normalizePersianText } from '../src/lib/persian';
 import { hashPassword } from '../src/lib/password';
+import { DEFAULT_RULES_CONTENT } from '../src/lib/rules-defaults';
 import provincesCitiesData from '../src/assets/provinces_cities.json';
 
 const prisma = new PrismaClient({
@@ -744,6 +745,17 @@ async function main() {
       footerTrust4Icon: '🎧',
       footerTrust4Title: 'پشتیبانی ۲۴/۷',
       footerTrust4Desc: 'همیشه در کنار شما',
+    },
+    update: {},
+  });
+
+  await prisma.rulesContent.upsert({
+    where: { id: 1 },
+    create: {
+      id: 1,
+      updatedLabel: DEFAULT_RULES_CONTENT.updatedLabel,
+      intro: DEFAULT_RULES_CONTENT.intro,
+      body: DEFAULT_RULES_CONTENT.body,
     },
     update: {},
   });

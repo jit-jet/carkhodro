@@ -25,7 +25,8 @@ type IconKey =
   | "menu"
   | "blog"
   | "comms"
-  | "discount";
+  | "discount"
+  | "rules";
 
 interface NavItem {
   href: string;
@@ -33,20 +34,35 @@ interface NavItem {
   icon: IconKey;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { href: "/admin", label: "داشبورد", icon: "grid" },
-  { href: "/admin/products", label: "محصولات و قیمت‌گذاری", icon: "box" },
-  { href: "/admin/discount-codes", label: "کد تخفیف", icon: "discount" },
-  { href: "/admin/orders", label: "سفارشات و فاکتورها", icon: "orders" },
-  { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: "category" },
-  { href: "/admin/brands", label: "برندها و خودروها", icon: "car" },
-  { href: "/admin/posts", label: "مقالات وبلاگ", icon: "blog" },
-  { href: "/admin/users", label: "کاربران", icon: "users" },
-  { href: "/admin/communications", label: "مدیریت ارتباطات", icon: "comms" },
-  { href: "/admin/sms", label: "پیامک گروهی", icon: "sms" },
-  { href: "/admin/navigation", label: "منوی سایت", icon: "menu" },
-  { href: "/admin/faq", label: "سوالات متداول", icon: "faq" },
-  { href: "/admin/settings", label: "تنظیمات سایت", icon: "settings" },
+interface NavSection {
+  label?: string;
+  items: NavItem[];
+}
+
+const NAV_SECTIONS: NavSection[] = [
+  {
+    items: [
+      { href: "/admin", label: "داشبورد", icon: "grid" },
+      { href: "/admin/products", label: "محصولات و قیمت‌گذاری", icon: "box" },
+      { href: "/admin/discount-codes", label: "کد تخفیف", icon: "discount" },
+      { href: "/admin/orders", label: "سفارشات و فاکتورها", icon: "orders" },
+      { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: "category" },
+      { href: "/admin/brands", label: "برندها و خودروها", icon: "car" },
+      { href: "/admin/users", label: "کاربران", icon: "users" },
+      { href: "/admin/communications", label: "مدیریت ارتباطات", icon: "comms" },
+      { href: "/admin/sms", label: "پیامک گروهی", icon: "sms" },
+    ],
+  },
+  {
+    label: "مدیریت محتوا",
+    items: [
+      { href: "/admin/posts", label: "مقالات وبلاگ", icon: "blog" },
+      { href: "/admin/navigation", label: "منوی سایت", icon: "menu" },
+      { href: "/admin/faq", label: "سوالات متداول", icon: "faq" },
+      { href: "/admin/rules", label: "قوانین و مقررات", icon: "rules" },
+      { href: "/admin/settings", label: "تنظیمات سایت", icon: "settings" },
+    ],
+  },
 ];
 
 function NavIcon({ icon }: { icon: IconKey }) {
@@ -159,6 +175,16 @@ function NavIcon({ icon }: { icon: IconKey }) {
           <line x1="7" y1="7" x2="7.01" y2="7" />
         </svg>
       );
+    case "rules":
+      return (
+        <svg {...common}>
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <line x1="10" y1="9" x2="8" y2="9" />
+        </svg>
+      );
   }
 }
 
@@ -211,29 +237,40 @@ export default function AdminSidebar({
       </div>
 
       <nav className="flex-1 overflow-y-auto p-2.5" aria-label="منوی مدیریت">
-        <ul className="space-y-0.5">
-          {NAV_ITEMS.map((item) => {
-            const active = isActive(item.href);
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={onNavigate}
-                  aria-current={active ? "page" : undefined}
-                  className={[
-                    "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-colors",
-                    active
-                      ? "bg-accent text-charcoal shadow-sm shadow-accent/20"
-                      : "text-white/65 hover:bg-white/8 hover:text-white",
-                  ].join(" ")}
-                >
-                  <NavIcon icon={item.icon} />
-                  <span className="flex-1 leading-snug">{item.label}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="space-y-4">
+          {NAV_SECTIONS.map((section, sectionIdx) => (
+            <div key={section.label ?? `section-${sectionIdx}`}>
+              {section.label ? (
+                <p className="px-3 mb-1.5 text-[11px] font-bold tracking-wide text-white/35">
+                  {section.label}
+                </p>
+              ) : null}
+              <ul className="space-y-0.5">
+                {section.items.map((item) => {
+                  const active = isActive(item.href);
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={onNavigate}
+                        aria-current={active ? "page" : undefined}
+                        className={[
+                          "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-colors",
+                          active
+                            ? "bg-accent text-charcoal shadow-sm shadow-accent/20"
+                            : "text-white/65 hover:bg-white/8 hover:text-white",
+                        ].join(" ")}
+                      >
+                        <NavIcon icon={item.icon} />
+                        <span className="flex-1 leading-snug">{item.label}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
       </nav>
 
       <div className="p-2.5 border-t border-white/10">

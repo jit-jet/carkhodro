@@ -21,5 +21,6 @@ export const tags = {
   postCategories: 'post-categories',
   siteSettings: 'site-settings',
   socialLinks: 'social-links',
+  rulesContent: 'rules-content',
   discountCodes: 'discount-codes',
 } as const;

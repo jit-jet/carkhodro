@@ -659,6 +659,20 @@ model SiteSetting {
   @@map("site_settings")
 }
 
+/// Terms & rules page content — singleton row (`id = 1`), admin-edited via TipTap.
+model RulesContent {
+  id           Int      @id @default(1)
+  /// Line under the page title (e.g. last-updated note).
+  updatedLabel String?  @map("updated_label")
+  /// Amber intro banner text on /rules.
+  intro        String?  @db.Text
+  /// Main rules body HTML — admin-authored via TipTap.
+  body         String   @db.Text @default("")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("rules_content")
+}
+
 /// Admin-managed social media links — shown in the footer and contact page.
 model SocialLink {
   id        Int      @id @default(autoincrement())

@@ -391,6 +391,14 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.RulesContentScalarFieldEnum = {
+  id: 'id',
+  updatedLabel: 'updatedLabel',
+  intro: 'intro',
+  body: 'body',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SocialLinkScalarFieldEnum = {
   id: 'id',
   label: 'label',
@@ -646,6 +654,7 @@ exports.Prisma.ModelName = {
   Post: 'Post',
   Faq: 'Faq',
   SiteSetting: 'SiteSetting',
+  RulesContent: 'RulesContent',
   SocialLink: 'SocialLink',
   SmsCampaign: 'SmsCampaign',
   ShippingOption: 'ShippingOption',
