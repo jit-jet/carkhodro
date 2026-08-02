@@ -6,14 +6,15 @@ import { revalidateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { tags } from '@/actions/cache-tags';
 import {
-  batchSaveItems,
   getAllItems,
   getItemByCode,
   getItemsById,
+  HesabfaError,
   isHesabfaConfigured,
   saveItem,
 } from './client';
 import { rialToToman, tomanToRial } from './currency';
+import { computeRetailPrice } from '@/src/lib/pricing';
 import {
   HESABFA_ITEM_TYPE_PRODUCT,
   HESABFA_TAG,
@@ -40,6 +41,15 @@ function codeOf(item: HesabfaItem): string {
 
 function stockOf(n: number | null | undefined): number {
   return Math.max(0, Math.round(n ?? 0));
+}
+
+/** Prefer PriceList «عمده»; fall back to SellPrice (legacy). */
+function wholesaleFromItem(item: HesabfaItem): bigint {
+  const list = item.PriceList ?? [];
+  const entry = list.find((e) => (e.Title ?? e.title ?? '').trim() === 'عمده');
+  const price = entry?.Price ?? entry?.price;
+  if (price != null && Number(price) > 0) return rialToToman(price);
+  return rialToToman(item.SellPrice);
 }
 
 async function getFallbackCategoryId(): Promise<number> {
@@ -123,6 +133,7 @@ interface PreparedItem {
   code: string;
   name: string;
   wholesalePrice: bigint;
+  buyPrice: bigint | null;
   stock: number;
   hesabfaId: number | undefined;
   active: boolean | null;
@@ -154,7 +165,8 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
     prepared.set(code, {
       code,
       name,
-      wholesalePrice: rialToToman(item.SellPrice),
+      wholesalePrice: wholesaleFromItem(item),
+      buyPrice: item.BuyPrice != null && item.BuyPrice > 0 ? rialToToman(item.BuyPrice) : null,
       stock: stockOf(item.Stock),
       hesabfaId: typeof item.Id === 'number' ? item.Id : undefined,
       active: item.Active === true ? true : item.Active === false ? false : null,
@@ -224,6 +236,7 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
       data: {
         name: item.name,
         wholesalePrice: item.wholesalePrice,
+        buyPrice: item.buyPrice,
         stock: item.stock,
         hesabfaCode: item.code,
         ...(item.hesabfaId != null ? { hesabfaId: item.hesabfaId } : {}),
@@ -255,6 +268,7 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
           categoryId: resolveCategoryId(item.nodeFamily, categoryMap, fallbackCategoryId),
           partsBrandId: fallbackBrandId,
           wholesalePrice: item.wholesalePrice,
+          buyPrice: item.buyPrice,
           stock: item.stock,
           lastSyncedAt: now,
           isActive: item.active === true,
@@ -331,29 +345,81 @@ export async function fullSyncProducts(): Promise<ProductSyncStats> {
   return stats;
 }
 
-function toHesabfaItemPayload(product: {
-  hesabfaCode: string | null;
-  sku: string;
+export interface HesabfaProductPayloadInput {
+  /** Empty string for new items so Hesabfa generates the code. */
+  code: string;
   name: string;
-  wholesalePrice: bigint;
-  stock: number;
-  isActive: boolean;
-  description: string | null;
-  category: { name: string };
-}): Record<string, unknown> {
-  const code = product.hesabfaCode?.trim() || product.sku.trim();
+  categoryName: string;
+  wholesalePrice: bigint | number;
+  retailPriceDiffPct?: number | string;
+  retailDiscountPct?: number | string;
+  wholesaleDiscountPct?: number | string;
+  /** Optional buy/cost price in Toman. */
+  buyPrice?: bigint | number | null;
+  description?: string | null;
+  active?: boolean;
+}
+
+/** Build the Hesabfa `item/save` body (amounts converted Toman → Rial). */
+export function toHesabfaItemPayload(input: HesabfaProductPayloadInput): Record<string, unknown> {
+  const wholesale = Number(input.wholesalePrice);
+  const retailPrice = computeRetailPrice({
+    wholesalePrice: wholesale,
+    wholesaleDiscountPct: Number(input.wholesaleDiscountPct ?? 0),
+    retailPriceDiffPct: Number(input.retailPriceDiffPct ?? 25),
+    retailDiscountPct: Number(input.retailDiscountPct ?? 0),
+  });
+  const buy =
+    input.buyPrice != null && Number(input.buyPrice) > 0 ? Number(input.buyPrice) : null;
+
   return {
-    ...(product.hesabfaCode ? { code: product.hesabfaCode } : { code }),
-    name: product.name,
+    code: input.code,
+    name: input.name,
     itemType: HESABFA_ITEM_TYPE_PRODUCT,
-    unit: 'عدد',
-    sellPrice: tomanToRial(product.wholesalePrice),
-    productCode: product.sku,
-    active: product.isActive,
-    description: product.description ?? '',
+    buyPrice: buy != null ? tomanToRial(buy) : 0,
+    sellPrice: tomanToRial(retailPrice),
+    active: input.active ?? true,
+    description: input.description ?? '',
     tag: HESABFA_TAG,
-    nodeFamily: `کالاها:${product.category.name}`,
+    nodeFamily: `کالا : کالاها : ${input.categoryName}`,
+    priceList: [
+      {
+        title: 'عمده',
+        currency: 'IRR',
+        price: tomanToRial(wholesale),
+      },
+      {
+        title: 'تک فروشی',
+        currency: 'IRR',
+        price: tomanToRial(retailPrice),
+      },
+    ],
   };
+}
+
+export function formatHesabfaSaveError(err: unknown): string {
+  const reason =
+    err instanceof HesabfaError
+      ? err.message
+      : err instanceof Error
+        ? err.message
+        : 'Unknown error';
+  return `Saving product to Hesabfa failed. Please try again. ${reason}`;
+}
+
+/**
+ * Save (create or update) an item in Hesabfa and return the API result.
+ * Pass `code: ""` to let Hesabfa generate a new item code.
+ */
+export async function saveProductItemToHesabfa(
+  input: HesabfaProductPayloadInput,
+): Promise<HesabfaItem> {
+  if (!isHesabfaConfigured()) {
+    throw new HesabfaError(
+      'Hesabfa is not configured — set HESABFA_API_KEY and HESABFA_LOGIN_TOKEN.',
+    );
+  }
+  return saveItem(toHesabfaItemPayload(input));
 }
 
 /** Push one local product to Hesabfa immediately (create/update). */
@@ -366,25 +432,39 @@ export async function pushProductToHesabfa(productId: string): Promise<void> {
   });
   if (!product) return;
 
-  const payload = toHesabfaItemPayload(product);
-  let saved: HesabfaItem;
-
-  if (product.hesabfaCode) {
-    const existing = await getItemByCode(product.hesabfaCode);
-    if (existing) {
-      saved = await saveItem({ ...payload, code: product.hesabfaCode });
-    } else {
-      saved = await saveItem(payload);
+  const existingCode = product.hesabfaCode?.trim() || '';
+  let code = existingCode;
+  if (!code) {
+    const sku = product.sku.trim();
+    if (sku) {
+      const existing = await getItemByCode(sku);
+      if (existing) code = sku;
     }
-  } else {
-    saved = await saveItem(payload);
   }
 
-  const code = codeOf(saved);
+  const saved = await saveProductItemToHesabfa({
+    code,
+    name: product.name,
+    categoryName: product.category.name,
+    wholesalePrice: product.wholesalePrice,
+    retailPriceDiffPct: Number(product.retailPriceDiffPct),
+    retailDiscountPct: Number(product.retailDiscountPct),
+    wholesaleDiscountPct: Number(product.wholesaleDiscountPct),
+    buyPrice: product.buyPrice,
+    description: product.description,
+    active: product.isActive,
+  });
+
+  const savedCode = codeOf(saved);
   await prisma.product.update({
     where: { id: productId },
     data: {
-      hesabfaCode: code || product.sku,
+      ...(savedCode
+        ? {
+            hesabfaCode: savedCode,
+            ...(!existingCode ? { sku: savedCode } : {}),
+          }
+        : {}),
       hesabfaId: typeof saved.Id === 'number' ? saved.Id : product.hesabfaId,
       lastSyncedAt: new Date(),
     },

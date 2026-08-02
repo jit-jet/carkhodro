@@ -436,6 +436,7 @@ export async function getProductAdminById(id: string) {
         categoryId: row.categoryId,
         carModelId: row.compatibilities[0]?.carModelId ?? null,
         wholesalePrice: Number(row.wholesalePrice),
+        buyPrice: row.buyPrice != null ? Number(row.buyPrice) : null,
         wholesaleDiscountPct: Number(row.wholesaleDiscountPct),
         retailPriceDiffPct: Number(row.retailPriceDiffPct),
         retailDiscountPct: Number(row.retailDiscountPct),

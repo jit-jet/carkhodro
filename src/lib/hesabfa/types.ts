@@ -30,6 +30,15 @@ export interface HesabfaPagedList<T> {
   To?: number;
 }
 
+export interface HesabfaPriceListEntry {
+  Title?: string;
+  title?: string;
+  Currency?: string;
+  currency?: string;
+  Price?: number;
+  price?: number;
+}
+
 export interface HesabfaItem {
   Id?: number;
   Code: number | string;
@@ -45,6 +54,7 @@ export interface HesabfaItem {
   Description?: string | null;
   ProductCode?: string | null;
   Active?: boolean | null;
+  PriceList?: HesabfaPriceListEntry[] | null;
 }
 
 export interface HesabfaContact {

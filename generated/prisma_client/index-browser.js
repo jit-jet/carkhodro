@@ -245,6 +245,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   partsBrandId: 'partsBrandId',
   categoryId: 'categoryId',
   wholesalePrice: 'wholesalePrice',
+  buyPrice: 'buyPrice',
   wholesaleDiscountPct: 'wholesaleDiscountPct',
   retailPriceDiffPct: 'retailPriceDiffPct',
   retailDiscountPct: 'retailDiscountPct',

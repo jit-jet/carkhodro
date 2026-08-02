@@ -19,18 +19,26 @@ import {
   buildAdminProductWhere,
   type AdminProductWhereFilters,
 } from '@/src/lib/admin-product-where';
-import { pushProductToHesabfa } from '@/src/lib/hesabfa/products';
+import { isHesabfaConfigured } from '@/src/lib/hesabfa/client';
+import {
+  formatHesabfaSaveError,
+  pushProductToHesabfa,
+  saveProductItemToHesabfa,
+} from '@/src/lib/hesabfa/products';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import crypto from 'node:crypto';
 
 export interface ProductInput {
-  sku: string;
+  /** Ignored on create — Hesabfa generates the code used as SKU. */
+  sku?: string;
   name: string;
   partsBrandId: number;
   categoryId: number;
   /** Compatible car model (“مدل خودرو”). Null clears compatibility. */
   carModelId?: number | null;
   wholesalePrice: number;
+  /** Optional buy/cost price in Toman (Hesabfa BuyPrice). */
+  buyPrice?: number | null;
   wholesaleDiscountPct?: number;
   retailPriceDiffPct?: number;
   retailDiscountPct?: number;
@@ -42,6 +50,15 @@ export interface ProductInput {
   /** Gallery image URLs (including main). Order is preserved as sortOrder. */
   images?: string[];
   description?: string | null;
+}
+
+function normalizeBuyPrice(value: number | null | undefined): bigint | null {
+  if (value == null || !Number.isFinite(value) || value <= 0) return null;
+  return BigInt(Math.round(value));
+}
+
+function hesabfaCodeOf(item: { Code?: number | string | null }): string {
+  return item.Code != null ? String(item.Code).trim() : '';
 }
 
 async function syncProductImages(productId: string, images: string[] | undefined) {
@@ -69,35 +86,81 @@ export async function createProduct(
   input: ProductInput,
 ): Promise<ActionResult<{ id: string }>> {
   return runMutation('createProduct', async () => {
-    if (!input.sku?.trim() || !input.name?.trim()) {
-      return fail('کد کالا و نام محصول الزامی است.');
+    if (!input.name?.trim()) {
+      return fail('نام محصول الزامی است.');
+    }
+    if (!isHesabfaConfigured()) {
+      return fail(
+        'Saving product to Hesabfa failed. Please try again. Hesabfa is not configured.',
+      );
     }
     if (input.carModelId != null) {
       const carModel = await prisma.carModel.findUnique({ where: { id: input.carModelId } });
       if (!carModel) return fail('مدل خودرو انتخاب‌شده معتبر نیست.');
     }
+
+    const category = await prisma.category.findUnique({
+      where: { id: input.categoryId },
+      select: { name: true },
+    });
+    if (!category) return fail('دسته‌بندی انتخاب‌شده معتبر نیست.');
+
+    const buyPrice = normalizeBuyPrice(input.buyPrice);
+    const wholesalePrice = BigInt(Math.round(input.wholesalePrice));
+    const wholesaleDiscountPct = input.wholesaleDiscountPct ?? 0;
+    const retailPriceDiffPct = input.retailPriceDiffPct ?? 25;
+    const retailDiscountPct = input.retailDiscountPct ?? 0;
+
+    let saved;
+    try {
+      saved = await saveProductItemToHesabfa({
+        code: '',
+        name: input.name.trim(),
+        categoryName: category.name,
+        wholesalePrice,
+        retailPriceDiffPct,
+        retailDiscountPct,
+        wholesaleDiscountPct,
+        buyPrice,
+        description: input.description ?? null,
+        active: true,
+      });
+    } catch (err) {
+      return fail(formatHesabfaSaveError(err));
+    }
+
+    const code = hesabfaCodeOf(saved);
+    if (!code) {
+      return fail(
+        'Saving product to Hesabfa failed. Please try again. Hesabfa did not return an item code.',
+      );
+    }
+
     const created = await prisma.product.create({
       data: {
-        sku: input.sku.trim(),
+        sku: code,
         name: input.name.trim(),
         partsBrandId: input.partsBrandId,
         categoryId: input.categoryId,
-        wholesalePrice: BigInt(Math.round(input.wholesalePrice)),
-        wholesaleDiscountPct: input.wholesaleDiscountPct ?? 0,
-        retailPriceDiffPct: input.retailPriceDiffPct ?? 25,
-        retailDiscountPct: input.retailDiscountPct ?? 0,
+        wholesalePrice,
+        buyPrice,
+        wholesaleDiscountPct,
+        retailPriceDiffPct,
+        retailDiscountPct,
         isOffer: input.isOffer ?? false,
         stock: input.stock ?? 0,
         origin: input.origin ?? null,
         mainImage: input.mainImage ?? null,
         description: input.description ?? null,
+        hesabfaCode: code,
+        hesabfaId: typeof saved.Id === 'number' ? saved.Id : null,
+        lastSyncedAt: new Date(),
       },
       select: { id: true },
     });
     await syncProductImages(created.id, input.images);
     await syncProductVehicleType(created.id, input.carModelId ?? null);
     updateTag(tags.products);
-    runHesabfaBackground('pushProduct:create', () => pushProductToHesabfa(created.id));
     return ok(created);
   });
 }
@@ -107,35 +170,101 @@ export async function updateProduct(
   input: Partial<ProductInput>,
 ): Promise<ActionResult<{ id: string }>> {
   return runMutation('updateProduct', async () => {
+    if (!isHesabfaConfigured()) {
+      return fail(
+        'Saving product to Hesabfa failed. Please try again. Hesabfa is not configured.',
+      );
+    }
     if (input.carModelId != null) {
       const carModel = await prisma.carModel.findUnique({ where: { id: input.carModelId } });
       if (!carModel) return fail('مدل خودرو انتخاب‌شده معتبر نیست.');
     }
+
+    const existing = await prisma.product.findUnique({
+      where: { id },
+      include: { category: { select: { id: true, name: true } } },
+    });
+    if (!existing) return fail('محصول یافت نشد.');
+
+    const categoryId = input.categoryId ?? existing.categoryId;
+    const category =
+      categoryId === existing.categoryId
+        ? existing.category
+        : await prisma.category.findUnique({
+            where: { id: categoryId },
+            select: { id: true, name: true },
+          });
+    if (!category) return fail('دسته‌بندی انتخاب‌شده معتبر نیست.');
+
+    const name = input.name !== undefined ? input.name.trim() : existing.name;
+    if (!name) return fail('نام محصول الزامی است.');
+
+    const wholesalePrice =
+      input.wholesalePrice !== undefined
+        ? BigInt(Math.round(input.wholesalePrice))
+        : existing.wholesalePrice;
+    const buyPrice =
+      input.buyPrice !== undefined ? normalizeBuyPrice(input.buyPrice) : existing.buyPrice;
+    const wholesaleDiscountPct =
+      input.wholesaleDiscountPct !== undefined
+        ? input.wholesaleDiscountPct
+        : Number(existing.wholesaleDiscountPct);
+    const retailPriceDiffPct =
+      input.retailPriceDiffPct !== undefined
+        ? input.retailPriceDiffPct
+        : Number(existing.retailPriceDiffPct);
+    const retailDiscountPct =
+      input.retailDiscountPct !== undefined
+        ? input.retailDiscountPct
+        : Number(existing.retailDiscountPct);
+    const isActive = input.isActive !== undefined ? input.isActive : existing.isActive;
+    const description =
+      input.description !== undefined ? input.description : existing.description;
+
+    const hesabfaCode = existing.hesabfaCode?.trim() || existing.sku.trim();
+
+    let saved;
+    try {
+      saved = await saveProductItemToHesabfa({
+        code: hesabfaCode,
+        name,
+        categoryName: category.name,
+        wholesalePrice,
+        retailPriceDiffPct,
+        retailDiscountPct,
+        wholesaleDiscountPct,
+        buyPrice,
+        description,
+        active: isActive,
+      });
+    } catch (err) {
+      return fail(formatHesabfaSaveError(err));
+    }
+
+    const code = hesabfaCodeOf(saved) || hesabfaCode;
+
     const updated = await prisma.product.update({
       where: { id },
       data: {
-        ...(input.sku !== undefined ? { sku: input.sku.trim() } : {}),
-        ...(input.name !== undefined ? { name: input.name.trim() } : {}),
+        // SKU / Hesabfa code are never edited manually — keep Hesabfa as source of truth.
+        sku: code,
+        hesabfaCode: code,
+        ...(typeof saved.Id === 'number' ? { hesabfaId: saved.Id } : {}),
+        lastSyncedAt: new Date(),
+        name,
         ...(input.partsBrandId !== undefined ? { partsBrandId: input.partsBrandId } : {}),
-        ...(input.categoryId !== undefined ? { categoryId: input.categoryId } : {}),
-        ...(input.wholesalePrice !== undefined
-          ? { wholesalePrice: BigInt(Math.round(input.wholesalePrice)) }
-          : {}),
-        ...(input.wholesaleDiscountPct !== undefined
-          ? { wholesaleDiscountPct: input.wholesaleDiscountPct }
-          : {}),
-        ...(input.retailPriceDiffPct !== undefined
-          ? { retailPriceDiffPct: input.retailPriceDiffPct }
-          : {}),
-        ...(input.retailDiscountPct !== undefined
-          ? { retailDiscountPct: input.retailDiscountPct }
-          : {}),
+        categoryId,
+        wholesalePrice,
+        buyPrice,
+        wholesaleDiscountPct,
+        retailPriceDiffPct,
+        retailDiscountPct,
         ...(input.isOffer !== undefined ? { isOffer: input.isOffer } : {}),
-        ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
+        isActive,
         ...(input.stock !== undefined ? { stock: input.stock } : {}),
         ...(input.origin !== undefined ? { origin: input.origin } : {}),
         ...(input.mainImage !== undefined ? { mainImage: input.mainImage } : {}),
-        ...(input.description !== undefined ? { description: input.description } : {}),
+        description,
       },
       select: { id: true },
     });
@@ -143,7 +272,6 @@ export async function updateProduct(
     await syncProductVehicleType(id, input.carModelId);
     updateTag(tags.products);
     updateTag(tags.product(id));
-    runHesabfaBackground('pushProduct:update', () => pushProductToHesabfa(id));
     return ok(updated);
   });
 }

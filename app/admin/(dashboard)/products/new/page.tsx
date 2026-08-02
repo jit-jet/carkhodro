@@ -24,6 +24,7 @@ export default async function NewProductPage() {
           categoryId: categories[0]?.id ?? 0,
           carModelId: null,
           wholesalePrice: 0,
+          buyPrice: null,
           wholesaleDiscountPct: 0,
           retailPriceDiffPct: 25,
           retailDiscountPct: 0,
