@@ -36,6 +36,8 @@ import {
   canUseDashboardCart,
   isProductInStock,
 } from '@/src/lib/user-role';
+import { pushWholesaleInvoice } from '@/src/lib/hesabfa/invoices';
+import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import {
   resolveDiscountForCheckout,
   incrementDiscountUsage,
@@ -482,6 +484,7 @@ export async function submitInvoice(input: {
     revalidatePath('/dashboard/cart');
     revalidatePath('/dashboard/orders');
     revalidatePath('/dashboard');
+    runHesabfaBackground('pushWholesaleInvoice', () => pushWholesaleInvoice(order.id));
     return ok(order);
   });
 }

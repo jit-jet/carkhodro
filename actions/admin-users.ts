@@ -21,6 +21,8 @@ import { dateToJalaliParts, jalaliPartsToDate } from '@/src/lib/jalali-convert';
 import { resolveLocation } from '@/src/lib/resolve-location';
 import { deleteFile, saveFile } from '@/src/lib/storage';
 import type { UserRole } from '@/generated/prisma_client';
+import { pushContactToHesabfa } from '@/src/lib/hesabfa/contacts';
+import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 
 export interface AdminUserListItemVM {
   id: string;
@@ -336,6 +338,7 @@ export async function updateUser(
       }
     });
 
+    runHesabfaBackground('pushContact:adminUpdate', () => pushContactToHesabfa(userId));
     return ok(undefined);
   });
 }

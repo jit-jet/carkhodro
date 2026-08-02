@@ -7898,10 +7898,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     accountBalance: number | null
+    hesabfaId: number | null
   }
 
   export type UserSumAggregateOutputType = {
     accountBalance: bigint | null
+    hesabfaId: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -7921,6 +7923,9 @@ export namespace Prisma {
     partnerCode: string | null
     username: string | null
     passwordHash: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7942,6 +7947,9 @@ export namespace Prisma {
     partnerCode: string | null
     username: string | null
     passwordHash: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7963,6 +7971,9 @@ export namespace Prisma {
     partnerCode: number
     username: number
     passwordHash: number
+    hesabfaCode: number
+    hesabfaId: number
+    hesabfaSyncedAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7971,10 +7982,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateInputType = {
     accountBalance?: true
+    hesabfaId?: true
   }
 
   export type UserSumAggregateInputType = {
     accountBalance?: true
+    hesabfaId?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -7994,6 +8007,9 @@ export namespace Prisma {
     partnerCode?: true
     username?: true
     passwordHash?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8015,6 +8031,9 @@ export namespace Prisma {
     partnerCode?: true
     username?: true
     passwordHash?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8036,6 +8055,9 @@ export namespace Prisma {
     partnerCode?: true
     username?: true
     passwordHash?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8144,6 +8166,9 @@ export namespace Prisma {
     partnerCode: string | null
     username: string | null
     passwordHash: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -8184,6 +8209,9 @@ export namespace Prisma {
     partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     addresses?: boolean | User$addressesArgs<ExtArgs>
@@ -8218,6 +8246,9 @@ export namespace Prisma {
     partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -8239,6 +8270,9 @@ export namespace Prisma {
     partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -8260,11 +8294,14 @@ export namespace Prisma {
     partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "isActive" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "isActive" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addresses?: boolean | User$addressesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -8349,6 +8386,18 @@ export namespace Prisma {
        * Storefront customers keep authenticating with SMS OTP and never get one.
        */
       passwordHash: string | null
+      /**
+       * Hesabfa contact `Code` — unique link key for two-way contact sync.
+       */
+      hesabfaCode: string | null
+      /**
+       * Hesabfa internal numeric contact Id (webhook ObjectIdList).
+       */
+      hesabfaId: number | null
+      /**
+       * Last successful Hesabfa contact sync timestamp.
+       */
+      hesabfaSyncedAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -8802,6 +8851,9 @@ export namespace Prisma {
     readonly partnerCode: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
+    readonly hesabfaCode: FieldRef<"User", 'String'>
+    readonly hesabfaId: FieldRef<"User", 'Int'>
+    readonly hesabfaSyncedAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -17438,6 +17490,7 @@ export namespace Prisma {
     wholesaleDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
+    hesabfaId: number | null
     stock: number | null
     packQuantity: number | null
     cartonQuantity: number | null
@@ -17454,6 +17507,7 @@ export namespace Prisma {
     wholesaleDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
+    hesabfaId: number | null
     stock: number | null
     packQuantity: number | null
     cartonQuantity: number | null
@@ -17474,7 +17528,8 @@ export namespace Prisma {
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
-    accountancyId: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
     lastSyncedAt: Date | null
     stock: number | null
     origin: string | null
@@ -17504,7 +17559,8 @@ export namespace Prisma {
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
-    accountancyId: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
     lastSyncedAt: Date | null
     stock: number | null
     origin: string | null
@@ -17534,7 +17590,8 @@ export namespace Prisma {
     retailPriceDiffPct: number
     retailDiscountPct: number
     isOffer: number
-    accountancyId: number
+    hesabfaCode: number
+    hesabfaId: number
     lastSyncedAt: number
     stock: number
     origin: number
@@ -17562,6 +17619,7 @@ export namespace Prisma {
     wholesaleDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
+    hesabfaId?: true
     stock?: true
     packQuantity?: true
     cartonQuantity?: true
@@ -17578,6 +17636,7 @@ export namespace Prisma {
     wholesaleDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
+    hesabfaId?: true
     stock?: true
     packQuantity?: true
     cartonQuantity?: true
@@ -17598,7 +17657,8 @@ export namespace Prisma {
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
-    accountancyId?: true
+    hesabfaCode?: true
+    hesabfaId?: true
     lastSyncedAt?: true
     stock?: true
     origin?: true
@@ -17628,7 +17688,8 @@ export namespace Prisma {
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
-    accountancyId?: true
+    hesabfaCode?: true
+    hesabfaId?: true
     lastSyncedAt?: true
     stock?: true
     origin?: true
@@ -17658,7 +17719,8 @@ export namespace Prisma {
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
-    accountancyId?: true
+    hesabfaCode?: true
+    hesabfaId?: true
     lastSyncedAt?: true
     stock?: true
     origin?: true
@@ -17775,7 +17837,8 @@ export namespace Prisma {
     retailPriceDiffPct: Decimal
     retailDiscountPct: Decimal
     isOffer: boolean
-    accountancyId: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
     lastSyncedAt: Date | null
     stock: number
     origin: string | null
@@ -17824,7 +17887,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
-    accountancyId?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
     origin?: boolean
@@ -17864,7 +17928,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
-    accountancyId?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
     origin?: boolean
@@ -17896,7 +17961,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
-    accountancyId?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
     origin?: boolean
@@ -17928,7 +17994,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
-    accountancyId?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
     origin?: boolean
@@ -17947,7 +18014,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "accountancyId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -17992,7 +18059,7 @@ export namespace Prisma {
       partsBrandId: number
       categoryId: number
       /**
-       * Base wholesale price in Toman — synced from Hesabfa (SellPrice).
+       * Base wholesale price in Toman.
        */
       wholesalePrice: bigint
       /**
@@ -18012,12 +18079,15 @@ export namespace Prisma {
       retailDiscountPct: Prisma.Decimal
       isOffer: boolean
       /**
-       * Primary key in the external accountancy system.
-       * Nullable until first sync — product must not go live until populated.
+       * Hesabfa item `Code` — unique link key for two-way product sync.
        */
-      accountancyId: string | null
+      hesabfaCode: string | null
       /**
-       * Timestamp of the last successful price + stock pull from the external API
+       * Hesabfa internal numeric item Id (webhook ObjectIdList / deletes).
+       */
+      hesabfaId: number | null
+      /**
+       * Timestamp of the last successful Hesabfa product sync.
        */
       lastSyncedAt: Date | null
       stock: number
@@ -18497,7 +18567,8 @@ export namespace Prisma {
     readonly retailPriceDiffPct: FieldRef<"Product", 'Decimal'>
     readonly retailDiscountPct: FieldRef<"Product", 'Decimal'>
     readonly isOffer: FieldRef<"Product", 'Boolean'>
-    readonly accountancyId: FieldRef<"Product", 'String'>
+    readonly hesabfaCode: FieldRef<"Product", 'String'>
+    readonly hesabfaId: FieldRef<"Product", 'Int'>
     readonly lastSyncedAt: FieldRef<"Product", 'DateTime'>
     readonly stock: FieldRef<"Product", 'Int'>
     readonly origin: FieldRef<"Product", 'String'>
@@ -36085,6 +36156,7 @@ export namespace Prisma {
     discountAmount: number | null
     totalAmount: number | null
     paymentTrackId: number | null
+    hesabfaId: number | null
   }
 
   export type OrderSumAggregateOutputType = {
@@ -36095,6 +36167,7 @@ export namespace Prisma {
     discountAmount: bigint | null
     totalAmount: bigint | null
     paymentTrackId: bigint | null
+    hesabfaId: number | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -36122,6 +36195,9 @@ export namespace Prisma {
     trackingCode: string | null
     paymentTrackId: bigint | null
     paymentRefNumber: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     paidAt: Date | null
     shippedAt: Date | null
     deliveredAt: Date | null
@@ -36154,6 +36230,9 @@ export namespace Prisma {
     trackingCode: string | null
     paymentTrackId: bigint | null
     paymentRefNumber: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     paidAt: Date | null
     shippedAt: Date | null
     deliveredAt: Date | null
@@ -36186,6 +36265,9 @@ export namespace Prisma {
     trackingCode: number
     paymentTrackId: number
     paymentRefNumber: number
+    hesabfaCode: number
+    hesabfaId: number
+    hesabfaSyncedAt: number
     paidAt: number
     shippedAt: number
     deliveredAt: number
@@ -36203,6 +36285,7 @@ export namespace Prisma {
     discountAmount?: true
     totalAmount?: true
     paymentTrackId?: true
+    hesabfaId?: true
   }
 
   export type OrderSumAggregateInputType = {
@@ -36213,6 +36296,7 @@ export namespace Prisma {
     discountAmount?: true
     totalAmount?: true
     paymentTrackId?: true
+    hesabfaId?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -36240,6 +36324,9 @@ export namespace Prisma {
     trackingCode?: true
     paymentTrackId?: true
     paymentRefNumber?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     paidAt?: true
     shippedAt?: true
     deliveredAt?: true
@@ -36272,6 +36359,9 @@ export namespace Prisma {
     trackingCode?: true
     paymentTrackId?: true
     paymentRefNumber?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     paidAt?: true
     shippedAt?: true
     deliveredAt?: true
@@ -36304,6 +36394,9 @@ export namespace Prisma {
     trackingCode?: true
     paymentTrackId?: true
     paymentRefNumber?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     paidAt?: true
     shippedAt?: true
     deliveredAt?: true
@@ -36423,6 +36516,9 @@ export namespace Prisma {
     trackingCode: string | null
     paymentTrackId: bigint | null
     paymentRefNumber: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     paidAt: Date | null
     shippedAt: Date | null
     deliveredAt: Date | null
@@ -36474,6 +36570,9 @@ export namespace Prisma {
     trackingCode?: boolean
     paymentTrackId?: boolean
     paymentRefNumber?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -36513,6 +36612,9 @@ export namespace Prisma {
     trackingCode?: boolean
     paymentTrackId?: boolean
     paymentRefNumber?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -36549,6 +36651,9 @@ export namespace Prisma {
     trackingCode?: boolean
     paymentTrackId?: boolean
     paymentRefNumber?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -36585,6 +36690,9 @@ export namespace Prisma {
     trackingCode?: boolean
     paymentTrackId?: boolean
     paymentRefNumber?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -36592,7 +36700,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "discountAmount" | "discountCode" | "discountCodeId" | "totalAmount" | "notes" | "trackingCode" | "paymentTrackId" | "paymentRefNumber" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "discountAmount" | "discountCode" | "discountCodeId" | "totalAmount" | "notes" | "trackingCode" | "paymentTrackId" | "paymentRefNumber" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     address?: boolean | AddressDefaultArgs<ExtArgs>
@@ -36679,6 +36787,18 @@ export namespace Prisma {
        * Bank reference number returned by Zibal after a successful verify.
        */
       paymentRefNumber: string | null
+      /**
+       * Hesabfa sales invoice `Number` — unique link key (never import unknown invoices).
+       */
+      hesabfaCode: string | null
+      /**
+       * Hesabfa internal numeric invoice Id (webhook ObjectIdList).
+       */
+      hesabfaId: number | null
+      /**
+       * Last successful Hesabfa invoice sync timestamp.
+       */
+      hesabfaSyncedAt: Date | null
       paidAt: Date | null
       shippedAt: Date | null
       deliveredAt: Date | null
@@ -37137,6 +37257,9 @@ export namespace Prisma {
     readonly trackingCode: FieldRef<"Order", 'String'>
     readonly paymentTrackId: FieldRef<"Order", 'BigInt'>
     readonly paymentRefNumber: FieldRef<"Order", 'String'>
+    readonly hesabfaCode: FieldRef<"Order", 'String'>
+    readonly hesabfaId: FieldRef<"Order", 'Int'>
+    readonly hesabfaSyncedAt: FieldRef<"Order", 'DateTime'>
     readonly paidAt: FieldRef<"Order", 'DateTime'>
     readonly shippedAt: FieldRef<"Order", 'DateTime'>
     readonly deliveredAt: FieldRef<"Order", 'DateTime'>
@@ -44657,6 +44780,9 @@ export namespace Prisma {
     partnerCode: 'partnerCode',
     username: 'username',
     passwordHash: 'passwordHash',
+    hesabfaCode: 'hesabfaCode',
+    hesabfaId: 'hesabfaId',
+    hesabfaSyncedAt: 'hesabfaSyncedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -44767,7 +44893,8 @@ export namespace Prisma {
     retailPriceDiffPct: 'retailPriceDiffPct',
     retailDiscountPct: 'retailDiscountPct',
     isOffer: 'isOffer',
-    accountancyId: 'accountancyId',
+    hesabfaCode: 'hesabfaCode',
+    hesabfaId: 'hesabfaId',
     lastSyncedAt: 'lastSyncedAt',
     stock: 'stock',
     origin: 'origin',
@@ -45028,6 +45155,9 @@ export namespace Prisma {
     trackingCode: 'trackingCode',
     paymentTrackId: 'paymentTrackId',
     paymentRefNumber: 'paymentRefNumber',
+    hesabfaCode: 'hesabfaCode',
+    hesabfaId: 'hesabfaId',
+    hesabfaSyncedAt: 'hesabfaSyncedAt',
     paidAt: 'paidAt',
     shippedAt: 'shippedAt',
     deliveredAt: 'deliveredAt',
@@ -45595,6 +45725,9 @@ export namespace Prisma {
     partnerCode?: StringNullableFilter<"User"> | string | null
     username?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
+    hesabfaCode?: StringNullableFilter<"User"> | string | null
+    hesabfaId?: IntNullableFilter<"User"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     addresses?: AddressListRelationFilter
@@ -45628,6 +45761,9 @@ export namespace Prisma {
     partnerCode?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
+    hesabfaSyncedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     addresses?: AddressOrderByRelationAggregateInput
@@ -45649,6 +45785,8 @@ export namespace Prisma {
     phoneNumber?: string
     partnerCode?: string
     username?: string
+    hesabfaCode?: string
+    hesabfaId?: number
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -45664,6 +45802,7 @@ export namespace Prisma {
     referredBy?: StringNullableFilter<"User"> | string | null
     activityField?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     addresses?: AddressListRelationFilter
@@ -45678,7 +45817,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestListRelationFilter
     productSuggestions?: ProductSuggestionListRelationFilter
     smsCampaigns?: SmsCampaignListRelationFilter
-  }, "id" | "phoneNumber" | "partnerCode" | "username">
+  }, "id" | "phoneNumber" | "partnerCode" | "username" | "hesabfaCode" | "hesabfaId">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -45697,6 +45836,9 @@ export namespace Prisma {
     partnerCode?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
+    hesabfaSyncedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -45726,6 +45868,9 @@ export namespace Prisma {
     partnerCode?: StringNullableWithAggregatesFilter<"User"> | string | null
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
+    hesabfaCode?: StringNullableWithAggregatesFilter<"User"> | string | null
+    hesabfaId?: IntNullableWithAggregatesFilter<"User"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -46222,7 +46367,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
-    accountancyId?: StringNullableFilter<"Product"> | string | null
+    hesabfaCode?: StringNullableFilter<"Product"> | string | null
+    hesabfaId?: IntNullableFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     stock?: IntFilter<"Product"> | number
     origin?: StringNullableFilter<"Product"> | string | null
@@ -46261,7 +46407,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
     stock?: SortOrder
     origin?: SortOrderInput | SortOrder
@@ -46292,7 +46439,8 @@ export namespace Prisma {
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     sku?: string
-    accountancyId?: string
+    hesabfaCode?: string
+    hesabfaId?: number
     AND?: ProductWhereInput | ProductWhereInput[]
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
@@ -46329,7 +46477,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     wishlistedBy?: WishlistItemListRelationFilter
     comparedBy?: CompareItemListRelationFilter
-  }, "id" | "sku" | "accountancyId">
+  }, "id" | "sku" | "hesabfaCode" | "hesabfaId">
 
   export type ProductOrderByWithAggregationInput = {
     id?: SortOrder
@@ -46342,7 +46490,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
     stock?: SortOrder
     origin?: SortOrderInput | SortOrder
@@ -46380,7 +46529,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolWithAggregatesFilter<"Product"> | boolean
-    accountancyId?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    hesabfaCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    hesabfaId?: IntNullableWithAggregatesFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
     stock?: IntWithAggregatesFilter<"Product"> | number
     origin?: StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -47531,6 +47681,9 @@ export namespace Prisma {
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
     paymentRefNumber?: StringNullableFilter<"Order"> | string | null
+    hesabfaCode?: StringNullableFilter<"Order"> | string | null
+    hesabfaId?: IntNullableFilter<"Order"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -47569,6 +47722,9 @@ export namespace Prisma {
     trackingCode?: SortOrderInput | SortOrder
     paymentTrackId?: SortOrderInput | SortOrder
     paymentRefNumber?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
+    hesabfaSyncedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     shippedAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
@@ -47585,6 +47741,8 @@ export namespace Prisma {
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     orderNumber?: number
+    hesabfaCode?: string
+    hesabfaId?: number
     AND?: OrderWhereInput | OrderWhereInput[]
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
@@ -47610,6 +47768,7 @@ export namespace Prisma {
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
     paymentRefNumber?: StringNullableFilter<"Order"> | string | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -47621,7 +47780,7 @@ export namespace Prisma {
     coupon?: XOR<DiscountCodeNullableScalarRelationFilter, DiscountCodeWhereInput> | null
     items?: OrderItemListRelationFilter
     survey?: XOR<OrderSurveyNullableScalarRelationFilter, OrderSurveyWhereInput> | null
-  }, "id" | "orderNumber">
+  }, "id" | "orderNumber" | "hesabfaCode" | "hesabfaId">
 
   export type OrderOrderByWithAggregationInput = {
     id?: SortOrder
@@ -47648,6 +47807,9 @@ export namespace Prisma {
     trackingCode?: SortOrderInput | SortOrder
     paymentTrackId?: SortOrderInput | SortOrder
     paymentRefNumber?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
+    hesabfaSyncedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     shippedAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
@@ -47688,6 +47850,9 @@ export namespace Prisma {
     trackingCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableWithAggregatesFilter<"Order"> | bigint | number | null
     paymentRefNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    hesabfaCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    hesabfaId?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     paidAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
@@ -48350,6 +48515,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -48383,6 +48551,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -48416,6 +48587,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -48449,6 +48623,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -48482,6 +48659,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -48503,6 +48683,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -48524,6 +48707,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -49038,7 +49224,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -49077,7 +49264,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -49112,7 +49300,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49151,7 +49340,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49188,7 +49378,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -49216,7 +49407,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49246,7 +49438,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50455,6 +50648,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -50493,6 +50689,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -50522,6 +50721,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50560,6 +50762,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50594,6 +50799,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -50621,6 +50829,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50653,6 +50864,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -51451,6 +51665,17 @@ export namespace Prisma {
     not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type SessionListRelationFilter = {
     every?: SessionWhereInput
     some?: SessionWhereInput
@@ -51578,12 +51803,16 @@ export namespace Prisma {
     partnerCode?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     accountBalance?: SortOrder
+    hesabfaId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -51603,6 +51832,9 @@ export namespace Prisma {
     partnerCode?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -51624,12 +51856,16 @@ export namespace Prisma {
     partnerCode?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     accountBalance?: SortOrder
+    hesabfaId?: SortOrder
   }
 
   export type EnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -51688,6 +51924,22 @@ export namespace Prisma {
     _sum?: NestedBigIntFilter<$PrismaModel>
     _min?: NestedBigIntFilter<$PrismaModel>
     _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type OtpSessionCountOrderByAggregateInput = {
@@ -52066,7 +52318,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
     stock?: SortOrder
     origin?: SortOrder
@@ -52092,6 +52345,7 @@ export namespace Prisma {
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
+    hesabfaId?: SortOrder
     stock?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
@@ -52112,7 +52366,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
     stock?: SortOrder
     origin?: SortOrder
@@ -52142,7 +52397,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
     stock?: SortOrder
     origin?: SortOrder
@@ -52168,6 +52424,7 @@ export namespace Prisma {
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
+    hesabfaId?: SortOrder
     stock?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
@@ -52503,17 +52760,6 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type PostCategoryNullableScalarRelationFilter = {
     is?: PostCategoryWhereInput | null
     isNot?: PostCategoryWhereInput | null
@@ -52596,22 +52842,6 @@ export namespace Prisma {
     id?: SortOrder
     readTime?: SortOrder
     categoryId?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type FaqCountOrderByAggregateInput = {
@@ -53026,6 +53256,9 @@ export namespace Prisma {
     trackingCode?: SortOrder
     paymentTrackId?: SortOrder
     paymentRefNumber?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     paidAt?: SortOrder
     shippedAt?: SortOrder
     deliveredAt?: SortOrder
@@ -53041,6 +53274,7 @@ export namespace Prisma {
     discountAmount?: SortOrder
     totalAmount?: SortOrder
     paymentTrackId?: SortOrder
+    hesabfaId?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -53068,6 +53302,9 @@ export namespace Prisma {
     trackingCode?: SortOrder
     paymentTrackId?: SortOrder
     paymentRefNumber?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     paidAt?: SortOrder
     shippedAt?: SortOrder
     deliveredAt?: SortOrder
@@ -53100,6 +53337,9 @@ export namespace Prisma {
     trackingCode?: SortOrder
     paymentTrackId?: SortOrder
     paymentRefNumber?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     paidAt?: SortOrder
     shippedAt?: SortOrder
     deliveredAt?: SortOrder
@@ -53115,6 +53355,7 @@ export namespace Prisma {
     discountAmount?: SortOrder
     totalAmount?: SortOrder
     paymentTrackId?: SortOrder
+    hesabfaId?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -53838,6 +54079,14 @@ export namespace Prisma {
     decrement?: bigint | number
     multiply?: bigint | number
     divide?: bigint | number
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type AddressUpdateManyWithoutUserNestedInput = {
@@ -55043,14 +55292,6 @@ export namespace Prisma {
     update?: XOR<XOR<PostCategoryUpdateToOneWithWhereWithoutPostsInput, PostCategoryUpdateWithoutPostsInput>, PostCategoryUncheckedUpdateWithoutPostsInput>
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type UserCreateNestedOneWithoutSmsCampaignsInput = {
     create?: XOR<UserCreateWithoutSmsCampaignsInput, UserUncheckedCreateWithoutSmsCampaignsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSmsCampaignsInput
@@ -55641,6 +55882,17 @@ export namespace Prisma {
     not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
@@ -55666,17 +55918,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -55709,33 +55950,6 @@ export namespace Prisma {
     _max?: NestedBigIntFilter<$PrismaModel>
   }
 
-  export type NestedDecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -55761,6 +55975,33 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type NestedEnumSmsTargetRoleFilter<$PrismaModel = never> = {
@@ -56213,6 +56454,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -56249,6 +56493,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -56602,6 +56849,9 @@ export namespace Prisma {
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
     paymentRefNumber?: StringNullableFilter<"Order"> | string | null
+    hesabfaCode?: StringNullableFilter<"Order"> | string | null
+    hesabfaId?: IntNullableFilter<"Order"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -56885,6 +57135,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -56917,6 +57170,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -56965,6 +57221,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -56997,6 +57256,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -57029,6 +57291,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -57061,6 +57326,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -57120,6 +57388,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -57156,6 +57427,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -57203,6 +57477,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -57235,6 +57512,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -57460,7 +57740,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -57497,7 +57778,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -57563,7 +57845,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
-    accountancyId?: StringNullableFilter<"Product"> | string | null
+    hesabfaCode?: StringNullableFilter<"Product"> | string | null
+    hesabfaId?: IntNullableFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     stock?: IntFilter<"Product"> | number
     origin?: StringNullableFilter<"Product"> | string | null
@@ -57591,7 +57874,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -57628,7 +57912,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -58134,7 +58419,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -58172,7 +58458,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -58222,7 +58509,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58260,7 +58548,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58294,7 +58583,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -58332,7 +58622,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -58406,7 +58697,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58444,7 +58736,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58508,7 +58801,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -58546,7 +58840,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -58593,6 +58888,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -58625,6 +58923,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -58665,7 +58966,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58703,7 +59005,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58756,6 +59059,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -58788,6 +59094,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -58820,6 +59129,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -58852,6 +59164,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -58924,6 +59239,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -58956,6 +59274,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -59015,7 +59336,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -59053,7 +59375,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -59128,7 +59451,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59166,7 +59490,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59208,6 +59533,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -59240,6 +59568,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -59269,7 +59600,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -59307,7 +59639,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -59365,6 +59698,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -59397,6 +59733,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -59432,7 +59771,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59470,7 +59810,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59512,6 +59853,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -59544,6 +59888,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -59573,7 +59920,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -59611,7 +59959,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -59669,6 +60018,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -59701,6 +60053,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -59736,7 +60091,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59774,7 +60130,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59977,6 +60334,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -60009,6 +60369,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -60057,6 +60420,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -60089,6 +60455,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -60125,6 +60494,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -60161,6 +60533,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -60213,6 +60588,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -60245,6 +60623,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -60453,6 +60834,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -60485,6 +60869,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -60689,6 +61076,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -60726,6 +61116,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -60748,7 +61141,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -60786,7 +61180,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -60847,6 +61242,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60884,6 +61282,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60912,7 +61313,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60950,7 +61352,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60992,6 +61395,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -61024,6 +61430,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -61072,6 +61481,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -61104,6 +61516,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -61140,6 +61555,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -61177,6 +61595,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -61207,6 +61628,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -61239,6 +61663,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -61290,6 +61717,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61327,6 +61757,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61363,6 +61796,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -61395,6 +61831,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -61427,6 +61866,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -61459,6 +61901,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -61507,6 +61952,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -61539,6 +61987,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -61571,6 +62022,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -61603,6 +62057,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -61651,6 +62108,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -61683,6 +62143,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -61719,6 +62182,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -61755,6 +62221,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -61898,6 +62367,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -62052,6 +62524,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62088,6 +62563,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62121,6 +62599,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62374,6 +62855,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -62401,6 +62885,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62437,6 +62924,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62470,6 +62960,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62544,7 +63037,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -62572,7 +63066,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62609,7 +63104,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62645,7 +63141,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62674,7 +63171,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -62702,7 +63200,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62739,7 +63238,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62775,7 +63275,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63153,6 +63654,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -63180,6 +63684,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63216,6 +63723,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63249,6 +63759,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63324,6 +63837,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -63351,6 +63867,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63387,6 +63906,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63420,6 +63942,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

@@ -179,6 +179,12 @@ model User {
   /// Scrypt password hash — only set for admin/back-office logins (ADMIN role).
   /// Storefront customers keep authenticating with SMS OTP and never get one.
   passwordHash String?  @map("password_hash")
+  /// Hesabfa contact `Code` — unique link key for two-way contact sync.
+  hesabfaCode  String?  @unique @map("hesabfa_code")
+  /// Hesabfa internal numeric contact Id (webhook ObjectIdList).
+  hesabfaId    Int?     @unique @map("hesabfa_id")
+  /// Last successful Hesabfa contact sync timestamp.
+  hesabfaSyncedAt DateTime? @map("hesabfa_synced_at")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -197,6 +203,7 @@ model User {
 
   @@index([phoneNumber])
   @@index([isActive])
+  @@index([hesabfaCode])
   @@map("users")
 }
 
@@ -360,10 +367,12 @@ model Product {
   retailDiscountPct    Decimal  @default(0) @map("retail_discount_pct") @db.Decimal(5, 2)
   isOffer              Boolean  @default(false) @map("is_offer")
 
-  // ── Optional external accounting reference ────────────────────────────────
-  /// Primary key in an external accountancy system (if linked).
-  accountancyId String?  @unique @map("accountancy_id")
-  /// Timestamp of the last successful external price/stock update (if any).
+  // ── Hesabfa accounting link ───────────────────────────────────────────────
+  /// Hesabfa item `Code` — unique link key for two-way product sync.
+  hesabfaCode String?  @unique @map("hesabfa_code")
+  /// Hesabfa internal numeric item Id (webhook ObjectIdList / deletes).
+  hesabfaId   Int?     @unique @map("hesabfa_id")
+  /// Timestamp of the last successful Hesabfa product sync.
   lastSyncedAt  DateTime? @map("last_synced_at")
 
   // ── Inventory ─────────────────────────────────────────────────────────────
@@ -411,7 +420,7 @@ model Product {
   comparedBy      CompareItem[]
 
   @@index([sku])
-  @@index([accountancyId])
+  @@index([hesabfaCode])
   @@index([categoryId])
   @@index([partsBrandId])
   @@index([isActive, isOffer])
@@ -777,6 +786,13 @@ model Order {
   /// Bank reference number returned by Zibal after a successful verify.
   paymentRefNumber String?  @map("payment_ref_number")
 
+  /// Hesabfa sales invoice `Number` — unique link key (never import unknown invoices).
+  hesabfaCode String?  @unique @map("hesabfa_code")
+  /// Hesabfa internal numeric invoice Id (webhook ObjectIdList).
+  hesabfaId   Int?     @unique @map("hesabfa_id")
+  /// Last successful Hesabfa invoice sync timestamp.
+  hesabfaSyncedAt DateTime? @map("hesabfa_synced_at")
+
   paidAt      DateTime? @map("paid_at")
   shippedAt   DateTime? @map("shipped_at")
   deliveredAt DateTime? @map("delivered_at")
@@ -795,6 +811,7 @@ model Order {
   @@index([paymentStatus])
   @@index([createdAt])
   @@index([discountCodeId])
+  @@index([hesabfaCode])
   @@map("orders")
 }
 

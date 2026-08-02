@@ -150,37 +150,43 @@ model NavLink {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model User {
-  id             String    @id @default(cuid())
+  id              String    @id @default(cuid())
   /// Iranian mobile format: 09XXXXXXXXX (11 digits)
-  phoneNumber    String    @unique @map("phone_number")
-  firstName      String    @map("first_name")
-  lastName       String    @map("last_name")
-  role           UserRole  @default(RETAIL)
+  phoneNumber     String    @unique @map("phone_number")
+  firstName       String    @map("first_name")
+  lastName        String    @map("last_name")
+  role            UserRole  @default(RETAIL)
   /// Set to true after the first successful OTP verification
-  isVerified     Boolean   @default(false) @map("is_verified")
+  isVerified      Boolean   @default(false) @map("is_verified")
   /// When false, the user cannot log in (storefront OTP or admin password).
-  isActive       Boolean   @default(true) @map("is_active")
+  isActive        Boolean   @default(true) @map("is_active")
   /// Wholesale customers must supply a shop/business name
-  shopName       String?   @map("shop_name")
-  birthDate      DateTime? @map("birth_date")
-  profileImage   String?   @map("profile_image")
+  shopName        String?   @map("shop_name")
+  birthDate       DateTime? @map("birth_date")
+  profileImage    String?   @map("profile_image")
   /// Partner's running ledger balance with the shop, in the same magnitude as
   /// product prices (Toman). Shown as «مانده حساب» on the dashboard.
-  accountBalance BigInt    @default(0) @map("account_balance")
+  accountBalance  BigInt    @default(0) @map("account_balance")
   /// Who referred this partner («معرف») — free text captured on the profile.
-  referredBy     String?   @map("referred_by")
+  referredBy      String?   @map("referred_by")
   /// The partner's line of business («زمینه فعالیت») — free text.
-  activityField  String?   @map("activity_field")
+  activityField   String?   @map("activity_field")
   /// Short, unique partner/affiliate code («کد اختصاصی») — null for retail users.
-  partnerCode    String?   @unique @map("partner_code")
+  partnerCode     String?   @unique @map("partner_code")
   /// Admin login username — only set for ADMIN-role users; storefront customers
   /// authenticate with SMS OTP and never get one.
-  username       String?   @unique
+  username        String?   @unique
   /// Scrypt password hash — only set for admin/back-office logins (ADMIN role).
   /// Storefront customers keep authenticating with SMS OTP and never get one.
-  passwordHash   String?   @map("password_hash")
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
+  passwordHash    String?   @map("password_hash")
+  /// Hesabfa contact `Code` — unique link key for two-way contact sync.
+  hesabfaCode     String?   @unique @map("hesabfa_code")
+  /// Hesabfa internal numeric contact Id (webhook ObjectIdList).
+  hesabfaId       Int?      @unique @map("hesabfa_id")
+  /// Last successful Hesabfa contact sync timestamp.
+  hesabfaSyncedAt DateTime? @map("hesabfa_synced_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
 
   addresses          Address[]
   sessions           Session[]
@@ -197,6 +203,7 @@ model User {
 
   @@index([phoneNumber])
   @@index([isActive])
+  @@index([hesabfaCode])
   @@map("users")
 }
 
@@ -347,7 +354,7 @@ model Product {
   categoryId   Int    @map("category_id")
 
   // ── Pricing ────────────────────────────────────────────────────────────────
-  /// Base wholesale price in Toman — synced from Hesabfa (SellPrice).
+  /// Base wholesale price in Toman.
   wholesalePrice       BigInt  @map("wholesale_price")
   /// Percentage deducted for WHOLESALE users (0–100).
   /// wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100)
@@ -360,14 +367,15 @@ model Product {
   retailDiscountPct    Decimal @default(0) @map("retail_discount_pct") @db.Decimal(5, 2)
   isOffer              Boolean @default(false) @map("is_offer")
 
-  // ── External accounting / ERP sync ────────────────────────────────────────
-  /// Primary key in the external accountancy system.
-  /// Nullable until first sync — product must not go live until populated.
-  accountancyId String?   @unique @map("accountancy_id")
-  /// Timestamp of the last successful price + stock pull from the external API
-  lastSyncedAt  DateTime? @map("last_synced_at")
+  // ── Hesabfa accounting link ───────────────────────────────────────────────
+  /// Hesabfa item `Code` — unique link key for two-way product sync.
+  hesabfaCode  String?   @unique @map("hesabfa_code")
+  /// Hesabfa internal numeric item Id (webhook ObjectIdList / deletes).
+  hesabfaId    Int?      @unique @map("hesabfa_id")
+  /// Timestamp of the last successful Hesabfa product sync.
+  lastSyncedAt DateTime? @map("last_synced_at")
 
-  // ── Inventory — synced from accountancy API ───────────────────────────────
+  // ── Inventory ─────────────────────────────────────────────────────────────
   stock Int @default(0)
 
   // ── Physical / logistics details (managed by local admin) ─────────────────
@@ -412,7 +420,7 @@ model Product {
   comparedBy      CompareItem[]
 
   @@index([sku])
-  @@index([accountancyId])
+  @@index([hesabfaCode])
   @@index([categoryId])
   @@index([partsBrandId])
   @@index([isActive, isOffer])
@@ -778,6 +786,13 @@ model Order {
   /// Bank reference number returned by Zibal after a successful verify.
   paymentRefNumber String? @map("payment_ref_number")
 
+  /// Hesabfa sales invoice `Number` — unique link key (never import unknown invoices).
+  hesabfaCode     String?   @unique @map("hesabfa_code")
+  /// Hesabfa internal numeric invoice Id (webhook ObjectIdList).
+  hesabfaId       Int?      @unique @map("hesabfa_id")
+  /// Last successful Hesabfa invoice sync timestamp.
+  hesabfaSyncedAt DateTime? @map("hesabfa_synced_at")
+
   paidAt      DateTime? @map("paid_at")
   shippedAt   DateTime? @map("shipped_at")
   deliveredAt DateTime? @map("delivered_at")
@@ -796,6 +811,7 @@ model Order {
   @@index([paymentStatus])
   @@index([createdAt])
   @@index([discountCodeId])
+  @@index([hesabfaCode])
   @@map("orders")
 }
 

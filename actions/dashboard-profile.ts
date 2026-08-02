@@ -19,6 +19,8 @@ import { dateToJalaliParts, jalaliPartsToDate } from '@/src/lib/jalali-convert';
 import { resolveLocation } from '@/src/lib/resolve-location';
 import { deleteFile, saveFile } from '@/src/lib/storage';
 import type { ProfileVM } from '@/src/lib/dashboard-types';
+import { pushContactToHesabfa } from '@/src/lib/hesabfa/contacts';
+import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 
 const PROFILE_PATH = '/dashboard/profile';
 /** Reject avatars over ~1 MB. */
@@ -148,6 +150,7 @@ export async function updateProfile(input: ProfileUpdateInput): Promise<ActionRe
 
     revalidatePath(PROFILE_PATH);
     revalidatePath('/dashboard');
+    runHesabfaBackground('pushContact:profile', () => pushContactToHesabfa(user.id));
     return ok(undefined);
   });
 }

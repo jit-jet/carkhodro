@@ -11,6 +11,8 @@
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentAdmin } from '@/src/lib/admin-session';
+import { syncOrderStatusToHesabfa } from '@/src/lib/hesabfa/invoices';
+import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import {
   ORDER_STATUS_FA,
   PAYMENT_STATUS_FA,
@@ -396,6 +398,7 @@ export async function updateOrderStatusAdmin(
         ...(status === 'COMPLETED' ? { deliveredAt: now } : {}),
       },
     });
+    runHesabfaBackground('syncOrderStatus', () => syncOrderStatusToHesabfa(orderId));
     return ok(undefined);
   });
 }
@@ -450,6 +453,9 @@ export async function updateOrderAdmin(
       }),
     ]);
 
+    runHesabfaBackground('syncOrderStatus:adminUpdate', () =>
+      syncOrderStatusToHesabfa(orderId),
+    );
     return ok(undefined);
   });
 }

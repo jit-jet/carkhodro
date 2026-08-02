@@ -26,7 +26,8 @@ type IconKey =
   | "blog"
   | "comms"
   | "discount"
-  | "rules";
+  | "rules"
+  | "accounting";
 
 interface NavItem {
   href: string;
@@ -51,6 +52,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/admin/users", label: "کاربران", icon: "users" },
       { href: "/admin/communications", label: "مدیریت ارتباطات", icon: "comms" },
       { href: "/admin/sms", label: "پیامک گروهی", icon: "sms" },
+      { href: "/admin/accounting", label: "حسابداری", icon: "accounting" },
     ],
   },
   {
@@ -183,6 +185,13 @@ function NavIcon({ icon }: { icon: IconKey }) {
           <line x1="16" y1="13" x2="8" y2="13" />
           <line x1="16" y1="17" x2="8" y2="17" />
           <line x1="10" y1="9" x2="8" y2="9" />
+        </svg>
+      );
+    case "accounting":
+      return (
+        <svg {...common}>
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <path d="M7 8h10M7 12h10M7 16h6" />
         </svg>
       );
   }
