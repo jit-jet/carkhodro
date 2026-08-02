@@ -107,7 +107,6 @@ async function post<T>(
   if (opts?.unique) {
     payload.requestUniqueId = randomUUID();
   }
-console.log("payload",payload)
   let lastError: unknown;
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
