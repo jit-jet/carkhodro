@@ -347,7 +347,7 @@ model Product {
   categoryId   Int    @map("category_id")
 
   // ── Pricing ────────────────────────────────────────────────────────────────
-  /// Base wholesale price in Toman — synced from Hesabfa (SellPrice).
+  /// Base wholesale price in Toman.
   wholesalePrice       BigInt   @map("wholesale_price")
   /// Percentage deducted for WHOLESALE users (0–100).
   /// wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100)
@@ -360,14 +360,13 @@ model Product {
   retailDiscountPct    Decimal  @default(0) @map("retail_discount_pct") @db.Decimal(5, 2)
   isOffer              Boolean  @default(false) @map("is_offer")
 
-  // ── External accounting / ERP sync ────────────────────────────────────────
-  /// Primary key in the external accountancy system.
-  /// Nullable until first sync — product must not go live until populated.
+  // ── Optional external accounting reference ────────────────────────────────
+  /// Primary key in an external accountancy system (if linked).
   accountancyId String?  @unique @map("accountancy_id")
-  /// Timestamp of the last successful price + stock pull from the external API
+  /// Timestamp of the last successful external price/stock update (if any).
   lastSyncedAt  DateTime? @map("last_synced_at")
 
-  // ── Inventory — synced from accountancy API ───────────────────────────────
+  // ── Inventory ─────────────────────────────────────────────────────────────
   stock Int @default(0)
 
   // ── Physical / logistics details (managed by local admin) ─────────────────

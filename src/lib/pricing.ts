@@ -1,7 +1,7 @@
 /**
  * Product pricing — wholesale vs retail tiers.
  * ───────────────────────────────────────────
- * Wholesale (from Hesabfa):
+ * Wholesale:
  *   wholesalePrice → apply wholesaleDiscountPct → wholesaleFinal
  *
  * Retail:
