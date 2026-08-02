@@ -116,7 +116,7 @@ export async function getReviewsAdmin(input?: {
   perPage?: number;
 }): Promise<AdminReviewPage> {
   const page = Math.max(1, input?.page ?? 1);
-  const perPage = Math.min(50, Math.max(1, input?.perPage ?? 20));
+  const perPage = Math.min(100, Math.max(1, input?.perPage ?? 20));
   const empty: AdminReviewPage = {
     items: [],
     total: 0,
@@ -245,7 +245,7 @@ export async function getSupportMessagesAdmin(input?: {
   perPage?: number;
 }): Promise<AdminSupportPage> {
   const page = Math.max(1, input?.page ?? 1);
-  const perPage = Math.min(50, Math.max(1, input?.perPage ?? 20));
+  const perPage = Math.min(100, Math.max(1, input?.perPage ?? 20));
   const empty: AdminSupportPage = {
     items: [],
     total: 0,
@@ -424,7 +424,7 @@ export async function getSuggestionsAdmin(input?: {
   perPage?: number;
 }): Promise<AdminSuggestionPage> {
   const page = Math.max(1, input?.page ?? 1);
-  const perPage = Math.min(50, Math.max(1, input?.perPage ?? 20));
+  const perPage = Math.min(100, Math.max(1, input?.perPage ?? 20));
   const empty: AdminSuggestionPage = {
     items: [],
     total: 0,
