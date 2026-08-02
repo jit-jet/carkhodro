@@ -139,6 +139,6 @@ export const HESABFA_ACTION = {
 export const HESABFA_INVOICE_TYPE_SALE = 0;
 export const HESABFA_CONTACT_TYPE_CUSTOMER = 2;
 export const HESABFA_ITEM_TYPE_PRODUCT = 0;
-export const HESABFA_CONTACT_NODE_FAMILY = 'مشتریان فروشگاه آنلاین';
+export const HESABFA_CONTACT_NODE_FAMILY = 'اشخاص : مشتریان فروشگاه آنلاین';
 export const HESABFA_INVOICE_NOTE = 'فاکتور صادر شده توسط وب سایت کار خودرو';
 export const HESABFA_TAG = 'carkhodro';

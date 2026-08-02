@@ -199,18 +199,6 @@ export async function saveItem(
   return post<HesabfaItem>('item/save', { item }, { unique: true });
 }
 
-export async function batchSaveItems(
-  items: Record<string, unknown>[],
-): Promise<HesabfaItem[]> {
-  if (items.length === 0) return [];
-  const result = await post<HesabfaItem[] | HesabfaPagedList<HesabfaItem>>(
-    'item/batchSave',
-    { items },
-    { unique: true },
-  );
-  return Array.isArray(result) ? result : (result.List ?? []);
-}
-
 export async function getProductCategories(): Promise<HesabfaProductCategory[]> {
   const result = await post<HesabfaProductCategory[] | HesabfaPagedList<HesabfaProductCategory>>(
     'setting/getProductCategories',
@@ -249,17 +237,6 @@ export async function saveContact(
   return post<HesabfaContact>('contact/save', { contact }, { unique: true });
 }
 
-export async function batchSaveContacts(
-  contacts: Record<string, unknown>[],
-): Promise<HesabfaContact[]> {
-  if (contacts.length === 0) return [];
-  const result = await post<HesabfaContact[] | HesabfaPagedList<HesabfaContact>>(
-    'contact/batchSave',
-    { contacts },
-    { unique: true },
-  );
-  return Array.isArray(result) ? result : (result.List ?? []);
-}
 
 // ── Invoices ──────────────────────────────────────────────────────────────────
 

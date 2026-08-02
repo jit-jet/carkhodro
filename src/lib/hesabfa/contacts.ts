@@ -5,7 +5,6 @@
 
 import { prisma } from '@/src/lib/prisma';
 import {
-  batchSaveContacts,
   getAllContacts,
   getContactsById,
   isHesabfaConfigured,
@@ -410,7 +409,6 @@ async function buildContactPayload(userId: string): Promise<Record<string, unkno
     company: user.shopName ?? '',
     contactType: HESABFA_CONTACT_TYPE_CUSTOMER,
     mobile,
-    phone: mobile,
     address: address?.street ?? '',
     city: address?.city.name ?? '',
     state: address?.city.province.name ?? '',
