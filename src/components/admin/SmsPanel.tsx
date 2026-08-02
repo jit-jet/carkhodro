@@ -23,6 +23,8 @@ import {
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
 import { formatNumberFa } from "@/src/lib/format";
+import AdminPagination from "@/src/components/admin/AdminPagination";
+import { useClientPagination } from "@/src/hooks/useClientPagination";
 import { useCartUI } from "@/src/store/cart-ui";
 import type { SmsCampaignStatus, SmsTargetRole } from "@/generated/prisma_client";
 
@@ -54,6 +56,7 @@ export default function SmsPanel({ initialHistory }: { initialHistory: AdminSmsC
   const [success, setSuccess] = useState("");
   const [sending, startSend] = useTransition();
   const [, startCount] = useTransition();
+  const pagination = useClientPagination(history, { resetKey: String(history.length) });
 
   useEffect(() => {
     startCount(async () => {
@@ -172,7 +175,7 @@ export default function SmsPanel({ initialHistory }: { initialHistory: AdminSmsC
                 </tr>
               </thead>
               <tbody className={tableBodyClass}>
-                {history.map((c) => (
+                {pagination.items.map((c) => (
                   <tr key={c.id} className={tableRowClass}>
                     <td className="px-4 py-3 max-w-xs truncate text-charcoal">{c.body}</td>
                     <td className="px-4 py-3 text-gray-500">{c.targetRoleLabel}</td>
@@ -187,6 +190,14 @@ export default function SmsPanel({ initialHistory }: { initialHistory: AdminSmsC
                 ))}
               </tbody>
           </TableShell>
+          <AdminPagination
+            page={pagination.page}
+            pageCount={pagination.pageCount}
+            total={pagination.total}
+            perPage={pagination.perPage}
+            onPageChange={pagination.setPage}
+            onPerPageChange={pagination.setPerPage}
+          />
         </div>
       )}
     </div>

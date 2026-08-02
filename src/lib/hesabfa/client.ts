@@ -30,6 +30,40 @@ export class HesabfaError extends Error {
   }
 }
 
+/** Human-readable labels for Hesabfa ErrorCode values (api/errorcode). */
+const HESABFA_ERROR_LABELS: Record<number, string> = {
+  100: 'InternalServerError',
+  101: 'TooManyRequests',
+  103: 'MissingData',
+  104: 'MissingParameter',
+  105: 'ApiDisabled',
+  106: 'UserIsNotOwner',
+  107: 'BusinessNotFound',
+  108: 'BusinessExpired',
+  109: 'FinanYearNotFound',
+  110: 'IdMustBeZero',
+  111: 'IdMustNotBeZero',
+  112: 'ObjectNotFound',
+  113: 'MissingApiKey',
+  114: 'ParameterIsOutOfRange',
+  120: 'DuplicateRequestId',
+  190: 'ApplicationError',
+};
+
+function formatHesabfaFailure(
+  path: string,
+  errorCode?: number,
+  errorMessage?: string,
+): string {
+  const label =
+    errorCode != null ? (HESABFA_ERROR_LABELS[errorCode] ?? 'Unknown') : 'Unknown';
+  const codePart = errorCode != null ? `ErrorCode ${errorCode} (${label})` : 'unknown ErrorCode';
+  const msg = errorMessage?.trim();
+  return msg
+    ? `Hesabfa ${path}: ${codePart} — ${msg}`
+    : `Hesabfa ${path}: ${codePart}`;
+}
+
 interface HesabfaConfig {
   baseUrl: string;
   apiKey: string;
@@ -73,7 +107,7 @@ async function post<T>(
   if (opts?.unique) {
     payload.requestUniqueId = randomUUID();
   }
-
+console.log("payload",payload)
   let lastError: unknown;
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
@@ -94,7 +128,7 @@ async function post<T>(
       const json = (await res.json()) as HesabfaResponse<T>;
       if (!json.Success) {
         throw new HesabfaError(
-          json.ErrorMessage ?? `Hesabfa request to ${path} failed`,
+          formatHesabfaFailure(path, json.ErrorCode, json.ErrorMessage),
           json.ErrorCode,
         );
       }

@@ -22,6 +22,8 @@ import {
   tableHeadClass,
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
+import AdminPagination from "@/src/components/admin/AdminPagination";
+import { useClientPagination } from "@/src/hooks/useClientPagination";
 import { useCartUI } from "@/src/store/cart-ui";
 
 const EMPTY_FORM: PostCategoryInput = {
@@ -45,6 +47,9 @@ export default function PostCategoriesManager({
   const [editingId, setEditingId] = useState<number | null>(null);
   const [pending, startTransition] = useTransition();
   const [slugTouched, setSlugTouched] = useState(false);
+  const pagination = useClientPagination(categories, {
+    resetKey: String(categories.length),
+  });
 
   function startEdit(c: PostCategoryVM) {
     setEditingId(c.id);
@@ -286,7 +291,7 @@ export default function PostCategoriesManager({
               </tr>
             </thead>
             <tbody className={tableBodyClass}>
-              {categories.map((c) => (
+              {pagination.items.map((c) => (
                 <tr key={c.id} className={tableRowClass}>
                   <td className="px-4 py-3 font-bold text-charcoal">{c.name}</td>
                   <td className="px-4 py-3 hidden sm:table-cell font-mono text-xs text-gray-500" dir="ltr">
@@ -325,6 +330,17 @@ export default function PostCategoriesManager({
           </TableShell>
         )}
       </Card>
+
+      {categories.length > 0 && (
+        <AdminPagination
+          page={pagination.page}
+          pageCount={pagination.pageCount}
+          total={pagination.total}
+          perPage={pagination.perPage}
+          onPageChange={pagination.setPage}
+          onPerPageChange={pagination.setPerPage}
+        />
+      )}
     </div>
   );
 }

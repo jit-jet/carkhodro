@@ -250,6 +250,7 @@ export default function UsersTable({
                         userId: u.id,
                         sortBy: "",
                         sortDir: "",
+                        perPage: filters.perPage,
                       })}
                       className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors whitespace-nowrap"
                     >

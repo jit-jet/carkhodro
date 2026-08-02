@@ -4,6 +4,11 @@
  * build the same query string.
  */
 
+import {
+  ADMIN_DEFAULT_PER_PAGE,
+  appendPaginationParams,
+} from "@/src/lib/admin-pagination";
+
 export interface UsersTableFilters {
   search: string;
   phone: string;
@@ -11,6 +16,7 @@ export interface UsersTableFilters {
   status: string;
   sortBy: string;
   sortDir: string;
+  perPage: number;
 }
 
 export function buildUsersHref(filters: UsersTableFilters, page?: number): string {
@@ -21,7 +27,12 @@ export function buildUsersHref(filters: UsersTableFilters, page?: number): strin
   if (filters.status) params.set("status", filters.status);
   if (filters.sortBy) params.set("sortBy", filters.sortBy);
   if (filters.sortDir) params.set("sortDir", filters.sortDir);
-  if (page && page > 1) params.set("page", String(page));
+  appendPaginationParams(
+    params,
+    page,
+    filters.perPage,
+    ADMIN_DEFAULT_PER_PAGE,
+  );
   const qs = params.toString();
   return qs ? `/admin/users?${qs}` : "/admin/users";
 }

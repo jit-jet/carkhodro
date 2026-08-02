@@ -12,6 +12,8 @@ import {
   Input,
   Textarea,
 } from "@/src/components/admin/AdminUI";
+import AdminPagination from "@/src/components/admin/AdminPagination";
+import { useClientPagination } from "@/src/hooks/useClientPagination";
 import { useCartUI } from "@/src/store/cart-ui";
 
 const EMPTY_FORM: FaqInput = { question: "", answer: "", sortOrder: 0 };
@@ -23,6 +25,7 @@ export default function FaqManager({ initialFaqs }: { initialFaqs: FaqVM[] }) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
+  const pagination = useClientPagination(faqs, { resetKey: String(faqs.length) });
 
   function reset() {
     setEditingId(null);
@@ -131,7 +134,7 @@ export default function FaqManager({ initialFaqs }: { initialFaqs: FaqVM[] }) {
           <EmptyState message="هنوز سوالی ثبت نشده است." />
         ) : (
           <ul className="divide-y divide-gray-100 px-5 sm:px-6">
-            {faqs.map((f) => (
+            {pagination.items.map((f) => (
               <li key={f.id} className="py-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
@@ -166,6 +169,17 @@ export default function FaqManager({ initialFaqs }: { initialFaqs: FaqVM[] }) {
           </ul>
         )}
       </Card>
+
+      {faqs.length > 0 && (
+        <AdminPagination
+          page={pagination.page}
+          pageCount={pagination.pageCount}
+          total={pagination.total}
+          perPage={pagination.perPage}
+          onPageChange={pagination.setPage}
+          onPerPageChange={pagination.setPerPage}
+        />
+      )}
     </div>
   );
 }

@@ -10,6 +10,8 @@ import {
 } from "@/actions/admin-navigation";
 import type { AdminNavLinkVM } from "@/src/lib/serializers";
 import { Badge, Button, Card, CardHeader, EmptyState, FormError, Input } from "@/src/components/admin/AdminUI";
+import AdminPagination from "@/src/components/admin/AdminPagination";
+import { useClientPagination } from "@/src/hooks/useClientPagination";
 import { useCartUI } from "@/src/store/cart-ui";
 
 const EMPTY_FORM: NavLinkInput = { href: "", label: "", isActive: true };
@@ -137,6 +139,10 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
   }
 
   const sortedLinks = sortLinks(links);
+  const pagination = useClientPagination(sortedLinks, {
+    resetKey: String(sortedLinks.length),
+  });
+  const pageStart = (pagination.page - 1) * pagination.perPage;
 
   return (
     <div className="space-y-6">
@@ -190,7 +196,9 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
           <EmptyState message="هنوز لینکی ثبت نشده است." />
         ) : (
           <ul className="divide-y divide-gray-100 px-5 sm:px-6">
-            {sortedLinks.map((link, index) => (
+            {pagination.items.map((link, index) => {
+              const globalIndex = pageStart + index;
+              return (
               <li key={link.id} className="py-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
@@ -206,7 +214,7 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
                     <button
                       type="button"
                       onClick={() => moveLink(link.id, "up")}
-                      disabled={pending || index === 0}
+                      disabled={pending || globalIndex === 0}
                       title="انتقال به بالا"
                       className="p-2 rounded-lg text-gray-500 hover:bg-silver-light disabled:opacity-30 disabled:cursor-not-allowed"
                       aria-label="انتقال به بالا"
@@ -218,7 +226,7 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
                     <button
                       type="button"
                       onClick={() => moveLink(link.id, "down")}
-                      disabled={pending || index === sortedLinks.length - 1}
+                      disabled={pending || globalIndex === sortedLinks.length - 1}
                       title="انتقال به پایین"
                       className="p-2 rounded-lg text-gray-500 hover:bg-silver-light disabled:opacity-30 disabled:cursor-not-allowed"
                       aria-label="انتقال به پایین"
@@ -251,10 +259,22 @@ export default function NavLinksManager({ initialLinks }: { initialLinks: AdminN
                   </div>
                 </div>
               </li>
-            ))}
+              );
+            })}
           </ul>
         )}
       </Card>
+
+      {sortedLinks.length > 0 && (
+        <AdminPagination
+          page={pagination.page}
+          pageCount={pagination.pageCount}
+          total={pagination.total}
+          perPage={pagination.perPage}
+          onPageChange={pagination.setPage}
+          onPerPageChange={pagination.setPerPage}
+        />
+      )}
     </div>
   );
 }

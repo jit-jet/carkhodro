@@ -22,6 +22,8 @@ import {
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
 import ImageUploadField, { AdminThumb } from "@/src/components/admin/ImageUploadField";
+import AdminPagination from "@/src/components/admin/AdminPagination";
+import { useClientPagination } from "@/src/hooks/useClientPagination";
 import { useCartUI } from "@/src/store/cart-ui";
 
 const EMPTY_FORM: CategoryInput = {
@@ -44,6 +46,9 @@ export default function CategoriesManager({
   const [error, setError] = useState("");
   const [rowError, setRowError] = useState<{ id: number; message: string } | null>(null);
   const [pending, startTransition] = useTransition();
+  const pagination = useClientPagination(categories, {
+    resetKey: String(categories.length),
+  });
 
   function startEdit(c: AdminCategoryVM) {
     setEditingId(c.id);
@@ -224,7 +229,7 @@ export default function CategoriesManager({
             </tr>
           </thead>
           <tbody className={tableBodyClass}>
-            {categories.map((c) => (
+            {pagination.items.map((c) => (
               <tr key={c.id} className={tableRowClass}>
                 <td className="px-4 py-3">
                   <AdminThumb src={c.image} alt={c.name} />
@@ -260,6 +265,17 @@ export default function CategoriesManager({
             ))}
           </tbody>
         </TableShell>
+      )}
+
+      {categories.length > 0 && (
+        <AdminPagination
+          page={pagination.page}
+          pageCount={pagination.pageCount}
+          total={pagination.total}
+          perPage={pagination.perPage}
+          onPageChange={pagination.setPage}
+          onPerPageChange={pagination.setPerPage}
+        />
       )}
     </div>
   );

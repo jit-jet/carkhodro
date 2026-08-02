@@ -4,17 +4,15 @@ import type { Metadata } from "next";
 import { getPostsAdmin } from "@/actions/posts";
 import { getPostCategoriesAdmin } from "@/actions/post-categories";
 import { PageHeader, Button } from "@/src/components/admin/AdminUI";
+import AdminPagination from "@/src/components/admin/AdminPagination";
 import PostsTable from "@/src/components/admin/PostsTable";
+import { parsePage, parsePerPage, pickSearchParam } from "@/src/lib/admin-pagination";
 import { formatNumberFa } from "@/src/lib/format";
 
 export const metadata: Metadata = { title: "مقالات وبلاگ | پنل مدیریت" };
 
 interface Props {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function pick(value: string | string[] | undefined): string {
-  return (Array.isArray(value) ? value[0] : value) ?? "";
 }
 
 export default function AdminPostsPage({ searchParams }: Props) {
@@ -27,12 +25,15 @@ export default function AdminPostsPage({ searchParams }: Props) {
 
 async function PostsContent({ searchParams }: Props) {
   const sp = await searchParams;
-  const search = pick(sp.search);
-  const statusRaw = pick(sp.status);
+  const search = pickSearchParam(sp.search);
+  const statusRaw = pickSearchParam(sp.status);
   const status =
     statusRaw === "published" || statusRaw === "draft" ? statusRaw : "all";
-  const categoryId = pick(sp.categoryId);
-  const page = Number(pick(sp.page)) || 1;
+  const categoryId = pickSearchParam(sp.categoryId);
+  const page = parsePage(sp.page);
+  const perPage = parsePerPage(sp.perPage);
+
+  const filters = { search, status, categoryId, perPage };
 
   const [data, categories] = await Promise.all([
     getPostsAdmin({
@@ -40,7 +41,7 @@ async function PostsContent({ searchParams }: Props) {
       status,
       categoryId: categoryId ? Number(categoryId) : undefined,
       page,
-      perPage: 20,
+      perPage,
     }),
     getPostCategoriesAdmin(),
   ]);
@@ -67,35 +68,22 @@ async function PostsContent({ searchParams }: Props) {
       <PostsTable
         items={data.items}
         total={data.total}
-        filters={{ search, status, categoryId }}
+        filters={filters}
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
       />
 
-      {data.pageCount > 1 && (
-        <div className="flex items-center justify-center gap-1.5 flex-wrap pt-5">
-          {Array.from({ length: data.pageCount }, (_, i) => i + 1).map((p) => {
-            const params = new URLSearchParams();
-            if (search) params.set("search", search);
-            if (status !== "all") params.set("status", status);
-            if (categoryId) params.set("categoryId", categoryId);
-            params.set("page", String(p));
-            return (
-              <Link
-                key={p}
-                href={`/admin/posts?${params.toString()}`}
-                className={[
-                  "min-w-9 h-9 px-2 flex items-center justify-center rounded-lg text-sm font-semibold transition-colors",
-                  p === data.page
-                    ? "bg-accent text-charcoal"
-                    : "bg-white border border-gray-200 text-charcoal hover:bg-silver-light",
-                ].join(" ")}
-              >
-                {p.toLocaleString("fa-IR")}
-              </Link>
-            );
-          })}
-        </div>
-      )}
+      <AdminPagination
+        page={data.page}
+        pageCount={data.pageCount}
+        total={data.total}
+        perPage={data.perPage}
+        pathname="/admin/posts"
+        query={{
+          ...(search ? { search } : {}),
+          ...(status !== "all" ? { status } : {}),
+          ...(categoryId ? { categoryId } : {}),
+        }}
+      />
     </div>
   );
 }

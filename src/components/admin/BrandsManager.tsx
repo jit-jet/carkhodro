@@ -32,6 +32,8 @@ import {
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
 import ImageUploadField, { AdminThumb } from "@/src/components/admin/ImageUploadField";
+import AdminPagination from "@/src/components/admin/AdminPagination";
+import { useClientPagination } from "@/src/hooks/useClientPagination";
 import { useCartUI } from "@/src/store/cart-ui";
 
 type Tab = "car-brands" | "car-models" | "parts-brands";
@@ -113,6 +115,7 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
+  const pagination = useClientPagination(items, { resetKey: String(items.length) });
 
   function reset() {
     setEditingId(null);
@@ -259,7 +262,7 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
             </tr>
           </thead>
           <tbody className={tableBodyClass}>
-            {items.map((b) => (
+            {pagination.items.map((b) => (
               <tr key={b.id} className={tableRowClass}>
                 <td className="px-4 py-3">
                   <AdminThumb src={b.logoImage} alt={b.name} />
@@ -308,6 +311,17 @@ function CarBrandsTab({ initial }: { initial: AdminCarBrandVM[] }) {
           </tbody>
         </TableShell>
       )}
+
+      {items.length > 0 && (
+        <AdminPagination
+          page={pagination.page}
+          pageCount={pagination.pageCount}
+          total={pagination.total}
+          perPage={pagination.perPage}
+          onPageChange={pagination.setPage}
+          onPerPageChange={pagination.setPerPage}
+        />
+      )}
     </div>
   );
 }
@@ -332,6 +346,7 @@ function CarModelsTab({
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
+  const pagination = useClientPagination(items, { resetKey: String(items.length) });
 
   function reset() {
     setEditingId(null);
@@ -488,7 +503,7 @@ function CarModelsTab({
             </tr>
           </thead>
           <tbody className={tableBodyClass}>
-            {items.map((m) => (
+            {pagination.items.map((m) => (
               <tr key={m.id} className={tableRowClass}>
                 <td className="px-4 py-3">
                   <AdminThumb src={m.image} alt={m.name} />
@@ -534,6 +549,17 @@ function CarModelsTab({
           </tbody>
         </TableShell>
       )}
+
+      {items.length > 0 && (
+        <AdminPagination
+          page={pagination.page}
+          pageCount={pagination.pageCount}
+          total={pagination.total}
+          perPage={pagination.perPage}
+          onPageChange={pagination.setPage}
+          onPerPageChange={pagination.setPerPage}
+        />
+      )}
     </div>
   );
 }
@@ -552,6 +578,7 @@ function PartsBrandsTab({ initial }: { initial: AdminPartsBrandVM[] }) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
+  const pagination = useClientPagination(items, { resetKey: String(items.length) });
 
   function reset() {
     setEditingId(null);
@@ -692,7 +719,7 @@ function PartsBrandsTab({ initial }: { initial: AdminPartsBrandVM[] }) {
             </tr>
           </thead>
           <tbody className={tableBodyClass}>
-            {items.map((b) => (
+            {pagination.items.map((b) => (
               <tr key={b.id} className={tableRowClass}>
                 <td className="px-4 py-3">
                   <AdminThumb src={b.logoImage} alt={b.name} />
@@ -737,6 +764,17 @@ function PartsBrandsTab({ initial }: { initial: AdminPartsBrandVM[] }) {
             ))}
           </tbody>
         </TableShell>
+      )}
+
+      {items.length > 0 && (
+        <AdminPagination
+          page={pagination.page}
+          pageCount={pagination.pageCount}
+          total={pagination.total}
+          perPage={pagination.perPage}
+          onPageChange={pagination.setPage}
+          onPerPageChange={pagination.setPerPage}
+        />
       )}
     </div>
   );

@@ -7,19 +7,17 @@ import {
   getAdminCommunicationCounts,
 } from "@/actions/admin-communications";
 import { PageHeader } from "@/src/components/admin/AdminUI";
+import AdminPagination from "@/src/components/admin/AdminPagination";
 import CommunicationsPanel, {
   type CommunicationsTab,
 } from "@/src/components/admin/CommunicationsPanel";
+import { parsePage, parsePerPage, pickSearchParam } from "@/src/lib/admin-pagination";
 import { formatNumberFa } from "@/src/lib/format";
 
 export const metadata: Metadata = { title: "مدیریت ارتباطات | پنل مدیریت" };
 
 interface Props {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function pick(value: string | string[] | undefined): string {
-  return (Array.isArray(value) ? value[0] : value) ?? "";
 }
 
 function parseTab(value: string): CommunicationsTab {
@@ -37,15 +35,28 @@ export default function AdminCommunicationsPage({ searchParams }: Props) {
 
 async function CommunicationsContent({ searchParams }: Props) {
   const sp = await searchParams;
-  const tab = parseTab(pick(sp.tab));
-  const unreadOnly = pick(sp.unread) === "1";
+  const tab = parseTab(pickSearchParam(sp.tab));
+  const unreadOnly = pickSearchParam(sp.unread) === "1";
+  const page = parsePage(sp.page);
+  const perPage = parsePerPage(sp.perPage);
 
-  const [counts, reviews, support, suggestions] = await Promise.all([
-    getAdminCommunicationCounts(),
-    getReviewsAdmin({ unreadOnly, page: 1, perPage: 50 }),
-    getSupportMessagesAdmin({ unreadOnly, page: 1, perPage: 50 }),
-    getSuggestionsAdmin({ unreadOnly, page: 1, perPage: 50 }),
+  const counts = await getAdminCommunicationCounts();
+
+  const listQuery = { unreadOnly, page, perPage };
+  const [reviews, support, suggestions] = await Promise.all([
+    tab === "reviews"
+      ? getReviewsAdmin(listQuery)
+      : Promise.resolve({ items: [], total: 0, page, perPage, pageCount: 1, unreadCount: 0 }),
+    tab === "support"
+      ? getSupportMessagesAdmin(listQuery)
+      : Promise.resolve({ items: [], total: 0, page, perPage, pageCount: 1, unreadCount: 0 }),
+    tab === "suggestions"
+      ? getSuggestionsAdmin(listQuery)
+      : Promise.resolve({ items: [], total: 0, page, perPage, pageCount: 1, unreadCount: 0 }),
   ]);
+
+  const active =
+    tab === "reviews" ? reviews : tab === "support" ? support : suggestions;
 
   const totalUnread =
     counts.unreadReviews + counts.unreadSupport + counts.unreadSuggestions;
@@ -68,6 +79,19 @@ async function CommunicationsContent({ searchParams }: Props) {
         suggestions={suggestions.items}
         counts={counts}
         unreadOnly={unreadOnly}
+        perPage={perPage}
+      />
+
+      <AdminPagination
+        page={active.page}
+        pageCount={active.pageCount}
+        total={active.total}
+        perPage={active.perPage}
+        pathname="/admin/communications"
+        query={{
+          ...(tab !== "reviews" ? { tab } : {}),
+          ...(unreadOnly ? { unread: "1" } : {}),
+        }}
       />
     </div>
   );

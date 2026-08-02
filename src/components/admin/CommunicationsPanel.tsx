@@ -33,6 +33,7 @@ import {
   Textarea,
 } from "@/src/components/admin/AdminUI";
 import { formatNumberFa } from "@/src/lib/format";
+import { buildCommunicationsHref } from "@/src/lib/admin-communications-query";
 import { useCartUI } from "@/src/store/cart-ui";
 
 export type CommunicationsTab = "reviews" | "support" | "suggestions";
@@ -48,6 +49,7 @@ interface Props {
     unreadSuggestions: number;
   };
   unreadOnly: boolean;
+  perPage: number;
 }
 
 const TABS: { key: CommunicationsTab; label: string; countKey: keyof Props["counts"] }[] = [
@@ -63,8 +65,10 @@ export default function CommunicationsPanel({
   suggestions,
   counts,
   unreadOnly,
+  perPage,
 }: Props) {
   const router = useRouter();
+  const filters = { tab, unreadOnly, perPage };
 
   return (
     <div className="space-y-4">
@@ -75,7 +79,7 @@ export default function CommunicationsPanel({
           return (
             <Link
               key={t.key}
-              href={`/admin/communications?tab=${t.key}${unreadOnly ? "&unread=1" : ""}`}
+              href={buildCommunicationsHref({ ...filters, tab: t.key })}
               className={[
                 "inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-bold transition-colors border",
                 active
@@ -97,9 +101,11 @@ export default function CommunicationsPanel({
             type="checkbox"
             checked={unreadOnly}
             onChange={(e) => {
-              const next = e.target.checked;
               router.push(
-                `/admin/communications?tab=${tab}${next ? "&unread=1" : ""}`,
+                buildCommunicationsHref({
+                  ...filters,
+                  unreadOnly: e.target.checked,
+                }),
               );
             }}
             className="w-3.5 h-3.5 rounded border-gray-300 text-accent accent-accent cursor-pointer"
