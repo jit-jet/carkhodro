@@ -19,8 +19,6 @@ export default function BrandsSlider({ brands }: { brands: PartsBrandSlide[] }) 
         <SectionTitle
           title="جستجو بر اساس برند قطعه"
           subtitle="برند قطعه مورد نظر خود را انتخاب کنید"
-          linkHref="/products"
-          linkLabel="همه برندها"
         />
 
         <SliderWrapper>
