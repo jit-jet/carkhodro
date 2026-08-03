@@ -10,9 +10,11 @@ import {
   toNavLinkVM,
   toAdminNavLinkVM,
   toShippingOptionVM,
+  toAdminShippingOptionVM,
   type NavLinkVM,
   type AdminNavLinkVM,
   type ShippingOptionVM,
+  type AdminShippingOptionVM,
 } from '@/src/lib/serializers';
 import { safeQuery } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
@@ -55,5 +57,19 @@ export async function getShippingOptions(): Promise<ShippingOptionVM[]> {
       orderBy: { cost: 'asc' },
     });
     return rows.map(toShippingOptionVM);
+  }, []);
+}
+
+/** All shipping options including inactive — admin panel only. */
+export async function getAllShippingOptions(): Promise<AdminShippingOptionVM[]> {
+  'use cache';
+  cacheLife('days');
+  cacheTag(tags.shipping);
+
+  return safeQuery('getAllShippingOptions', async () => {
+    const rows = await prisma.shippingOption.findMany({
+      orderBy: { cost: 'asc' },
+    });
+    return rows.map(toAdminShippingOptionVM);
   }, []);
 }

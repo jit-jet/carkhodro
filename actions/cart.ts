@@ -33,6 +33,10 @@ import {
   type PricingRole,
 } from '@/src/lib/user-role';
 import {
+  isCallForPriceForRole,
+  CALL_FOR_PRICE_BLOCKED_MSG,
+} from '@/src/lib/call-for-price';
+import {
   readGuestCart,
   writeGuestCart,
   buildGuestCartVM,
@@ -55,13 +59,29 @@ export async function addToCart(
 
     const product = await prisma.product.findFirst({
       where: { id: productId, isActive: true },
-      select: { stock: true },
+      select: {
+        stock: true,
+        callForPriceRetail: true,
+        callForPriceWholesale: true,
+      },
     });
     if (!product) return fail('محصول یافت نشد.');
     if (product.stock < 1) return fail('این محصول موجود نیست.');
 
     const user = await getCurrentUser();
     const role = pricingRoleFromUser(user?.role);
+
+    if (
+      isCallForPriceForRole(
+        {
+          callForPriceRetail: product.callForPriceRetail,
+          callForPriceWholesale: product.callForPriceWholesale,
+        },
+        role,
+      )
+    ) {
+      return fail(CALL_FOR_PRICE_BLOCKED_MSG);
+    }
 
     if (!user) {
       // ── Guest path: merge into the cookie cart. ──────────────────────────
@@ -208,7 +228,13 @@ export async function validateCartStockForCheckout(): Promise<ActionResult> {
       return ok(undefined);
     }
 
-    let lines: { name: string; quantity: number; stock: number }[];
+    const role = pricingRoleFromUser(user?.role);
+    let lines: {
+      name: string;
+      quantity: number;
+      stock: number;
+      callForPrice: boolean;
+    }[];
 
     if (!user) {
       const cart = await buildGuestCartVM(await readGuestCart());
@@ -217,13 +243,23 @@ export async function validateCartStockForCheckout(): Promise<ActionResult> {
         name: i.name,
         quantity: i.quantity,
         stock: i.stock,
+        callForPrice: i.callForPrice,
       }));
     } else {
       const cart = await prisma.cart.findUnique({
         where: { userId: user.id },
         include: {
           items: {
-            include: { product: { select: { name: true, stock: true } } },
+            include: {
+              product: {
+                select: {
+                  name: true,
+                  stock: true,
+                  callForPriceRetail: true,
+                  callForPriceWholesale: true,
+                },
+              },
+            },
           },
         },
       });
@@ -232,7 +268,19 @@ export async function validateCartStockForCheckout(): Promise<ActionResult> {
         name: i.product.name,
         quantity: i.quantity,
         stock: i.product.stock,
+        callForPrice: isCallForPriceForRole(
+          {
+            callForPriceRetail: i.product.callForPriceRetail,
+            callForPriceWholesale: i.product.callForPriceWholesale,
+          },
+          role,
+        ),
       }));
+    }
+
+    const blocked = lines.find((i) => i.callForPrice);
+    if (blocked) {
+      return fail(`«${blocked.name}» ${CALL_FOR_PRICE_BLOCKED_MSG}`);
     }
 
     const issues = collectCartStockIssues(lines);

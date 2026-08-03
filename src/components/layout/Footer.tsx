@@ -1,25 +1,11 @@
 import Link from "next/link";
-import type { PublicSiteSettingsVM, SocialLinkVM } from "@/src/lib/serializers";
+import type {
+  FooterLinkVM,
+  PublicSiteSettingsVM,
+  SocialLinkVM,
+} from "@/src/lib/serializers";
 import { settingLines } from "@/src/lib/site-settings-display";
 import { SocialLinksRow } from "@/src/components/layout/SocialLinksRow";
-
-const quickLinks = [
-  { href: "/", label: "صفحه اصلی" },
-  { href: "/products?category=engine", label: "قطعات موتوری" },
-  { href: "/products?category=body", label: "بدنه و شیشه" },
-  { href: "/products?category=electrical", label: "برق خودرو" },
-  { href: "/products", label: "لوازم جانبی" },
-  { href: "/products", label: "همه برندها" },
-];
-
-const categoryLinks = [
-  { href: "/products?category=engine", label: "موتور و قطعات" },
-  { href: "/products?category=brake", label: "ترمز و تعلیق" },
-  { href: "/products?category=cooling", label: "سیستم خنک‌کننده" },
-  { href: "/products?category=electrical", label: "برق و روشنایی" },
-  { href: "/products?category=oil", label: "روغن و مایعات" },
-  { href: "/products", label: "فیلترها" },
-];
 
 const infoLinks = [
   { href: "/about", label: "درباره ما" },
@@ -67,9 +53,13 @@ function ClockIcon() {
 export default function Footer({
   settings,
   socialLinks,
+  quickLinks,
+  categoryLinks,
 }: {
   settings: PublicSiteSettingsVM;
   socialLinks: SocialLinkVM[];
+  quickLinks: FooterLinkVM[];
+  categoryLinks: FooterLinkVM[];
 }) {
   const phoneLines = [settings.phone, settings.secondaryPhone].filter(Boolean);
   const addressLines = settingLines(settings.address);
@@ -114,7 +104,7 @@ export default function Footer({
             </h3>
             <ul className="space-y-2.5">
               {quickLinks.map((link) => (
-                <li key={link.href+link.label}>
+                <li key={`${link.id}-${link.href}`}>
                   <Link href={link.href} className="text-sm text-gray-400 hover:text-accent transition-colors flex items-center gap-2">
                     <span className="text-accent">‹</span>
                     {link.label}
@@ -132,7 +122,7 @@ export default function Footer({
             </h3>
             <ul className="space-y-2.5">
               {categoryLinks.map((link) => (
-                <li key={link.href+link.label}>
+                <li key={`${link.id}-${link.href}`}>
                   <Link href={link.href} className="text-sm text-gray-400 hover:text-accent transition-colors flex items-center gap-2">
                     <span className="text-accent">‹</span>
                     {link.label}

@@ -24,11 +24,19 @@ import { tags } from '@/actions/cache-tags';
 export async function getCarBrands(): Promise<CarBrandVM[]> {
   'use cache';
   cacheLife('days');
-  cacheTag(tags.carBrands);
+  cacheTag(tags.carBrands, tags.carModels, tags.products);
 
   return safeQuery('getCarBrands', async () => {
     const rows = await prisma.carBrand.findMany({
-      where: { isActive: true },
+      where: {
+        isActive: true,
+        carModels: {
+          some: {
+            isActive: true,
+            compatibilities: { some: { product: { isActive: true } } },
+          },
+        },
+      },
       orderBy: { productCount: 'desc' },
     });
     return rows.map(toCarBrandVM);
@@ -40,11 +48,15 @@ export async function getCarBrands(): Promise<CarBrandVM[]> {
 export async function getCarModels(): Promise<CarModelVM[]> {
   'use cache';
   cacheLife('days');
-  cacheTag(tags.carModels, tags.carBrands);
+  cacheTag(tags.carModels, tags.carBrands, tags.products);
 
   return safeQuery('getCarModels', async () => {
     const rows = await prisma.carModel.findMany({
-      where: { isActive: true, carBrand: { isActive: true } },
+      where: {
+        isActive: true,
+        carBrand: { isActive: true },
+        compatibilities: { some: { product: { isActive: true } } },
+      },
       include: { carBrand: true },
       orderBy: { id: 'asc' },
     });

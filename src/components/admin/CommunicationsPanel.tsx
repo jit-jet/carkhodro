@@ -2,7 +2,7 @@
 
 /**
  * Admin communications panel — three tabs:
- * 1. Product comments (reviews) — view + reply
+ * 1. Product comments (reviews) — view, reply, hide/unhide, delete
  * 2. Support messages — view + reply
  * 3. Product suggestions — view only
  */
@@ -11,12 +11,14 @@ import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  deleteReviewAdmin,
   getSupportThreadAdmin,
   markReviewReadAdmin,
   markSuggestionReadAdmin,
   markSupportMessageReadAdmin,
   replyToReviewAdmin,
   replyToSupportMessageAdmin,
+  setReviewHiddenAdmin,
   type AdminReviewListItemVM,
   type AdminSuggestionListItemVM,
   type AdminSupportListItemVM,
@@ -162,7 +164,63 @@ function ReviewsPane({ items }: { items: AdminReviewListItemVM[] }) {
         return;
       }
       setSuccess("پاسخ ثبت شد.");
-      notify({ variant: "success", title: "پاسخ ثبت شد", description: "پاسخ زیر نظر در صفحه محصول نمایش داده می‌شود." });
+      notify({
+        variant: "success",
+        title: "پاسخ ثبت شد",
+        description: "پاسخ روی نظر در صفحه محصول نمایش داده می‌شود.",
+      });
+      router.refresh();
+    });
+  }
+
+  function toggleHidden(item: AdminReviewListItemVM) {
+    const nextHidden = !item.isHidden;
+    const confirmMsg = nextHidden
+      ? "این نظر از صفحه محصول مخفی شود؟"
+      : "این نظر دوباره در صفحه محصول نمایش داده شود؟";
+    if (!window.confirm(confirmMsg)) return;
+
+    startTransition(async () => {
+      const result = await setReviewHiddenAdmin({ id: item.id, isHidden: nextHidden });
+      if (!result.ok) {
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
+      notify({
+        variant: "success",
+        title: nextHidden ? "مخفی شد" : "نمایش داده شد",
+        description: nextHidden
+          ? "نظر از صفحه محصول مخفی شد."
+          : "نظر دوباره در صفحه محصول نمایش داده می‌شود.",
+      });
+      router.refresh();
+    });
+  }
+
+  function removeReview(item: AdminReviewListItemVM) {
+    if (
+      !window.confirm(
+        `نظر «${item.authorName}» برای همیشه حذف شود؟ این عمل قابل بازگشت نیست.`,
+      )
+    ) {
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await deleteReviewAdmin(item.id);
+      if (!result.ok) {
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
+      if (openId === item.id) {
+        setOpenId(null);
+        setReply("");
+      }
+      notify({
+        variant: "success",
+        title: "حذف شد",
+        description: "نظر با موفقیت حذف شد.",
+      });
       router.refresh();
     });
   }
@@ -188,6 +246,7 @@ function ReviewsPane({ items }: { items: AdminReviewListItemVM[] }) {
                 isOpen
                   ? "bg-amber-50/40 ring-2 ring-inset ring-accent border-y border-accent/40"
                   : "",
+                item.isHidden && !isOpen ? "opacity-70" : "",
               ].join(" ")}
             >
               <div
@@ -219,6 +278,7 @@ function ReviewsPane({ items }: { items: AdminReviewListItemVM[] }) {
                         {item.authorName}
                       </span>
                       <Badge tone="default">{item.rating} ★</Badge>
+                      {item.isHidden ? <Badge tone="danger">مخفی</Badge> : null}
                       {item.hasReply ? <Badge tone="success">پاسخ داده شده</Badge> : null}
                       {item.isVerifiedPurchase ? <Badge tone="warning">خریدار تأیید شده</Badge> : null}
                       {isOpen ? <Badge tone="warning">در حال پاسخ</Badge> : null}
@@ -229,15 +289,37 @@ function ReviewsPane({ items }: { items: AdminReviewListItemVM[] }) {
                     <span className="block text-sm text-gray-600 line-clamp-2">{item.text}</span>
                   </span>
                 </button>
-                <Link
-                  href={`/products/${item.productId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shrink-0 max-w-[11rem] sm:max-w-[14rem] text-xs font-bold text-accent-dark hover:underline text-end leading-5"
-                  title={item.productName}
-                >
-                  <span className="line-clamp-2">{item.productName}</span>
-                </Link>
+                <div className="shrink-0 flex flex-col items-end gap-2">
+                  <Link
+                    href={`/products/${item.productId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="max-w-[11rem] sm:max-w-[14rem] text-xs font-bold text-accent-dark hover:underline text-end leading-5"
+                    title={item.productName}
+                  >
+                    <span className="line-clamp-2">{item.productName}</span>
+                  </Link>
+                  <div className="flex flex-wrap justify-end gap-1.5">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={pending}
+                      onClick={() => toggleHidden(item)}
+                    >
+                      {item.isHidden ? "نمایش" : "مخفی"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      size="sm"
+                      disabled={pending}
+                      onClick={() => removeReview(item)}
+                    >
+                      حذف
+                    </Button>
+                  </div>
+                </div>
               </div>
 
               {isOpen && open && (
@@ -282,9 +364,29 @@ function ReviewsPane({ items }: { items: AdminReviewListItemVM[] }) {
                     </div>
                     <FormError message={error} />
                     <FormSuccess message={success} />
-                    <Button type="submit" disabled={pending || !reply.trim()}>
-                      {pending ? "در حال ذخیره…" : open.hasReply ? "به‌روزرسانی پاسخ" : "ثبت پاسخ"}
-                    </Button>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button type="submit" disabled={pending || !reply.trim()}>
+                        {pending ? "در حال ذخیره…" : open.hasReply ? "به‌روزرسانی پاسخ" : "ثبت پاسخ"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        disabled={pending}
+                        onClick={() => toggleHidden(open)}
+                      >
+                        {open.isHidden ? "نمایش در سایت" : "مخفی از سایت"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="danger"
+                        size="sm"
+                        disabled={pending}
+                        onClick={() => removeReview(open)}
+                      >
+                        حذف نظر
+                      </Button>
+                    </div>
                   </form>
                 </div>
               )}

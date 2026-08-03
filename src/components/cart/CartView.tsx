@@ -28,8 +28,11 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
   const [error, setError] = useState('');
   const setCount = useCartUI((s) => s.setCount);
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = items
+    .filter((item) => !item.callForPrice)
+    .reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const hasCallForPrice = items.some((item) => item.callForPrice);
 
   function updateQty(id: string, delta: number) {
     const item = items.find((i) => i.id === id);
@@ -129,7 +132,13 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
             ctaLabel="ادامه و تسویه حساب"
             onPlaceOrder={proceedToCheckout}
             busy={pending || checkingOut}
+            disabled={hasCallForPrice || items.length === 0}
           />
+          {hasCallForPrice && (
+            <p className="text-center text-xs text-amber-700 mt-3 leading-5">
+              لطفاً محصولات «تماس برای قیمت» را از سبد حذف کنید تا بتوانید ادامه دهید.
+            </p>
+          )}
           {!isAuthenticated && (
             <p className="text-center text-xs text-gray-400 mt-3 leading-5">
               برای تکمیل خرید ابتدا وارد می‌شوید؛ سبد خرید شما حفظ می‌شود.

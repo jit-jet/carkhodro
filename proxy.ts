@@ -2,11 +2,12 @@
  * Proxy (this Next.js version's renamed `middleware`).
  * ────────────────────────────────────────────────────
  * Optimistic auth gate: bounces signed-out visitors away from account-only
- * routes before they render. It only checks for the *presence* of the session
- * cookie — fast, and runs on every matched request including prefetches — so it
- * deliberately does NOT hit the database. The authoritative check still happens
- * in the Server Actions / data layer (`getCurrentUser`), which is the real line
- * of defense; this is purely a UX redirect.
+ * routes, and signed-in visitors away from /login and /signup, before they
+ * render. It only checks for the *presence* of the session cookie — fast, and
+ * runs on every matched request including prefetches — so it deliberately does
+ * NOT hit the database. The authoritative check still happens in the Server
+ * Actions / data layer (`getCurrentUser`), which is the real line of defense;
+ * this is purely a UX redirect.
  */
 
 import { NextResponse } from 'next/server';
@@ -25,6 +26,9 @@ const PROTECTED_PREFIXES = ['/dashboard', '/checkout', '/wishlist'];
 // (or gets confused for) a customer/partner session in the same browser.
 const ADMIN_SESSION_COOKIE = 'admin_session_token';
 const ADMIN_LOGIN_PATH = '/admin/login';
+
+/** Auth pages that signed-in customers should not see. */
+const AUTH_PAGES = ['/login', '/signup'];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -45,6 +49,15 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Already-authenticated customers skip login/signup → dashboard.
+  // Mid-signup visitors only have VERIFIED_PHONE_COOKIE, not SESSION_COOKIE,
+  // so they still reach /signup.
+  if (AUTH_PAGES.includes(pathname)) {
+    const hasSession = Boolean(request.cookies.get(SESSION_COOKIE)?.value);
+    if (hasSession) return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.next();
+  }
+
   const isProtected = PROTECTED_PREFIXES.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`),
   );
@@ -60,5 +73,12 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/checkout/:path*', '/wishlist', '/admin/:path*'],
+  matcher: [
+    '/dashboard/:path*',
+    '/checkout/:path*',
+    '/wishlist',
+    '/admin/:path*',
+    '/login',
+    '/signup',
+  ],
 };

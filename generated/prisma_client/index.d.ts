@@ -29,6 +29,11 @@ export type City = $Result.DefaultSelection<Prisma.$CityPayload>
  */
 export type NavLink = $Result.DefaultSelection<Prisma.$NavLinkPayload>
 /**
+ * Model FooterLink
+ * Footer column links — «لینک‌های سریع» / «دسته‌بندی‌ها», managed in admin.
+ */
+export type FooterLink = $Result.DefaultSelection<Prisma.$FooterLinkPayload>
+/**
  * Model User
  * 
  */
@@ -152,6 +157,7 @@ export type SmsCampaign = $Result.DefaultSelection<Prisma.$SmsCampaignPayload>
 /**
  * Model ShippingOption
  * Shipping methods and their current cost — editable by admin.
+ * `method` is a stable unique code (e.g. STANDARD, EXPRESS); free-form codes allowed.
  */
 export type ShippingOption = $Result.DefaultSelection<Prisma.$ShippingOptionPayload>
 /**
@@ -274,14 +280,6 @@ export const PaymentStatus: {
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
-export const ShippingMethod: {
-  STANDARD: 'STANDARD',
-  EXPRESS: 'EXPRESS'
-};
-
-export type ShippingMethod = (typeof ShippingMethod)[keyof typeof ShippingMethod]
-
-
 export const DiscountType: {
   PERCENTAGE: 'PERCENTAGE',
   FIXED_AMOUNT: 'FIXED_AMOUNT',
@@ -310,6 +308,14 @@ export const DiscountTargetUserType: {
 };
 
 export type DiscountTargetUserType = (typeof DiscountTargetUserType)[keyof typeof DiscountTargetUserType]
+
+
+export const FooterLinkGroup: {
+  QUICK: 'QUICK',
+  CATEGORY: 'CATEGORY'
+};
+
+export type FooterLinkGroup = (typeof FooterLinkGroup)[keyof typeof FooterLinkGroup]
 
 }
 
@@ -341,10 +347,6 @@ export type PaymentStatus = $Enums.PaymentStatus
 
 export const PaymentStatus: typeof $Enums.PaymentStatus
 
-export type ShippingMethod = $Enums.ShippingMethod
-
-export const ShippingMethod: typeof $Enums.ShippingMethod
-
 export type DiscountType = $Enums.DiscountType
 
 export const DiscountType: typeof $Enums.DiscountType
@@ -356,6 +358,10 @@ export const DiscountScopeType: typeof $Enums.DiscountScopeType
 export type DiscountTargetUserType = $Enums.DiscountTargetUserType
 
 export const DiscountTargetUserType: typeof $Enums.DiscountTargetUserType
+
+export type FooterLinkGroup = $Enums.FooterLinkGroup
+
+export const FooterLinkGroup: typeof $Enums.FooterLinkGroup
 
 /**
  * ##  Prisma Client ʲˢ
@@ -507,6 +513,16 @@ export class PrismaClient<
     * ```
     */
   get navLink(): Prisma.NavLinkDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.footerLink`: Exposes CRUD operations for the **FooterLink** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FooterLinks
+    * const footerLinks = await prisma.footerLink.findMany()
+    * ```
+    */
+  get footerLink(): Prisma.FooterLinkDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -1254,6 +1270,7 @@ export namespace Prisma {
     Province: 'Province',
     City: 'City',
     NavLink: 'NavLink',
+    FooterLink: 'FooterLink',
     User: 'User',
     OtpSession: 'OtpSession',
     Session: 'Session',
@@ -1300,7 +1317,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "rulesContent" | "socialLink" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
+      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "rulesContent" | "socialLink" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1523,6 +1540,80 @@ export namespace Prisma {
           count: {
             args: Prisma.NavLinkCountArgs<ExtArgs>
             result: $Utils.Optional<NavLinkCountAggregateOutputType> | number
+          }
+        }
+      }
+      FooterLink: {
+        payload: Prisma.$FooterLinkPayload<ExtArgs>
+        fields: Prisma.FooterLinkFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FooterLinkFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FooterLinkFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload>
+          }
+          findFirst: {
+            args: Prisma.FooterLinkFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FooterLinkFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload>
+          }
+          findMany: {
+            args: Prisma.FooterLinkFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload>[]
+          }
+          create: {
+            args: Prisma.FooterLinkCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload>
+          }
+          createMany: {
+            args: Prisma.FooterLinkCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FooterLinkCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload>[]
+          }
+          delete: {
+            args: Prisma.FooterLinkDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload>
+          }
+          update: {
+            args: Prisma.FooterLinkUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload>
+          }
+          deleteMany: {
+            args: Prisma.FooterLinkDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FooterLinkUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FooterLinkUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload>[]
+          }
+          upsert: {
+            args: Prisma.FooterLinkUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FooterLinkPayload>
+          }
+          aggregate: {
+            args: Prisma.FooterLinkAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFooterLink>
+          }
+          groupBy: {
+            args: Prisma.FooterLinkGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FooterLinkGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FooterLinkCountArgs<ExtArgs>
+            result: $Utils.Optional<FooterLinkCountAggregateOutputType> | number
           }
         }
       }
@@ -3931,6 +4022,7 @@ export namespace Prisma {
     province?: ProvinceOmit
     city?: CityOmit
     navLink?: NavLinkOmit
+    footerLink?: FooterLinkOmit
     user?: UserOmit
     otpSession?: OtpSessionOmit
     session?: SessionOmit
@@ -7881,6 +7973,1083 @@ export namespace Prisma {
      * Omit specific fields from the NavLink
      */
     omit?: NavLinkOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FooterLink
+   */
+
+  export type AggregateFooterLink = {
+    _count: FooterLinkCountAggregateOutputType | null
+    _avg: FooterLinkAvgAggregateOutputType | null
+    _sum: FooterLinkSumAggregateOutputType | null
+    _min: FooterLinkMinAggregateOutputType | null
+    _max: FooterLinkMaxAggregateOutputType | null
+  }
+
+  export type FooterLinkAvgAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type FooterLinkSumAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type FooterLinkMinAggregateOutputType = {
+    id: number | null
+    group: $Enums.FooterLinkGroup | null
+    href: string | null
+    label: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FooterLinkMaxAggregateOutputType = {
+    id: number | null
+    group: $Enums.FooterLinkGroup | null
+    href: string | null
+    label: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FooterLinkCountAggregateOutputType = {
+    id: number
+    group: number
+    href: number
+    label: number
+    sortOrder: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FooterLinkAvgAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type FooterLinkSumAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type FooterLinkMinAggregateInputType = {
+    id?: true
+    group?: true
+    href?: true
+    label?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FooterLinkMaxAggregateInputType = {
+    id?: true
+    group?: true
+    href?: true
+    label?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FooterLinkCountAggregateInputType = {
+    id?: true
+    group?: true
+    href?: true
+    label?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FooterLinkAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FooterLink to aggregate.
+     */
+    where?: FooterLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FooterLinks to fetch.
+     */
+    orderBy?: FooterLinkOrderByWithRelationInput | FooterLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FooterLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FooterLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FooterLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FooterLinks
+    **/
+    _count?: true | FooterLinkCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FooterLinkAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FooterLinkSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FooterLinkMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FooterLinkMaxAggregateInputType
+  }
+
+  export type GetFooterLinkAggregateType<T extends FooterLinkAggregateArgs> = {
+        [P in keyof T & keyof AggregateFooterLink]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFooterLink[P]>
+      : GetScalarType<T[P], AggregateFooterLink[P]>
+  }
+
+
+
+
+  export type FooterLinkGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FooterLinkWhereInput
+    orderBy?: FooterLinkOrderByWithAggregationInput | FooterLinkOrderByWithAggregationInput[]
+    by: FooterLinkScalarFieldEnum[] | FooterLinkScalarFieldEnum
+    having?: FooterLinkScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FooterLinkCountAggregateInputType | true
+    _avg?: FooterLinkAvgAggregateInputType
+    _sum?: FooterLinkSumAggregateInputType
+    _min?: FooterLinkMinAggregateInputType
+    _max?: FooterLinkMaxAggregateInputType
+  }
+
+  export type FooterLinkGroupByOutputType = {
+    id: number
+    group: $Enums.FooterLinkGroup
+    href: string
+    label: string
+    sortOrder: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: FooterLinkCountAggregateOutputType | null
+    _avg: FooterLinkAvgAggregateOutputType | null
+    _sum: FooterLinkSumAggregateOutputType | null
+    _min: FooterLinkMinAggregateOutputType | null
+    _max: FooterLinkMaxAggregateOutputType | null
+  }
+
+  type GetFooterLinkGroupByPayload<T extends FooterLinkGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FooterLinkGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FooterLinkGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FooterLinkGroupByOutputType[P]>
+            : GetScalarType<T[P], FooterLinkGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FooterLinkSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    group?: boolean
+    href?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["footerLink"]>
+
+  export type FooterLinkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    group?: boolean
+    href?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["footerLink"]>
+
+  export type FooterLinkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    group?: boolean
+    href?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["footerLink"]>
+
+  export type FooterLinkSelectScalar = {
+    id?: boolean
+    group?: boolean
+    href?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FooterLinkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "group" | "href" | "label" | "sortOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["footerLink"]>
+
+  export type $FooterLinkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FooterLink"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      group: $Enums.FooterLinkGroup
+      href: string
+      label: string
+      sortOrder: number
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["footerLink"]>
+    composites: {}
+  }
+
+  type FooterLinkGetPayload<S extends boolean | null | undefined | FooterLinkDefaultArgs> = $Result.GetResult<Prisma.$FooterLinkPayload, S>
+
+  type FooterLinkCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FooterLinkFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FooterLinkCountAggregateInputType | true
+    }
+
+  export interface FooterLinkDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FooterLink'], meta: { name: 'FooterLink' } }
+    /**
+     * Find zero or one FooterLink that matches the filter.
+     * @param {FooterLinkFindUniqueArgs} args - Arguments to find a FooterLink
+     * @example
+     * // Get one FooterLink
+     * const footerLink = await prisma.footerLink.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FooterLinkFindUniqueArgs>(args: SelectSubset<T, FooterLinkFindUniqueArgs<ExtArgs>>): Prisma__FooterLinkClient<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FooterLink that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FooterLinkFindUniqueOrThrowArgs} args - Arguments to find a FooterLink
+     * @example
+     * // Get one FooterLink
+     * const footerLink = await prisma.footerLink.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FooterLinkFindUniqueOrThrowArgs>(args: SelectSubset<T, FooterLinkFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FooterLinkClient<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FooterLink that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FooterLinkFindFirstArgs} args - Arguments to find a FooterLink
+     * @example
+     * // Get one FooterLink
+     * const footerLink = await prisma.footerLink.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FooterLinkFindFirstArgs>(args?: SelectSubset<T, FooterLinkFindFirstArgs<ExtArgs>>): Prisma__FooterLinkClient<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FooterLink that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FooterLinkFindFirstOrThrowArgs} args - Arguments to find a FooterLink
+     * @example
+     * // Get one FooterLink
+     * const footerLink = await prisma.footerLink.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FooterLinkFindFirstOrThrowArgs>(args?: SelectSubset<T, FooterLinkFindFirstOrThrowArgs<ExtArgs>>): Prisma__FooterLinkClient<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FooterLinks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FooterLinkFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FooterLinks
+     * const footerLinks = await prisma.footerLink.findMany()
+     * 
+     * // Get first 10 FooterLinks
+     * const footerLinks = await prisma.footerLink.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const footerLinkWithIdOnly = await prisma.footerLink.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FooterLinkFindManyArgs>(args?: SelectSubset<T, FooterLinkFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FooterLink.
+     * @param {FooterLinkCreateArgs} args - Arguments to create a FooterLink.
+     * @example
+     * // Create one FooterLink
+     * const FooterLink = await prisma.footerLink.create({
+     *   data: {
+     *     // ... data to create a FooterLink
+     *   }
+     * })
+     * 
+     */
+    create<T extends FooterLinkCreateArgs>(args: SelectSubset<T, FooterLinkCreateArgs<ExtArgs>>): Prisma__FooterLinkClient<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FooterLinks.
+     * @param {FooterLinkCreateManyArgs} args - Arguments to create many FooterLinks.
+     * @example
+     * // Create many FooterLinks
+     * const footerLink = await prisma.footerLink.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FooterLinkCreateManyArgs>(args?: SelectSubset<T, FooterLinkCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FooterLinks and returns the data saved in the database.
+     * @param {FooterLinkCreateManyAndReturnArgs} args - Arguments to create many FooterLinks.
+     * @example
+     * // Create many FooterLinks
+     * const footerLink = await prisma.footerLink.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FooterLinks and only return the `id`
+     * const footerLinkWithIdOnly = await prisma.footerLink.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FooterLinkCreateManyAndReturnArgs>(args?: SelectSubset<T, FooterLinkCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FooterLink.
+     * @param {FooterLinkDeleteArgs} args - Arguments to delete one FooterLink.
+     * @example
+     * // Delete one FooterLink
+     * const FooterLink = await prisma.footerLink.delete({
+     *   where: {
+     *     // ... filter to delete one FooterLink
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FooterLinkDeleteArgs>(args: SelectSubset<T, FooterLinkDeleteArgs<ExtArgs>>): Prisma__FooterLinkClient<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FooterLink.
+     * @param {FooterLinkUpdateArgs} args - Arguments to update one FooterLink.
+     * @example
+     * // Update one FooterLink
+     * const footerLink = await prisma.footerLink.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FooterLinkUpdateArgs>(args: SelectSubset<T, FooterLinkUpdateArgs<ExtArgs>>): Prisma__FooterLinkClient<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FooterLinks.
+     * @param {FooterLinkDeleteManyArgs} args - Arguments to filter FooterLinks to delete.
+     * @example
+     * // Delete a few FooterLinks
+     * const { count } = await prisma.footerLink.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FooterLinkDeleteManyArgs>(args?: SelectSubset<T, FooterLinkDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FooterLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FooterLinkUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FooterLinks
+     * const footerLink = await prisma.footerLink.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FooterLinkUpdateManyArgs>(args: SelectSubset<T, FooterLinkUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FooterLinks and returns the data updated in the database.
+     * @param {FooterLinkUpdateManyAndReturnArgs} args - Arguments to update many FooterLinks.
+     * @example
+     * // Update many FooterLinks
+     * const footerLink = await prisma.footerLink.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FooterLinks and only return the `id`
+     * const footerLinkWithIdOnly = await prisma.footerLink.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FooterLinkUpdateManyAndReturnArgs>(args: SelectSubset<T, FooterLinkUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FooterLink.
+     * @param {FooterLinkUpsertArgs} args - Arguments to update or create a FooterLink.
+     * @example
+     * // Update or create a FooterLink
+     * const footerLink = await prisma.footerLink.upsert({
+     *   create: {
+     *     // ... data to create a FooterLink
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FooterLink we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FooterLinkUpsertArgs>(args: SelectSubset<T, FooterLinkUpsertArgs<ExtArgs>>): Prisma__FooterLinkClient<$Result.GetResult<Prisma.$FooterLinkPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FooterLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FooterLinkCountArgs} args - Arguments to filter FooterLinks to count.
+     * @example
+     * // Count the number of FooterLinks
+     * const count = await prisma.footerLink.count({
+     *   where: {
+     *     // ... the filter for the FooterLinks we want to count
+     *   }
+     * })
+    **/
+    count<T extends FooterLinkCountArgs>(
+      args?: Subset<T, FooterLinkCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FooterLinkCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FooterLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FooterLinkAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FooterLinkAggregateArgs>(args: Subset<T, FooterLinkAggregateArgs>): Prisma.PrismaPromise<GetFooterLinkAggregateType<T>>
+
+    /**
+     * Group by FooterLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FooterLinkGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FooterLinkGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FooterLinkGroupByArgs['orderBy'] }
+        : { orderBy?: FooterLinkGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FooterLinkGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFooterLinkGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FooterLink model
+   */
+  readonly fields: FooterLinkFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FooterLink.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FooterLinkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FooterLink model
+   */
+  interface FooterLinkFieldRefs {
+    readonly id: FieldRef<"FooterLink", 'Int'>
+    readonly group: FieldRef<"FooterLink", 'FooterLinkGroup'>
+    readonly href: FieldRef<"FooterLink", 'String'>
+    readonly label: FieldRef<"FooterLink", 'String'>
+    readonly sortOrder: FieldRef<"FooterLink", 'Int'>
+    readonly isActive: FieldRef<"FooterLink", 'Boolean'>
+    readonly createdAt: FieldRef<"FooterLink", 'DateTime'>
+    readonly updatedAt: FieldRef<"FooterLink", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FooterLink findUnique
+   */
+  export type FooterLinkFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which FooterLink to fetch.
+     */
+    where: FooterLinkWhereUniqueInput
+  }
+
+  /**
+   * FooterLink findUniqueOrThrow
+   */
+  export type FooterLinkFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which FooterLink to fetch.
+     */
+    where: FooterLinkWhereUniqueInput
+  }
+
+  /**
+   * FooterLink findFirst
+   */
+  export type FooterLinkFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which FooterLink to fetch.
+     */
+    where?: FooterLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FooterLinks to fetch.
+     */
+    orderBy?: FooterLinkOrderByWithRelationInput | FooterLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FooterLinks.
+     */
+    cursor?: FooterLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FooterLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FooterLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FooterLinks.
+     */
+    distinct?: FooterLinkScalarFieldEnum | FooterLinkScalarFieldEnum[]
+  }
+
+  /**
+   * FooterLink findFirstOrThrow
+   */
+  export type FooterLinkFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which FooterLink to fetch.
+     */
+    where?: FooterLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FooterLinks to fetch.
+     */
+    orderBy?: FooterLinkOrderByWithRelationInput | FooterLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FooterLinks.
+     */
+    cursor?: FooterLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FooterLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FooterLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FooterLinks.
+     */
+    distinct?: FooterLinkScalarFieldEnum | FooterLinkScalarFieldEnum[]
+  }
+
+  /**
+   * FooterLink findMany
+   */
+  export type FooterLinkFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * Filter, which FooterLinks to fetch.
+     */
+    where?: FooterLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FooterLinks to fetch.
+     */
+    orderBy?: FooterLinkOrderByWithRelationInput | FooterLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FooterLinks.
+     */
+    cursor?: FooterLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FooterLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FooterLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FooterLinks.
+     */
+    distinct?: FooterLinkScalarFieldEnum | FooterLinkScalarFieldEnum[]
+  }
+
+  /**
+   * FooterLink create
+   */
+  export type FooterLinkCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * The data needed to create a FooterLink.
+     */
+    data: XOR<FooterLinkCreateInput, FooterLinkUncheckedCreateInput>
+  }
+
+  /**
+   * FooterLink createMany
+   */
+  export type FooterLinkCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FooterLinks.
+     */
+    data: FooterLinkCreateManyInput | FooterLinkCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FooterLink createManyAndReturn
+   */
+  export type FooterLinkCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * The data used to create many FooterLinks.
+     */
+    data: FooterLinkCreateManyInput | FooterLinkCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FooterLink update
+   */
+  export type FooterLinkUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * The data needed to update a FooterLink.
+     */
+    data: XOR<FooterLinkUpdateInput, FooterLinkUncheckedUpdateInput>
+    /**
+     * Choose, which FooterLink to update.
+     */
+    where: FooterLinkWhereUniqueInput
+  }
+
+  /**
+   * FooterLink updateMany
+   */
+  export type FooterLinkUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FooterLinks.
+     */
+    data: XOR<FooterLinkUpdateManyMutationInput, FooterLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which FooterLinks to update
+     */
+    where?: FooterLinkWhereInput
+    /**
+     * Limit how many FooterLinks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FooterLink updateManyAndReturn
+   */
+  export type FooterLinkUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * The data used to update FooterLinks.
+     */
+    data: XOR<FooterLinkUpdateManyMutationInput, FooterLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which FooterLinks to update
+     */
+    where?: FooterLinkWhereInput
+    /**
+     * Limit how many FooterLinks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FooterLink upsert
+   */
+  export type FooterLinkUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * The filter to search for the FooterLink to update in case it exists.
+     */
+    where: FooterLinkWhereUniqueInput
+    /**
+     * In case the FooterLink found by the `where` argument doesn't exist, create a new FooterLink with this data.
+     */
+    create: XOR<FooterLinkCreateInput, FooterLinkUncheckedCreateInput>
+    /**
+     * In case the FooterLink was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FooterLinkUpdateInput, FooterLinkUncheckedUpdateInput>
+  }
+
+  /**
+   * FooterLink delete
+   */
+  export type FooterLinkDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
+    /**
+     * Filter which FooterLink to delete.
+     */
+    where: FooterLinkWhereUniqueInput
+  }
+
+  /**
+   * FooterLink deleteMany
+   */
+  export type FooterLinkDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FooterLinks to delete
+     */
+    where?: FooterLinkWhereInput
+    /**
+     * Limit how many FooterLinks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FooterLink without action
+   */
+  export type FooterLinkDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FooterLink
+     */
+    select?: FooterLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FooterLink
+     */
+    omit?: FooterLinkOmit<ExtArgs> | null
   }
 
 
@@ -17487,6 +18656,7 @@ export namespace Prisma {
     partsBrandId: number | null
     categoryId: number | null
     wholesalePrice: number | null
+    buyPrice: number | null
     wholesaleDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
@@ -17504,6 +18674,7 @@ export namespace Prisma {
     partsBrandId: number | null
     categoryId: number | null
     wholesalePrice: bigint | null
+    buyPrice: bigint | null
     wholesaleDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
@@ -17524,10 +18695,13 @@ export namespace Prisma {
     partsBrandId: number | null
     categoryId: number | null
     wholesalePrice: bigint | null
+    buyPrice: bigint | null
     wholesaleDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
+    callForPriceRetail: boolean | null
+    callForPriceWholesale: boolean | null
     hesabfaCode: string | null
     hesabfaId: number | null
     lastSyncedAt: Date | null
@@ -17555,10 +18729,13 @@ export namespace Prisma {
     partsBrandId: number | null
     categoryId: number | null
     wholesalePrice: bigint | null
+    buyPrice: bigint | null
     wholesaleDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
+    callForPriceRetail: boolean | null
+    callForPriceWholesale: boolean | null
     hesabfaCode: string | null
     hesabfaId: number | null
     lastSyncedAt: Date | null
@@ -17586,10 +18763,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: number
+    buyPrice: number
     wholesaleDiscountPct: number
     retailPriceDiffPct: number
     retailDiscountPct: number
     isOffer: number
+    callForPriceRetail: number
+    callForPriceWholesale: number
     hesabfaCode: number
     hesabfaId: number
     lastSyncedAt: number
@@ -17616,6 +18796,7 @@ export namespace Prisma {
     partsBrandId?: true
     categoryId?: true
     wholesalePrice?: true
+    buyPrice?: true
     wholesaleDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
@@ -17633,6 +18814,7 @@ export namespace Prisma {
     partsBrandId?: true
     categoryId?: true
     wholesalePrice?: true
+    buyPrice?: true
     wholesaleDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
@@ -17653,10 +18835,13 @@ export namespace Prisma {
     partsBrandId?: true
     categoryId?: true
     wholesalePrice?: true
+    buyPrice?: true
     wholesaleDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
+    callForPriceRetail?: true
+    callForPriceWholesale?: true
     hesabfaCode?: true
     hesabfaId?: true
     lastSyncedAt?: true
@@ -17684,10 +18869,13 @@ export namespace Prisma {
     partsBrandId?: true
     categoryId?: true
     wholesalePrice?: true
+    buyPrice?: true
     wholesaleDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
+    callForPriceRetail?: true
+    callForPriceWholesale?: true
     hesabfaCode?: true
     hesabfaId?: true
     lastSyncedAt?: true
@@ -17715,10 +18903,13 @@ export namespace Prisma {
     partsBrandId?: true
     categoryId?: true
     wholesalePrice?: true
+    buyPrice?: true
     wholesaleDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
+    callForPriceRetail?: true
+    callForPriceWholesale?: true
     hesabfaCode?: true
     hesabfaId?: true
     lastSyncedAt?: true
@@ -17833,10 +19024,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint
+    buyPrice: bigint | null
     wholesaleDiscountPct: Decimal
     retailPriceDiffPct: Decimal
     retailDiscountPct: Decimal
     isOffer: boolean
+    callForPriceRetail: boolean
+    callForPriceWholesale: boolean
     hesabfaCode: string | null
     hesabfaId: number | null
     lastSyncedAt: Date | null
@@ -17883,10 +19077,13 @@ export namespace Prisma {
     partsBrandId?: boolean
     categoryId?: boolean
     wholesalePrice?: boolean
+    buyPrice?: boolean
     wholesaleDiscountPct?: boolean
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     lastSyncedAt?: boolean
@@ -17924,10 +19121,13 @@ export namespace Prisma {
     partsBrandId?: boolean
     categoryId?: boolean
     wholesalePrice?: boolean
+    buyPrice?: boolean
     wholesaleDiscountPct?: boolean
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     lastSyncedAt?: boolean
@@ -17957,10 +19157,13 @@ export namespace Prisma {
     partsBrandId?: boolean
     categoryId?: boolean
     wholesalePrice?: boolean
+    buyPrice?: boolean
     wholesaleDiscountPct?: boolean
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     lastSyncedAt?: boolean
@@ -17990,10 +19193,13 @@ export namespace Prisma {
     partsBrandId?: boolean
     categoryId?: boolean
     wholesalePrice?: boolean
+    buyPrice?: boolean
     wholesaleDiscountPct?: boolean
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     lastSyncedAt?: boolean
@@ -18014,7 +19220,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -18063,6 +19269,10 @@ export namespace Prisma {
        */
       wholesalePrice: bigint
       /**
+       * Optional purchase / cost price in Toman (Hesabfa `BuyPrice`).
+       */
+      buyPrice: bigint | null
+      /**
        * Percentage deducted for WHOLESALE users (0–100).
        * wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100)
        */
@@ -18078,6 +19288,14 @@ export namespace Prisma {
        */
       retailDiscountPct: Prisma.Decimal
       isOffer: boolean
+      /**
+       * When true, retail/guest users see “Call for Price” instead of the price and cannot purchase.
+       */
+      callForPriceRetail: boolean
+      /**
+       * When true, wholesale partners see “Call for Price” instead of the price and cannot purchase.
+       */
+      callForPriceWholesale: boolean
       /**
        * Hesabfa item `Code` — unique link key for two-way product sync.
        */
@@ -18563,10 +19781,13 @@ export namespace Prisma {
     readonly partsBrandId: FieldRef<"Product", 'Int'>
     readonly categoryId: FieldRef<"Product", 'Int'>
     readonly wholesalePrice: FieldRef<"Product", 'BigInt'>
+    readonly buyPrice: FieldRef<"Product", 'BigInt'>
     readonly wholesaleDiscountPct: FieldRef<"Product", 'Decimal'>
     readonly retailPriceDiffPct: FieldRef<"Product", 'Decimal'>
     readonly retailDiscountPct: FieldRef<"Product", 'Decimal'>
     readonly isOffer: FieldRef<"Product", 'Boolean'>
+    readonly callForPriceRetail: FieldRef<"Product", 'Boolean'>
+    readonly callForPriceWholesale: FieldRef<"Product", 'Boolean'>
     readonly hesabfaCode: FieldRef<"Product", 'String'>
     readonly hesabfaId: FieldRef<"Product", 'Int'>
     readonly lastSyncedAt: FieldRef<"Product", 'DateTime'>
@@ -21377,6 +22598,7 @@ export namespace Prisma {
     text: string | null
     isVerifiedPurchase: boolean | null
     isRead: boolean | null
+    isHidden: boolean | null
     adminReply: string | null
     repliedAt: Date | null
     createdAt: Date | null
@@ -21391,6 +22613,7 @@ export namespace Prisma {
     text: string | null
     isVerifiedPurchase: boolean | null
     isRead: boolean | null
+    isHidden: boolean | null
     adminReply: string | null
     repliedAt: Date | null
     createdAt: Date | null
@@ -21405,6 +22628,7 @@ export namespace Prisma {
     text: number
     isVerifiedPurchase: number
     isRead: number
+    isHidden: number
     adminReply: number
     repliedAt: number
     createdAt: number
@@ -21429,6 +22653,7 @@ export namespace Prisma {
     text?: true
     isVerifiedPurchase?: true
     isRead?: true
+    isHidden?: true
     adminReply?: true
     repliedAt?: true
     createdAt?: true
@@ -21443,6 +22668,7 @@ export namespace Prisma {
     text?: true
     isVerifiedPurchase?: true
     isRead?: true
+    isHidden?: true
     adminReply?: true
     repliedAt?: true
     createdAt?: true
@@ -21457,6 +22683,7 @@ export namespace Prisma {
     text?: true
     isVerifiedPurchase?: true
     isRead?: true
+    isHidden?: true
     adminReply?: true
     repliedAt?: true
     createdAt?: true
@@ -21558,6 +22785,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase: boolean
     isRead: boolean
+    isHidden: boolean
     adminReply: string | null
     repliedAt: Date | null
     createdAt: Date
@@ -21591,6 +22819,7 @@ export namespace Prisma {
     text?: boolean
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: boolean
     repliedAt?: boolean
     createdAt?: boolean
@@ -21607,6 +22836,7 @@ export namespace Prisma {
     text?: boolean
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: boolean
     repliedAt?: boolean
     createdAt?: boolean
@@ -21623,6 +22853,7 @@ export namespace Prisma {
     text?: boolean
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: boolean
     repliedAt?: boolean
     createdAt?: boolean
@@ -21639,12 +22870,13 @@ export namespace Prisma {
     text?: boolean
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: boolean
     repliedAt?: boolean
     createdAt?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "userId" | "authorName" | "rating" | "text" | "isVerifiedPurchase" | "isRead" | "adminReply" | "repliedAt" | "createdAt", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "userId" | "authorName" | "rating" | "text" | "isVerifiedPurchase" | "isRead" | "isHidden" | "adminReply" | "repliedAt" | "createdAt", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     user?: boolean | Review$userArgs<ExtArgs>
@@ -21685,6 +22917,10 @@ export namespace Prisma {
        * Admin-side read flag for the communications inbox (defaults unread for new reviews).
        */
       isRead: boolean
+      /**
+       * When true, the review is hidden from the storefront but kept in the admin inbox.
+       */
+      isHidden: boolean
       /**
        * Optional public reply from the shop, shown under the review on the PDP.
        */
@@ -22124,6 +23360,7 @@ export namespace Prisma {
     readonly text: FieldRef<"Review", 'String'>
     readonly isVerifiedPurchase: FieldRef<"Review", 'Boolean'>
     readonly isRead: FieldRef<"Review", 'Boolean'>
+    readonly isHidden: FieldRef<"Review", 'Boolean'>
     readonly adminReply: FieldRef<"Review", 'String'>
     readonly repliedAt: FieldRef<"Review", 'DateTime'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
@@ -35010,7 +36247,7 @@ export namespace Prisma {
 
   export type ShippingOptionMinAggregateOutputType = {
     id: string | null
-    method: $Enums.ShippingMethod | null
+    method: string | null
     label: string | null
     description: string | null
     cost: bigint | null
@@ -35021,7 +36258,7 @@ export namespace Prisma {
 
   export type ShippingOptionMaxAggregateOutputType = {
     id: string | null
-    method: $Enums.ShippingMethod | null
+    method: string | null
     label: string | null
     description: string | null
     cost: bigint | null
@@ -35173,7 +36410,7 @@ export namespace Prisma {
 
   export type ShippingOptionGroupByOutputType = {
     id: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description: string | null
     cost: bigint
@@ -35262,7 +36499,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      method: $Enums.ShippingMethod
+      method: string
       label: string
       description: string | null
       cost: bigint
@@ -35694,7 +36931,7 @@ export namespace Prisma {
    */
   interface ShippingOptionFieldRefs {
     readonly id: FieldRef<"ShippingOption", 'String'>
-    readonly method: FieldRef<"ShippingOption", 'ShippingMethod'>
+    readonly method: FieldRef<"ShippingOption", 'String'>
     readonly label: FieldRef<"ShippingOption", 'String'>
     readonly description: FieldRef<"ShippingOption", 'String'>
     readonly cost: FieldRef<"ShippingOption", 'BigInt'>
@@ -44763,6 +46000,20 @@ export namespace Prisma {
   export type NavLinkScalarFieldEnum = (typeof NavLinkScalarFieldEnum)[keyof typeof NavLinkScalarFieldEnum]
 
 
+  export const FooterLinkScalarFieldEnum: {
+    id: 'id',
+    group: 'group',
+    href: 'href',
+    label: 'label',
+    sortOrder: 'sortOrder',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FooterLinkScalarFieldEnum = (typeof FooterLinkScalarFieldEnum)[keyof typeof FooterLinkScalarFieldEnum]
+
+
   export const UserScalarFieldEnum: {
     id: 'id',
     phoneNumber: 'phoneNumber',
@@ -44889,10 +46140,13 @@ export namespace Prisma {
     partsBrandId: 'partsBrandId',
     categoryId: 'categoryId',
     wholesalePrice: 'wholesalePrice',
+    buyPrice: 'buyPrice',
     wholesaleDiscountPct: 'wholesaleDiscountPct',
     retailPriceDiffPct: 'retailPriceDiffPct',
     retailDiscountPct: 'retailDiscountPct',
     isOffer: 'isOffer',
+    callForPriceRetail: 'callForPriceRetail',
+    callForPriceWholesale: 'callForPriceWholesale',
     hesabfaCode: 'hesabfaCode',
     hesabfaId: 'hesabfaId',
     lastSyncedAt: 'lastSyncedAt',
@@ -44945,6 +46199,7 @@ export namespace Prisma {
     text: 'text',
     isVerifiedPurchase: 'isVerifiedPurchase',
     isRead: 'isRead',
+    isHidden: 'isHidden',
     adminReply: 'adminReply',
     repliedAt: 'repliedAt',
     createdAt: 'createdAt'
@@ -45340,6 +46595,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'FooterLinkGroup'
+   */
+  export type EnumFooterLinkGroupFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FooterLinkGroup'>
+    
+
+
+  /**
+   * Reference to a field of type 'FooterLinkGroup[]'
+   */
+  export type ListEnumFooterLinkGroupFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FooterLinkGroup[]'>
+    
+
+
+  /**
    * Reference to a field of type 'UserRole'
    */
   export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
@@ -45406,20 +46675,6 @@ export namespace Prisma {
    * Reference to a field of type 'SmsCampaignStatus[]'
    */
   export type ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsCampaignStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'ShippingMethod'
-   */
-  export type EnumShippingMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShippingMethod'>
-    
-
-
-  /**
-   * Reference to a field of type 'ShippingMethod[]'
-   */
-  export type ListEnumShippingMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShippingMethod[]'>
     
 
 
@@ -45703,6 +46958,75 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"NavLink"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"NavLink"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"NavLink"> | Date | string
+  }
+
+  export type FooterLinkWhereInput = {
+    AND?: FooterLinkWhereInput | FooterLinkWhereInput[]
+    OR?: FooterLinkWhereInput[]
+    NOT?: FooterLinkWhereInput | FooterLinkWhereInput[]
+    id?: IntFilter<"FooterLink"> | number
+    group?: EnumFooterLinkGroupFilter<"FooterLink"> | $Enums.FooterLinkGroup
+    href?: StringFilter<"FooterLink"> | string
+    label?: StringFilter<"FooterLink"> | string
+    sortOrder?: IntFilter<"FooterLink"> | number
+    isActive?: BoolFilter<"FooterLink"> | boolean
+    createdAt?: DateTimeFilter<"FooterLink"> | Date | string
+    updatedAt?: DateTimeFilter<"FooterLink"> | Date | string
+  }
+
+  export type FooterLinkOrderByWithRelationInput = {
+    id?: SortOrder
+    group?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FooterLinkWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: FooterLinkWhereInput | FooterLinkWhereInput[]
+    OR?: FooterLinkWhereInput[]
+    NOT?: FooterLinkWhereInput | FooterLinkWhereInput[]
+    group?: EnumFooterLinkGroupFilter<"FooterLink"> | $Enums.FooterLinkGroup
+    href?: StringFilter<"FooterLink"> | string
+    label?: StringFilter<"FooterLink"> | string
+    sortOrder?: IntFilter<"FooterLink"> | number
+    isActive?: BoolFilter<"FooterLink"> | boolean
+    createdAt?: DateTimeFilter<"FooterLink"> | Date | string
+    updatedAt?: DateTimeFilter<"FooterLink"> | Date | string
+  }, "id">
+
+  export type FooterLinkOrderByWithAggregationInput = {
+    id?: SortOrder
+    group?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FooterLinkCountOrderByAggregateInput
+    _avg?: FooterLinkAvgOrderByAggregateInput
+    _max?: FooterLinkMaxOrderByAggregateInput
+    _min?: FooterLinkMinOrderByAggregateInput
+    _sum?: FooterLinkSumOrderByAggregateInput
+  }
+
+  export type FooterLinkScalarWhereWithAggregatesInput = {
+    AND?: FooterLinkScalarWhereWithAggregatesInput | FooterLinkScalarWhereWithAggregatesInput[]
+    OR?: FooterLinkScalarWhereWithAggregatesInput[]
+    NOT?: FooterLinkScalarWhereWithAggregatesInput | FooterLinkScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"FooterLink"> | number
+    group?: EnumFooterLinkGroupWithAggregatesFilter<"FooterLink"> | $Enums.FooterLinkGroup
+    href?: StringWithAggregatesFilter<"FooterLink"> | string
+    label?: StringWithAggregatesFilter<"FooterLink"> | string
+    sortOrder?: IntWithAggregatesFilter<"FooterLink"> | number
+    isActive?: BoolWithAggregatesFilter<"FooterLink"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"FooterLink"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FooterLink"> | Date | string
   }
 
   export type UserWhereInput = {
@@ -46363,10 +47687,13 @@ export namespace Prisma {
     partsBrandId?: IntFilter<"Product"> | number
     categoryId?: IntFilter<"Product"> | number
     wholesalePrice?: BigIntFilter<"Product"> | bigint | number
+    buyPrice?: BigIntNullableFilter<"Product"> | bigint | number | null
     wholesaleDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
+    callForPriceRetail?: BoolFilter<"Product"> | boolean
+    callForPriceWholesale?: BoolFilter<"Product"> | boolean
     hesabfaCode?: StringNullableFilter<"Product"> | string | null
     hesabfaId?: IntNullableFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -46403,10 +47730,13 @@ export namespace Prisma {
     partsBrandId?: SortOrder
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
+    buyPrice?: SortOrderInput | SortOrder
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrderInput | SortOrder
     hesabfaId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
@@ -46448,10 +47778,13 @@ export namespace Prisma {
     partsBrandId?: IntFilter<"Product"> | number
     categoryId?: IntFilter<"Product"> | number
     wholesalePrice?: BigIntFilter<"Product"> | bigint | number
+    buyPrice?: BigIntNullableFilter<"Product"> | bigint | number | null
     wholesaleDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
+    callForPriceRetail?: BoolFilter<"Product"> | boolean
+    callForPriceWholesale?: BoolFilter<"Product"> | boolean
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     stock?: IntFilter<"Product"> | number
     origin?: StringNullableFilter<"Product"> | string | null
@@ -46486,10 +47819,13 @@ export namespace Prisma {
     partsBrandId?: SortOrder
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
+    buyPrice?: SortOrderInput | SortOrder
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrderInput | SortOrder
     hesabfaId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
@@ -46525,10 +47861,13 @@ export namespace Prisma {
     partsBrandId?: IntWithAggregatesFilter<"Product"> | number
     categoryId?: IntWithAggregatesFilter<"Product"> | number
     wholesalePrice?: BigIntWithAggregatesFilter<"Product"> | bigint | number
+    buyPrice?: BigIntNullableWithAggregatesFilter<"Product"> | bigint | number | null
     wholesaleDiscountPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolWithAggregatesFilter<"Product"> | boolean
+    callForPriceRetail?: BoolWithAggregatesFilter<"Product"> | boolean
+    callForPriceWholesale?: BoolWithAggregatesFilter<"Product"> | boolean
     hesabfaCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
     hesabfaId?: IntNullableWithAggregatesFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
@@ -46669,6 +48008,7 @@ export namespace Prisma {
     text?: StringFilter<"Review"> | string
     isVerifiedPurchase?: BoolFilter<"Review"> | boolean
     isRead?: BoolFilter<"Review"> | boolean
+    isHidden?: BoolFilter<"Review"> | boolean
     adminReply?: StringNullableFilter<"Review"> | string | null
     repliedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
@@ -46685,6 +48025,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrderInput | SortOrder
     repliedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -46704,6 +48045,7 @@ export namespace Prisma {
     text?: StringFilter<"Review"> | string
     isVerifiedPurchase?: BoolFilter<"Review"> | boolean
     isRead?: BoolFilter<"Review"> | boolean
+    isHidden?: BoolFilter<"Review"> | boolean
     adminReply?: StringNullableFilter<"Review"> | string | null
     repliedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
@@ -46720,6 +48062,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrderInput | SortOrder
     repliedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -46742,6 +48085,7 @@ export namespace Prisma {
     text?: StringWithAggregatesFilter<"Review"> | string
     isVerifiedPurchase?: BoolWithAggregatesFilter<"Review"> | boolean
     isRead?: BoolWithAggregatesFilter<"Review"> | boolean
+    isHidden?: BoolWithAggregatesFilter<"Review"> | boolean
     adminReply?: StringNullableWithAggregatesFilter<"Review"> | string | null
     repliedAt?: DateTimeNullableWithAggregatesFilter<"Review"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
@@ -47586,7 +48930,7 @@ export namespace Prisma {
     OR?: ShippingOptionWhereInput[]
     NOT?: ShippingOptionWhereInput | ShippingOptionWhereInput[]
     id?: StringFilter<"ShippingOption"> | string
-    method?: EnumShippingMethodFilter<"ShippingOption"> | $Enums.ShippingMethod
+    method?: StringFilter<"ShippingOption"> | string
     label?: StringFilter<"ShippingOption"> | string
     description?: StringNullableFilter<"ShippingOption"> | string | null
     cost?: BigIntFilter<"ShippingOption"> | bigint | number
@@ -47610,7 +48954,7 @@ export namespace Prisma {
 
   export type ShippingOptionWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    method?: $Enums.ShippingMethod
+    method?: string
     AND?: ShippingOptionWhereInput | ShippingOptionWhereInput[]
     OR?: ShippingOptionWhereInput[]
     NOT?: ShippingOptionWhereInput | ShippingOptionWhereInput[]
@@ -47644,7 +48988,7 @@ export namespace Prisma {
     OR?: ShippingOptionScalarWhereWithAggregatesInput[]
     NOT?: ShippingOptionScalarWhereWithAggregatesInput | ShippingOptionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"ShippingOption"> | string
-    method?: EnumShippingMethodWithAggregatesFilter<"ShippingOption"> | $Enums.ShippingMethod
+    method?: StringWithAggregatesFilter<"ShippingOption"> | string
     label?: StringWithAggregatesFilter<"ShippingOption"> | string
     description?: StringNullableWithAggregatesFilter<"ShippingOption"> | string | null
     cost?: BigIntWithAggregatesFilter<"ShippingOption"> | bigint | number
@@ -48498,6 +49842,80 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FooterLinkCreateInput = {
+    group: $Enums.FooterLinkGroup
+    href: string
+    label: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FooterLinkUncheckedCreateInput = {
+    id?: number
+    group: $Enums.FooterLinkGroup
+    href: string
+    label: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FooterLinkUpdateInput = {
+    group?: EnumFooterLinkGroupFieldUpdateOperationsInput | $Enums.FooterLinkGroup
+    href?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FooterLinkUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    group?: EnumFooterLinkGroupFieldUpdateOperationsInput | $Enums.FooterLinkGroup
+    href?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FooterLinkCreateManyInput = {
+    id?: number
+    group: $Enums.FooterLinkGroup
+    href: string
+    label: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FooterLinkUpdateManyMutationInput = {
+    group?: EnumFooterLinkGroupFieldUpdateOperationsInput | $Enums.FooterLinkGroup
+    href?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FooterLinkUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    group?: EnumFooterLinkGroupFieldUpdateOperationsInput | $Enums.FooterLinkGroup
+    href?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     phoneNumber: string
@@ -49220,10 +50638,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -49260,10 +50681,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -49296,10 +50720,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49336,10 +50763,13 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49374,10 +50804,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -49403,10 +50836,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49434,10 +50870,13 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49560,6 +50999,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -49576,6 +51016,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -49588,6 +51029,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49604,6 +51046,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49618,6 +51061,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -49630,6 +51074,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49644,6 +51089,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -50548,7 +51994,7 @@ export namespace Prisma {
 
   export type ShippingOptionCreateInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -50560,7 +52006,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedCreateInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -50572,7 +52018,7 @@ export namespace Prisma {
 
   export type ShippingOptionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -50584,7 +52030,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -50596,7 +52042,7 @@ export namespace Prisma {
 
   export type ShippingOptionCreateManyInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -50607,7 +52053,7 @@ export namespace Prisma {
 
   export type ShippingOptionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -50618,7 +52064,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -51621,6 +53067,66 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type EnumFooterLinkGroupFilter<$PrismaModel = never> = {
+    equals?: $Enums.FooterLinkGroup | EnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    in?: $Enums.FooterLinkGroup[] | ListEnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FooterLinkGroup[] | ListEnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    not?: NestedEnumFooterLinkGroupFilter<$PrismaModel> | $Enums.FooterLinkGroup
+  }
+
+  export type FooterLinkCountOrderByAggregateInput = {
+    id?: SortOrder
+    group?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FooterLinkAvgOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type FooterLinkMaxOrderByAggregateInput = {
+    id?: SortOrder
+    group?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FooterLinkMinOrderByAggregateInput = {
+    id?: SortOrder
+    group?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FooterLinkSumOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type EnumFooterLinkGroupWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FooterLinkGroup | EnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    in?: $Enums.FooterLinkGroup[] | ListEnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FooterLinkGroup[] | ListEnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    not?: NestedEnumFooterLinkGroupWithAggregatesFilter<$PrismaModel> | $Enums.FooterLinkGroup
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFooterLinkGroupFilter<$PrismaModel>
+    _max?: NestedEnumFooterLinkGroupFilter<$PrismaModel>
+  }
+
   export type EnumUserRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
@@ -52256,6 +53762,17 @@ export namespace Prisma {
     productCount?: SortOrder
   }
 
+  export type BigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  }
+
   export type DecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -52314,10 +53831,13 @@ export namespace Prisma {
     partsBrandId?: SortOrder
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
+    buyPrice?: SortOrder
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrder
     hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
@@ -52342,6 +53862,7 @@ export namespace Prisma {
     partsBrandId?: SortOrder
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
+    buyPrice?: SortOrder
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
@@ -52362,10 +53883,13 @@ export namespace Prisma {
     partsBrandId?: SortOrder
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
+    buyPrice?: SortOrder
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrder
     hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
@@ -52393,10 +53917,13 @@ export namespace Prisma {
     partsBrandId?: SortOrder
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
+    buyPrice?: SortOrder
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrder
     hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
@@ -52421,6 +53948,7 @@ export namespace Prisma {
     partsBrandId?: SortOrder
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
+    buyPrice?: SortOrder
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
@@ -52432,6 +53960,22 @@ export namespace Prisma {
     saleCount?: SortOrder
     ratingAvg?: SortOrder
     reviewCount?: SortOrder
+  }
+
+  export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedBigIntNullableFilter<$PrismaModel>
+    _min?: NestedBigIntNullableFilter<$PrismaModel>
+    _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -52537,6 +54081,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrder
     repliedAt?: SortOrder
     createdAt?: SortOrder
@@ -52555,6 +54100,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrder
     repliedAt?: SortOrder
     createdAt?: SortOrder
@@ -52569,6 +54115,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrder
     repliedAt?: SortOrder
     createdAt?: SortOrder
@@ -53121,13 +54668,6 @@ export namespace Prisma {
     _max?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
   }
 
-  export type EnumShippingMethodFilter<$PrismaModel = never> = {
-    equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    not?: NestedEnumShippingMethodFilter<$PrismaModel> | $Enums.ShippingMethod
-  }
-
   export type ShippingOptionCountOrderByAggregateInput = {
     id?: SortOrder
     method?: SortOrder
@@ -53169,16 +54709,6 @@ export namespace Prisma {
     cost?: SortOrder
   }
 
-  export type EnumShippingMethodWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    not?: NestedEnumShippingMethodWithAggregatesFilter<$PrismaModel> | $Enums.ShippingMethod
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumShippingMethodFilter<$PrismaModel>
-    _max?: NestedEnumShippingMethodFilter<$PrismaModel>
-  }
-
   export type EnumOrderStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -53198,17 +54728,6 @@ export namespace Prisma {
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
-  }
-
-  export type BigIntNullableFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
   export type AddressScalarRelationFilter = {
@@ -53386,22 +54905,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
-  }
-
-  export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedBigIntNullableFilter<$PrismaModel>
-    _min?: NestedBigIntNullableFilter<$PrismaModel>
-    _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
   export type OrderScalarRelationFilter = {
@@ -53893,6 +55396,10 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type EnumFooterLinkGroupFieldUpdateOperationsInput = {
+    set?: $Enums.FooterLinkGroup
   }
 
   export type AddressCreateNestedManyWithoutUserInput = {
@@ -54793,6 +56300,14 @@ export namespace Prisma {
     connect?: CompareItemWhereUniqueInput | CompareItemWhereUniqueInput[]
   }
 
+  export type NullableBigIntFieldUpdateOperationsInput = {
+    set?: bigint | number | null
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
+  }
+
   export type DecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string
     increment?: Decimal | DecimalJsLike | number | string
@@ -55330,10 +56845,6 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
-  export type EnumShippingMethodFieldUpdateOperationsInput = {
-    set?: $Enums.ShippingMethod
-  }
-
   export type OrderUpdateManyWithoutShippingOptionNestedInput = {
     create?: XOR<OrderCreateWithoutShippingOptionInput, OrderUncheckedCreateWithoutShippingOptionInput> | OrderCreateWithoutShippingOptionInput[] | OrderUncheckedCreateWithoutShippingOptionInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutShippingOptionInput | OrderCreateOrConnectWithoutShippingOptionInput[]
@@ -55422,14 +56933,6 @@ export namespace Prisma {
 
   export type EnumPaymentStatusFieldUpdateOperationsInput = {
     set?: $Enums.PaymentStatus
-  }
-
-  export type NullableBigIntFieldUpdateOperationsInput = {
-    set?: bigint | number | null
-    increment?: bigint | number
-    decrement?: bigint | number
-    multiply?: bigint | number
-    divide?: bigint | number
   }
 
   export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
@@ -55839,6 +57342,23 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedEnumFooterLinkGroupFilter<$PrismaModel = never> = {
+    equals?: $Enums.FooterLinkGroup | EnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    in?: $Enums.FooterLinkGroup[] | ListEnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FooterLinkGroup[] | ListEnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    not?: NestedEnumFooterLinkGroupFilter<$PrismaModel> | $Enums.FooterLinkGroup
+  }
+
+  export type NestedEnumFooterLinkGroupWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FooterLinkGroup | EnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    in?: $Enums.FooterLinkGroup[] | ListEnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FooterLinkGroup[] | ListEnumFooterLinkGroupFieldRefInput<$PrismaModel>
+    not?: NestedEnumFooterLinkGroupWithAggregatesFilter<$PrismaModel> | $Enums.FooterLinkGroup
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFooterLinkGroupFilter<$PrismaModel>
+    _max?: NestedEnumFooterLinkGroupFilter<$PrismaModel>
+  }
+
   export type NestedEnumUserRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
@@ -55977,6 +57497,17 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedBigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  }
+
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -55986,6 +57517,22 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedBigIntNullableFilter<$PrismaModel>
+    _min?: NestedBigIntNullableFilter<$PrismaModel>
+    _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -56038,23 +57585,6 @@ export namespace Prisma {
     _max?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
   }
 
-  export type NestedEnumShippingMethodFilter<$PrismaModel = never> = {
-    equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    not?: NestedEnumShippingMethodFilter<$PrismaModel> | $Enums.ShippingMethod
-  }
-
-  export type NestedEnumShippingMethodWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    not?: NestedEnumShippingMethodWithAggregatesFilter<$PrismaModel> | $Enums.ShippingMethod
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumShippingMethodFilter<$PrismaModel>
-    _max?: NestedEnumShippingMethodFilter<$PrismaModel>
-  }
-
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -56074,17 +57604,6 @@ export namespace Prisma {
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
-  }
-
-  export type NestedBigIntNullableFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
   export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -56115,22 +57634,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
-  }
-
-  export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedBigIntNullableFilter<$PrismaModel>
-    _min?: NestedBigIntNullableFilter<$PrismaModel>
-    _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumMessageDirectionFilter<$PrismaModel = never> = {
@@ -56522,6 +58025,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -56536,6 +58040,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -56887,6 +58392,7 @@ export namespace Prisma {
     text?: StringFilter<"Review"> | string
     isVerifiedPurchase?: BoolFilter<"Review"> | boolean
     isRead?: BoolFilter<"Review"> | boolean
+    isHidden?: BoolFilter<"Review"> | boolean
     adminReply?: StringNullableFilter<"Review"> | string | null
     repliedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
@@ -57736,10 +59242,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -57774,10 +59283,13 @@ export namespace Prisma {
     name: string
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -57841,10 +59353,13 @@ export namespace Prisma {
     partsBrandId?: IntFilter<"Product"> | number
     categoryId?: IntFilter<"Product"> | number
     wholesalePrice?: BigIntFilter<"Product"> | bigint | number
+    buyPrice?: BigIntNullableFilter<"Product"> | bigint | number | null
     wholesaleDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
+    callForPriceRetail?: BoolFilter<"Product"> | boolean
+    callForPriceWholesale?: BoolFilter<"Product"> | boolean
     hesabfaCode?: StringNullableFilter<"Product"> | string | null
     hesabfaId?: IntNullableFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -57870,10 +59385,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -57908,10 +59426,13 @@ export namespace Prisma {
     name: string
     partsBrandId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -58068,6 +59589,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -58082,6 +59604,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -58415,10 +59938,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -58454,10 +59980,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -58505,10 +60034,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -58544,10 +60076,13 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -58579,10 +60114,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -58618,10 +60156,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -58693,10 +60234,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -58732,10 +60276,13 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -58797,10 +60344,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -58836,10 +60386,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -58962,10 +60515,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59001,10 +60557,13 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59332,10 +60891,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59371,10 +60933,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59447,10 +61012,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59486,10 +61054,13 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59596,10 +61167,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59635,10 +61209,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59767,10 +61344,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59806,10 +61386,13 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59916,10 +61499,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59955,10 +61541,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -60087,10 +61676,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60126,10 +61718,13 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60675,7 +62270,7 @@ export namespace Prisma {
 
   export type ShippingOptionCreateWithoutOrdersInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -60686,7 +62281,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedCreateWithoutOrdersInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -60933,7 +62528,7 @@ export namespace Prisma {
 
   export type ShippingOptionUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -60944,7 +62539,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -61137,10 +62732,13 @@ export namespace Prisma {
     sku: string
     name: string
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -61176,10 +62774,13 @@ export namespace Prisma {
     partsBrandId: number
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -61309,10 +62910,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61348,10 +62952,13 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62385,6 +63992,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -62616,6 +64224,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -62630,6 +64239,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -62643,6 +64253,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63033,10 +64644,13 @@ export namespace Prisma {
     name: string
     categoryId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -63062,10 +64676,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63100,10 +64717,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63137,10 +64757,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63167,10 +64790,13 @@ export namespace Prisma {
     name: string
     partsBrandId: number
     wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
     wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -63196,10 +64822,13 @@ export namespace Prisma {
     sku?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63234,10 +64863,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     partsBrandId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63271,10 +64903,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     partsBrandId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63315,6 +64950,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -63393,6 +65029,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63407,6 +65044,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63420,6 +65058,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

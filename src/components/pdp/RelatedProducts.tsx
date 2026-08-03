@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import type { ProductVM as Product } from '@/src/lib/serializers';
 import Link from 'next/link';
+import { CALL_FOR_PRICE_LABEL } from '@/src/lib/call-for-price';
 
 interface Props {
   products: Product[];
@@ -32,7 +33,7 @@ export default function RelatedProducts({ products }: Props) {
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
               />
-              {p.discount && (
+              {!p.callForPrice && p.discount && (
                 <span className="absolute top-2 inset-e-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow">
                   {p.discount}٪−
                 </span>
@@ -46,14 +47,22 @@ export default function RelatedProducts({ products }: Props) {
                 {p.name}
               </h3>
               <div>
-                {p.oldPrice && (
-                  <p className="text-xs text-gray-400 line-through leading-none mb-0.5">
-                    {formatPrice(p.oldPrice)}
+                {p.callForPrice ? (
+                  <p className="text-sm font-bold text-accent-dark leading-none">
+                    {CALL_FOR_PRICE_LABEL}
                   </p>
+                ) : (
+                  <>
+                    {p.oldPrice && (
+                      <p className="text-xs text-gray-400 line-through leading-none mb-0.5">
+                        {formatPrice(p.oldPrice)}
+                      </p>
+                    )}
+                    <p className={`text-sm font-bold leading-none ${p.stock > 0 ? 'text-accent-dark' : 'text-gray-400'}`}>
+                      {p.stock > 0 ? formatPrice(p.price) : 'ناموجود'}
+                    </p>
+                  </>
                 )}
-                <p className={`text-sm font-bold leading-none ${p.stock > 0 ? 'text-accent-dark' : 'text-gray-400'}`}>
-                  {p.stock > 0 ? formatPrice(p.price) : 'ناموجود'}
-                </p>
               </div>
             </div>
           </Link>

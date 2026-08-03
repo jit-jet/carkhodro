@@ -6,6 +6,8 @@ interface Props {
   subtotal: number;
   /** `null` until the user picks a shipping method (cart → checkout handoff). */
   shippingCost: number | null;
+  /** Selected method label shown next to the shipping cost row on checkout. */
+  shippingLabel?: string | null;
   /** VAT / fees. Omit or 0 to hide the row. */
   taxAmount?: number;
   /** Applied coupon discount in Toman. */
@@ -34,6 +36,7 @@ interface Props {
 export default function OrderSummary({
   subtotal,
   shippingCost,
+  shippingLabel = null,
   taxAmount = 0,
   discountAmount = 0,
   discountCode = null,
@@ -118,7 +121,11 @@ export default function OrderSummary({
             value={formatPrice(subtotal)}
           />
           <Row
-            label="هزینه ارسال"
+            label={
+              shippingLabel && shippingCost !== null
+                ? `هزینه ارسال (${shippingLabel})`
+                : 'هزینه ارسال'
+            }
             value={
               shippingCost === null
                 ? 'در مرحله بعد محاسبه می‌شود'

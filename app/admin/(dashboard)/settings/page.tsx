@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getSiteSettings } from "@/actions/admin-settings";
-import { getAllSocialLinks } from "@/actions/site-settings";
 import { PageHeader } from "@/src/components/admin/AdminUI";
 import SettingsForm from "@/src/components/admin/SettingsForm";
 
@@ -12,7 +11,7 @@ export default function AdminSettingsPage() {
     <div>
       <PageHeader
         title="تنظیمات سایت"
-        description="مدیریت اطلاعات هدر، فوتر، تماس و شبکه‌های اجتماعی فروشگاه"
+        description="مدیریت اطلاعات هدر، فوتر و تماس فروشگاه"
       />
       <Suspense fallback={<SettingsSkeleton />}>
         <AdminSettingsContent />
@@ -22,11 +21,8 @@ export default function AdminSettingsPage() {
 }
 
 async function AdminSettingsContent() {
-  const [settings, socialLinks] = await Promise.all([
-    getSiteSettings(),
-    getAllSocialLinks(),
-  ]);
-  return <SettingsForm initial={settings} initialSocialLinks={socialLinks} />;
+  const settings = await getSiteSettings();
+  return <SettingsForm initial={settings} />;
 }
 
 function SettingsSkeleton() {

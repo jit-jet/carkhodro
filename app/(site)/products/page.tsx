@@ -30,44 +30,6 @@ export default async function ProductsPage({ searchParams }: Props) {
         <FilteredBrowser filters={filters} searchParams={searchParams} />
       </Suspense>
 
-      <div className="max-w-7xl mx-auto px-4 pb-6">
-        <section className="mt-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 lg:p-8">
-          <h2 className="text-xl font-bold text-charcoal mb-5">راهنمای خرید قطعات یدکی خودرو</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-600 leading-7">
-            <div>
-              <h3 className="text-base font-semibold text-charcoal mb-2">چرا کارخودرو؟</h3>
-              <p>
-                فروشگاه آنلاین کارخودرو با بیش از ۵۰,۰۰۰ قطعه یدکی اصل، معتبرترین مرجع خرید قطعات
-                خودروهای ایرانی و خارجی است. تمامی محصولات دارای ضمانت اصالت کالا بوده و از برندهای
-                معتبر جهانی مانند بوش، NGK، ایساکو و واریان تأمین می‌شوند.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-base font-semibold text-charcoal mb-2">راهنمای انتخاب قطعه مناسب</h3>
-              <p>
-                برای انتخاب صحیح قطعه، مدل، سال ساخت و شماره موتور خودرو خود را مشخص کنید. در صورت
-                نیاز به راهنمایی، کارشناسان فنی ما از طریق چت آنلاین یا تماس تلفنی در کنار شما هستند.
-                ارسال سریع به سراسر ایران در کمتر از ۴۸ ساعت.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-base font-semibold text-charcoal mb-2">شرایط بازگشت کالا</h3>
-              <p>
-                تمامی محصولات کارخودرو دارای ضمانت اصالت و ۷ روز امکان بازگشت وجه هستند. در صورت وجود
-                هرگونه مشکل، تیم پشتیبانی ما ۲۴ ساعته آماده رسیدگی به درخواست‌های شما است.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-base font-semibold text-charcoal mb-2">پرکاربردترین قطعات</h3>
-              <p>
-                فیلتر روغن، لنت ترمز، فیلتر هوا، واتر پمپ و شمع از پرفروش‌ترین قطعات یدکی در
-                کارخودرو هستند. این قطعات برای تمامی مدل‌های پراید، پژو ۲۰۶، پژو ۴۰۵، سمند، دنا،
-                تیبا و ساینا موجود می‌باشند.
-              </p>
-            </div>
-          </div>
-        </section>
-      </div>
     </div>
   );
 }

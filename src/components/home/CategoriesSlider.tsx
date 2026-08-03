@@ -11,8 +11,6 @@ export default async function CategoriesSlider() {
         <SectionTitle
           title="دسته‌بندی قطعات"
           subtitle="قطعه مورد نظر خود را بر اساس دسته‌بندی پیدا کنید"
-          linkHref="/products"
-          linkLabel="همه دسته‌بندی‌ها"
         />
 
         {/* Desktop: full grid; Mobile/tablet: scrollable slider */}
@@ -54,9 +52,6 @@ function CategoryCard({ cat }: { cat: CategoryVM }) {
         <p className="text-xs text-gray-400">
           {cat.count.toLocaleString("fa-IR")} قطعه
         </p>
-        <div className="mt-3 text-xs font-semibold px-3 py-1 rounded-full bg-orange-500 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          مشاهده همه
-        </div>
       </div>
     </a>
   );

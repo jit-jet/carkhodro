@@ -44,7 +44,9 @@ type BulkOpKey =
   | "retailDiscount"
   | "retailPriceDiff"
   | "setActive"
-  | "setOffer";
+  | "setOffer"
+  | "setCallForPriceRetail"
+  | "setCallForPriceWholesale";
 
 const BULK_OPTIONS: { value: BulkOpKey; label: string }[] = [
   { value: "category", label: "تغییر دسته‌بندی" },
@@ -55,6 +57,8 @@ const BULK_OPTIONS: { value: BulkOpKey; label: string }[] = [
   { value: "retailPriceDiff", label: "تنظیم اختلاف عمده/تک‌فروشی (%)" },
   { value: "setActive", label: "فعال / غیرفعال کردن محصولات" },
   { value: "setOffer", label: "ویژه / غیرویژه کردن محصولات" },
+  { value: "setCallForPriceRetail", label: "تماس برای قیمت — تک‌فروشی" },
+  { value: "setCallForPriceWholesale", label: "تماس برای قیمت — عمده" },
 ];
 
 const SELECT_ALL_STORAGE_KEY = "admin-products-select-all-matching";
@@ -254,6 +258,10 @@ export default function ProductsTable({
         return { op: "setActive", isActive: bulkFlag };
       case "setOffer":
         return { op: "setOffer", isOffer: bulkFlag };
+      case "setCallForPriceRetail":
+        return { op: "setCallForPriceRetail", callForPriceRetail: bulkFlag };
+      case "setCallForPriceWholesale":
+        return { op: "setCallForPriceWholesale", callForPriceWholesale: bulkFlag };
       default:
         return null;
     }
@@ -359,10 +367,13 @@ export default function ProductsTable({
     });
   }
 
-  const headerSelectClass = "!py-1.5 !text-xs !rounded-lg min-w-[120px]";
+  /** Keep header filters as wide as the column — do not inflate cells via min-width. */
+  const headerSelectClass = "!py-1.5 !px-2 !text-xs !rounded-lg w-full max-w-full";
+  const thClass = "text-right px-1.5 py-3 align-bottom";
+  const tdClass = "px-1.5 py-3";
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 min-w-0">
       <Toolbar tone="accent">
         <span className="text-sm font-semibold text-charcoal">
           {selectedCount > 0
@@ -472,6 +483,30 @@ export default function ProductsTable({
           </label>
         )}
 
+        {bulkOp === "setCallForPriceRetail" && (
+          <label className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={bulkFlag}
+              onChange={(e) => setBulkFlag(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            {bulkFlag ? "فعال کردن تماس برای قیمت (تک‌فروشی)" : "غیرفعال کردن تماس برای قیمت (تک‌فروشی)"}
+          </label>
+        )}
+
+        {bulkOp === "setCallForPriceWholesale" && (
+          <label className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={bulkFlag}
+              onChange={(e) => setBulkFlag(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            {bulkFlag ? "فعال کردن تماس برای قیمت (عمده)" : "غیرفعال کردن تماس برای قیمت (عمده)"}
+          </label>
+        )}
+
         <Button type="button" size="sm" onClick={handleBulkSubmit} disabled={pending}>
           ثبت تغییرات
         </Button>
@@ -480,10 +515,10 @@ export default function ProductsTable({
       {error && <FormError message={error} />}
       {message && <FormSuccess message={message} />}
 
-      <TableShell minWidth="min-w-[1200px]">
+      <TableShell minWidth="min-w-0" tableClassName="table-fixed w-full">
             <thead className={tableHeadClass}>
               <tr>
-                <th className="px-4 py-3 align-bottom">
+                <th className="w-8 px-1.5 py-3 align-bottom">
                   <input
                     type="checkbox"
                     checked={allSelected}
@@ -493,8 +528,8 @@ export default function ProductsTable({
                     className="w-4 h-4 accent-accent"
                   />
                 </th>
-                <th className="text-right px-4 py-3 align-bottom">
-                  <div className="flex flex-col gap-1.5 items-stretch">
+                <th className={`${thClass} w-[16%]`}>
+                  <div className="flex flex-col gap-1.5 items-stretch min-w-0">
                     <SortButton
                       label="محصول"
                       column="name"
@@ -512,13 +547,13 @@ export default function ProductsTable({
                         value={searchDraft}
                         onChange={(e) => setSearchDraft(e.target.value)}
                         placeholder="جستجو…"
-                        className="!py-1.5 !text-xs !rounded-lg"
+                        className="!py-1.5 !px-2 !text-xs !rounded-lg"
                       />
                     </form>
                   </div>
                 </th>
-                <th className="text-right px-4 py-3 align-bottom">
-                  <div className="flex flex-col gap-1.5">
+                <th className={`${thClass} w-[9%]`}>
+                  <div className="flex flex-col gap-1.5 min-w-0">
                     <SortButton
                       label="دسته‌بندی"
                       column="category"
@@ -540,8 +575,8 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className="text-right px-4 py-3 align-bottom">
-                  <div className="flex flex-col gap-1.5">
+                <th className={`${thClass} w-[8%]`}>
+                  <div className="flex flex-col gap-1.5 min-w-0">
                     <SortButton
                       label="نوع برند"
                       column="partsBrand"
@@ -563,9 +598,9 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className="text-right px-4 py-3 align-bottom">
-                  <div className="flex flex-col gap-1.5">
-                    <span className="font-semibold text-gray-500">مدل خودرو</span>
+                <th className={`${thClass} w-[9%]`}>
+                  <div className="flex flex-col gap-1.5 min-w-0">
+                    <span className="font-semibold text-gray-500 whitespace-nowrap">مدل خودرو</span>
                     <Select
                       value={filters.carModelId}
                       onChange={(e) => pushFilters({ carModelId: e.target.value })}
@@ -580,7 +615,7 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className="text-right px-4 py-3 align-bottom">
+                <th className={`${thClass} w-[9%] whitespace-nowrap`}>
                   <SortButton
                     label="قیمت عمده"
                     column="wholesalePrice"
@@ -589,7 +624,7 @@ export default function ProductsTable({
                     onSort={toggleSort}
                   />
                 </th>
-                <th className="text-right px-4 py-3 align-bottom">
+                <th className={`${thClass} w-[9%] whitespace-nowrap`}>
                   <SortButton
                     label="قیمت تک‌فروشی"
                     column="retailPrice"
@@ -598,7 +633,7 @@ export default function ProductsTable({
                     onSort={toggleSort}
                   />
                 </th>
-                <th className="text-right px-4 py-3 align-bottom">
+                <th className={`${thClass} w-[5%] whitespace-nowrap`}>
                   <SortButton
                     label="موجودی"
                     column="stock"
@@ -607,8 +642,8 @@ export default function ProductsTable({
                     onSort={toggleSort}
                   />
                 </th>
-                <th className="text-right px-4 py-3 align-bottom">
-                  <div className="flex flex-col gap-1.5">
+                <th className={`${thClass} w-[7%]`}>
+                  <div className="flex flex-col gap-1.5 min-w-0">
                     <SortButton
                       label="وضعیت"
                       column="isActive"
@@ -627,8 +662,8 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className="text-right px-4 py-3 align-bottom">
-                  <div className="flex flex-col gap-1.5">
+                <th className={`${thClass} w-[6%]`}>
+                  <div className="flex flex-col gap-1.5 min-w-0">
                     <SortButton
                       label="ویژه"
                       column="isOffer"
@@ -647,13 +682,32 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className="px-4 py-3"></th>
+                <th
+                  className={`${thClass} w-[7%]`}
+                  title="تماس برای قیمت — تک‌فروشی / عمده"
+                >
+                  <div className="flex flex-col gap-1.5 min-w-0">
+                    <span className="font-semibold text-gray-500 whitespace-nowrap">تماس</span>
+                    <Select
+                      value={filters.callForPrice}
+                      onChange={(e) => pushFilters({ callForPrice: e.target.value })}
+                      className={headerSelectClass}
+                    >
+                      <option value="">همه</option>
+                      <option value="retail">تک‌فروشی</option>
+                      <option value="wholesale">عمده</option>
+                      <option value="any">فعال</option>
+                      <option value="none">بدون تماس</option>
+                    </Select>
+                  </div>
+                </th>
+                <th className="px-1.5 py-3 w-[10%]"></th>
               </tr>
             </thead>
             <tbody className={tableBodyClass}>
               {items.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="px-4 py-12 text-center text-gray-400">
+                  <td colSpan={12} className="px-4 py-12 text-center text-gray-400">
                     محصولی با این فیلترها یافت نشد.
                   </td>
                 </tr>
@@ -663,7 +717,7 @@ export default function ProductsTable({
                     key={p.id}
                     className={`${tableRowClass} ${isRowSelected(p.id) ? "bg-amber-50/60" : ""}`}
                   >
-                    <td className="px-4 py-3">
+                    <td className={tdClass}>
                       <input
                         type="checkbox"
                         checked={isRowSelected(p.id)}
@@ -671,49 +725,89 @@ export default function ProductsTable({
                         className="w-4 h-4 accent-accent"
                       />
                     </td>
-                    <td className="px-4 py-3">
-                      <p className="font-semibold text-charcoal">{p.name}</p>
-                      <p className="text-xs text-gray-400 font-mono">{p.sku}</p>
+                    <td className={`${tdClass} min-w-0`}>
+                      <p className="font-semibold text-charcoal truncate" title={p.name}>
+                        {p.name}
+                      </p>
+                      <p className="text-xs text-gray-400 font-mono truncate" title={p.sku}>
+                        {p.sku}
+                      </p>
                     </td>
-                    <td className="px-4 py-3 text-gray-500">{p.categoryName}</td>
-                    <td className="px-4 py-3 text-gray-500">{p.partsBrandName}</td>
-                    <td className="px-4 py-3 text-gray-500">{p.carType || "—"}</td>
-                    <td className="px-4 py-3 whitespace-nowrap tabular-nums">
-                      {formatToman(p.wholesaleFinal)}
+                    <td className={`${tdClass} text-gray-500 truncate`} title={p.categoryName}>
+                      {p.categoryName}
+                    </td>
+                    <td className={`${tdClass} text-gray-500 truncate`} title={p.partsBrandName}>
+                      {p.partsBrandName}
+                    </td>
+                    <td
+                      className={`${tdClass} text-gray-500 truncate`}
+                      title={p.carType || undefined}
+                    >
+                      {p.carType || "—"}
+                    </td>
+                    <td className={`${tdClass} tabular-nums text-sm`}>
+                      <span className="block truncate" title={formatToman(p.wholesaleFinal)}>
+                        {formatToman(p.wholesaleFinal)}
+                      </span>
                       {p.wholesaleDiscountPct > 0 && (
-                        <span className="text-xs text-red-500 mr-1">
-                          (٪{noFormatNumberFa(p.wholesaleDiscountPct)})
+                        <span className="block text-xs text-red-500">
+                          ٪{noFormatNumberFa(p.wholesaleDiscountPct)}
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap tabular-nums">
-                      {formatToman(p.retailFinal)}
+                    <td className={`${tdClass} tabular-nums text-sm`}>
+                      <span className="block truncate" title={formatToman(p.retailFinal)}>
+                        {formatToman(p.retailFinal)}
+                      </span>
                       {p.retailDiscountPct > 0 && (
-                        <span className="text-xs text-red-500 mr-1">
-                          (٪{noFormatNumberFa(p.retailDiscountPct)})
+                        <span className="block text-xs text-red-500">
+                          ٪{noFormatNumberFa(p.retailDiscountPct)}
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className={`${tdClass} whitespace-nowrap`}>
                       <span className={p.stock === 0 ? "text-red-600 font-semibold" : "text-gray-600"}>
                         {noFormatNumberFa(p.stock)}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className={tdClass}>
                       <Badge tone={p.isActive ? "success" : "default"}>
                         {p.isActive ? "فعال" : "غیرفعال"}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className={tdClass}>
                       <Badge tone={p.isOffer ? "warning" : "default"}>
                         {p.isOffer ? "ویژه" : "عادی"}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                    <td className={tdClass}>
+                      <div className="flex flex-wrap gap-0.5">
+                        {p.callForPriceRetail ? (
+                          <span
+                            className="inline-flex items-center rounded px-1 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-800"
+                            title="تماس برای قیمت — تک‌فروشی"
+                          >
+                            تک
+                          </span>
+                        ) : null}
+                        {p.callForPriceWholesale ? (
+                          <span
+                            className="inline-flex items-center rounded px-1 py-0.5 text-[10px] font-bold bg-sky-100 text-sky-800"
+                            title="تماس برای قیمت — عمده"
+                          >
+                            عمده
+                          </span>
+                        ) : null}
+                        {!p.callForPriceRetail && !p.callForPriceWholesale ? (
+                          <span className="text-xs text-gray-300">—</span>
+                        ) : null}
+                      </div>
+                    </td>
+                    <td className={tdClass}>
+                      <div className="flex items-center justify-end gap-1 whitespace-nowrap">
                         <Link
                           href={`/admin/products/${p.id}`}
-                          className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors"
+                          className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-bold text-charcoal hover:bg-silver-light transition-colors"
                         >
                           ویرایش
                         </Link>

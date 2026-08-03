@@ -24,6 +24,7 @@ export default async function NewProductPage() {
           categoryId: categories[0]?.id ?? 0,
           carModelId: null,
           wholesalePrice: 0,
+          buyPrice: null,
           wholesaleDiscountPct: 0,
           retailPriceDiffPct: 25,
           retailDiscountPct: 0,
@@ -33,6 +34,8 @@ export default async function NewProductPage() {
           images: [],
           description: "",
           isOffer: false,
+          callForPriceRetail: false,
+          callForPriceWholesale: false,
         }}
         categories={categories}
         partsBrands={partsBrands}

@@ -28,12 +28,12 @@ import { pricingRoleFromUser } from '@/src/lib/user-role';
 import { getCurrentUser } from '@/src/lib/session';
 import { safeQuery } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
+import { buildAdminProductWhere } from '@/src/lib/admin-product-where';
 import {
   computeRetailPrice,
   computeRetailFinal,
   computeWholesaleFinal,
 } from '@/src/lib/pricing';
-import { buildAdminProductWhere } from '@/src/lib/admin-product-where';
 
 /** Re-resolve cached product VMs for the current viewer's role. */
 export async function withViewerPricing(products: ProductVM[]): Promise<ProductVM[]> {
@@ -239,6 +239,8 @@ export interface AdminProductListItemVM {
   stock: number;
   isActive: boolean;
   isOffer: boolean;
+  callForPriceRetail: boolean;
+  callForPriceWholesale: boolean;
   mainImage: string | null;
 }
 
@@ -249,6 +251,8 @@ export interface AdminProductFilters {
   carModelId?: number;
   isActive?: boolean;
   isOffer?: boolean;
+  /** retail | wholesale | none | any */
+  callForPrice?: 'retail' | 'wholesale' | 'none' | 'any';
   sortBy?: AdminProductSortBy;
   sortDir?: AdminProductSortDir;
   page?: number;
@@ -279,6 +283,8 @@ function toAdminProductListItem(p: {
   stock: number;
   isActive: boolean;
   isOffer: boolean;
+  callForPriceRetail: boolean;
+  callForPriceWholesale: boolean;
   mainImage: string | null;
 }): AdminProductListItemVM {
   const fields = {
@@ -308,6 +314,8 @@ function toAdminProductListItem(p: {
     stock: p.stock,
     isActive: p.isActive,
     isOffer: p.isOffer,
+    callForPriceRetail: p.callForPriceRetail,
+    callForPriceWholesale: p.callForPriceWholesale,
     mainImage: p.mainImage,
   };
 }
@@ -351,23 +359,15 @@ export async function getProductsAdmin(
   return safeQuery(
     'getProductsAdmin',
     async () => {
-      const where = {
-        ...(filters.search
-          ? {
-              OR: [
-                { name: { contains: filters.search, mode: 'insensitive' as const } },
-                { sku: { contains: filters.search, mode: 'insensitive' as const } },
-              ],
-            }
-          : {}),
-        ...(filters.categoryId ? { categoryId: filters.categoryId } : {}),
-        ...(filters.partsBrandId ? { partsBrandId: filters.partsBrandId } : {}),
-        ...(filters.carModelId
-          ? { compatibilities: { some: { carModelId: filters.carModelId } } }
-          : {}),
-        ...(filters.isActive !== undefined ? { isActive: filters.isActive } : {}),
-        ...(filters.isOffer !== undefined ? { isOffer: filters.isOffer } : {}),
-      };
+      const where = buildAdminProductWhere({
+        search: filters.search,
+        categoryId: filters.categoryId,
+        partsBrandId: filters.partsBrandId,
+        carModelId: filters.carModelId,
+        isActive: filters.isActive,
+        isOffer: filters.isOffer,
+        callForPrice: filters.callForPrice,
+      });
 
       const orderBy = adminProductOrderBy(filters.sortBy, filters.sortDir);
 
@@ -436,10 +436,13 @@ export async function getProductAdminById(id: string) {
         categoryId: row.categoryId,
         carModelId: row.compatibilities[0]?.carModelId ?? null,
         wholesalePrice: Number(row.wholesalePrice),
+        buyPrice: row.buyPrice != null ? Number(row.buyPrice) : null,
         wholesaleDiscountPct: Number(row.wholesaleDiscountPct),
         retailPriceDiffPct: Number(row.retailPriceDiffPct),
         retailDiscountPct: Number(row.retailDiscountPct),
         isOffer: row.isOffer,
+        callForPriceRetail: row.callForPriceRetail,
+        callForPriceWholesale: row.callForPriceWholesale,
         isActive: row.isActive,
         stock: row.stock,
         origin: row.origin,

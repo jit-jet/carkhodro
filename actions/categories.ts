@@ -17,14 +17,23 @@ import { tags } from '@/actions/cache-tags';
 export async function getCategories(): Promise<CategoryVM[]> {
   'use cache';
   cacheLife('days');
-  cacheTag(tags.categories);
+  cacheTag(tags.categories, tags.products);
 
   return safeQuery('getCategories', async () => {
     const rows = await prisma.category.findMany({
-      where: { isActive: true },
+      where: { isActive: true, products: { some: { isActive: true } } },
       orderBy: { sortOrder: 'asc' },
+      include: { _count: { select: { products: { where: { isActive: true } } } } },
     });
-    return rows.map(toCategoryVM);
+    return rows.map((c) =>
+      toCategoryVM({
+        id: c.id,
+        key: c.key,
+        name: c.name,
+        image: c.image,
+        productCount: c._count.products,
+      }),
+    );
   }, []);
 }
 

@@ -65,6 +65,7 @@ export interface AdminReviewListItemVM {
   text: string;
   isVerifiedPurchase: boolean;
   isRead: boolean;
+  isHidden: boolean;
   hasReply: boolean;
   adminReply: string | null;
   repliedAt: string | null;
@@ -88,6 +89,7 @@ function toReviewItem(r: {
   text: string;
   isVerifiedPurchase: boolean;
   isRead: boolean;
+  isHidden: boolean;
   adminReply: string | null;
   repliedAt: Date | null;
   createdAt: Date;
@@ -103,11 +105,31 @@ function toReviewItem(r: {
     text: r.text,
     isVerifiedPurchase: r.isVerifiedPurchase,
     isRead: r.isRead,
+    isHidden: r.isHidden,
     hasReply: Boolean(r.adminReply),
     adminReply: r.adminReply,
     repliedAt: r.repliedAt ? formatJalaliDateTime(r.repliedAt) : null,
     date: formatJalaliDateTime(r.createdAt),
   };
+}
+
+/** Recompute denormalized product rating from visible (non-hidden) reviews. */
+async function recomputeProductRating(
+  tx: Prisma.TransactionClient,
+  productId: string,
+) {
+  const agg = await tx.review.aggregate({
+    where: { productId, isHidden: false },
+    _avg: { rating: true },
+    _count: { _all: true },
+  });
+  await tx.product.update({
+    where: { id: productId },
+    data: {
+      ratingAvg: agg._avg.rating ?? 0,
+      reviewCount: agg._count._all,
+    },
+  });
 }
 
 export async function getReviewsAdmin(input?: {
@@ -201,6 +223,63 @@ export async function replyToReviewAdmin(input: {
     });
 
     updateTag(tags.reviews(review.productId));
+    revalidatePath(COMM_PATH);
+    revalidatePath(ADMIN_HOME);
+    return ok(undefined);
+  });
+}
+
+export async function setReviewHiddenAdmin(input: {
+  id: string;
+  isHidden: boolean;
+}): Promise<ActionResult> {
+  return runMutation('setReviewHiddenAdmin', async () => {
+    const admin = await getCurrentAdmin();
+    if (!admin) return fail('دسترسی غیرمجاز.');
+
+    const review = await prisma.review.findUnique({
+      where: { id: input.id },
+      select: { id: true, productId: true, isHidden: true },
+    });
+    if (!review) return fail('نظر یافت نشد.');
+    if (review.isHidden === input.isHidden) return ok(undefined);
+
+    await prisma.$transaction(async (tx) => {
+      await tx.review.update({
+        where: { id: review.id },
+        data: { isHidden: input.isHidden, isRead: true },
+      });
+      await recomputeProductRating(tx, review.productId);
+    });
+
+    updateTag(tags.reviews(review.productId));
+    updateTag(tags.product(review.productId));
+    updateTag(tags.products);
+    revalidatePath(COMM_PATH);
+    revalidatePath(ADMIN_HOME);
+    return ok(undefined);
+  });
+}
+
+export async function deleteReviewAdmin(id: string): Promise<ActionResult> {
+  return runMutation('deleteReviewAdmin', async () => {
+    const admin = await getCurrentAdmin();
+    if (!admin) return fail('دسترسی غیرمجاز.');
+
+    const review = await prisma.review.findUnique({
+      where: { id },
+      select: { id: true, productId: true },
+    });
+    if (!review) return fail('نظر یافت نشد.');
+
+    await prisma.$transaction(async (tx) => {
+      await tx.review.delete({ where: { id: review.id } });
+      await recomputeProductRating(tx, review.productId);
+    });
+
+    updateTag(tags.reviews(review.productId));
+    updateTag(tags.product(review.productId));
+    updateTag(tags.products);
     revalidatePath(COMM_PATH);
     revalidatePath(ADMIN_HOME);
     return ok(undefined);

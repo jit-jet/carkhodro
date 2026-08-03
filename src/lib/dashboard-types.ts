@@ -43,6 +43,8 @@ export interface DashboardCartLineVM {
   discountPct: number; // wholesale/cash discount applied to this line
   quantity: number;
   stock: number;
+  /** True when wholesale call-for-price is enabled — not purchasable. */
+  callForPrice: boolean;
   lineTotalToman: number; // unit × qty after discount
 }
 
@@ -62,6 +64,7 @@ export interface InvoiceSearchResultVM {
   packQuantity: number;
   cartonQuantity: number;
   stock: number;
+  callForPrice: boolean;
 }
 
 // ── Orders list + invoice detail ─────────────────────────────────────────────

@@ -17,7 +17,7 @@ export async function getProductReviews(productId: string): Promise<ReviewVM[]> 
 
   return safeQuery(`getProductReviews:${productId}`, async () => {
     const rows = await prisma.review.findMany({
-      where: { productId },
+      where: { productId, isHidden: false },
       orderBy: { createdAt: 'desc' },
     });
     return rows.map(toReviewVM);

@@ -143,6 +143,17 @@ exports.Prisma.NavLinkScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FooterLinkScalarFieldEnum = {
+  id: 'id',
+  group: 'group',
+  href: 'href',
+  label: 'label',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   phoneNumber: 'phoneNumber',
@@ -245,10 +256,13 @@ exports.Prisma.ProductScalarFieldEnum = {
   partsBrandId: 'partsBrandId',
   categoryId: 'categoryId',
   wholesalePrice: 'wholesalePrice',
+  buyPrice: 'buyPrice',
   wholesaleDiscountPct: 'wholesaleDiscountPct',
   retailPriceDiffPct: 'retailPriceDiffPct',
   retailDiscountPct: 'retailDiscountPct',
   isOffer: 'isOffer',
+  callForPriceRetail: 'callForPriceRetail',
+  callForPriceWholesale: 'callForPriceWholesale',
   hesabfaCode: 'hesabfaCode',
   hesabfaId: 'hesabfaId',
   lastSyncedAt: 'lastSyncedAt',
@@ -292,6 +306,7 @@ exports.Prisma.ReviewScalarFieldEnum = {
   text: 'text',
   isVerifiedPurchase: 'isVerifiedPurchase',
   isRead: 'isRead',
+  isHidden: 'isHidden',
   adminReply: 'adminReply',
   repliedAt: 'repliedAt',
   createdAt: 'createdAt'
@@ -562,6 +577,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.FooterLinkGroup = exports.$Enums.FooterLinkGroup = {
+  QUICK: 'QUICK',
+  CATEGORY: 'CATEGORY'
+};
+
 exports.UserRole = exports.$Enums.UserRole = {
   RETAIL: 'RETAIL',
   WHOLESALE: 'WHOLESALE',
@@ -580,11 +600,6 @@ exports.SmsCampaignStatus = exports.$Enums.SmsCampaignStatus = {
   SENT: 'SENT',
   PARTIAL: 'PARTIAL',
   FAILED: 'FAILED'
-};
-
-exports.ShippingMethod = exports.$Enums.ShippingMethod = {
-  STANDARD: 'STANDARD',
-  EXPRESS: 'EXPRESS'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {
@@ -641,6 +656,7 @@ exports.Prisma.ModelName = {
   Province: 'Province',
   City: 'City',
   NavLink: 'NavLink',
+  FooterLink: 'FooterLink',
   User: 'User',
   OtpSession: 'OtpSession',
   Session: 'Session',

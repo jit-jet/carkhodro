@@ -59,12 +59,15 @@ export default function ProductForm({
   const fileRef = useRef<HTMLInputElement>(null);
   const isEditing = Boolean(initial.id);
 
-  const [sku, setSku] = useState(initial.sku);
+  const [sku] = useState(initial.sku ?? "");
   const [name, setName] = useState(initial.name);
   const [partsBrandId, setPartsBrandId] = useState(initial.partsBrandId || partsBrands[0]?.id || 0);
   const [categoryId, setCategoryId] = useState(initial.categoryId || categories[0]?.id || 0);
   const [carModelId, setCarModelId] = useState<number | "">(initial.carModelId ?? "");
   const [wholesalePrice, setWholesalePrice] = useState(String(initial.wholesalePrice ?? ""));
+  const [buyPrice, setBuyPrice] = useState(
+    initial.buyPrice != null && initial.buyPrice > 0 ? String(initial.buyPrice) : "",
+  );
   const [wholesaleDiscountPct, setWholesaleDiscountPct] = useState(String(initial.wholesaleDiscountPct ?? 0));
   const [retailPriceDiffPct, setRetailPriceDiffPct] = useState(String(initial.retailPriceDiffPct ?? 25));
   const [retailDiscountPct, setRetailDiscountPct] = useState(String(initial.retailDiscountPct ?? 0));
@@ -76,6 +79,12 @@ export default function ProductForm({
   );
   const [description, setDescription] = useState(initial.description ?? "");
   const [isOffer, setIsOffer] = useState(initial.isOffer ?? false);
+  const [callForPriceRetail, setCallForPriceRetail] = useState(
+    initial.callForPriceRetail ?? false,
+  );
+  const [callForPriceWholesale, setCallForPriceWholesale] = useState(
+    initial.callForPriceWholesale ?? false,
+  );
   const [isActive, setIsActive] = useState(initial.isActive ?? true);
 
   const [error, setError] = useState("");
@@ -179,12 +188,12 @@ export default function ProductForm({
         : images;
 
     const input: ProductInput = {
-      sku,
       name,
       partsBrandId: Number(partsBrandId),
       categoryId: Number(categoryId),
       carModelId: carModelId === "" ? null : Number(carModelId),
       wholesalePrice: Number(wholesalePrice),
+      buyPrice: buyPrice.trim() === "" ? null : Number(buyPrice),
       wholesaleDiscountPct: Number(wholesaleDiscountPct),
       retailPriceDiffPct: Number(retailPriceDiffPct),
       retailDiscountPct: Number(retailDiscountPct),
@@ -194,6 +203,8 @@ export default function ProductForm({
       images: orderedImages,
       description: description || null,
       isOffer,
+      callForPriceRetail,
+      callForPriceWholesale,
     };
 
     startTransition(async () => {
@@ -215,6 +226,10 @@ export default function ProductForm({
         title: "ذخیره موفق",
         description: successMessage,
       });
+      if (!isEditing && result.data?.id) {
+        router.push(`/admin/products/${result.data.id}`);
+        router.refresh();
+      }
     });
   }
 
@@ -229,7 +244,17 @@ export default function ProductForm({
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <Label>کد کالا (SKU)</Label>
-            <Input value={sku} onChange={(e) => setSku(e.target.value)} required />
+            <Input
+              value={isEditing ? sku : ""}
+              readOnly
+              disabled
+              placeholder={isEditing ? undefined : "پس از ذخیره، توسط حسابفا تولید می‌شود"}
+            />
+            <p className="text-xs text-gray-500 mt-1.5 leading-5">
+              {isEditing
+                ? "کد کالا توسط حسابفا تولید شده و قابل ویرایش نیست."
+                : "کد کالا هنگام ذخیره توسط حسابفا تولید می‌شود و به‌صورت خودکار ثبت می‌گردد."}
+            </p>
           </div>
           <div>
             <Label>نام محصول</Label>
@@ -405,6 +430,16 @@ export default function ProductForm({
             />
           </div>
           <div>
+            <Label>قیمت خرید (اختیاری — تومان)</Label>
+            <Input
+              type="number"
+              min={0}
+              value={buyPrice}
+              onChange={(e) => setBuyPrice(e.target.value)}
+              placeholder="اختیاری"
+            />
+          </div>
+          <div>
             <Label>اختلاف قیمت همکار با تک‌فروشی (٪)</Label>
             <Input
               type="number"
@@ -447,6 +482,24 @@ export default function ProductForm({
           <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
             <input type="checkbox" checked={isOffer} onChange={(e) => setIsOffer(e.target.checked)} className="w-4 h-4 accent-accent" />
             پیشنهاد ویژه
+          </label>
+          <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
+            <input
+              type="checkbox"
+              checked={callForPriceRetail}
+              onChange={(e) => setCallForPriceRetail(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            تماس برای قیمت — تک‌فروشی
+          </label>
+          <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
+            <input
+              type="checkbox"
+              checked={callForPriceWholesale}
+              onChange={(e) => setCallForPriceWholesale(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            تماس برای قیمت — عمده
           </label>
           {isEditing && (
             <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">

@@ -14,6 +14,7 @@
 
 import type { Prisma, OrderStatus, PaymentMethod, PaymentStatus } from '@/generated/prisma_client';
 import { resolveProductPrice, type ProductPriceFields } from '@/src/lib/pricing';
+import { isCallForPriceForRole } from '@/src/lib/call-for-price';
 import { orderQuantityCapForRole } from '@/src/lib/order-quantity';
 import type { PricingRole } from '@/src/lib/user-role';
 
@@ -49,6 +50,11 @@ export interface ProductVM {
   wholesaleDiscountPct: number;
   retailPriceDiffPct: number;
   retailDiscountPct: number;
+  /** Admin flags — used to re-resolve call-for-price when role is known after cache. */
+  callForPriceRetail: boolean;
+  callForPriceWholesale: boolean;
+  /** True when this viewer must call for price (no purchase). */
+  callForPrice: boolean;
   mainImage: string;
   images: string[];
   isOffer: boolean;
@@ -129,6 +135,20 @@ export interface AdminNavLinkVM extends NavLinkVM {
   isActive: boolean;
 }
 
+export type FooterLinkGroupVM = 'QUICK' | 'CATEGORY';
+
+export interface FooterLinkVM {
+  id: number;
+  group: FooterLinkGroupVM;
+  href: string;
+  label: string;
+  order: number;
+}
+
+export interface AdminFooterLinkVM extends FooterLinkVM {
+  isActive: boolean;
+}
+
 export interface FooterTrustBadgeVM {
   icon: string;
   title: string;
@@ -175,6 +195,10 @@ export interface ShippingOptionVM {
   cost: number;
 }
 
+export interface AdminShippingOptionVM extends ShippingOptionVM {
+  isActive: boolean;
+}
+
 export interface FaqVM {
   id: number;
   question: string;
@@ -217,6 +241,8 @@ export interface CartItemVM {
   quantity: number;
   brand: string;
   stock: number;
+  /** True when this viewer must call for price (should not be purchasable). */
+  callForPrice: boolean;
 }
 
 export interface CartVM {
@@ -356,6 +382,13 @@ export function pricingFieldsFromProduct(p: {
 
 /** Apply role-specific list / final / discount onto an existing ProductVM. */
 export function applyRoleToProduct(vm: ProductVM, role: PricingRole): ProductVM {
+  const callForPrice = isCallForPriceForRole(
+    {
+      callForPriceRetail: vm.callForPriceRetail,
+      callForPriceWholesale: vm.callForPriceWholesale,
+    },
+    role,
+  );
   const resolved = resolveProductPrice(
     {
       wholesalePrice: vm.wholesalePrice,
@@ -367,9 +400,18 @@ export function applyRoleToProduct(vm: ProductVM, role: PricingRole): ProductVM 
   );
   return {
     ...vm,
+    callForPrice,
     price: resolved.finalPrice,
-    oldPrice: resolved.discountPct > 0 ? resolved.basePrice : undefined,
-    discount: resolved.discountPct > 0 ? Math.round(resolved.discountPct) : undefined,
+    oldPrice: callForPrice
+      ? undefined
+      : resolved.discountPct > 0
+        ? resolved.basePrice
+        : undefined,
+    discount: callForPrice
+      ? undefined
+      : resolved.discountPct > 0
+        ? Math.round(resolved.discountPct)
+        : undefined,
     orderQuantityCap: orderQuantityCapForRole(vm.stock, role),
   };
 }
@@ -381,6 +423,12 @@ export function applyRoleToProducts(vms: ProductVM[], role: PricingRole): Produc
 export function toProductVM(p: ProductWithRelations, role: PricingRole = null): ProductVM {
   const fields = pricingFieldsFromProduct(p);
   const resolved = resolveProductPrice(fields, role);
+  const callForPriceRetail = p.callForPriceRetail;
+  const callForPriceWholesale = p.callForPriceWholesale;
+  const callForPrice = isCallForPriceForRole(
+    { callForPriceRetail, callForPriceWholesale },
+    role,
+  );
 
   const firstModel = p.compatibilities[0]?.carModel;
   const gallery = [...p.images]
@@ -398,12 +446,23 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     carModelId: firstModel?.id ?? 0,
     categoryId: p.categoryId,
     price: resolved.finalPrice,
-    oldPrice: resolved.discountPct > 0 ? resolved.basePrice : undefined,
-    discount: resolved.discountPct > 0 ? Math.round(resolved.discountPct) : undefined,
+    oldPrice: callForPrice
+      ? undefined
+      : resolved.discountPct > 0
+        ? resolved.basePrice
+        : undefined,
+    discount: callForPrice
+      ? undefined
+      : resolved.discountPct > 0
+        ? Math.round(resolved.discountPct)
+        : undefined,
     wholesalePrice: Number(p.wholesalePrice),
     wholesaleDiscountPct: Number(p.wholesaleDiscountPct),
     retailPriceDiffPct: Number(p.retailPriceDiffPct),
     retailDiscountPct: Number(p.retailDiscountPct),
+    callForPriceRetail,
+    callForPriceWholesale,
+    callForPrice,
     mainImage: p.mainImage ?? FALLBACK_IMAGE,
     images: uniqueGallery.length > 0 ? uniqueGallery : [p.mainImage ?? FALLBACK_IMAGE],
     isOffer: p.isOffer,
@@ -526,6 +585,40 @@ export function toAdminNavLinkVM(n: {
   isActive: boolean;
 }): AdminNavLinkVM {
   return { id: n.id, href: n.href, label: n.label, order: n.sortOrder, isActive: n.isActive };
+}
+
+export function toFooterLinkVM(n: {
+  id: number;
+  group: FooterLinkGroupVM;
+  href: string;
+  label: string;
+  sortOrder: number;
+}): FooterLinkVM {
+  return {
+    id: n.id,
+    group: n.group,
+    href: n.href,
+    label: n.label,
+    order: n.sortOrder,
+  };
+}
+
+export function toAdminFooterLinkVM(n: {
+  id: number;
+  group: FooterLinkGroupVM;
+  href: string;
+  label: string;
+  sortOrder: number;
+  isActive: boolean;
+}): AdminFooterLinkVM {
+  return {
+    id: n.id,
+    group: n.group,
+    href: n.href,
+    label: n.label,
+    order: n.sortOrder,
+    isActive: n.isActive,
+  };
 }
 
 type SiteSettingTrustFields = {
@@ -671,6 +764,20 @@ export function toShippingOptionVM(s: {
   };
 }
 
+export function toAdminShippingOptionVM(s: {
+  id: string;
+  method: string;
+  label: string;
+  description: string | null;
+  cost: bigint;
+  isActive: boolean;
+}): AdminShippingOptionVM {
+  return {
+    ...toShippingOptionVM(s),
+    isActive: s.isActive,
+  };
+}
+
 // ── Cart ────────────────────────────────────────────────────────────────────
 
 // ── Post ────────────────────────────────────────────────────────────────────
@@ -751,5 +858,6 @@ export function toCartItemVM(
     quantity: item.quantity,
     brand: p.brand,
     stock: p.stock,
+    callForPrice: p.callForPrice,
   };
 }

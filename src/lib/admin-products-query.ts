@@ -17,6 +17,7 @@ export interface ProductsTableFilters {
   carModelId: string;
   status: string;
   offer: string;
+  callForPrice: string;
   sortBy: string;
   sortDir: string;
   perPage: number;
@@ -31,7 +32,22 @@ export function productsFilterKey(filters: ProductsTableFilters): string {
     filters.carModelId,
     filters.status,
     filters.offer,
+    filters.callForPrice,
   ].join("\0");
+}
+
+function parseCallForPriceFilter(
+  value: string,
+): AdminProductWhereFilters["callForPrice"] {
+  if (
+    value === "retail" ||
+    value === "wholesale" ||
+    value === "none" ||
+    value === "any"
+  ) {
+    return value;
+  }
+  return undefined;
 }
 
 /** Map UI/URL filter strings to the Prisma where-filter shape for bulk select-all. */
@@ -47,6 +63,7 @@ export function toAdminProductWhereFilters(
       filters.status === "active" ? true : filters.status === "inactive" ? false : undefined,
     isOffer:
       filters.offer === "special" ? true : filters.offer === "normal" ? false : undefined,
+    callForPrice: parseCallForPriceFilter(filters.callForPrice),
   };
 }
 
@@ -58,6 +75,7 @@ export function buildProductsHref(filters: ProductsTableFilters, page?: number):
   if (filters.carModelId) params.set("carModelId", filters.carModelId);
   if (filters.status) params.set("status", filters.status);
   if (filters.offer) params.set("offer", filters.offer);
+  if (filters.callForPrice) params.set("callForPrice", filters.callForPrice);
   if (filters.sortBy) params.set("sortBy", filters.sortBy);
   if (filters.sortDir) params.set("sortDir", filters.sortDir);
   appendPaginationParams(
