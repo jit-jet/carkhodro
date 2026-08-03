@@ -97,6 +97,24 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
     setCouponDraft('');
   }
 
+  /** Re-preview an already-applied code against a (possibly new) shipping option. */
+  function revalidateAppliedCoupon(code: string, nextShippingId: string) {
+    if (!nextShippingId) return;
+    startCoupon(async () => {
+      const result = await previewDiscountCode(code, nextShippingId);
+      if (!result.ok) {
+        setAppliedCode(null);
+        setDiscountAmount(0);
+        setCouponDraft(code);
+        setCouponError(result.error);
+        return;
+      }
+      setAppliedCode(result.data.code);
+      setDiscountAmount(result.data.discountAmount);
+      setCouponError('');
+    });
+  }
+
   function applyCoupon() {
     setCouponError('');
     if (!shippingId) {
@@ -222,8 +240,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
           selected={shippingId}
           onChange={(id) => {
             setShippingId(id);
-            // Shipping-dependent codes (free shipping) need re-validation.
-            if (appliedCode) clearCoupon();
+            if (appliedCode) revalidateAppliedCoupon(appliedCode, id);
           }}
         />
 
