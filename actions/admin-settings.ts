@@ -44,17 +44,29 @@ export async function updateSiteSettings(
       return fail('ایمیل معتبر نیست.');
     }
 
-    const data = {
-      phone: input.phone?.trim() || null,
-      secondaryPhone: input.secondaryPhone?.trim() || null,
-      email: input.email?.trim() || null,
-      address: input.address?.trim() || null,
-      workingHours: input.workingHours?.trim() || null,
-      headerPromo1: input.headerPromo1?.trim() || null,
-      headerPromo2: input.headerPromo2?.trim() || null,
-      aboutText: input.aboutText?.trim() || null,
-      ...footerTrustBadgesToDbFields(input.footerTrustBadges),
-    };
+    const data: Record<string, string | null> = {};
+
+    if (input.phone !== undefined) data.phone = input.phone.trim() || null;
+    if (input.secondaryPhone !== undefined) {
+      data.secondaryPhone = input.secondaryPhone.trim() || null;
+    }
+    if (input.email !== undefined) data.email = input.email.trim() || null;
+    if (input.address !== undefined) data.address = input.address.trim() || null;
+    if (input.workingHours !== undefined) {
+      data.workingHours = input.workingHours.trim() || null;
+    }
+    if (input.headerPromo1 !== undefined) {
+      data.headerPromo1 = input.headerPromo1.trim() || null;
+    }
+    if (input.headerPromo2 !== undefined) {
+      data.headerPromo2 = input.headerPromo2.trim() || null;
+    }
+    if (input.aboutText !== undefined) {
+      data.aboutText = input.aboutText.trim() || null;
+    }
+    if (input.footerTrustBadges !== undefined) {
+      Object.assign(data, footerTrustBadgesToDbFields(input.footerTrustBadges));
+    }
 
     await prisma.siteSetting.upsert({
       where: { id: 1 },

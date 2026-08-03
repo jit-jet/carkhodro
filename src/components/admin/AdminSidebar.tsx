@@ -3,12 +3,12 @@
 /**
  * Admin panel sidebar — desktop: fixed right-hand rail; mobile: slide-over
  * drawer toggled from the topbar hamburger. Active link highlighting via
- * `usePathname`, logout via `adminLogout`.
+ * `usePathname`, logout via `adminLogout`. Sections are collapsible.
  */
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { adminLogout } from "@/actions/admin-auth";
 import { useCartUI } from "@/src/store/cart-ui";
 
@@ -28,7 +28,13 @@ type IconKey =
   | "discount"
   | "rules"
   | "accounting"
-  | "shipping";
+  | "shipping"
+  | "social"
+  | "trust"
+  | "sales"
+  | "finance"
+  | "content"
+  | "chevron";
 
 interface NavItem {
   href: string;
@@ -37,36 +43,67 @@ interface NavItem {
 }
 
 interface NavSection {
-  label?: string;
+  id: string;
+  label: string;
+  icon: IconKey;
   items: NavItem[];
 }
 
+const DASHBOARD_ITEM: NavItem = {
+  href: "/admin",
+  label: "داشبورد",
+  icon: "grid",
+};
+
 const NAV_SECTIONS: NavSection[] = [
   {
+    id: "sales",
+    label: "فروش",
+    icon: "sales",
     items: [
-      { href: "/admin", label: "داشبورد", icon: "grid" },
       { href: "/admin/products", label: "محصولات و قیمت‌گذاری", icon: "box" },
-      { href: "/admin/discount-codes", label: "کد تخفیف", icon: "discount" },
-      { href: "/admin/orders", label: "سفارشات و فاکتورها", icon: "orders" },
-      { href: "/admin/shipping", label: "روش‌های ارسال", icon: "shipping" },
       { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: "category" },
       { href: "/admin/brands", label: "برندها و خودروها", icon: "car" },
-      { href: "/admin/users", label: "کاربران", icon: "users" },
-      { href: "/admin/communications", label: "مدیریت ارتباطات", icon: "comms" },
-      { href: "/admin/sms", label: "پیامک گروهی", icon: "sms" },
-      { href: "/admin/accounting", label: "حسابداری", icon: "accounting" },
+      { href: "/admin/orders", label: "سفارشات و فاکتورها", icon: "orders" },
+      { href: "/admin/shipping", label: "روش‌های ارسال", icon: "shipping" },
+      { href: "/admin/discount-codes", label: "کد تخفیف", icon: "discount" },
     ],
   },
   {
+    id: "users",
+    label: "کاربران",
+    icon: "users",
+    items: [
+      { href: "/admin/users", label: "کاربران", icon: "users" },
+      { href: "/admin/communications", label: "مدیریت ارتباطات", icon: "comms" },
+      { href: "/admin/sms", label: "پیامک گروهی", icon: "sms" },
+    ],
+  },
+  {
+    id: "finance",
+    label: "مالی",
+    icon: "finance",
+    items: [{ href: "/admin/accounting", label: "حسابداری", icon: "accounting" }],
+  },
+  {
+    id: "content",
     label: "مدیریت محتوا",
+    icon: "content",
     items: [
       { href: "/admin/posts", label: "مقالات وبلاگ", icon: "blog" },
       { href: "/admin/navigation", label: "منوی سایت", icon: "menu" },
       { href: "/admin/footer-links", label: "لینک‌های فوتر", icon: "menu" },
+      { href: "/admin/social-links", label: "شبکه‌های اجتماعی", icon: "social" },
+      { href: "/admin/trust-badges", label: "نشان‌های اعتماد فوتر", icon: "trust" },
       { href: "/admin/faq", label: "سوالات متداول", icon: "faq" },
       { href: "/admin/rules", label: "قوانین و مقررات", icon: "rules" },
-      { href: "/admin/settings", label: "تنظیمات سایت", icon: "settings" },
     ],
+  },
+  {
+    id: "settings",
+    label: "تنظیمات",
+    icon: "settings",
+    items: [{ href: "/admin/settings", label: "تنظیمات سایت", icon: "settings" }],
   },
 ];
 
@@ -206,7 +243,69 @@ function NavIcon({ icon }: { icon: IconKey }) {
           <path d="M7 8h10M7 12h10M7 16h6" />
         </svg>
       );
+    case "social":
+      return (
+        <svg {...common}>
+          <circle cx="18" cy="5" r="3" />
+          <circle cx="6" cy="12" r="3" />
+          <circle cx="18" cy="19" r="3" />
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+        </svg>
+      );
+    case "trust":
+      return (
+        <svg {...common}>
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      );
+    case "sales":
+      return (
+        <svg {...common}>
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 01-8 0" />
+        </svg>
+      );
+    case "finance":
+      return (
+        <svg {...common}>
+          <line x1="12" y1="1" x2="12" y2="23" />
+          <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+        </svg>
+      );
+    case "content":
+      return (
+        <svg {...common}>
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+        </svg>
+      );
+    case "chevron":
+      return (
+        <svg {...common} className="w-4 h-4 shrink-0">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      );
   }
+}
+
+function isItemActive(pathname: string, href: string): boolean {
+  if (href === "/admin") return pathname === "/admin";
+  if (href === "/admin/posts") {
+    return (
+      pathname === href ||
+      pathname.startsWith(`${href}/`) ||
+      pathname.startsWith("/admin/post-categories")
+    );
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function sectionHasActive(pathname: string, section: NavSection): boolean {
+  return section.items.some((item) => isItemActive(pathname, item.href));
 }
 
 export default function AdminSidebar({
@@ -221,16 +320,30 @@ export default function AdminSidebar({
   const notify = useCartUI((s) => s.notify);
   const [loggingOut, startLogout] = useTransition();
 
-  function isActive(href: string): boolean {
-    if (href === "/admin") return pathname === "/admin";
-    if (href === "/admin/posts") {
-      return (
-        pathname === href ||
-        pathname.startsWith(`${href}/`) ||
-        pathname.startsWith("/admin/post-categories")
-      );
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    for (const section of NAV_SECTIONS) {
+      initial[section.id] = sectionHasActive(pathname, section);
     }
-    return pathname === href || pathname.startsWith(`${href}/`);
+    return initial;
+  });
+
+  useEffect(() => {
+    setOpenSections((prev) => {
+      let changed = false;
+      const next = { ...prev };
+      for (const section of NAV_SECTIONS) {
+        if (sectionHasActive(pathname, section) && !next[section.id]) {
+          next[section.id] = true;
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [pathname]);
+
+  function toggleSection(id: string) {
+    setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
   }
 
   function handleLogout() {
@@ -246,6 +359,8 @@ export default function AdminSidebar({
     });
   }
 
+  const dashboardActive = isItemActive(pathname, DASHBOARD_ITEM.href);
+
   return (
     <aside className="h-full flex flex-col bg-charcoal text-white w-72 border-l border-black/20">
       <div className="px-5 py-5 border-b border-white/10">
@@ -258,40 +373,87 @@ export default function AdminSidebar({
       </div>
 
       <nav className="flex-1 overflow-y-auto p-2.5" aria-label="منوی مدیریت">
-        <div className="space-y-4">
-          {NAV_SECTIONS.map((section, sectionIdx) => (
-            <div key={section.label ?? `section-${sectionIdx}`}>
-              {section.label ? (
-                <p className="px-3 mb-1.5 text-[11px] font-bold tracking-wide text-white/35">
-                  {section.label}
-                </p>
-              ) : null}
-              <ul className="space-y-0.5">
-                {section.items.map((item) => {
-                  const active = isActive(item.href);
-                  return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        onClick={onNavigate}
-                        aria-current={active ? "page" : undefined}
-                        className={[
-                          "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-colors",
-                          active
-                            ? "bg-accent text-charcoal shadow-sm shadow-accent/20"
-                            : "text-white/65 hover:bg-white/8 hover:text-white",
-                        ].join(" ")}
-                      >
-                        <NavIcon icon={item.icon} />
-                        <span className="flex-1 leading-snug">{item.label}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
-        </div>
+        <ul className="space-y-0.5">
+          <li>
+            <Link
+              href={DASHBOARD_ITEM.href}
+              onClick={onNavigate}
+              aria-current={dashboardActive ? "page" : undefined}
+              className={[
+                "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-colors",
+                dashboardActive
+                  ? "bg-accent text-charcoal shadow-sm shadow-accent/20"
+                  : "text-white/65 hover:bg-white/8 hover:text-white",
+              ].join(" ")}
+            >
+              <NavIcon icon={DASHBOARD_ITEM.icon} />
+              <span className="flex-1 leading-snug">{DASHBOARD_ITEM.label}</span>
+            </Link>
+          </li>
+
+          {NAV_SECTIONS.map((section) => {
+            const open = !!openSections[section.id];
+            const sectionActive = sectionHasActive(pathname, section);
+
+            return (
+              <li key={section.id} className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => toggleSection(section.id)}
+                  aria-expanded={open}
+                  className={[
+                    "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-bold transition-colors",
+                    sectionActive
+                      ? "text-white bg-white/8"
+                      : "text-white/50 hover:bg-white/8 hover:text-white/80",
+                  ].join(" ")}
+                >
+                  <NavIcon icon={section.icon} />
+                  <span className="flex-1 text-right leading-snug">{section.label}</span>
+                  <span
+                    className={[
+                      "transition-transform duration-200 text-white/40",
+                      open ? "rotate-180" : "",
+                    ].join(" ")}
+                  >
+                    <NavIcon icon="chevron" />
+                  </span>
+                </button>
+
+                <div
+                  className={[
+                    "grid transition-[grid-template-rows] duration-200 ease-out",
+                    open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                  ].join(" ")}
+                >
+                  <ul className="overflow-hidden space-y-0.5 mt-0.5 mr-2 border-r border-white/10 pr-1">
+                    {section.items.map((item) => {
+                      const active = isItemActive(pathname, item.href);
+                      return (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            onClick={onNavigate}
+                            aria-current={active ? "page" : undefined}
+                            className={[
+                              "flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12.5px] font-semibold transition-colors",
+                              active
+                                ? "bg-accent text-charcoal shadow-sm shadow-accent/20"
+                                : "text-white/55 hover:bg-white/8 hover:text-white",
+                            ].join(" ")}
+                          >
+                            <NavIcon icon={item.icon} />
+                            <span className="flex-1 leading-snug">{item.label}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       </nav>
 
       <div className="p-2.5 border-t border-white/10">

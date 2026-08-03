@@ -2,8 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { updateSiteSettings, type SiteSettingVM } from "@/actions/admin-settings";
-import type { AdminSocialLinkVM } from "@/src/lib/serializers";
-import SocialLinksManager from "@/src/components/admin/SocialLinksManager";
 import {
   Button,
   Card,
@@ -16,13 +14,7 @@ import {
 } from "@/src/components/admin/AdminUI";
 import { useCartUI } from "@/src/store/cart-ui";
 
-export default function SettingsForm({
-  initial,
-  initialSocialLinks,
-}: {
-  initial: SiteSettingVM;
-  initialSocialLinks: AdminSocialLinkVM[];
-}) {
+export default function SettingsForm({ initial }: { initial: SiteSettingVM }) {
   const notify = useCartUI((s) => s.notify);
   const [form, setForm] = useState(initial);
   const [error, setError] = useState("");
@@ -38,7 +30,8 @@ export default function SettingsForm({
     setError("");
     setSuccess(false);
     startTransition(async () => {
-      const result = await updateSiteSettings(form);
+      const { footerTrustBadges: _badges, ...settingsFields } = form;
+      const result = await updateSiteSettings(settingsFields);
       if (!result.ok) {
         setError(result.error);
         notify({ variant: "error", title: "خطا", description: result.error });
@@ -156,73 +149,10 @@ export default function SettingsForm({
           </div>
         </Card>
 
-        <Card className="overflow-hidden">
-          <CardHeader
-            title="نشان‌های اعتماد فوتر"
-            description="چهار مورد بالای فوتر — آیکون (ایموجی)، عنوان و توضیح کوتاه."
-          />
-          <div className="p-5 sm:p-6 space-y-5">
-            {form.footerTrustBadges.map((badge, index) => (
-              <div
-                key={index}
-                className="grid sm:grid-cols-[5rem_1fr_1fr] gap-3 rounded-xl border border-gray-100 p-4"
-              >
-                <div>
-                  <Label>آیکون</Label>
-                  <Input
-                    value={badge.icon}
-                    onChange={(e) => {
-                      const next = [...form.footerTrustBadges];
-                      next[index] = { ...next[index], icon: e.target.value };
-                      set("footerTrustBadges", next);
-                    }}
-                    placeholder="🛡️"
-                    className="text-center text-xl"
-                  />
-                </div>
-                <div>
-                  <Label>عنوان {index + 1}</Label>
-                  <Input
-                    value={badge.title}
-                    onChange={(e) => {
-                      const next = [...form.footerTrustBadges];
-                      next[index] = { ...next[index], title: e.target.value };
-                      set("footerTrustBadges", next);
-                    }}
-                    placeholder="عنوان نشان"
-                  />
-                </div>
-                <div>
-                  <Label>توضیح</Label>
-                  <Input
-                    value={badge.desc}
-                    onChange={(e) => {
-                      const next = [...form.footerTrustBadges];
-                      next[index] = { ...next[index], desc: e.target.value };
-                      set("footerTrustBadges", next);
-                    }}
-                    placeholder="توضیح کوتاه"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
         <Button type="submit" disabled={pending}>
           {pending ? "در حال ذخیره…" : "ذخیره تنظیمات"}
         </Button>
       </form>
-
-      <Card className="overflow-hidden">
-        <CardHeader
-          title="شبکه‌های اجتماعی"
-          description="هر لینک بلافاصله پس از افزودن یا ویرایش ذخیره می‌شود — نیازی به دکمه «ذخیره تنظیمات» نیست."
-        />
-        <div className="p-5 sm:p-6">
-          <SocialLinksManager initialLinks={initialSocialLinks} />
-        </div>
-      </Card>
     </div>
   );
 }
