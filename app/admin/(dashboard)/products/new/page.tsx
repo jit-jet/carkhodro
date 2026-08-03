@@ -34,6 +34,8 @@ export default async function NewProductPage() {
           images: [],
           description: "",
           isOffer: false,
+          callForPriceRetail: false,
+          callForPriceWholesale: false,
         }}
         categories={categories}
         partsBrands={partsBrands}

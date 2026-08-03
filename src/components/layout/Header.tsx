@@ -177,8 +177,14 @@ function SearchDropdown({
                     <span className="block text-xs text-gray-400 mt-0.5 truncate">{p.brand}</span>
                   </span>
                   <span className="shrink-0 text-sm font-semibold text-charcoal whitespace-nowrap">
-                    {p.price.toLocaleString("fa-IR")}{" "}
-                    <span className="text-xs font-normal text-gray-400">تومان</span>
+                    {p.callForPrice ? (
+                      "تماس برای قیمت"
+                    ) : (
+                      <>
+                        {p.price.toLocaleString("fa-IR")}{" "}
+                        <span className="text-xs font-normal text-gray-400">تومان</span>
+                      </>
+                    )}
                   </span>
                 </button>
               </li>

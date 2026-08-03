@@ -190,8 +190,12 @@ function ProductRow({
       </div>
 
       <div className="text-left shrink-0">
-        <p className="text-sm font-bold text-charcoal whitespace-nowrap">{formatRial(product.priceToman)}</p>
-        {outOfStock ? (
+        <p className="text-sm font-bold text-charcoal whitespace-nowrap">
+          {product.callForPrice ? 'تماس برای قیمت' : formatRial(product.priceToman)}
+        </p>
+        {product.callForPrice ? (
+          <p className="text-[11px] text-amber-700 mt-1">فقط با تماس</p>
+        ) : outOfStock ? (
           <p className="text-[11px] text-red-500 mt-1">ناموجود</p>
         ) : (
           <div className="flex items-center gap-1.5 mt-1.5 justify-end">

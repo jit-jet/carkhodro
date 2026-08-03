@@ -43,6 +43,8 @@ export interface ProductInput {
   retailPriceDiffPct?: number;
   retailDiscountPct?: number;
   isOffer?: boolean;
+  callForPriceRetail?: boolean;
+  callForPriceWholesale?: boolean;
   isActive?: boolean;
   stock?: number;
   origin?: string | null;
@@ -148,6 +150,8 @@ export async function createProduct(
         retailPriceDiffPct,
         retailDiscountPct,
         isOffer: input.isOffer ?? false,
+        callForPriceRetail: input.callForPriceRetail ?? false,
+        callForPriceWholesale: input.callForPriceWholesale ?? false,
         stock: input.stock ?? 0,
         origin: input.origin ?? null,
         mainImage: input.mainImage ?? null,
@@ -260,6 +264,12 @@ export async function updateProduct(
         retailPriceDiffPct,
         retailDiscountPct,
         ...(input.isOffer !== undefined ? { isOffer: input.isOffer } : {}),
+        ...(input.callForPriceRetail !== undefined
+          ? { callForPriceRetail: input.callForPriceRetail }
+          : {}),
+        ...(input.callForPriceWholesale !== undefined
+          ? { callForPriceWholesale: input.callForPriceWholesale }
+          : {}),
         isActive,
         ...(input.stock !== undefined ? { stock: input.stock } : {}),
         ...(input.origin !== undefined ? { origin: input.origin } : {}),
@@ -325,7 +335,9 @@ export type BulkProductOp =
   | { op: 'retailDiscount'; value: number }
   | { op: 'retailPriceDiff'; value: number }
   | { op: 'setActive'; isActive: boolean }
-  | { op: 'setOffer'; isOffer: boolean };
+  | { op: 'setOffer'; isOffer: boolean }
+  | { op: 'setCallForPriceRetail'; callForPriceRetail: boolean }
+  | { op: 'setCallForPriceWholesale'; callForPriceWholesale: boolean };
 
 /** Either explicit IDs, or every product matching the current list filters (all pages). */
 export type BulkProductTarget =
@@ -453,6 +465,24 @@ export async function bulkUpdateProducts(
         const result = await prisma.product.updateMany({
           where,
           data: { isOffer: action.isOffer },
+        });
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        touchProductTags(tagScope);
+        return ok({ count: result.count });
+      }
+      case 'setCallForPriceRetail': {
+        const result = await prisma.product.updateMany({
+          where,
+          data: { callForPriceRetail: action.callForPriceRetail },
+        });
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        touchProductTags(tagScope);
+        return ok({ count: result.count });
+      }
+      case 'setCallForPriceWholesale': {
+        const result = await prisma.product.updateMany({
+          where,
+          data: { callForPriceWholesale: action.callForPriceWholesale },
         });
         if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);

@@ -384,6 +384,10 @@ model Product {
   /// retailFinal = retailPrice × (1 − retailDiscountPct / 100)
   retailDiscountPct    Decimal  @default(0) @map("retail_discount_pct") @db.Decimal(5, 2)
   isOffer              Boolean  @default(false) @map("is_offer")
+  /// When true, retail/guest users see “Call for Price” instead of the price and cannot purchase.
+  callForPriceRetail   Boolean  @default(false) @map("call_for_price_retail")
+  /// When true, wholesale partners see “Call for Price” instead of the price and cannot purchase.
+  callForPriceWholesale Boolean @default(false) @map("call_for_price_wholesale")
 
   // ── Hesabfa accounting link ───────────────────────────────────────────────
   /// Hesabfa item `Code` — unique link key for two-way product sync.

@@ -145,6 +145,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
   }
 
   const empty = cart.lines.length === 0;
+  const hasCallForPrice = cart.lines.some((l) => l.callForPrice);
   const payableToman = Math.max(0, cart.subtotalToman - discountAmount);
 
   return (
@@ -235,20 +236,28 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
                         <span className="block truncate">{line.name}</span>
                       </td>
                       <td className="py-3 px-2 text-center whitespace-nowrap tabular-nums">
-                        {formatNumberFa(line.unitPriceToman * 10)}
+                        {line.callForPrice
+                          ? 'تماس برای قیمت'
+                          : formatNumberFa(line.unitPriceToman * 10)}
                       </td>
                       <td className="py-3 px-2 text-center text-gray-500">
-                        ٪{line.discountPct.toLocaleString('fa-IR')}
+                        {line.callForPrice ? '—' : `٪${line.discountPct.toLocaleString('fa-IR')}`}
                       </td>
                       <td className="py-3 px-2">
-                        <QtyStepper
-                          value={line.quantity}
-                          disabled={pending}
-                          onChange={(q) => changeQty(line.id, q)}
-                        />
+                        {line.callForPrice ? (
+                          <span className="text-xs text-amber-700">فقط تماس</span>
+                        ) : (
+                          <QtyStepper
+                            value={line.quantity}
+                            disabled={pending}
+                            onChange={(q) => changeQty(line.id, q)}
+                          />
+                        )}
                       </td>
                       <td className="py-3 px-2 text-center font-bold whitespace-nowrap tabular-nums">
-                        {formatNumberFa(line.lineTotalToman * 10)}
+                        {line.callForPrice
+                          ? '—'
+                          : formatNumberFa(line.lineTotalToman * 10)}
                       </td>
                     </tr>
                   ))}
@@ -362,7 +371,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
             </div>
             <button
               onClick={() => setConfirmOpen(true)}
-              disabled={submitting}
+              disabled={submitting || hasCallForPrice}
               className="mt-4 w-full flex items-center justify-center gap-2 bg-charcoal hover:bg-charcoal/90 text-white font-bold text-sm py-3.5 rounded-xl transition-colors disabled:opacity-60"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} className="w-4.5 h-4.5">
@@ -370,6 +379,11 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
               </svg>
               {submitting ? 'در حال ثبت…' : 'ثبت فاکتور'}
             </button>
+            {hasCallForPrice && (
+              <p className="text-xs text-amber-700 mt-2 text-center leading-5">
+                لطفاً ردیف‌های «تماس برای قیمت» را از فاکتور حذف کنید.
+              </p>
+            )}
           </div>
         </div>
       )}

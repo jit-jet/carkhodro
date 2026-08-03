@@ -35,42 +35,49 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: Props)
         {/* Name */}
         <h3 className="text-sm font-semibold text-charcoal leading-5 line-clamp-2">{item.name}</h3>
 
-        {/* Unit price */}
-        <p className="text-xs text-gray-500">
-          قیمت واحد:{' '}
-          <span className="font-semibold text-charcoal">{formatPrice(item.price)}</span>
-        </p>
+        {item.callForPrice ? (
+          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-2 py-1.5">
+            تماس برای قیمت — این محصول قابل خرید آنلاین نیست. لطفاً آن را حذف کنید.
+          </p>
+        ) : (
+          <p className="text-xs text-gray-500">
+            قیمت واحد:{' '}
+            <span className="font-semibold text-charcoal">{formatPrice(item.price)}</span>
+          </p>
+        )}
 
         {/* Bottom row: qty stepper + line total + remove */}
         <div className="flex flex-wrap items-center gap-3 mt-1">
-          {/* Quantity stepper — always LTR so +/− are on the correct sides */}
-          <div
-            dir="ltr"
-            className="flex items-center border border-gray-200 rounded-xl overflow-hidden"
-          >
-            <button
-              onClick={() => onUpdateQuantity(item.id, -1)}
-              disabled={item.quantity <= 1}
-              className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
-              aria-label="کاهش تعداد"
+          {!item.callForPrice && (
+            <div
+              dir="ltr"
+              className="flex items-center border border-gray-200 rounded-xl overflow-hidden"
             >
-              −
-            </button>
-            <span className="w-8 text-center text-sm font-semibold text-charcoal select-none">
-              {item.quantity.toLocaleString('fa-IR')}
-            </span>
-            <button
-              onClick={() => onUpdateQuantity(item.id, 1)}
-              disabled={item.quantity >= item.stock}
-              className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
-              aria-label="افزایش تعداد"
-            >
-              +
-            </button>
-          </div>
+              <button
+                onClick={() => onUpdateQuantity(item.id, -1)}
+                disabled={item.quantity <= 1}
+                className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
+                aria-label="کاهش تعداد"
+              >
+                −
+              </button>
+              <span className="w-8 text-center text-sm font-semibold text-charcoal select-none">
+                {item.quantity.toLocaleString('fa-IR')}
+              </span>
+              <button
+                onClick={() => onUpdateQuantity(item.id, 1)}
+                disabled={item.quantity >= item.stock}
+                className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
+                aria-label="افزایش تعداد"
+              >
+                +
+              </button>
+            </div>
+          )}
 
-          {/* Line total */}
-          <span className="text-sm font-bold text-accent-dark">{formatPrice(lineTotal)}</span>
+          {!item.callForPrice && (
+            <span className="text-sm font-bold text-accent-dark">{formatPrice(lineTotal)}</span>
+          )}
 
           {/* Remove */}
           <button

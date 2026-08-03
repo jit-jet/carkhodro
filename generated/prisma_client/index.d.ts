@@ -18700,6 +18700,8 @@ export namespace Prisma {
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
+    callForPriceRetail: boolean | null
+    callForPriceWholesale: boolean | null
     hesabfaCode: string | null
     hesabfaId: number | null
     lastSyncedAt: Date | null
@@ -18732,6 +18734,8 @@ export namespace Prisma {
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
+    callForPriceRetail: boolean | null
+    callForPriceWholesale: boolean | null
     hesabfaCode: string | null
     hesabfaId: number | null
     lastSyncedAt: Date | null
@@ -18764,6 +18768,8 @@ export namespace Prisma {
     retailPriceDiffPct: number
     retailDiscountPct: number
     isOffer: number
+    callForPriceRetail: number
+    callForPriceWholesale: number
     hesabfaCode: number
     hesabfaId: number
     lastSyncedAt: number
@@ -18834,6 +18840,8 @@ export namespace Prisma {
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
+    callForPriceRetail?: true
+    callForPriceWholesale?: true
     hesabfaCode?: true
     hesabfaId?: true
     lastSyncedAt?: true
@@ -18866,6 +18874,8 @@ export namespace Prisma {
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
+    callForPriceRetail?: true
+    callForPriceWholesale?: true
     hesabfaCode?: true
     hesabfaId?: true
     lastSyncedAt?: true
@@ -18898,6 +18908,8 @@ export namespace Prisma {
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
+    callForPriceRetail?: true
+    callForPriceWholesale?: true
     hesabfaCode?: true
     hesabfaId?: true
     lastSyncedAt?: true
@@ -19017,6 +19029,8 @@ export namespace Prisma {
     retailPriceDiffPct: Decimal
     retailDiscountPct: Decimal
     isOffer: boolean
+    callForPriceRetail: boolean
+    callForPriceWholesale: boolean
     hesabfaCode: string | null
     hesabfaId: number | null
     lastSyncedAt: Date | null
@@ -19068,6 +19082,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     lastSyncedAt?: boolean
@@ -19110,6 +19126,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     lastSyncedAt?: boolean
@@ -19144,6 +19162,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     lastSyncedAt?: boolean
@@ -19178,6 +19198,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     lastSyncedAt?: boolean
@@ -19198,7 +19220,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -19266,6 +19288,14 @@ export namespace Prisma {
        */
       retailDiscountPct: Prisma.Decimal
       isOffer: boolean
+      /**
+       * When true, retail/guest users see “Call for Price” instead of the price and cannot purchase.
+       */
+      callForPriceRetail: boolean
+      /**
+       * When true, wholesale partners see “Call for Price” instead of the price and cannot purchase.
+       */
+      callForPriceWholesale: boolean
       /**
        * Hesabfa item `Code` — unique link key for two-way product sync.
        */
@@ -19756,6 +19786,8 @@ export namespace Prisma {
     readonly retailPriceDiffPct: FieldRef<"Product", 'Decimal'>
     readonly retailDiscountPct: FieldRef<"Product", 'Decimal'>
     readonly isOffer: FieldRef<"Product", 'Boolean'>
+    readonly callForPriceRetail: FieldRef<"Product", 'Boolean'>
+    readonly callForPriceWholesale: FieldRef<"Product", 'Boolean'>
     readonly hesabfaCode: FieldRef<"Product", 'String'>
     readonly hesabfaId: FieldRef<"Product", 'Int'>
     readonly lastSyncedAt: FieldRef<"Product", 'DateTime'>
@@ -46097,6 +46129,8 @@ export namespace Prisma {
     retailPriceDiffPct: 'retailPriceDiffPct',
     retailDiscountPct: 'retailDiscountPct',
     isOffer: 'isOffer',
+    callForPriceRetail: 'callForPriceRetail',
+    callForPriceWholesale: 'callForPriceWholesale',
     hesabfaCode: 'hesabfaCode',
     hesabfaId: 'hesabfaId',
     lastSyncedAt: 'lastSyncedAt',
@@ -47641,6 +47675,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
+    callForPriceRetail?: BoolFilter<"Product"> | boolean
+    callForPriceWholesale?: BoolFilter<"Product"> | boolean
     hesabfaCode?: StringNullableFilter<"Product"> | string | null
     hesabfaId?: IntNullableFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -47682,6 +47718,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrderInput | SortOrder
     hesabfaId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
@@ -47728,6 +47766,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
+    callForPriceRetail?: BoolFilter<"Product"> | boolean
+    callForPriceWholesale?: BoolFilter<"Product"> | boolean
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     stock?: IntFilter<"Product"> | number
     origin?: StringNullableFilter<"Product"> | string | null
@@ -47767,6 +47807,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrderInput | SortOrder
     hesabfaId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
@@ -47807,6 +47849,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolWithAggregatesFilter<"Product"> | boolean
+    callForPriceRetail?: BoolWithAggregatesFilter<"Product"> | boolean
+    callForPriceWholesale?: BoolWithAggregatesFilter<"Product"> | boolean
     hesabfaCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
     hesabfaId?: IntNullableWithAggregatesFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
@@ -50577,6 +50621,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -50618,6 +50664,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -50655,6 +50703,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50696,6 +50746,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50735,6 +50787,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -50765,6 +50819,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -50797,6 +50853,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53749,6 +53807,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrder
     hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
@@ -53799,6 +53859,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrder
     hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
@@ -53831,6 +53893,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
+    callForPriceRetail?: SortOrder
+    callForPriceWholesale?: SortOrder
     hesabfaCode?: SortOrder
     hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
@@ -59148,6 +59212,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59187,6 +59253,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59255,6 +59323,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
+    callForPriceRetail?: BoolFilter<"Product"> | boolean
+    callForPriceWholesale?: BoolFilter<"Product"> | boolean
     hesabfaCode?: StringNullableFilter<"Product"> | string | null
     hesabfaId?: IntNullableFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -59285,6 +59355,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59324,6 +59396,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59832,6 +59906,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59872,6 +59948,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -59924,6 +60002,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59964,6 +60044,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60000,6 +60082,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -60040,6 +60124,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -60116,6 +60202,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60156,6 +60244,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60222,6 +60312,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -60262,6 +60354,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -60389,6 +60483,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60429,6 +60525,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60761,6 +60859,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -60801,6 +60901,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -60878,6 +60980,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60918,6 +61022,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61029,6 +61135,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -61069,6 +61177,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -61202,6 +61312,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61242,6 +61354,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61353,6 +61467,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -61393,6 +61509,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -61526,6 +61644,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61566,6 +61686,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62578,6 +62700,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -62618,6 +62742,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -62752,6 +62878,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62792,6 +62920,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64478,6 +64608,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -64508,6 +64640,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64547,6 +64681,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64585,6 +64721,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64616,6 +64754,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
     hesabfaCode?: string | null
     hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
@@ -64646,6 +64786,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64685,6 +64827,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64723,6 +64867,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

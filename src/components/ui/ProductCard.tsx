@@ -7,6 +7,7 @@ import type { ProductVM as Product } from '@/src/lib/serializers';
 import { resolveOrderQtyUI } from '@/src/lib/order-quantity';
 import { addToCart } from '@/actions/cart';
 import { handleAddToCartResult, notifyStockLimit, useCartUI } from '@/src/store/cart-ui';
+import CallForPrice from '@/src/components/product/CallForPrice';
 import WishlistButton from '@/src/components/product/WishlistButton';
 import CompareButton from '@/src/components/product/CompareButton';
 
@@ -113,7 +114,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
           />
 
           {/* Discount / New badge — end side (left in RTL) */}
-          {product.discount ? (
+          {!product.callForPrice && product.discount ? (
             <span className="absolute top-2 inset-e-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
               {product.discount}٪ تخفیف
             </span>
@@ -154,106 +155,118 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
           </span>
         </div>
 
-        {/* Price */}
-        <div className="mb-3">
-          {product.oldPrice && (
-            <p className="text-xs text-gray-400 line-through mb-0.5">
-              {formatPrice(product.oldPrice)}
-            </p>
-          )}
-          <p className="text-base font-bold text-accent-dark leading-none">
-            {formatPrice(product.price)}
-          </p>
-        </div>
-
-        {/* Wishlist + Compare */}
-        <div className="flex items-center gap-2 mb-3">
-          <WishlistButton productId={product.id} productName={product.name} variant="compact" />
-          <CompareButton productId={product.id} productName={product.name} variant="compact" />
-        </div>
-
-        {inStock ? (
-          <>
-            {/* Quantity stepper */}
-            <div dir="ltr" className="flex items-center border border-gray-200 rounded-xl overflow-hidden mb-2">
-              <button
-                onClick={() => changeQty(-1)}
-                disabled={qty <= 1}
-                className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
-                aria-label="کاهش تعداد"
-              >
-                −
-              </button>
-              <input
-                type="number"
-                min={1}
-                {...(stockCapped && maxQty != null ? { max: maxQty } : {})}
-                value={qty}
-                onChange={handleInput}
-                className="w-0 flex-1 text-center text-sm font-semibold text-charcoal bg-transparent focus:outline-none
-                           [appearance:textfield]
-                           [&::-webkit-outer-spin-button]:appearance-none
-                           [&::-webkit-inner-spin-button]:appearance-none"
-                aria-label="تعداد"
-              />
-              <button
-                onClick={() => changeQty(1)}
-                disabled={stockCapped && maxQty != null && qty >= maxQty}
-                className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
-                aria-label="افزایش تعداد"
-              >
-                +
-              </button>
+        {/* Price / Call for price */}
+        {product.callForPrice ? (
+          <div className="mt-auto flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <WishlistButton productId={product.id} productName={product.name} variant="compact" />
+              <CompareButton productId={product.id} productName={product.name} variant="compact" />
             </div>
-
-            {/* Add to cart */}
-            <button
-              onClick={handleAddToCart}
-              disabled={pending}
-              className={[
-                'w-full active:scale-95 font-semibold text-sm py-2 rounded-xl transition-all duration-150 disabled:opacity-60',
-                added
-                  ? 'bg-green-500 text-white'
-                  : 'bg-accent hover:bg-accent-dark text-charcoal',
-              ].join(' ')}
-            >
-              {pending ? 'در حال افزودن…' : added ? '✓ اضافه شد' : 'افزودن به سبد'}
-            </button>
-          </>
+            <CallForPrice variant="card" />
+          </div>
         ) : (
           <>
-            {/* Out-of-stock: notify me */}
-            {notifyState === 'success' ? (
-              <div className="flex items-center justify-center gap-2 bg-green-50 text-green-600 text-xs font-semibold rounded-xl px-3 py-3">
-                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
-                شماره شما ثبت شد، خبرتان می‌دهیم
-              </div>
+            <div className="mb-3">
+              {product.oldPrice && (
+                <p className="text-xs text-gray-400 line-through mb-0.5">
+                  {formatPrice(product.oldPrice)}
+                </p>
+              )}
+              <p className="text-base font-bold text-accent-dark leading-none">
+                {formatPrice(product.price)}
+              </p>
+            </div>
+
+            {/* Wishlist + Compare */}
+            <div className="flex items-center gap-2 mb-3">
+              <WishlistButton productId={product.id} productName={product.name} variant="compact" />
+              <CompareButton productId={product.id} productName={product.name} variant="compact" />
+            </div>
+
+            {inStock ? (
+              <>
+                {/* Quantity stepper */}
+                <div dir="ltr" className="flex items-center border border-gray-200 rounded-xl overflow-hidden mb-2">
+                  <button
+                    onClick={() => changeQty(-1)}
+                    disabled={qty <= 1}
+                    className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
+                    aria-label="کاهش تعداد"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    min={1}
+                    {...(stockCapped && maxQty != null ? { max: maxQty } : {})}
+                    value={qty}
+                    onChange={handleInput}
+                    className="w-0 flex-1 text-center text-sm font-semibold text-charcoal bg-transparent focus:outline-none
+                               [appearance:textfield]
+                               [&::-webkit-outer-spin-button]:appearance-none
+                               [&::-webkit-inner-spin-button]:appearance-none"
+                    aria-label="تعداد"
+                  />
+                  <button
+                    onClick={() => changeQty(1)}
+                    disabled={stockCapped && maxQty != null && qty >= maxQty}
+                    className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
+                    aria-label="افزایش تعداد"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* Add to cart */}
+                <button
+                  onClick={handleAddToCart}
+                  disabled={pending}
+                  className={[
+                    'w-full active:scale-95 font-semibold text-sm py-2 rounded-xl transition-all duration-150 disabled:opacity-60',
+                    added
+                      ? 'bg-green-500 text-white'
+                      : 'bg-accent hover:bg-accent-dark text-charcoal',
+                  ].join(' ')}
+                >
+                  {pending ? 'در حال افزودن…' : added ? '✓ اضافه شد' : 'افزودن به سبد'}
+                </button>
+              </>
             ) : (
               <>
-                <p className="text-xs text-gray-500 mb-1.5">وقتی موجود شد به شما خبر می‌دهیم:</p>
-                <input
-                  type="tel"
-                  dir="ltr"
-                  value={phone}
-                  onChange={e => { setPhone(e.target.value); setNotifyState('idle'); }}
-                  placeholder="09xxxxxxxxx"
-                  className={`w-full border rounded-xl px-3 py-2 text-sm text-center tracking-wider focus:outline-none transition-colors mb-1.5 ${
-                    notifyState === 'error'
-                      ? 'border-red-400 bg-red-50 placeholder-red-300'
-                      : 'border-gray-200 focus:border-accent'
-                  }`}
-                />
-                {notifyState === 'error' && (
-                  <p className="text-xs text-red-500 mb-1.5">شماره موبایل معتبر نیست (مثال: ۰۹۱۲۳۴۵۶۷۸۹)</p>
+                {/* Out-of-stock: notify me */}
+                {notifyState === 'success' ? (
+                  <div className="flex items-center justify-center gap-2 bg-green-50 text-green-600 text-xs font-semibold rounded-xl px-3 py-3">
+                    <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                    شماره شما ثبت شد، خبرتان می‌دهیم
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs text-gray-500 mb-1.5">وقتی موجود شد به شما خبر می‌دهیم:</p>
+                    <input
+                      type="tel"
+                      dir="ltr"
+                      value={phone}
+                      onChange={e => { setPhone(e.target.value); setNotifyState('idle'); }}
+                      placeholder="09xxxxxxxxx"
+                      className={`w-full border rounded-xl px-3 py-2 text-sm text-center tracking-wider focus:outline-none transition-colors mb-1.5 ${
+                        notifyState === 'error'
+                          ? 'border-red-400 bg-red-50 placeholder-red-300'
+                          : 'border-gray-200 focus:border-accent'
+                      }`}
+                    />
+                    {notifyState === 'error' && (
+                      <p className="text-xs text-red-500 mb-1.5">شماره موبایل معتبر نیست (مثال: ۰۹۱۲۳۴۵۶۷۸۹)</p>
+                    )}
+                    <button
+                      onClick={handleNotify}
+                      className="w-full bg-charcoal hover:bg-gray-800 active:scale-95 text-white font-semibold text-xs py-2.5 rounded-xl transition-all duration-150"
+                    >
+                      موجود شد خبرم کن
+                    </button>
+                  </>
                 )}
-                <button
-                  onClick={handleNotify}
-                  className="w-full bg-charcoal hover:bg-gray-800 active:scale-95 text-white font-semibold text-xs py-2.5 rounded-xl transition-all duration-150"
-                >
-                  موجود شد خبرم کن
-                </button>
               </>
             )}
           </>

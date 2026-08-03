@@ -14,6 +14,7 @@
 
 import type { Prisma, OrderStatus, PaymentMethod, PaymentStatus } from '@/generated/prisma_client';
 import { resolveProductPrice, type ProductPriceFields } from '@/src/lib/pricing';
+import { isCallForPriceForRole } from '@/src/lib/call-for-price';
 import { orderQuantityCapForRole } from '@/src/lib/order-quantity';
 import type { PricingRole } from '@/src/lib/user-role';
 
@@ -49,6 +50,11 @@ export interface ProductVM {
   wholesaleDiscountPct: number;
   retailPriceDiffPct: number;
   retailDiscountPct: number;
+  /** Admin flags — used to re-resolve call-for-price when role is known after cache. */
+  callForPriceRetail: boolean;
+  callForPriceWholesale: boolean;
+  /** True when this viewer must call for price (no purchase). */
+  callForPrice: boolean;
   mainImage: string;
   images: string[];
   isOffer: boolean;
@@ -235,6 +241,8 @@ export interface CartItemVM {
   quantity: number;
   brand: string;
   stock: number;
+  /** True when this viewer must call for price (should not be purchasable). */
+  callForPrice: boolean;
 }
 
 export interface CartVM {
@@ -374,6 +382,13 @@ export function pricingFieldsFromProduct(p: {
 
 /** Apply role-specific list / final / discount onto an existing ProductVM. */
 export function applyRoleToProduct(vm: ProductVM, role: PricingRole): ProductVM {
+  const callForPrice = isCallForPriceForRole(
+    {
+      callForPriceRetail: vm.callForPriceRetail,
+      callForPriceWholesale: vm.callForPriceWholesale,
+    },
+    role,
+  );
   const resolved = resolveProductPrice(
     {
       wholesalePrice: vm.wholesalePrice,
@@ -385,9 +400,18 @@ export function applyRoleToProduct(vm: ProductVM, role: PricingRole): ProductVM 
   );
   return {
     ...vm,
+    callForPrice,
     price: resolved.finalPrice,
-    oldPrice: resolved.discountPct > 0 ? resolved.basePrice : undefined,
-    discount: resolved.discountPct > 0 ? Math.round(resolved.discountPct) : undefined,
+    oldPrice: callForPrice
+      ? undefined
+      : resolved.discountPct > 0
+        ? resolved.basePrice
+        : undefined,
+    discount: callForPrice
+      ? undefined
+      : resolved.discountPct > 0
+        ? Math.round(resolved.discountPct)
+        : undefined,
     orderQuantityCap: orderQuantityCapForRole(vm.stock, role),
   };
 }
@@ -399,6 +423,12 @@ export function applyRoleToProducts(vms: ProductVM[], role: PricingRole): Produc
 export function toProductVM(p: ProductWithRelations, role: PricingRole = null): ProductVM {
   const fields = pricingFieldsFromProduct(p);
   const resolved = resolveProductPrice(fields, role);
+  const callForPriceRetail = p.callForPriceRetail;
+  const callForPriceWholesale = p.callForPriceWholesale;
+  const callForPrice = isCallForPriceForRole(
+    { callForPriceRetail, callForPriceWholesale },
+    role,
+  );
 
   const firstModel = p.compatibilities[0]?.carModel;
   const gallery = [...p.images]
@@ -416,12 +446,23 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     carModelId: firstModel?.id ?? 0,
     categoryId: p.categoryId,
     price: resolved.finalPrice,
-    oldPrice: resolved.discountPct > 0 ? resolved.basePrice : undefined,
-    discount: resolved.discountPct > 0 ? Math.round(resolved.discountPct) : undefined,
+    oldPrice: callForPrice
+      ? undefined
+      : resolved.discountPct > 0
+        ? resolved.basePrice
+        : undefined,
+    discount: callForPrice
+      ? undefined
+      : resolved.discountPct > 0
+        ? Math.round(resolved.discountPct)
+        : undefined,
     wholesalePrice: Number(p.wholesalePrice),
     wholesaleDiscountPct: Number(p.wholesaleDiscountPct),
     retailPriceDiffPct: Number(p.retailPriceDiffPct),
     retailDiscountPct: Number(p.retailDiscountPct),
+    callForPriceRetail,
+    callForPriceWholesale,
+    callForPrice,
     mainImage: p.mainImage ?? FALLBACK_IMAGE,
     images: uniqueGallery.length > 0 ? uniqueGallery : [p.mainImage ?? FALLBACK_IMAGE],
     isOffer: p.isOffer,
@@ -817,5 +858,6 @@ export function toCartItemVM(
     quantity: item.quantity,
     brand: p.brand,
     stock: p.stock,
+    callForPrice: p.callForPrice,
   };
 }

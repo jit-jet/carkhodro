@@ -21,6 +21,7 @@ import { formatJalaliDateTime } from '@/src/lib/format';
 import { resolveProductPrice } from '@/src/lib/pricing';
 import { pricingFieldsFromProduct } from '@/src/lib/serializers';
 import { pricingRoleFromUser } from '@/src/lib/user-role';
+import { isCallForPriceForRole } from '@/src/lib/call-for-price';
 import { normalizePersianText } from '@/src/lib/persian';
 import { Prisma } from '@/generated/prisma_client';
 import type { PriceListRequestVM, PriceListItemVM } from '@/src/lib/dashboard-types';
@@ -73,6 +74,8 @@ const itemSelect = {
   wholesaleDiscountPct: true,
   retailPriceDiffPct: true,
   retailDiscountPct: true,
+  callForPriceRetail: true,
+  callForPriceWholesale: true,
   partsBrand: { select: { name: true } },
   compatibilities: {
     take: 1,
@@ -167,16 +170,27 @@ export async function getPriceListRequest(id: string): Promise<PriceListRequestV
       });
 
       const pricingRole = pricingRoleFromUser(user.role);
-      const items: PriceListItemVM[] = products.map((p) => {
-        const resolved = resolveProductPrice(pricingFieldsFromProduct(p), pricingRole);
-        return {
-          sku: p.sku,
-          name: p.name,
-          brand: p.partsBrand.name,
-          carType: p.compatibilities[0]?.carModel.name ?? '',
-          priceToman: resolved.finalPrice,
-        };
-      });
+      const items: PriceListItemVM[] = products
+        .filter(
+          (p) =>
+            !isCallForPriceForRole(
+              {
+                callForPriceRetail: p.callForPriceRetail,
+                callForPriceWholesale: p.callForPriceWholesale,
+              },
+              pricingRole,
+            ),
+        )
+        .map((p) => {
+          const resolved = resolveProductPrice(pricingFieldsFromProduct(p), pricingRole);
+          return {
+            sku: p.sku,
+            name: p.name,
+            brand: p.partsBrand.name,
+            carType: p.compatibilities[0]?.carModel.name ?? '',
+            priceToman: resolved.finalPrice,
+          };
+        });
 
       return {
         id: request.id,

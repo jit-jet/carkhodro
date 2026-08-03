@@ -54,10 +54,19 @@ async function ProductsContent({ searchParams }: Props) {
   const carModelId = pickSearchParam(sp.carModelId);
   const status = pickSearchParam(sp.status);
   const offer = pickSearchParam(sp.offer);
+  const callForPrice = pickSearchParam(sp.callForPrice);
   const sortBy = pickSearchParam(sp.sortBy);
   const sortDir = pickSearchParam(sp.sortDir);
   const page = parsePage(sp.page);
   const perPage = parsePerPage(sp.perPage);
+
+  const callForPriceFilter =
+    callForPrice === "retail" ||
+    callForPrice === "wholesale" ||
+    callForPrice === "none" ||
+    callForPrice === "any"
+      ? callForPrice
+      : undefined;
 
   const filters = {
     search,
@@ -66,6 +75,7 @@ async function ProductsContent({ searchParams }: Props) {
     carModelId,
     status,
     offer,
+    callForPrice,
     sortBy,
     sortDir,
     perPage,
@@ -79,6 +89,7 @@ async function ProductsContent({ searchParams }: Props) {
       carModelId: carModelId ? Number(carModelId) : undefined,
       isActive: status === "active" ? true : status === "inactive" ? false : undefined,
       isOffer: offer === "special" ? true : offer === "normal" ? false : undefined,
+      callForPrice: callForPriceFilter,
       sortBy: parseSortBy(sortBy),
       sortDir: parseSortDir(sortDir),
       page,
@@ -123,6 +134,7 @@ async function ProductsContent({ searchParams }: Props) {
           ...(carModelId ? { carModelId } : {}),
           ...(status ? { status } : {}),
           ...(offer ? { offer } : {}),
+          ...(callForPrice ? { callForPrice } : {}),
           ...(sortBy ? { sortBy } : {}),
           ...(sortDir ? { sortDir } : {}),
         }}

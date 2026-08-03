@@ -79,6 +79,12 @@ export default function ProductForm({
   );
   const [description, setDescription] = useState(initial.description ?? "");
   const [isOffer, setIsOffer] = useState(initial.isOffer ?? false);
+  const [callForPriceRetail, setCallForPriceRetail] = useState(
+    initial.callForPriceRetail ?? false,
+  );
+  const [callForPriceWholesale, setCallForPriceWholesale] = useState(
+    initial.callForPriceWholesale ?? false,
+  );
   const [isActive, setIsActive] = useState(initial.isActive ?? true);
 
   const [error, setError] = useState("");
@@ -197,6 +203,8 @@ export default function ProductForm({
       images: orderedImages,
       description: description || null,
       isOffer,
+      callForPriceRetail,
+      callForPriceWholesale,
     };
 
     startTransition(async () => {
@@ -474,6 +482,24 @@ export default function ProductForm({
           <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
             <input type="checkbox" checked={isOffer} onChange={(e) => setIsOffer(e.target.checked)} className="w-4 h-4 accent-accent" />
             پیشنهاد ویژه
+          </label>
+          <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
+            <input
+              type="checkbox"
+              checked={callForPriceRetail}
+              onChange={(e) => setCallForPriceRetail(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            تماس برای قیمت — تک‌فروشی
+          </label>
+          <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
+            <input
+              type="checkbox"
+              checked={callForPriceWholesale}
+              onChange={(e) => setCallForPriceWholesale(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            تماس برای قیمت — عمده
           </label>
           {isEditing && (
             <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">

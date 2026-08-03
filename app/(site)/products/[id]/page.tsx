@@ -2,10 +2,12 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getProductById, getRelatedProducts, withViewerPricing, withViewerProduct } from '@/actions/products';
 import { getProductReviews } from '@/actions/reviews';
+import { getPublicSiteSettings } from '@/actions/site-settings';
 import ImageGallery    from '@/src/components/pdp/ImageGallery';
 import CartActions     from '@/src/components/pdp/CartActions';
 import ProductComments from '@/src/components/pdp/ProductComments';
 import RelatedProducts from '@/src/components/pdp/RelatedProducts';
+import CallForPrice    from '@/src/components/product/CallForPrice';
 import WishlistButton  from '@/src/components/product/WishlistButton';
 import CompareButton   from '@/src/components/product/CompareButton';
 
@@ -65,10 +67,12 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   if (!rawProduct) notFound();
   const product = (await withViewerProduct(rawProduct))!;
 
-  const [relatedProducts, comments] = await Promise.all([
+  const [relatedProducts, comments, settings] = await Promise.all([
     withViewerPricing(await getRelatedProducts(product.id, product.categoryId)),
     getProductReviews(product.id),
+    getPublicSiteSettings(),
   ]);
+  const shopPhone = settings.phone.trim() || settings.secondaryPhone.trim() || '';
   const flag = ORIGIN_FLAGS[product.origin] ?? '🏭';
 
   const attrs: [string, string][] = [
@@ -137,21 +141,27 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
 
             {/* Price box */}
             <div className="bg-silver-light rounded-xl px-5 py-4">
-              {product.oldPrice && (
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm text-gray-400 line-through">
-                    {formatPrice(product.oldPrice)}
-                  </span>
-                  {product.discount && (
-                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                      {product.discount}٪ تخفیف
-                    </span>
+              {product.callForPrice ? (
+                <CallForPrice phone={shopPhone} />
+              ) : (
+                <>
+                  {product.oldPrice && (
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-sm text-gray-400 line-through">
+                        {formatPrice(product.oldPrice)}
+                      </span>
+                      {product.discount && (
+                        <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                          {product.discount}٪ تخفیف
+                        </span>
+                      )}
+                    </div>
                   )}
-                </div>
+                  <p className="text-2xl font-bold text-accent-dark">
+                    {formatPrice(product.price)}
+                  </p>
+                </>
               )}
-              <p className="text-2xl font-bold text-accent-dark">
-                {formatPrice(product.price)}
-              </p>
             </div>
 
             {/* Attributes table */}

@@ -23,6 +23,10 @@ import { tags } from '@/actions/cache-tags';
 import { resolveProductPriceBigInt, netLineTotalBigInt } from '@/src/lib/pricing';
 import { pricingRoleFromUser, canUseRetailCheckout } from '@/src/lib/user-role';
 import {
+  isCallForPriceForRole,
+  CALL_FOR_PRICE_BLOCKED_MSG,
+} from '@/src/lib/call-for-price';
+import {
   resolveDiscountForCheckout,
   incrementDiscountUsage,
 } from '@/actions/discount-checkout';
@@ -215,6 +219,8 @@ export async function submitCheckout(
                   wholesaleDiscountPct: true,
                   retailPriceDiffPct: true,
                   retailDiscountPct: true,
+                  callForPriceRetail: true,
+                  callForPriceWholesale: true,
                   compatibilities: {
                     select: {
                       carModelId: true,
@@ -233,11 +239,25 @@ export async function submitCheckout(
     if (!cart || cart.items.length === 0) return fail('سبد خرید شما خالی است.');
     if (!shipping || !shipping.isActive) return fail('روش ارسال معتبر نیست.');
 
+    const role = pricingRoleFromUser(user.role);
+    for (const item of cart.items) {
+      if (
+        isCallForPriceForRole(
+          {
+            callForPriceRetail: item.product.callForPriceRetail,
+            callForPriceWholesale: item.product.callForPriceWholesale,
+          },
+          role,
+        )
+      ) {
+        return fail(`«${item.product.name}» ${CALL_FOR_PRICE_BLOCKED_MSG}`);
+      }
+    }
+
     const resolved = await resolveLocation(contact.provinceId!, contact.cityId!);
     if (!resolved.ok) return fail(resolved.error);
     const { province, city } = resolved;
 
-    const role = pricingRoleFromUser(user.role);
     const lineItems = cart.items.map((item) => {
       const pricing = resolveProductPriceBigInt(
         {

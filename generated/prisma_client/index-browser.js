@@ -261,6 +261,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   retailPriceDiffPct: 'retailPriceDiffPct',
   retailDiscountPct: 'retailDiscountPct',
   isOffer: 'isOffer',
+  callForPriceRetail: 'callForPriceRetail',
+  callForPriceWholesale: 'callForPriceWholesale',
   hesabfaCode: 'hesabfaCode',
   hesabfaId: 'hesabfaId',
   lastSyncedAt: 'lastSyncedAt',

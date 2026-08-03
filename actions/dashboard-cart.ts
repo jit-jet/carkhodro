@@ -36,6 +36,10 @@ import {
   canUseDashboardCart,
   isProductInStock,
 } from '@/src/lib/user-role';
+import {
+  isCallForPriceForRole,
+  CALL_FOR_PRICE_BLOCKED_MSG,
+} from '@/src/lib/call-for-price';
 import { pushWholesaleInvoice } from '@/src/lib/hesabfa/invoices';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import {
@@ -67,6 +71,8 @@ const cartArgs = {
             retailPriceDiffPct: true,
             retailDiscountPct: true,
             stock: true,
+            callForPriceRetail: true,
+            callForPriceWholesale: true,
           },
         },
       },
@@ -82,6 +88,13 @@ async function loadDashboardCart(userId: string, role: UserRole): Promise<Dashbo
   const lines: DashboardCartLineVM[] = cart.items.map((item) => {
     const fields = pricingFieldsFromProduct(item.product);
     const resolved = resolveProductPrice(fields, pricingRole);
+    const callForPrice = isCallForPriceForRole(
+      {
+        callForPriceRetail: item.product.callForPriceRetail,
+        callForPriceWholesale: item.product.callForPriceWholesale,
+      },
+      pricingRole,
+    );
     return {
       id: item.id,
       productId: item.productId,
@@ -91,7 +104,10 @@ async function loadDashboardCart(userId: string, role: UserRole): Promise<Dashbo
       discountPct: resolved.discountPct,
       quantity: item.quantity,
       stock: item.product.stock,
-      lineTotalToman: netLineTotal(resolved.basePrice, item.quantity, resolved.discountPct),
+      callForPrice,
+      lineTotalToman: callForPrice
+        ? 0
+        : netLineTotal(resolved.basePrice, item.quantity, resolved.discountPct),
     };
   });
 
@@ -123,12 +139,27 @@ export async function addToInvoice(
     const qty = Math.max(1, Math.round(quantity));
     const product = await prisma.product.findFirst({
       where: { id: productId, isActive: true },
-      select: { stock: true },
+      select: {
+        stock: true,
+        callForPriceRetail: true,
+        callForPriceWholesale: true,
+      },
     });
     if (!product) return fail('محصول یافت نشد.');
     if (!isProductInStock(product.stock)) return fail('این محصول موجود نیست.');
 
     const role = pricingRoleFromUser(user.role);
+    if (
+      isCallForPriceForRole(
+        {
+          callForPriceRetail: product.callForPriceRetail,
+          callForPriceWholesale: product.callForPriceWholesale,
+        },
+        role,
+      )
+    ) {
+      return fail(CALL_FOR_PRICE_BLOCKED_MSG);
+    }
 
     const cart = await prisma.cart.upsert({
       where: { userId: user.id },
@@ -216,21 +247,31 @@ function toSearchResult(
     packQuantity: number;
     cartonQuantity: number;
     stock: number;
+    callForPriceRetail: boolean;
+    callForPriceWholesale: boolean;
   }[],
   role: UserRole,
 ): InvoiceSearchResultVM[] {
   const pricingRole = pricingRoleFromUser(role);
   return rows.map((r) => {
     const resolved = resolveProductPrice(pricingFieldsFromProduct(r), pricingRole);
+    const callForPrice = isCallForPriceForRole(
+      {
+        callForPriceRetail: r.callForPriceRetail,
+        callForPriceWholesale: r.callForPriceWholesale,
+      },
+      pricingRole,
+    );
     return {
       id: r.id,
       sku: r.sku,
       name: r.name,
       priceToman: resolved.finalPrice,
-      discountPct: resolved.discountPct,
+      discountPct: callForPrice ? 0 : resolved.discountPct,
       packQuantity: r.packQuantity,
       cartonQuantity: r.cartonQuantity,
       stock: r.stock,
+      callForPrice,
     };
   });
 }
@@ -246,6 +287,8 @@ const searchSelect = {
   packQuantity: true,
   cartonQuantity: true,
   stock: true,
+  callForPriceRetail: true,
+  callForPriceWholesale: true,
 } satisfies Prisma.ProductSelect;
 
 /**
@@ -368,6 +411,17 @@ export async function submitInvoice(input: {
     if (!shipping) return fail('روش ارسالی برای ثبت فاکتور پیدا نشد.');
 
     for (const item of cart.items) {
+      if (
+        isCallForPriceForRole(
+          {
+            callForPriceRetail: item.product.callForPriceRetail,
+            callForPriceWholesale: item.product.callForPriceWholesale,
+          },
+          pricingRoleFromUser(user.role),
+        )
+      ) {
+        return fail(`«${item.product.name}» ${CALL_FOR_PRICE_BLOCKED_MSG}`);
+      }
       if (!isProductInStock(item.product.stock)) {
         return fail(`«${item.product.name}» ناموجود است.`);
       }

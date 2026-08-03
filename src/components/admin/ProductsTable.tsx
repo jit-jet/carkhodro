@@ -44,7 +44,9 @@ type BulkOpKey =
   | "retailDiscount"
   | "retailPriceDiff"
   | "setActive"
-  | "setOffer";
+  | "setOffer"
+  | "setCallForPriceRetail"
+  | "setCallForPriceWholesale";
 
 const BULK_OPTIONS: { value: BulkOpKey; label: string }[] = [
   { value: "category", label: "تغییر دسته‌بندی" },
@@ -55,6 +57,8 @@ const BULK_OPTIONS: { value: BulkOpKey; label: string }[] = [
   { value: "retailPriceDiff", label: "تنظیم اختلاف عمده/تک‌فروشی (%)" },
   { value: "setActive", label: "فعال / غیرفعال کردن محصولات" },
   { value: "setOffer", label: "ویژه / غیرویژه کردن محصولات" },
+  { value: "setCallForPriceRetail", label: "تماس برای قیمت — تک‌فروشی" },
+  { value: "setCallForPriceWholesale", label: "تماس برای قیمت — عمده" },
 ];
 
 const SELECT_ALL_STORAGE_KEY = "admin-products-select-all-matching";
@@ -254,6 +258,10 @@ export default function ProductsTable({
         return { op: "setActive", isActive: bulkFlag };
       case "setOffer":
         return { op: "setOffer", isOffer: bulkFlag };
+      case "setCallForPriceRetail":
+        return { op: "setCallForPriceRetail", callForPriceRetail: bulkFlag };
+      case "setCallForPriceWholesale":
+        return { op: "setCallForPriceWholesale", callForPriceWholesale: bulkFlag };
       default:
         return null;
     }
@@ -361,8 +369,8 @@ export default function ProductsTable({
 
   /** Keep header filters as wide as the column — do not inflate cells via min-width. */
   const headerSelectClass = "!py-1.5 !px-2 !text-xs !rounded-lg w-full max-w-full";
-  const thClass = "text-right px-2.5 py-3 align-bottom";
-  const tdClass = "px-2.5 py-3";
+  const thClass = "text-right px-1.5 py-3 align-bottom";
+  const tdClass = "px-1.5 py-3";
 
   return (
     <div className="space-y-3 min-w-0">
@@ -475,6 +483,30 @@ export default function ProductsTable({
           </label>
         )}
 
+        {bulkOp === "setCallForPriceRetail" && (
+          <label className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={bulkFlag}
+              onChange={(e) => setBulkFlag(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            {bulkFlag ? "فعال کردن تماس برای قیمت (تک‌فروشی)" : "غیرفعال کردن تماس برای قیمت (تک‌فروشی)"}
+          </label>
+        )}
+
+        {bulkOp === "setCallForPriceWholesale" && (
+          <label className="inline-flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={bulkFlag}
+              onChange={(e) => setBulkFlag(e.target.checked)}
+              className="w-4 h-4 accent-accent"
+            />
+            {bulkFlag ? "فعال کردن تماس برای قیمت (عمده)" : "غیرفعال کردن تماس برای قیمت (عمده)"}
+          </label>
+        )}
+
         <Button type="button" size="sm" onClick={handleBulkSubmit} disabled={pending}>
           ثبت تغییرات
         </Button>
@@ -483,10 +515,10 @@ export default function ProductsTable({
       {error && <FormError message={error} />}
       {message && <FormSuccess message={message} />}
 
-      <TableShell minWidth="min-w-[1100px]" tableClassName="table-fixed">
+      <TableShell minWidth="min-w-0" tableClassName="table-fixed w-full">
             <thead className={tableHeadClass}>
               <tr>
-                <th className="w-10 px-2.5 py-3 align-bottom">
+                <th className="w-8 px-1.5 py-3 align-bottom">
                   <input
                     type="checkbox"
                     checked={allSelected}
@@ -496,7 +528,7 @@ export default function ProductsTable({
                     className="w-4 h-4 accent-accent"
                   />
                 </th>
-                <th className={`${thClass} w-[18%]`}>
+                <th className={`${thClass} w-[16%]`}>
                   <div className="flex flex-col gap-1.5 items-stretch min-w-0">
                     <SortButton
                       label="محصول"
@@ -520,7 +552,7 @@ export default function ProductsTable({
                     </form>
                   </div>
                 </th>
-                <th className={`${thClass} w-[10%]`}>
+                <th className={`${thClass} w-[9%]`}>
                   <div className="flex flex-col gap-1.5 min-w-0">
                     <SortButton
                       label="دسته‌بندی"
@@ -543,7 +575,7 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className={`${thClass} w-[9%]`}>
+                <th className={`${thClass} w-[8%]`}>
                   <div className="flex flex-col gap-1.5 min-w-0">
                     <SortButton
                       label="نوع برند"
@@ -566,7 +598,7 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className={`${thClass} w-[10%]`}>
+                <th className={`${thClass} w-[9%]`}>
                   <div className="flex flex-col gap-1.5 min-w-0">
                     <span className="font-semibold text-gray-500 whitespace-nowrap">مدل خودرو</span>
                     <Select
@@ -583,7 +615,7 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className={`${thClass} w-[10%] whitespace-nowrap`}>
+                <th className={`${thClass} w-[9%] whitespace-nowrap`}>
                   <SortButton
                     label="قیمت عمده"
                     column="wholesalePrice"
@@ -592,7 +624,7 @@ export default function ProductsTable({
                     onSort={toggleSort}
                   />
                 </th>
-                <th className={`${thClass} w-[10%] whitespace-nowrap`}>
+                <th className={`${thClass} w-[9%] whitespace-nowrap`}>
                   <SortButton
                     label="قیمت تک‌فروشی"
                     column="retailPrice"
@@ -601,7 +633,7 @@ export default function ProductsTable({
                     onSort={toggleSort}
                   />
                 </th>
-                <th className={`${thClass} w-[6%] whitespace-nowrap`}>
+                <th className={`${thClass} w-[5%] whitespace-nowrap`}>
                   <SortButton
                     label="موجودی"
                     column="stock"
@@ -610,7 +642,7 @@ export default function ProductsTable({
                     onSort={toggleSort}
                   />
                 </th>
-                <th className={`${thClass} w-[8%]`}>
+                <th className={`${thClass} w-[7%]`}>
                   <div className="flex flex-col gap-1.5 min-w-0">
                     <SortButton
                       label="وضعیت"
@@ -630,7 +662,7 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className={`${thClass} w-[7%]`}>
+                <th className={`${thClass} w-[6%]`}>
                   <div className="flex flex-col gap-1.5 min-w-0">
                     <SortButton
                       label="ویژه"
@@ -650,13 +682,32 @@ export default function ProductsTable({
                     </Select>
                   </div>
                 </th>
-                <th className="px-2.5 py-3 w-[12%]"></th>
+                <th
+                  className={`${thClass} w-[7%]`}
+                  title="تماس برای قیمت — تک‌فروشی / عمده"
+                >
+                  <div className="flex flex-col gap-1.5 min-w-0">
+                    <span className="font-semibold text-gray-500 whitespace-nowrap">تماس</span>
+                    <Select
+                      value={filters.callForPrice}
+                      onChange={(e) => pushFilters({ callForPrice: e.target.value })}
+                      className={headerSelectClass}
+                    >
+                      <option value="">همه</option>
+                      <option value="retail">تک‌فروشی</option>
+                      <option value="wholesale">عمده</option>
+                      <option value="any">فعال</option>
+                      <option value="none">بدون تماس</option>
+                    </Select>
+                  </div>
+                </th>
+                <th className="px-1.5 py-3 w-[10%]"></th>
               </tr>
             </thead>
             <tbody className={tableBodyClass}>
               {items.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="px-4 py-12 text-center text-gray-400">
+                  <td colSpan={12} className="px-4 py-12 text-center text-gray-400">
                     محصولی با این فیلترها یافت نشد.
                   </td>
                 </tr>
@@ -728,6 +779,29 @@ export default function ProductsTable({
                       <Badge tone={p.isOffer ? "warning" : "default"}>
                         {p.isOffer ? "ویژه" : "عادی"}
                       </Badge>
+                    </td>
+                    <td className={tdClass}>
+                      <div className="flex flex-wrap gap-0.5">
+                        {p.callForPriceRetail ? (
+                          <span
+                            className="inline-flex items-center rounded px-1 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-800"
+                            title="تماس برای قیمت — تک‌فروشی"
+                          >
+                            تک
+                          </span>
+                        ) : null}
+                        {p.callForPriceWholesale ? (
+                          <span
+                            className="inline-flex items-center rounded px-1 py-0.5 text-[10px] font-bold bg-sky-100 text-sky-800"
+                            title="تماس برای قیمت — عمده"
+                          >
+                            عمده
+                          </span>
+                        ) : null}
+                        {!p.callForPriceRetail && !p.callForPriceWholesale ? (
+                          <span className="text-xs text-gray-300">—</span>
+                        ) : null}
+                      </div>
                     </td>
                     <td className={tdClass}>
                       <div className="flex items-center justify-end gap-1 whitespace-nowrap">

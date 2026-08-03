@@ -8,6 +8,8 @@ import { addToCart } from '@/actions/cart';
 import { useListsUI, ensureListsHydrated } from '@/src/store/lists-ui';
 import { useCartUI, handleAddToCartResult } from '@/src/store/cart-ui';
 import type { ProductVM } from '@/src/lib/serializers';
+import { CALL_FOR_PRICE_LABEL } from '@/src/lib/call-for-price';
+import CallForPrice from '@/src/components/product/CallForPrice';
 
 const ORIGIN_FLAGS: Record<string, string> = {
   'آلمان': '🇩🇪', 'ژاپن': '🇯🇵', 'ایران': '🇮🇷',
@@ -38,6 +40,10 @@ function AddToCartCell({ product }: { product: ProductVM }) {
   const [added, setAdded] = useState(false);
   const [busy, setBusy] = useState(false);
   const notify = useCartUI((s) => s.notify);
+
+  if (product.callForPrice) {
+    return <CallForPrice compact />;
+  }
 
   if (product.stock <= 0) {
     return <span className="text-xs font-medium text-red-500">ناموجود</span>;
@@ -181,7 +187,11 @@ export default function CompareView({ initial, loggedIn }: Props) {
     );
   }
 
-  const minPrice = Math.min(...products.map((p) => p.price));
+  const pricedProducts = products.filter((p) => !p.callForPrice);
+  const minPrice =
+    pricedProducts.length > 0
+      ? Math.min(...pricedProducts.map((p) => p.price))
+      : Number.POSITIVE_INFINITY;
 
   // Attribute rows — defined here so minPrice/products are in scope
   const ROWS: Array<{ key: string; label: string; cell: (p: ProductVM) => React.ReactNode }> = [
@@ -190,26 +200,32 @@ export default function CompareView({ initial, loggedIn }: Props) {
       label: 'قیمت',
       cell: (p) => (
         <div className="py-3 px-4 space-y-1">
-          {p.oldPrice && (
-            <p className="text-xs text-gray-400 line-through">{formatPrice(p.oldPrice)}</p>
+          {p.callForPrice ? (
+            <p className="text-sm font-bold text-accent-dark">{CALL_FOR_PRICE_LABEL}</p>
+          ) : (
+            <>
+              {p.oldPrice && (
+                <p className="text-xs text-gray-400 line-through">{formatPrice(p.oldPrice)}</p>
+              )}
+              <p className={['text-sm font-bold',
+                p.price === minPrice && pricedProducts.length > 1 ? 'text-green-600' : 'text-accent-dark',
+              ].join(' ')}>
+                {formatPrice(p.price)}
+              </p>
+              <div className="flex flex-wrap gap-1">
+                {p.discount ? (
+                  <span className="text-[10px] bg-red-50 text-red-500 border border-red-100 px-1.5 py-0.5 rounded-full">
+                    {p.discount}٪ تخفیف
+                  </span>
+                ) : null}
+                {p.price === minPrice && pricedProducts.length > 1 ? (
+                  <span className="text-[10px] bg-green-50 text-green-600 border border-green-100 px-1.5 py-0.5 rounded-full">
+                    بهترین قیمت ✓
+                  </span>
+                ) : null}
+              </div>
+            </>
           )}
-          <p className={['text-sm font-bold',
-            p.price === minPrice && products.length > 1 ? 'text-green-600' : 'text-accent-dark',
-          ].join(' ')}>
-            {formatPrice(p.price)}
-          </p>
-          <div className="flex flex-wrap gap-1">
-            {p.discount ? (
-              <span className="text-[10px] bg-red-50 text-red-500 border border-red-100 px-1.5 py-0.5 rounded-full">
-                {p.discount}٪ تخفیف
-              </span>
-            ) : null}
-            {p.price === minPrice && products.length > 1 ? (
-              <span className="text-[10px] bg-green-50 text-green-600 border border-green-100 px-1.5 py-0.5 rounded-full">
-                بهترین قیمت ✓
-              </span>
-            ) : null}
-          </div>
         </div>
       ),
     },

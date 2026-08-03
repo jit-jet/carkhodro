@@ -7,7 +7,7 @@ import { resolveOrderQtyUI } from '@/src/lib/order-quantity';
 import type { PDPProductVM } from '@/src/lib/serializers';
 
 interface Props {
-  product: Pick<PDPProductVM, 'id' | 'stock' | 'name' | 'orderQuantityCap'>;
+  product: Pick<PDPProductVM, 'id' | 'stock' | 'name' | 'orderQuantityCap' | 'callForPrice'>;
 }
 
 function ShoppingBagIcon() {
@@ -81,6 +81,14 @@ export default function CartActions({ product }: Props) {
     } else {
       setNotifyState('error');
     }
+  }
+
+  if (product.callForPrice) {
+    return (
+      <p className="text-sm text-gray-600 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+        امکان افزودن به سبد و خرید آنلاین برای این محصول وجود ندارد. لطفاً برای اعلام قیمت تماس بگیرید.
+      </p>
+    );
   }
 
   if (!inStock) {

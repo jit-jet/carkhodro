@@ -12,20 +12,37 @@ export type AdminProductWhereFilters = {
   carModelId?: number;
   isActive?: boolean;
   isOffer?: boolean;
+  /** retail | wholesale | none | any */
+  callForPrice?: "retail" | "wholesale" | "none" | "any";
 };
 
 export function buildAdminProductWhere(
   filters: AdminProductWhereFilters,
 ): Prisma.ProductWhereInput {
+  const and: Prisma.ProductWhereInput[] = [];
+
+  if (filters.search) {
+    and.push({
+      OR: [
+        { name: { contains: filters.search, mode: "insensitive" } },
+        { sku: { contains: filters.search, mode: "insensitive" } },
+      ],
+    });
+  }
+
+  if (filters.callForPrice === "retail") {
+    and.push({ callForPriceRetail: true });
+  } else if (filters.callForPrice === "wholesale") {
+    and.push({ callForPriceWholesale: true });
+  } else if (filters.callForPrice === "none") {
+    and.push({ callForPriceRetail: false, callForPriceWholesale: false });
+  } else if (filters.callForPrice === "any") {
+    and.push({
+      OR: [{ callForPriceRetail: true }, { callForPriceWholesale: true }],
+    });
+  }
+
   return {
-    ...(filters.search
-      ? {
-          OR: [
-            { name: { contains: filters.search, mode: "insensitive" as const } },
-            { sku: { contains: filters.search, mode: "insensitive" as const } },
-          ],
-        }
-      : {}),
     ...(filters.categoryId ? { categoryId: filters.categoryId } : {}),
     ...(filters.partsBrandId ? { partsBrandId: filters.partsBrandId } : {}),
     ...(filters.carModelId
@@ -33,5 +50,6 @@ export function buildAdminProductWhere(
       : {}),
     ...(filters.isActive !== undefined ? { isActive: filters.isActive } : {}),
     ...(filters.isOffer !== undefined ? { isOffer: filters.isOffer } : {}),
+    ...(and.length > 0 ? { AND: and } : {}),
   };
 }
