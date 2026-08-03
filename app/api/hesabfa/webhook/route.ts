@@ -8,7 +8,7 @@ import type { NextRequest } from 'next/server';
 import { handleHesabfaWebhook } from '@/src/lib/hesabfa/sync';
 import type { HesabfaWebhookPayload } from '@/src/lib/hesabfa/types';
 
-export async func   tion POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   let payload: HesabfaWebhookPayload;
   console.log('request', request);
   try {

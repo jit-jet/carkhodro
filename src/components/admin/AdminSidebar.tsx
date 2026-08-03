@@ -33,6 +33,7 @@ type IconKey =
   | "trust"
   | "sales"
   | "finance"
+  | "reports"
   | "content"
   | "chevron";
 
@@ -83,7 +84,10 @@ const NAV_SECTIONS: NavSection[] = [
     id: "finance",
     label: "مالی",
     icon: "finance",
-    items: [{ href: "/admin/accounting", label: "حسابداری", icon: "accounting" }],
+    items: [
+      { href: "/admin/reports", label: "گزارش‌ها", icon: "reports" },
+      { href: "/admin/accounting", label: "حسابداری", icon: "accounting" },
+    ],
   },
   {
     id: "content",
@@ -272,6 +276,12 @@ function NavIcon({ icon }: { icon: IconKey }) {
         <svg {...common}>
           <line x1="12" y1="1" x2="12" y2="23" />
           <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+        </svg>
+      );
+    case "reports":
+      return (
+        <svg {...common}>
+          <path d="M18 20V10M12 20V4M6 20v-6" />
         </svg>
       );
     case "content":

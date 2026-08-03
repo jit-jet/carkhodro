@@ -308,17 +308,6 @@ export async function reactivateProduct(id: string): Promise<ActionResult> {
   });
 }
 
-/** Fire-and-forget view counter. */
-export async function incrementProductView(id: string): Promise<ActionResult> {
-  return runMutation('incrementProductView', async () => {
-    await prisma.product.update({
-      where: { id },
-      data: { viewCount: { increment: 1 } },
-    });
-    return ok(undefined);
-  });
-}
-
 /** Bulk-assign a category to a set of products in one call. */
 export async function bulkAssignCategory(
   productIds: string[],

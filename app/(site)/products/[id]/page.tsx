@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getProductById, getRelatedProducts, withViewerPricing, withViewerProduct } from '@/actions/products';
+import { recordProductView } from '@/actions/product-views';
 import { getProductReviews } from '@/actions/reviews';
 import { getPublicSiteSettings } from '@/actions/site-settings';
 import ImageGallery    from '@/src/components/pdp/ImageGallery';
@@ -66,6 +67,9 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const rawProduct = await getProductById(id);
   if (!rawProduct) notFound();
   const product = (await withViewerProduct(rawProduct))!;
+
+  // Fire-and-forget — do not block PDP render on the view counter.
+  void recordProductView(product.id);
 
   const [relatedProducts, comments, settings] = await Promise.all([
     withViewerPricing(await getRelatedProducts(product.id, product.categoryId)),
