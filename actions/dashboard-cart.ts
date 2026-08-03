@@ -36,6 +36,13 @@ import {
   canUseDashboardCart,
   isProductInStock,
 } from '@/src/lib/user-role';
+import { pushWholesaleInvoice } from '@/src/lib/hesabfa/invoices';
+import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
+import {
+  resolveDiscountForCheckout,
+  incrementDiscountUsage,
+} from '@/actions/discount-checkout';
+import type { DiscountCartLine } from '@/src/lib/apply-discount-code';
 import type { UserRole, Prisma } from '@/generated/prisma_client';
 import type {
   DashboardCartVM,
@@ -303,12 +310,14 @@ export async function getPreviousPurchaseProducts(): Promise<InvoiceSearchResult
 /**
  * Place the partner invoice from the current cart («ثبت فاکتور»).
  * One transaction: snapshot the partner's saved delivery address, freeze each
- * line's list price + discount, decrement stock, create the order (status NEW)
- * and clear the cart. Requires a completed profile address.
+ * line's list price + discount, optionally apply a redeemable discount code,
+ * decrement stock, create the order (status NEW) and clear the cart.
+ * Requires a completed profile address.
  */
 export async function submitInvoice(input: {
   paymentTerms: string;
   notes?: string;
+  discountCode?: string | null;
 }): Promise<ActionResult<{ id: string; orderNumber: number }>> {
   return runMutation('submitInvoice', async () => {
     const user = await getCurrentUser();
@@ -324,7 +333,22 @@ export async function submitInvoice(input: {
     const [cart, address, shipping] = await Promise.all([
       prisma.cart.findUnique({
         where: { userId: user.id },
-        include: { items: { include: { product: true } } },
+        include: {
+          items: {
+            include: {
+              product: {
+                include: {
+                  compatibilities: {
+                    select: {
+                      carModelId: true,
+                      carModel: { select: { carBrandId: true } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       }),
       prisma.address.findFirst({
         where: { userId: user.id },
@@ -370,10 +394,45 @@ export async function submitInvoice(input: {
       };
     });
 
+    const discountLines: DiscountCartLine[] = cart.items.map((item, idx) => {
+      const carModelIds = item.product.compatibilities.map((c) => c.carModelId);
+      const carBrandIds = [
+        ...new Set(item.product.compatibilities.map((c) => c.carModel.carBrandId)),
+      ];
+      return {
+        productId: item.product.id,
+        categoryId: item.product.categoryId,
+        partsBrandId: item.product.partsBrandId,
+        carBrandIds,
+        carModelIds,
+        lineTotal: Number(
+          netLineTotalBigInt(
+            lineItems[idx].priceAtPurchase,
+            lineItems[idx].quantity,
+            lineItems[idx].discountPct,
+          ),
+        ),
+      };
+    });
+
     const subtotal = lineItems.reduce(
       (sum, l) => sum + netLineTotalBigInt(l.priceAtPurchase, l.quantity, l.discountPct),
       BigInt(0),
     );
+
+    const discountResult = await resolveDiscountForCheckout(
+      input.discountCode,
+      discountLines,
+      BigInt(0),
+      subtotal,
+      user.id,
+      user.role,
+    );
+    if (!discountResult.ok) return fail(discountResult.error);
+    const applied = discountResult.data;
+    const discountAmount = applied ? BigInt(applied.discountAmount) : BigInt(0);
+    const totalAmount = subtotal - discountAmount;
+    if (totalAmount < BigInt(0)) return fail('مبلغ نهایی فاکتور نامعتبر است.');
 
     const order = await prisma.$transaction(async (tx) => {
       const created = await tx.order.create({
@@ -391,12 +450,19 @@ export async function submitInvoice(input: {
           subtotal,
           shippingCost: BigInt(0),
           taxAmount: BigInt(0),
-          totalAmount: subtotal,
+          discountAmount,
+          discountCode: applied?.code ?? null,
+          discountCodeId: applied?.discountCodeId ?? null,
+          totalAmount,
           notes: input.notes?.trim() || null,
           items: { create: lineItems },
         },
         select: { id: true, orderNumber: true },
       });
+
+      if (applied) {
+        await incrementDiscountUsage(tx, applied.discountCodeId);
+      }
 
       for (const item of cart.items) {
         await tx.product.update({
@@ -418,6 +484,7 @@ export async function submitInvoice(input: {
     revalidatePath('/dashboard/cart');
     revalidatePath('/dashboard/orders');
     revalidatePath('/dashboard');
+    runHesabfaBackground('pushWholesaleInvoice', () => pushWholesaleInvoice(order.id));
     return ok(order);
   });
 }

@@ -4,6 +4,7 @@ import type { OrderStatus } from '../generated/prisma_client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { normalizePersianText } from '../src/lib/persian';
 import { hashPassword } from '../src/lib/password';
+import { DEFAULT_RULES_CONTENT } from '../src/lib/rules-defaults';
 import provincesCitiesData from '../src/assets/provinces_cities.json';
 
 const prisma = new PrismaClient({
@@ -732,6 +733,29 @@ async function main() {
       headerPromo1: 'ضمانت اصالت کالا',
       headerPromo2: 'ارسال سریع به سراسر کشور',
       aboutText: 'بزرگترین فروشگاه آنلاین قطعات یدکی خودروهای ایرانی و خارجی با بیش از ۵۰,۰۰۰ قطعه اصل و ضمانت اصالت کالا.',
+      footerTrust1Icon: '🛡️',
+      footerTrust1Title: 'ضمانت اصالت کالا',
+      footerTrust1Desc: 'تمام محصولات اصلی',
+      footerTrust2Icon: '🚚',
+      footerTrust2Title: 'ارسال سریع',
+      footerTrust2Desc: 'به سراسر کشور',
+      footerTrust3Icon: '↩️',
+      footerTrust3Title: 'بازگشت آسان',
+      footerTrust3Desc: 'تا ۷ روز ضمانت برگشت',
+      footerTrust4Icon: '🎧',
+      footerTrust4Title: 'پشتیبانی ۲۴/۷',
+      footerTrust4Desc: 'همیشه در کنار شما',
+    },
+    update: {},
+  });
+
+  await prisma.rulesContent.upsert({
+    where: { id: 1 },
+    create: {
+      id: 1,
+      updatedLabel: DEFAULT_RULES_CONTENT.updatedLabel,
+      intro: DEFAULT_RULES_CONTENT.intro,
+      body: DEFAULT_RULES_CONTENT.body,
     },
     update: {},
   });

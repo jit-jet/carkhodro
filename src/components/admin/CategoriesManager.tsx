@@ -22,6 +22,9 @@ import {
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
 import ImageUploadField, { AdminThumb } from "@/src/components/admin/ImageUploadField";
+import AdminPagination from "@/src/components/admin/AdminPagination";
+import { useClientPagination } from "@/src/hooks/useClientPagination";
+import { useCartUI } from "@/src/store/cart-ui";
 
 const EMPTY_FORM: CategoryInput = {
   key: "",
@@ -36,12 +39,16 @@ export default function CategoriesManager({
 }: {
   initialCategories: AdminCategoryVM[];
 }) {
+  const notify = useCartUI((s) => s.notify);
   const [categories, setCategories] = useState(initialCategories);
   const [form, setForm] = useState<CategoryInput>(EMPTY_FORM);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [rowError, setRowError] = useState<{ id: number; message: string } | null>(null);
   const [pending, startTransition] = useTransition();
+  const pagination = useClientPagination(categories, {
+    resetKey: String(categories.length),
+  });
 
   function startEdit(c: AdminCategoryVM) {
     setEditingId(c.id);
@@ -71,7 +78,11 @@ export default function CategoriesManager({
       };
       if (editingId) {
         const result = await updateCategory(editingId, payload);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         setCategories((prev) =>
           prev.map((c) =>
             c.id === editingId
@@ -85,10 +96,19 @@ export default function CategoriesManager({
               : c,
           ),
         );
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "دسته‌بندی با موفقیت به‌روزرسانی شد.",
+        });
         cancelEdit();
       } else {
         const result = await createCategory(payload);
-        if (!result.ok) return setError(result.error);
+        if (!result.ok) {
+          setError(result.error);
+          notify({ variant: "error", title: "خطا", description: result.error });
+          return;
+        }
         setCategories((prev) => [
           ...prev,
           {
@@ -100,6 +120,11 @@ export default function CategoriesManager({
             isActive: payload.isActive ?? true,
           },
         ]);
+        notify({
+          variant: "success",
+          title: "ذخیره موفق",
+          description: "دسته‌بندی با موفقیت افزوده شد.",
+        });
         setForm(EMPTY_FORM);
       }
     });
@@ -111,9 +136,15 @@ export default function CategoriesManager({
       const result = await deleteCategory(id);
       if (!result.ok) {
         setRowError({ id, message: result.error });
+        notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
       setCategories((prev) => prev.filter((c) => c.id !== id));
+      notify({
+        variant: "success",
+        title: "حذف موفق",
+        description: "دسته‌بندی با موفقیت حذف شد.",
+      });
     });
   }
 
@@ -198,7 +229,7 @@ export default function CategoriesManager({
             </tr>
           </thead>
           <tbody className={tableBodyClass}>
-            {categories.map((c) => (
+            {pagination.items.map((c) => (
               <tr key={c.id} className={tableRowClass}>
                 <td className="px-4 py-3">
                   <AdminThumb src={c.image} alt={c.name} />
@@ -234,6 +265,17 @@ export default function CategoriesManager({
             ))}
           </tbody>
         </TableShell>
+      )}
+
+      {categories.length > 0 && (
+        <AdminPagination
+          page={pagination.page}
+          pageCount={pagination.pageCount}
+          total={pagination.total}
+          perPage={pagination.perPage}
+          onPageChange={pagination.setPage}
+          onPerPageChange={pagination.setPerPage}
+        />
       )}
     </div>
   );

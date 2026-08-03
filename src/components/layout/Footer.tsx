@@ -81,13 +81,8 @@ export default function Footer({
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { icon: "🛡️", title: "ضمانت اصالت کالا", desc: "تمام محصولات اصلی" },
-              { icon: "🚚", title: "ارسال سریع", desc: "به سراسر کشور" },
-              { icon: "↩️", title: "بازگشت آسان", desc: "تا ۷ روز ضمانت برگشت" },
-              { icon: "🎧", title: "پشتیبانی ۲۴/۷", desc: "همیشه در کنار شما" },
-            ].map((item) => (
-              <div key={item.title} className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+            {settings.footerTrustBadges.map((item, index) => (
+              <div key={`${item.title}-${index}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
                 <span className="text-2xl flex-shrink-0">{item.icon}</span>
                 <div>
                   <p className="font-semibold text-sm">{item.title}</p>
@@ -189,25 +184,6 @@ export default function Footer({
         </div>
       </div>
 
-      {/* Newsletter */}
-      <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center gap-4 justify-between">
-          <div>
-            <p className="font-semibold">عضویت در خبرنامه</p>
-            <p className="text-xs text-gray-400">از آخرین تخفیف‌ها و محصولات جدید مطلع شوید</p>
-          </div>
-          <div className="flex w-full sm:w-auto">
-            <input
-              type="email"
-              placeholder="ایمیل خود را وارد کنید"
-              className="flex-1 sm:w-64 bg-white/10 border border-white/20 rounded-s-xl px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-accent"
-            />
-            <button className="bg-accent hover:bg-accent-dark text-charcoal font-bold text-sm px-5 py-2.5 rounded-e-xl transition-colors flex-shrink-0">
-              عضویت
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* Bottom bar */}
       <div className="border-t border-white/10 bg-black/20">

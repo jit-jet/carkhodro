@@ -3,6 +3,11 @@
  * Server page (pagination) and Client table (header filters) share one builder.
  */
 
+import {
+  ADMIN_DEFAULT_PER_PAGE,
+  appendPaginationParams,
+} from "@/src/lib/admin-pagination";
+
 export interface OrdersTableFilters {
   orderNumber: string;
   customer: string;
@@ -12,6 +17,7 @@ export interface OrdersTableFilters {
   userId: string;
   sortBy: string;
   sortDir: string;
+  perPage: number;
 }
 
 export function buildOrdersHref(filters: OrdersTableFilters, page?: number): string {
@@ -24,7 +30,12 @@ export function buildOrdersHref(filters: OrdersTableFilters, page?: number): str
   if (filters.userId) params.set("userId", filters.userId);
   if (filters.sortBy) params.set("sortBy", filters.sortBy);
   if (filters.sortDir) params.set("sortDir", filters.sortDir);
-  if (page && page > 1) params.set("page", String(page));
+  appendPaginationParams(
+    params,
+    page,
+    filters.perPage,
+    ADMIN_DEFAULT_PER_PAGE,
+  );
   const qs = params.toString();
   return qs ? `/admin/orders?${qs}` : "/admin/orders";
 }

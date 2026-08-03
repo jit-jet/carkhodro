@@ -1,78 +1,134 @@
 /**
- * Hesabfa API — shared types.
- * ───────────────────────────
- * Type definitions for the subset of the Hesabfa cloud-accounting REST API we
- * consume to keep the local catalogue in sync (price + stock) with the books.
- *
+ * Hesabfa API types (PascalCase fields match the API).
  * Docs: https://www.hesabfa.com/help/api
- *
- * Conventions:
- *   • Every endpoint is POST and authenticated by putting `apiKey` + `loginToken`
- *     in the JSON body (see `client.ts`).
- *   • Every response is wrapped in the same envelope: `{ Success, Result, … }`.
- *   • Hesabfa property names are PascalCase, so we model them as-is.
  */
 
-/** The envelope every Hesabfa endpoint returns. `Result` is endpoint-specific. */
 export interface HesabfaResponse<T> {
   Success: boolean;
-  /** Present only on success. */
   Result: T;
-  /** Numeric error code when `Success` is false (see Hesabfa error table). */
   ErrorCode?: number;
   ErrorMessage?: string;
 }
 
-/**
- * A Hesabfa inventory item ("کالا"). Only the fields we map are declared; the
- * API returns many more. `Id` is Hesabfa's internal numeric key (what webhooks
- * send in `ObjectIdList`); `Code` is the stable accounting code we store as the
- * product's `accountancyId` and reuse as the local SKU.
- */
-export interface HesabfaItem {
-  Id: number;
-  /** Accounting code — unique, human-facing. May come back as number or string. */
-  Code: number | string;
-  Name: string;
-  Barcode?: string | null;
-  /** On-hand inventory quantity. */
-  Stock?: number | null;
-  /** Sale (retail) price in the account's currency unit. */
-  SellPrice?: number | null;
-  /** Purchase price — not surfaced to the storefront, kept for completeness. */
-  BuyPrice?: number | null;
-  /** 0 = product/good, others = service etc. */
-  ItemType?: number | null;
-  /** Whether the item is active/enabled in Hesabfa. */
-  Active?: boolean | null;
-}
-
-/** `Result` shape of `item/getItems` (paged list). */
-export interface HesabfaItemList {
-  List: HesabfaItem[];
-  TotalCount: number;
-  FilteredCount: number;
-}
-
-/** Paging/sort/filter envelope accepted by `item/getItems`. */
 export interface HesabfaQueryInfo {
   sortBy?: string;
   sortDesc?: boolean;
   take?: number;
   skip?: number;
-  filters?: unknown[];
+  filters?: Array<{
+    property: string;
+    operator: string;
+    value: string | number | boolean;
+  }>;
 }
 
-/**
- * The JSON body Hesabfa POSTs to our webhook on any create/update/delete of a
- * watched object. We only act on `ObjectType === 'Product'`. `ObjectIdList`
- * holds Hesabfa `Id`s (not `Code`s). `Password` echoes the `hookPassword` we
- * registered and is the only authenticity check Hesabfa offers.
- */
+export interface HesabfaPagedList<T> {
+  List: T[];
+  TotalCount: number;
+  FilteredCount?: number;
+  From?: number;
+  To?: number;
+}
+
+export interface HesabfaItem {
+  Id?: number;
+  Code: number | string;
+  Name: string;
+  Barcode?: string | null;
+  ItemType?: number | null;
+  Unit?: string | null;
+  Stock?: number | null;
+  BuyPrice?: number | null;
+  SellPrice?: number | null;
+  NodeFamily?: string | null;
+  Tag?: string | null;
+  Description?: string | null;
+  ProductCode?: string | null;
+  Active?: boolean | null;
+}
+
+export interface HesabfaContact {
+  Id?: number;
+  Code: number | string;
+  Name: string;
+  Company?: string | null;
+  FirstName?: string | null;
+  LastName?: string | null;
+  ContactType?: number | null;
+  NationalCode?: string | null;
+  Address?: string | null;
+  City?: string | null;
+  State?: string | null;
+  PostalCode?: string | null;
+  Phone?: string | null;
+  Mobile?: string | null;
+  Email?: string | null;
+  Note?: string | null;
+  Tag?: string | null;
+  Active?: boolean | null;
+  NodeFamily?: string | null;
+}
+
+export interface HesabfaInvoiceItem {
+  Id?: number;
+  RowNumber?: number;
+  Description?: string;
+  ItemCode?: string | null;
+  Unit?: string | null;
+  Quantity?: number;
+  UnitPrice?: number;
+  Discount?: number;
+  Tax?: number;
+  TotalAmount?: number;
+}
+
+export interface HesabfaInvoice {
+  Id?: number;
+  Number: number | string;
+  Reference?: string | null;
+  Date?: string;
+  DueDate?: string;
+  ContactCode?: string | null;
+  ContactTitle?: string | null;
+  Sum?: number;
+  Payable?: number;
+  Paid?: number;
+  Rest?: number;
+  Note?: string | null;
+  Sent?: boolean;
+  Returned?: boolean;
+  InvoiceType?: number;
+  Status?: number;
+  Tag?: string | null;
+  Freight?: number;
+  Currency?: string | null;
+  InvoiceItems?: HesabfaInvoiceItem[];
+}
+
+export interface HesabfaProductCategory {
+  Id?: number;
+  Name?: string;
+  FullPath?: string;
+  ParentId?: number | null;
+}
+
+/** Payload Hesabfa POSTs to the change-hook URL. */
 export interface HesabfaWebhookPayload {
   Password: string;
-  /** Integer action code (insert/edit/delete) — we refetch instead of trusting it. */
   Action: number;
   ObjectType: 'Product' | 'Invoice' | 'Contact' | string;
   ObjectIdList: number[];
 }
+
+/** Common Hesabfa action codes observed in docs / change feed. */
+export const HESABFA_ACTION = {
+  CONTACT_DELETE: 32,
+  PRODUCT_DELETE: 53,
+} as const;
+
+export const HESABFA_INVOICE_TYPE_SALE = 0;
+export const HESABFA_CONTACT_TYPE_CUSTOMER = 2;
+export const HESABFA_ITEM_TYPE_PRODUCT = 0;
+export const HESABFA_CONTACT_NODE_FAMILY = 'مشتریان فروشگاه آنلاین';
+export const HESABFA_INVOICE_NOTE = 'فاکتور صادر شده توسط وب سایت کار خودرو';
+export const HESABFA_TAG = 'carkhodro';

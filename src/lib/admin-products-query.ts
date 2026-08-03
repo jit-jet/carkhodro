@@ -5,6 +5,10 @@
  */
 
 import type { AdminProductWhereFilters } from "@/src/lib/admin-product-where";
+import {
+  ADMIN_DEFAULT_PER_PAGE,
+  appendPaginationParams,
+} from "@/src/lib/admin-pagination";
 
 export interface ProductsTableFilters {
   search: string;
@@ -15,6 +19,7 @@ export interface ProductsTableFilters {
   offer: string;
   sortBy: string;
   sortDir: string;
+  perPage: number;
 }
 
 /** Filter/search fields only — used to clear selection when the result set changes. */
@@ -55,7 +60,12 @@ export function buildProductsHref(filters: ProductsTableFilters, page?: number):
   if (filters.offer) params.set("offer", filters.offer);
   if (filters.sortBy) params.set("sortBy", filters.sortBy);
   if (filters.sortDir) params.set("sortDir", filters.sortDir);
-  if (page && page > 1) params.set("page", String(page));
+  appendPaginationParams(
+    params,
+    page,
+    filters.perPage,
+    ADMIN_DEFAULT_PER_PAGE,
+  );
   const qs = params.toString();
   return qs ? `/admin/products?${qs}` : "/admin/products";
 }

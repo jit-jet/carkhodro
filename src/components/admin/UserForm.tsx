@@ -100,7 +100,9 @@ export default function UserForm({
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.type !== "image/jpeg") {
-      setAvatarError("تصویر باید با پسوند jpg باشد.");
+      const msg = "تصویر باید با پسوند jpg باشد.";
+      setAvatarError(msg);
+      notify({ variant: "error", title: "خطا", description: msg });
       return;
     }
     const form = new FormData();
@@ -109,6 +111,7 @@ export default function UserForm({
       const result = await uploadUserAvatarAdmin(initial.id, form);
       if (!result.ok) {
         setAvatarError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
       setAvatar(result.data.url);
@@ -127,9 +130,15 @@ export default function UserForm({
       const result = await removeUserAvatarAdmin(initial.id);
       if (!result.ok) {
         setAvatarError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
       setAvatar(null);
+      notify({
+        variant: "success",
+        title: "آواتار حذف شد",
+        description: "تصویر پروفایل حذف شد.",
+      });
     });
   }
 
@@ -161,7 +170,11 @@ export default function UserForm({
 
     startTransition(async () => {
       const result = await updateUser(initial.id, input);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
       const message = "اطلاعات کاربر با موفقیت ذخیره شد.";
       setSuccess(message);
       notify({ variant: "success", title: "ذخیره موفق", description: message });

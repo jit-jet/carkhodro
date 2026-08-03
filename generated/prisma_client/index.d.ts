@@ -133,6 +133,11 @@ export type Faq = $Result.DefaultSelection<Prisma.$FaqPayload>
  */
 export type SiteSetting = $Result.DefaultSelection<Prisma.$SiteSettingPayload>
 /**
+ * Model RulesContent
+ * Terms & rules page content — singleton row (`id = 1`), admin-edited via TipTap.
+ */
+export type RulesContent = $Result.DefaultSelection<Prisma.$RulesContentPayload>
+/**
  * Model SocialLink
  * Admin-managed social media links — shown in the footer and contact page.
  */
@@ -704,6 +709,16 @@ export class PrismaClient<
   get siteSetting(): Prisma.SiteSettingDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.rulesContent`: Exposes CRUD operations for the **RulesContent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RulesContents
+    * const rulesContents = await prisma.rulesContent.findMany()
+    * ```
+    */
+  get rulesContent(): Prisma.RulesContentDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.socialLink`: Exposes CRUD operations for the **SocialLink** model.
     * Example usage:
     * ```ts
@@ -1259,6 +1274,7 @@ export namespace Prisma {
     Post: 'Post',
     Faq: 'Faq',
     SiteSetting: 'SiteSetting',
+    RulesContent: 'RulesContent',
     SocialLink: 'SocialLink',
     SmsCampaign: 'SmsCampaign',
     ShippingOption: 'ShippingOption',
@@ -1284,7 +1300,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "socialLink" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
+      modelProps: "province" | "city" | "navLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "rulesContent" | "socialLink" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2990,6 +3006,80 @@ export namespace Prisma {
           }
         }
       }
+      RulesContent: {
+        payload: Prisma.$RulesContentPayload<ExtArgs>
+        fields: Prisma.RulesContentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RulesContentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RulesContentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload>
+          }
+          findFirst: {
+            args: Prisma.RulesContentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RulesContentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload>
+          }
+          findMany: {
+            args: Prisma.RulesContentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload>[]
+          }
+          create: {
+            args: Prisma.RulesContentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload>
+          }
+          createMany: {
+            args: Prisma.RulesContentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RulesContentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload>[]
+          }
+          delete: {
+            args: Prisma.RulesContentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload>
+          }
+          update: {
+            args: Prisma.RulesContentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload>
+          }
+          deleteMany: {
+            args: Prisma.RulesContentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RulesContentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RulesContentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload>[]
+          }
+          upsert: {
+            args: Prisma.RulesContentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RulesContentPayload>
+          }
+          aggregate: {
+            args: Prisma.RulesContentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRulesContent>
+          }
+          groupBy: {
+            args: Prisma.RulesContentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RulesContentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RulesContentCountArgs<ExtArgs>
+            result: $Utils.Optional<RulesContentCountAggregateOutputType> | number
+          }
+        }
+      }
       SocialLink: {
         payload: Prisma.$SocialLinkPayload<ExtArgs>
         fields: Prisma.SocialLinkFieldRefs
@@ -3861,6 +3951,7 @@ export namespace Prisma {
     post?: PostOmit
     faq?: FaqOmit
     siteSetting?: SiteSettingOmit
+    rulesContent?: RulesContentOmit
     socialLink?: SocialLinkOmit
     smsCampaign?: SmsCampaignOmit
     shippingOption?: ShippingOptionOmit
@@ -7807,10 +7898,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     accountBalance: number | null
+    hesabfaId: number | null
   }
 
   export type UserSumAggregateOutputType = {
     accountBalance: bigint | null
+    hesabfaId: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -7830,6 +7923,9 @@ export namespace Prisma {
     partnerCode: string | null
     username: string | null
     passwordHash: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7851,6 +7947,9 @@ export namespace Prisma {
     partnerCode: string | null
     username: string | null
     passwordHash: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7872,6 +7971,9 @@ export namespace Prisma {
     partnerCode: number
     username: number
     passwordHash: number
+    hesabfaCode: number
+    hesabfaId: number
+    hesabfaSyncedAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7880,10 +7982,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateInputType = {
     accountBalance?: true
+    hesabfaId?: true
   }
 
   export type UserSumAggregateInputType = {
     accountBalance?: true
+    hesabfaId?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -7903,6 +8007,9 @@ export namespace Prisma {
     partnerCode?: true
     username?: true
     passwordHash?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7924,6 +8031,9 @@ export namespace Prisma {
     partnerCode?: true
     username?: true
     passwordHash?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7945,6 +8055,9 @@ export namespace Prisma {
     partnerCode?: true
     username?: true
     passwordHash?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8053,6 +8166,9 @@ export namespace Prisma {
     partnerCode: string | null
     username: string | null
     passwordHash: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -8093,6 +8209,9 @@ export namespace Prisma {
     partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     addresses?: boolean | User$addressesArgs<ExtArgs>
@@ -8127,6 +8246,9 @@ export namespace Prisma {
     partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -8148,6 +8270,9 @@ export namespace Prisma {
     partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -8169,11 +8294,14 @@ export namespace Prisma {
     partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "isActive" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "isActive" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addresses?: boolean | User$addressesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -8258,6 +8386,18 @@ export namespace Prisma {
        * Storefront customers keep authenticating with SMS OTP and never get one.
        */
       passwordHash: string | null
+      /**
+       * Hesabfa contact `Code` — unique link key for two-way contact sync.
+       */
+      hesabfaCode: string | null
+      /**
+       * Hesabfa internal numeric contact Id (webhook ObjectIdList).
+       */
+      hesabfaId: number | null
+      /**
+       * Last successful Hesabfa contact sync timestamp.
+       */
+      hesabfaSyncedAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -8711,6 +8851,9 @@ export namespace Prisma {
     readonly partnerCode: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
+    readonly hesabfaCode: FieldRef<"User", 'String'>
+    readonly hesabfaId: FieldRef<"User", 'Int'>
+    readonly hesabfaSyncedAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -17347,6 +17490,7 @@ export namespace Prisma {
     wholesaleDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
+    hesabfaId: number | null
     stock: number | null
     packQuantity: number | null
     cartonQuantity: number | null
@@ -17363,6 +17507,7 @@ export namespace Prisma {
     wholesaleDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
+    hesabfaId: number | null
     stock: number | null
     packQuantity: number | null
     cartonQuantity: number | null
@@ -17383,7 +17528,8 @@ export namespace Prisma {
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
-    accountancyId: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
     lastSyncedAt: Date | null
     stock: number | null
     origin: string | null
@@ -17413,7 +17559,8 @@ export namespace Prisma {
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
-    accountancyId: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
     lastSyncedAt: Date | null
     stock: number | null
     origin: string | null
@@ -17443,7 +17590,8 @@ export namespace Prisma {
     retailPriceDiffPct: number
     retailDiscountPct: number
     isOffer: number
-    accountancyId: number
+    hesabfaCode: number
+    hesabfaId: number
     lastSyncedAt: number
     stock: number
     origin: number
@@ -17471,6 +17619,7 @@ export namespace Prisma {
     wholesaleDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
+    hesabfaId?: true
     stock?: true
     packQuantity?: true
     cartonQuantity?: true
@@ -17487,6 +17636,7 @@ export namespace Prisma {
     wholesaleDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
+    hesabfaId?: true
     stock?: true
     packQuantity?: true
     cartonQuantity?: true
@@ -17507,7 +17657,8 @@ export namespace Prisma {
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
-    accountancyId?: true
+    hesabfaCode?: true
+    hesabfaId?: true
     lastSyncedAt?: true
     stock?: true
     origin?: true
@@ -17537,7 +17688,8 @@ export namespace Prisma {
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
-    accountancyId?: true
+    hesabfaCode?: true
+    hesabfaId?: true
     lastSyncedAt?: true
     stock?: true
     origin?: true
@@ -17567,7 +17719,8 @@ export namespace Prisma {
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
-    accountancyId?: true
+    hesabfaCode?: true
+    hesabfaId?: true
     lastSyncedAt?: true
     stock?: true
     origin?: true
@@ -17684,7 +17837,8 @@ export namespace Prisma {
     retailPriceDiffPct: Decimal
     retailDiscountPct: Decimal
     isOffer: boolean
-    accountancyId: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
     lastSyncedAt: Date | null
     stock: number
     origin: string | null
@@ -17733,7 +17887,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
-    accountancyId?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
     origin?: boolean
@@ -17773,7 +17928,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
-    accountancyId?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
     origin?: boolean
@@ -17805,7 +17961,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
-    accountancyId?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
     origin?: boolean
@@ -17837,7 +17994,8 @@ export namespace Prisma {
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
-    accountancyId?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
     lastSyncedAt?: boolean
     stock?: boolean
     origin?: boolean
@@ -17856,7 +18014,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "accountancyId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -17901,7 +18059,7 @@ export namespace Prisma {
       partsBrandId: number
       categoryId: number
       /**
-       * Base wholesale price in Toman — synced from Hesabfa (SellPrice).
+       * Base wholesale price in Toman.
        */
       wholesalePrice: bigint
       /**
@@ -17921,12 +18079,15 @@ export namespace Prisma {
       retailDiscountPct: Prisma.Decimal
       isOffer: boolean
       /**
-       * Primary key in the external accountancy system.
-       * Nullable until first sync — product must not go live until populated.
+       * Hesabfa item `Code` — unique link key for two-way product sync.
        */
-      accountancyId: string | null
+      hesabfaCode: string | null
       /**
-       * Timestamp of the last successful price + stock pull from the external API
+       * Hesabfa internal numeric item Id (webhook ObjectIdList / deletes).
+       */
+      hesabfaId: number | null
+      /**
+       * Timestamp of the last successful Hesabfa product sync.
        */
       lastSyncedAt: Date | null
       stock: number
@@ -18406,7 +18567,8 @@ export namespace Prisma {
     readonly retailPriceDiffPct: FieldRef<"Product", 'Decimal'>
     readonly retailDiscountPct: FieldRef<"Product", 'Decimal'>
     readonly isOffer: FieldRef<"Product", 'Boolean'>
-    readonly accountancyId: FieldRef<"Product", 'String'>
+    readonly hesabfaCode: FieldRef<"Product", 'String'>
+    readonly hesabfaId: FieldRef<"Product", 'Int'>
     readonly lastSyncedAt: FieldRef<"Product", 'DateTime'>
     readonly stock: FieldRef<"Product", 'Int'>
     readonly origin: FieldRef<"Product", 'String'>
@@ -30283,6 +30445,18 @@ export namespace Prisma {
     headerPromo1: string | null
     headerPromo2: string | null
     aboutText: string | null
+    footerTrust1Icon: string | null
+    footerTrust1Title: string | null
+    footerTrust1Desc: string | null
+    footerTrust2Icon: string | null
+    footerTrust2Title: string | null
+    footerTrust2Desc: string | null
+    footerTrust3Icon: string | null
+    footerTrust3Title: string | null
+    footerTrust3Desc: string | null
+    footerTrust4Icon: string | null
+    footerTrust4Title: string | null
+    footerTrust4Desc: string | null
     updatedAt: Date | null
   }
 
@@ -30296,6 +30470,18 @@ export namespace Prisma {
     headerPromo1: string | null
     headerPromo2: string | null
     aboutText: string | null
+    footerTrust1Icon: string | null
+    footerTrust1Title: string | null
+    footerTrust1Desc: string | null
+    footerTrust2Icon: string | null
+    footerTrust2Title: string | null
+    footerTrust2Desc: string | null
+    footerTrust3Icon: string | null
+    footerTrust3Title: string | null
+    footerTrust3Desc: string | null
+    footerTrust4Icon: string | null
+    footerTrust4Title: string | null
+    footerTrust4Desc: string | null
     updatedAt: Date | null
   }
 
@@ -30309,6 +30495,18 @@ export namespace Prisma {
     headerPromo1: number
     headerPromo2: number
     aboutText: number
+    footerTrust1Icon: number
+    footerTrust1Title: number
+    footerTrust1Desc: number
+    footerTrust2Icon: number
+    footerTrust2Title: number
+    footerTrust2Desc: number
+    footerTrust3Icon: number
+    footerTrust3Title: number
+    footerTrust3Desc: number
+    footerTrust4Icon: number
+    footerTrust4Title: number
+    footerTrust4Desc: number
     updatedAt: number
     _all: number
   }
@@ -30332,6 +30530,18 @@ export namespace Prisma {
     headerPromo1?: true
     headerPromo2?: true
     aboutText?: true
+    footerTrust1Icon?: true
+    footerTrust1Title?: true
+    footerTrust1Desc?: true
+    footerTrust2Icon?: true
+    footerTrust2Title?: true
+    footerTrust2Desc?: true
+    footerTrust3Icon?: true
+    footerTrust3Title?: true
+    footerTrust3Desc?: true
+    footerTrust4Icon?: true
+    footerTrust4Title?: true
+    footerTrust4Desc?: true
     updatedAt?: true
   }
 
@@ -30345,6 +30555,18 @@ export namespace Prisma {
     headerPromo1?: true
     headerPromo2?: true
     aboutText?: true
+    footerTrust1Icon?: true
+    footerTrust1Title?: true
+    footerTrust1Desc?: true
+    footerTrust2Icon?: true
+    footerTrust2Title?: true
+    footerTrust2Desc?: true
+    footerTrust3Icon?: true
+    footerTrust3Title?: true
+    footerTrust3Desc?: true
+    footerTrust4Icon?: true
+    footerTrust4Title?: true
+    footerTrust4Desc?: true
     updatedAt?: true
   }
 
@@ -30358,6 +30580,18 @@ export namespace Prisma {
     headerPromo1?: true
     headerPromo2?: true
     aboutText?: true
+    footerTrust1Icon?: true
+    footerTrust1Title?: true
+    footerTrust1Desc?: true
+    footerTrust2Icon?: true
+    footerTrust2Title?: true
+    footerTrust2Desc?: true
+    footerTrust3Icon?: true
+    footerTrust3Title?: true
+    footerTrust3Desc?: true
+    footerTrust4Icon?: true
+    footerTrust4Title?: true
+    footerTrust4Desc?: true
     updatedAt?: true
     _all?: true
   }
@@ -30458,6 +30692,18 @@ export namespace Prisma {
     headerPromo1: string | null
     headerPromo2: string | null
     aboutText: string | null
+    footerTrust1Icon: string | null
+    footerTrust1Title: string | null
+    footerTrust1Desc: string | null
+    footerTrust2Icon: string | null
+    footerTrust2Title: string | null
+    footerTrust2Desc: string | null
+    footerTrust3Icon: string | null
+    footerTrust3Title: string | null
+    footerTrust3Desc: string | null
+    footerTrust4Icon: string | null
+    footerTrust4Title: string | null
+    footerTrust4Desc: string | null
     updatedAt: Date
     _count: SiteSettingCountAggregateOutputType | null
     _avg: SiteSettingAvgAggregateOutputType | null
@@ -30490,6 +30736,18 @@ export namespace Prisma {
     headerPromo1?: boolean
     headerPromo2?: boolean
     aboutText?: boolean
+    footerTrust1Icon?: boolean
+    footerTrust1Title?: boolean
+    footerTrust1Desc?: boolean
+    footerTrust2Icon?: boolean
+    footerTrust2Title?: boolean
+    footerTrust2Desc?: boolean
+    footerTrust3Icon?: boolean
+    footerTrust3Title?: boolean
+    footerTrust3Desc?: boolean
+    footerTrust4Icon?: boolean
+    footerTrust4Title?: boolean
+    footerTrust4Desc?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
@@ -30503,6 +30761,18 @@ export namespace Prisma {
     headerPromo1?: boolean
     headerPromo2?: boolean
     aboutText?: boolean
+    footerTrust1Icon?: boolean
+    footerTrust1Title?: boolean
+    footerTrust1Desc?: boolean
+    footerTrust2Icon?: boolean
+    footerTrust2Title?: boolean
+    footerTrust2Desc?: boolean
+    footerTrust3Icon?: boolean
+    footerTrust3Title?: boolean
+    footerTrust3Desc?: boolean
+    footerTrust4Icon?: boolean
+    footerTrust4Title?: boolean
+    footerTrust4Desc?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
@@ -30516,6 +30786,18 @@ export namespace Prisma {
     headerPromo1?: boolean
     headerPromo2?: boolean
     aboutText?: boolean
+    footerTrust1Icon?: boolean
+    footerTrust1Title?: boolean
+    footerTrust1Desc?: boolean
+    footerTrust2Icon?: boolean
+    footerTrust2Title?: boolean
+    footerTrust2Desc?: boolean
+    footerTrust3Icon?: boolean
+    footerTrust3Title?: boolean
+    footerTrust3Desc?: boolean
+    footerTrust4Icon?: boolean
+    footerTrust4Title?: boolean
+    footerTrust4Desc?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
@@ -30529,10 +30811,22 @@ export namespace Prisma {
     headerPromo1?: boolean
     headerPromo2?: boolean
     aboutText?: boolean
+    footerTrust1Icon?: boolean
+    footerTrust1Title?: boolean
+    footerTrust1Desc?: boolean
+    footerTrust2Icon?: boolean
+    footerTrust2Title?: boolean
+    footerTrust2Desc?: boolean
+    footerTrust3Icon?: boolean
+    footerTrust3Title?: boolean
+    footerTrust3Desc?: boolean
+    footerTrust4Icon?: boolean
+    footerTrust4Title?: boolean
+    footerTrust4Desc?: boolean
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "secondaryPhone" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "aboutText" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "secondaryPhone" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
@@ -30550,6 +30844,21 @@ export namespace Prisma {
       headerPromo1: string | null
       headerPromo2: string | null
       aboutText: string | null
+      /**
+       * Footer trust badges (icon / title / description) — four fixed slots.
+       */
+      footerTrust1Icon: string | null
+      footerTrust1Title: string | null
+      footerTrust1Desc: string | null
+      footerTrust2Icon: string | null
+      footerTrust2Title: string | null
+      footerTrust2Desc: string | null
+      footerTrust3Icon: string | null
+      footerTrust3Title: string | null
+      footerTrust3Desc: string | null
+      footerTrust4Icon: string | null
+      footerTrust4Title: string | null
+      footerTrust4Desc: string | null
       updatedAt: Date
     }, ExtArgs["result"]["siteSetting"]>
     composites: {}
@@ -30983,6 +31292,18 @@ export namespace Prisma {
     readonly headerPromo1: FieldRef<"SiteSetting", 'String'>
     readonly headerPromo2: FieldRef<"SiteSetting", 'String'>
     readonly aboutText: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust1Icon: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust1Title: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust1Desc: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust2Icon: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust2Title: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust2Desc: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust3Icon: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust3Title: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust3Desc: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust4Icon: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust4Title: FieldRef<"SiteSetting", 'String'>
+    readonly footerTrust4Desc: FieldRef<"SiteSetting", 'String'>
     readonly updatedAt: FieldRef<"SiteSetting", 'DateTime'>
   }
     
@@ -31352,6 +31673,1049 @@ export namespace Prisma {
      * Omit specific fields from the SiteSetting
      */
     omit?: SiteSettingOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RulesContent
+   */
+
+  export type AggregateRulesContent = {
+    _count: RulesContentCountAggregateOutputType | null
+    _avg: RulesContentAvgAggregateOutputType | null
+    _sum: RulesContentSumAggregateOutputType | null
+    _min: RulesContentMinAggregateOutputType | null
+    _max: RulesContentMaxAggregateOutputType | null
+  }
+
+  export type RulesContentAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type RulesContentSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type RulesContentMinAggregateOutputType = {
+    id: number | null
+    updatedLabel: string | null
+    intro: string | null
+    body: string | null
+    updatedAt: Date | null
+  }
+
+  export type RulesContentMaxAggregateOutputType = {
+    id: number | null
+    updatedLabel: string | null
+    intro: string | null
+    body: string | null
+    updatedAt: Date | null
+  }
+
+  export type RulesContentCountAggregateOutputType = {
+    id: number
+    updatedLabel: number
+    intro: number
+    body: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type RulesContentAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type RulesContentSumAggregateInputType = {
+    id?: true
+  }
+
+  export type RulesContentMinAggregateInputType = {
+    id?: true
+    updatedLabel?: true
+    intro?: true
+    body?: true
+    updatedAt?: true
+  }
+
+  export type RulesContentMaxAggregateInputType = {
+    id?: true
+    updatedLabel?: true
+    intro?: true
+    body?: true
+    updatedAt?: true
+  }
+
+  export type RulesContentCountAggregateInputType = {
+    id?: true
+    updatedLabel?: true
+    intro?: true
+    body?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type RulesContentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RulesContent to aggregate.
+     */
+    where?: RulesContentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RulesContents to fetch.
+     */
+    orderBy?: RulesContentOrderByWithRelationInput | RulesContentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RulesContentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RulesContents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RulesContents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RulesContents
+    **/
+    _count?: true | RulesContentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RulesContentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RulesContentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RulesContentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RulesContentMaxAggregateInputType
+  }
+
+  export type GetRulesContentAggregateType<T extends RulesContentAggregateArgs> = {
+        [P in keyof T & keyof AggregateRulesContent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRulesContent[P]>
+      : GetScalarType<T[P], AggregateRulesContent[P]>
+  }
+
+
+
+
+  export type RulesContentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RulesContentWhereInput
+    orderBy?: RulesContentOrderByWithAggregationInput | RulesContentOrderByWithAggregationInput[]
+    by: RulesContentScalarFieldEnum[] | RulesContentScalarFieldEnum
+    having?: RulesContentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RulesContentCountAggregateInputType | true
+    _avg?: RulesContentAvgAggregateInputType
+    _sum?: RulesContentSumAggregateInputType
+    _min?: RulesContentMinAggregateInputType
+    _max?: RulesContentMaxAggregateInputType
+  }
+
+  export type RulesContentGroupByOutputType = {
+    id: number
+    updatedLabel: string | null
+    intro: string | null
+    body: string
+    updatedAt: Date
+    _count: RulesContentCountAggregateOutputType | null
+    _avg: RulesContentAvgAggregateOutputType | null
+    _sum: RulesContentSumAggregateOutputType | null
+    _min: RulesContentMinAggregateOutputType | null
+    _max: RulesContentMaxAggregateOutputType | null
+  }
+
+  type GetRulesContentGroupByPayload<T extends RulesContentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RulesContentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RulesContentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RulesContentGroupByOutputType[P]>
+            : GetScalarType<T[P], RulesContentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RulesContentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    updatedLabel?: boolean
+    intro?: boolean
+    body?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["rulesContent"]>
+
+  export type RulesContentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    updatedLabel?: boolean
+    intro?: boolean
+    body?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["rulesContent"]>
+
+  export type RulesContentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    updatedLabel?: boolean
+    intro?: boolean
+    body?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["rulesContent"]>
+
+  export type RulesContentSelectScalar = {
+    id?: boolean
+    updatedLabel?: boolean
+    intro?: boolean
+    body?: boolean
+    updatedAt?: boolean
+  }
+
+  export type RulesContentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "updatedLabel" | "intro" | "body" | "updatedAt", ExtArgs["result"]["rulesContent"]>
+
+  export type $RulesContentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RulesContent"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      /**
+       * Line under the page title (e.g. last-updated note).
+       */
+      updatedLabel: string | null
+      /**
+       * Amber intro banner text on /rules.
+       */
+      intro: string | null
+      /**
+       * Main rules body HTML — admin-authored via TipTap.
+       */
+      body: string
+      updatedAt: Date
+    }, ExtArgs["result"]["rulesContent"]>
+    composites: {}
+  }
+
+  type RulesContentGetPayload<S extends boolean | null | undefined | RulesContentDefaultArgs> = $Result.GetResult<Prisma.$RulesContentPayload, S>
+
+  type RulesContentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RulesContentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RulesContentCountAggregateInputType | true
+    }
+
+  export interface RulesContentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RulesContent'], meta: { name: 'RulesContent' } }
+    /**
+     * Find zero or one RulesContent that matches the filter.
+     * @param {RulesContentFindUniqueArgs} args - Arguments to find a RulesContent
+     * @example
+     * // Get one RulesContent
+     * const rulesContent = await prisma.rulesContent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RulesContentFindUniqueArgs>(args: SelectSubset<T, RulesContentFindUniqueArgs<ExtArgs>>): Prisma__RulesContentClient<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RulesContent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RulesContentFindUniqueOrThrowArgs} args - Arguments to find a RulesContent
+     * @example
+     * // Get one RulesContent
+     * const rulesContent = await prisma.rulesContent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RulesContentFindUniqueOrThrowArgs>(args: SelectSubset<T, RulesContentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RulesContentClient<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RulesContent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RulesContentFindFirstArgs} args - Arguments to find a RulesContent
+     * @example
+     * // Get one RulesContent
+     * const rulesContent = await prisma.rulesContent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RulesContentFindFirstArgs>(args?: SelectSubset<T, RulesContentFindFirstArgs<ExtArgs>>): Prisma__RulesContentClient<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RulesContent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RulesContentFindFirstOrThrowArgs} args - Arguments to find a RulesContent
+     * @example
+     * // Get one RulesContent
+     * const rulesContent = await prisma.rulesContent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RulesContentFindFirstOrThrowArgs>(args?: SelectSubset<T, RulesContentFindFirstOrThrowArgs<ExtArgs>>): Prisma__RulesContentClient<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RulesContents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RulesContentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RulesContents
+     * const rulesContents = await prisma.rulesContent.findMany()
+     * 
+     * // Get first 10 RulesContents
+     * const rulesContents = await prisma.rulesContent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const rulesContentWithIdOnly = await prisma.rulesContent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RulesContentFindManyArgs>(args?: SelectSubset<T, RulesContentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RulesContent.
+     * @param {RulesContentCreateArgs} args - Arguments to create a RulesContent.
+     * @example
+     * // Create one RulesContent
+     * const RulesContent = await prisma.rulesContent.create({
+     *   data: {
+     *     // ... data to create a RulesContent
+     *   }
+     * })
+     * 
+     */
+    create<T extends RulesContentCreateArgs>(args: SelectSubset<T, RulesContentCreateArgs<ExtArgs>>): Prisma__RulesContentClient<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RulesContents.
+     * @param {RulesContentCreateManyArgs} args - Arguments to create many RulesContents.
+     * @example
+     * // Create many RulesContents
+     * const rulesContent = await prisma.rulesContent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RulesContentCreateManyArgs>(args?: SelectSubset<T, RulesContentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RulesContents and returns the data saved in the database.
+     * @param {RulesContentCreateManyAndReturnArgs} args - Arguments to create many RulesContents.
+     * @example
+     * // Create many RulesContents
+     * const rulesContent = await prisma.rulesContent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RulesContents and only return the `id`
+     * const rulesContentWithIdOnly = await prisma.rulesContent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RulesContentCreateManyAndReturnArgs>(args?: SelectSubset<T, RulesContentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RulesContent.
+     * @param {RulesContentDeleteArgs} args - Arguments to delete one RulesContent.
+     * @example
+     * // Delete one RulesContent
+     * const RulesContent = await prisma.rulesContent.delete({
+     *   where: {
+     *     // ... filter to delete one RulesContent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RulesContentDeleteArgs>(args: SelectSubset<T, RulesContentDeleteArgs<ExtArgs>>): Prisma__RulesContentClient<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RulesContent.
+     * @param {RulesContentUpdateArgs} args - Arguments to update one RulesContent.
+     * @example
+     * // Update one RulesContent
+     * const rulesContent = await prisma.rulesContent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RulesContentUpdateArgs>(args: SelectSubset<T, RulesContentUpdateArgs<ExtArgs>>): Prisma__RulesContentClient<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RulesContents.
+     * @param {RulesContentDeleteManyArgs} args - Arguments to filter RulesContents to delete.
+     * @example
+     * // Delete a few RulesContents
+     * const { count } = await prisma.rulesContent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RulesContentDeleteManyArgs>(args?: SelectSubset<T, RulesContentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RulesContents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RulesContentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RulesContents
+     * const rulesContent = await prisma.rulesContent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RulesContentUpdateManyArgs>(args: SelectSubset<T, RulesContentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RulesContents and returns the data updated in the database.
+     * @param {RulesContentUpdateManyAndReturnArgs} args - Arguments to update many RulesContents.
+     * @example
+     * // Update many RulesContents
+     * const rulesContent = await prisma.rulesContent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RulesContents and only return the `id`
+     * const rulesContentWithIdOnly = await prisma.rulesContent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RulesContentUpdateManyAndReturnArgs>(args: SelectSubset<T, RulesContentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RulesContent.
+     * @param {RulesContentUpsertArgs} args - Arguments to update or create a RulesContent.
+     * @example
+     * // Update or create a RulesContent
+     * const rulesContent = await prisma.rulesContent.upsert({
+     *   create: {
+     *     // ... data to create a RulesContent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RulesContent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RulesContentUpsertArgs>(args: SelectSubset<T, RulesContentUpsertArgs<ExtArgs>>): Prisma__RulesContentClient<$Result.GetResult<Prisma.$RulesContentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RulesContents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RulesContentCountArgs} args - Arguments to filter RulesContents to count.
+     * @example
+     * // Count the number of RulesContents
+     * const count = await prisma.rulesContent.count({
+     *   where: {
+     *     // ... the filter for the RulesContents we want to count
+     *   }
+     * })
+    **/
+    count<T extends RulesContentCountArgs>(
+      args?: Subset<T, RulesContentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RulesContentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RulesContent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RulesContentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RulesContentAggregateArgs>(args: Subset<T, RulesContentAggregateArgs>): Prisma.PrismaPromise<GetRulesContentAggregateType<T>>
+
+    /**
+     * Group by RulesContent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RulesContentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RulesContentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RulesContentGroupByArgs['orderBy'] }
+        : { orderBy?: RulesContentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RulesContentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRulesContentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RulesContent model
+   */
+  readonly fields: RulesContentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RulesContent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RulesContentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RulesContent model
+   */
+  interface RulesContentFieldRefs {
+    readonly id: FieldRef<"RulesContent", 'Int'>
+    readonly updatedLabel: FieldRef<"RulesContent", 'String'>
+    readonly intro: FieldRef<"RulesContent", 'String'>
+    readonly body: FieldRef<"RulesContent", 'String'>
+    readonly updatedAt: FieldRef<"RulesContent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RulesContent findUnique
+   */
+  export type RulesContentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * Filter, which RulesContent to fetch.
+     */
+    where: RulesContentWhereUniqueInput
+  }
+
+  /**
+   * RulesContent findUniqueOrThrow
+   */
+  export type RulesContentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * Filter, which RulesContent to fetch.
+     */
+    where: RulesContentWhereUniqueInput
+  }
+
+  /**
+   * RulesContent findFirst
+   */
+  export type RulesContentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * Filter, which RulesContent to fetch.
+     */
+    where?: RulesContentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RulesContents to fetch.
+     */
+    orderBy?: RulesContentOrderByWithRelationInput | RulesContentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RulesContents.
+     */
+    cursor?: RulesContentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RulesContents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RulesContents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RulesContents.
+     */
+    distinct?: RulesContentScalarFieldEnum | RulesContentScalarFieldEnum[]
+  }
+
+  /**
+   * RulesContent findFirstOrThrow
+   */
+  export type RulesContentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * Filter, which RulesContent to fetch.
+     */
+    where?: RulesContentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RulesContents to fetch.
+     */
+    orderBy?: RulesContentOrderByWithRelationInput | RulesContentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RulesContents.
+     */
+    cursor?: RulesContentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RulesContents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RulesContents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RulesContents.
+     */
+    distinct?: RulesContentScalarFieldEnum | RulesContentScalarFieldEnum[]
+  }
+
+  /**
+   * RulesContent findMany
+   */
+  export type RulesContentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * Filter, which RulesContents to fetch.
+     */
+    where?: RulesContentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RulesContents to fetch.
+     */
+    orderBy?: RulesContentOrderByWithRelationInput | RulesContentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RulesContents.
+     */
+    cursor?: RulesContentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RulesContents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RulesContents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RulesContents.
+     */
+    distinct?: RulesContentScalarFieldEnum | RulesContentScalarFieldEnum[]
+  }
+
+  /**
+   * RulesContent create
+   */
+  export type RulesContentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * The data needed to create a RulesContent.
+     */
+    data: XOR<RulesContentCreateInput, RulesContentUncheckedCreateInput>
+  }
+
+  /**
+   * RulesContent createMany
+   */
+  export type RulesContentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RulesContents.
+     */
+    data: RulesContentCreateManyInput | RulesContentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RulesContent createManyAndReturn
+   */
+  export type RulesContentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * The data used to create many RulesContents.
+     */
+    data: RulesContentCreateManyInput | RulesContentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RulesContent update
+   */
+  export type RulesContentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * The data needed to update a RulesContent.
+     */
+    data: XOR<RulesContentUpdateInput, RulesContentUncheckedUpdateInput>
+    /**
+     * Choose, which RulesContent to update.
+     */
+    where: RulesContentWhereUniqueInput
+  }
+
+  /**
+   * RulesContent updateMany
+   */
+  export type RulesContentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RulesContents.
+     */
+    data: XOR<RulesContentUpdateManyMutationInput, RulesContentUncheckedUpdateManyInput>
+    /**
+     * Filter which RulesContents to update
+     */
+    where?: RulesContentWhereInput
+    /**
+     * Limit how many RulesContents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RulesContent updateManyAndReturn
+   */
+  export type RulesContentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * The data used to update RulesContents.
+     */
+    data: XOR<RulesContentUpdateManyMutationInput, RulesContentUncheckedUpdateManyInput>
+    /**
+     * Filter which RulesContents to update
+     */
+    where?: RulesContentWhereInput
+    /**
+     * Limit how many RulesContents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RulesContent upsert
+   */
+  export type RulesContentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * The filter to search for the RulesContent to update in case it exists.
+     */
+    where: RulesContentWhereUniqueInput
+    /**
+     * In case the RulesContent found by the `where` argument doesn't exist, create a new RulesContent with this data.
+     */
+    create: XOR<RulesContentCreateInput, RulesContentUncheckedCreateInput>
+    /**
+     * In case the RulesContent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RulesContentUpdateInput, RulesContentUncheckedUpdateInput>
+  }
+
+  /**
+   * RulesContent delete
+   */
+  export type RulesContentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
+    /**
+     * Filter which RulesContent to delete.
+     */
+    where: RulesContentWhereUniqueInput
+  }
+
+  /**
+   * RulesContent deleteMany
+   */
+  export type RulesContentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RulesContents to delete
+     */
+    where?: RulesContentWhereInput
+    /**
+     * Limit how many RulesContents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RulesContent without action
+   */
+  export type RulesContentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RulesContent
+     */
+    select?: RulesContentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RulesContent
+     */
+    omit?: RulesContentOmit<ExtArgs> | null
   }
 
 
@@ -34792,6 +36156,7 @@ export namespace Prisma {
     discountAmount: number | null
     totalAmount: number | null
     paymentTrackId: number | null
+    hesabfaId: number | null
   }
 
   export type OrderSumAggregateOutputType = {
@@ -34802,6 +36167,7 @@ export namespace Prisma {
     discountAmount: bigint | null
     totalAmount: bigint | null
     paymentTrackId: bigint | null
+    hesabfaId: number | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -34829,6 +36195,9 @@ export namespace Prisma {
     trackingCode: string | null
     paymentTrackId: bigint | null
     paymentRefNumber: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     paidAt: Date | null
     shippedAt: Date | null
     deliveredAt: Date | null
@@ -34861,6 +36230,9 @@ export namespace Prisma {
     trackingCode: string | null
     paymentTrackId: bigint | null
     paymentRefNumber: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     paidAt: Date | null
     shippedAt: Date | null
     deliveredAt: Date | null
@@ -34893,6 +36265,9 @@ export namespace Prisma {
     trackingCode: number
     paymentTrackId: number
     paymentRefNumber: number
+    hesabfaCode: number
+    hesabfaId: number
+    hesabfaSyncedAt: number
     paidAt: number
     shippedAt: number
     deliveredAt: number
@@ -34910,6 +36285,7 @@ export namespace Prisma {
     discountAmount?: true
     totalAmount?: true
     paymentTrackId?: true
+    hesabfaId?: true
   }
 
   export type OrderSumAggregateInputType = {
@@ -34920,6 +36296,7 @@ export namespace Prisma {
     discountAmount?: true
     totalAmount?: true
     paymentTrackId?: true
+    hesabfaId?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -34947,6 +36324,9 @@ export namespace Prisma {
     trackingCode?: true
     paymentTrackId?: true
     paymentRefNumber?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     paidAt?: true
     shippedAt?: true
     deliveredAt?: true
@@ -34979,6 +36359,9 @@ export namespace Prisma {
     trackingCode?: true
     paymentTrackId?: true
     paymentRefNumber?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     paidAt?: true
     shippedAt?: true
     deliveredAt?: true
@@ -35011,6 +36394,9 @@ export namespace Prisma {
     trackingCode?: true
     paymentTrackId?: true
     paymentRefNumber?: true
+    hesabfaCode?: true
+    hesabfaId?: true
+    hesabfaSyncedAt?: true
     paidAt?: true
     shippedAt?: true
     deliveredAt?: true
@@ -35130,6 +36516,9 @@ export namespace Prisma {
     trackingCode: string | null
     paymentTrackId: bigint | null
     paymentRefNumber: string | null
+    hesabfaCode: string | null
+    hesabfaId: number | null
+    hesabfaSyncedAt: Date | null
     paidAt: Date | null
     shippedAt: Date | null
     deliveredAt: Date | null
@@ -35181,6 +36570,9 @@ export namespace Prisma {
     trackingCode?: boolean
     paymentTrackId?: boolean
     paymentRefNumber?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -35220,6 +36612,9 @@ export namespace Prisma {
     trackingCode?: boolean
     paymentTrackId?: boolean
     paymentRefNumber?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -35256,6 +36651,9 @@ export namespace Prisma {
     trackingCode?: boolean
     paymentTrackId?: boolean
     paymentRefNumber?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -35292,6 +36690,9 @@ export namespace Prisma {
     trackingCode?: boolean
     paymentTrackId?: boolean
     paymentRefNumber?: boolean
+    hesabfaCode?: boolean
+    hesabfaId?: boolean
+    hesabfaSyncedAt?: boolean
     paidAt?: boolean
     shippedAt?: boolean
     deliveredAt?: boolean
@@ -35299,7 +36700,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "discountAmount" | "discountCode" | "discountCodeId" | "totalAmount" | "notes" | "trackingCode" | "paymentTrackId" | "paymentRefNumber" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "discountAmount" | "discountCode" | "discountCodeId" | "totalAmount" | "notes" | "trackingCode" | "paymentTrackId" | "paymentRefNumber" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     address?: boolean | AddressDefaultArgs<ExtArgs>
@@ -35386,6 +36787,18 @@ export namespace Prisma {
        * Bank reference number returned by Zibal after a successful verify.
        */
       paymentRefNumber: string | null
+      /**
+       * Hesabfa sales invoice `Number` — unique link key (never import unknown invoices).
+       */
+      hesabfaCode: string | null
+      /**
+       * Hesabfa internal numeric invoice Id (webhook ObjectIdList).
+       */
+      hesabfaId: number | null
+      /**
+       * Last successful Hesabfa invoice sync timestamp.
+       */
+      hesabfaSyncedAt: Date | null
       paidAt: Date | null
       shippedAt: Date | null
       deliveredAt: Date | null
@@ -35844,6 +37257,9 @@ export namespace Prisma {
     readonly trackingCode: FieldRef<"Order", 'String'>
     readonly paymentTrackId: FieldRef<"Order", 'BigInt'>
     readonly paymentRefNumber: FieldRef<"Order", 'String'>
+    readonly hesabfaCode: FieldRef<"Order", 'String'>
+    readonly hesabfaId: FieldRef<"Order", 'Int'>
+    readonly hesabfaSyncedAt: FieldRef<"Order", 'DateTime'>
     readonly paidAt: FieldRef<"Order", 'DateTime'>
     readonly shippedAt: FieldRef<"Order", 'DateTime'>
     readonly deliveredAt: FieldRef<"Order", 'DateTime'>
@@ -43364,6 +44780,9 @@ export namespace Prisma {
     partnerCode: 'partnerCode',
     username: 'username',
     passwordHash: 'passwordHash',
+    hesabfaCode: 'hesabfaCode',
+    hesabfaId: 'hesabfaId',
+    hesabfaSyncedAt: 'hesabfaSyncedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -43474,7 +44893,8 @@ export namespace Prisma {
     retailPriceDiffPct: 'retailPriceDiffPct',
     retailDiscountPct: 'retailDiscountPct',
     isOffer: 'isOffer',
-    accountancyId: 'accountancyId',
+    hesabfaCode: 'hesabfaCode',
+    hesabfaId: 'hesabfaId',
     lastSyncedAt: 'lastSyncedAt',
     stock: 'stock',
     origin: 'origin',
@@ -43637,10 +45057,33 @@ export namespace Prisma {
     headerPromo1: 'headerPromo1',
     headerPromo2: 'headerPromo2',
     aboutText: 'aboutText',
+    footerTrust1Icon: 'footerTrust1Icon',
+    footerTrust1Title: 'footerTrust1Title',
+    footerTrust1Desc: 'footerTrust1Desc',
+    footerTrust2Icon: 'footerTrust2Icon',
+    footerTrust2Title: 'footerTrust2Title',
+    footerTrust2Desc: 'footerTrust2Desc',
+    footerTrust3Icon: 'footerTrust3Icon',
+    footerTrust3Title: 'footerTrust3Title',
+    footerTrust3Desc: 'footerTrust3Desc',
+    footerTrust4Icon: 'footerTrust4Icon',
+    footerTrust4Title: 'footerTrust4Title',
+    footerTrust4Desc: 'footerTrust4Desc',
     updatedAt: 'updatedAt'
   };
 
   export type SiteSettingScalarFieldEnum = (typeof SiteSettingScalarFieldEnum)[keyof typeof SiteSettingScalarFieldEnum]
+
+
+  export const RulesContentScalarFieldEnum: {
+    id: 'id',
+    updatedLabel: 'updatedLabel',
+    intro: 'intro',
+    body: 'body',
+    updatedAt: 'updatedAt'
+  };
+
+  export type RulesContentScalarFieldEnum = (typeof RulesContentScalarFieldEnum)[keyof typeof RulesContentScalarFieldEnum]
 
 
   export const SocialLinkScalarFieldEnum: {
@@ -43712,6 +45155,9 @@ export namespace Prisma {
     trackingCode: 'trackingCode',
     paymentTrackId: 'paymentTrackId',
     paymentRefNumber: 'paymentRefNumber',
+    hesabfaCode: 'hesabfaCode',
+    hesabfaId: 'hesabfaId',
+    hesabfaSyncedAt: 'hesabfaSyncedAt',
     paidAt: 'paidAt',
     shippedAt: 'shippedAt',
     deliveredAt: 'deliveredAt',
@@ -44279,6 +45725,9 @@ export namespace Prisma {
     partnerCode?: StringNullableFilter<"User"> | string | null
     username?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
+    hesabfaCode?: StringNullableFilter<"User"> | string | null
+    hesabfaId?: IntNullableFilter<"User"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     addresses?: AddressListRelationFilter
@@ -44312,6 +45761,9 @@ export namespace Prisma {
     partnerCode?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
+    hesabfaSyncedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     addresses?: AddressOrderByRelationAggregateInput
@@ -44333,6 +45785,8 @@ export namespace Prisma {
     phoneNumber?: string
     partnerCode?: string
     username?: string
+    hesabfaCode?: string
+    hesabfaId?: number
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -44348,6 +45802,7 @@ export namespace Prisma {
     referredBy?: StringNullableFilter<"User"> | string | null
     activityField?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     addresses?: AddressListRelationFilter
@@ -44362,7 +45817,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestListRelationFilter
     productSuggestions?: ProductSuggestionListRelationFilter
     smsCampaigns?: SmsCampaignListRelationFilter
-  }, "id" | "phoneNumber" | "partnerCode" | "username">
+  }, "id" | "phoneNumber" | "partnerCode" | "username" | "hesabfaCode" | "hesabfaId">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -44381,6 +45836,9 @@ export namespace Prisma {
     partnerCode?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
+    hesabfaSyncedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -44410,6 +45868,9 @@ export namespace Prisma {
     partnerCode?: StringNullableWithAggregatesFilter<"User"> | string | null
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
+    hesabfaCode?: StringNullableWithAggregatesFilter<"User"> | string | null
+    hesabfaId?: IntNullableWithAggregatesFilter<"User"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -44906,7 +46367,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
-    accountancyId?: StringNullableFilter<"Product"> | string | null
+    hesabfaCode?: StringNullableFilter<"Product"> | string | null
+    hesabfaId?: IntNullableFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     stock?: IntFilter<"Product"> | number
     origin?: StringNullableFilter<"Product"> | string | null
@@ -44945,7 +46407,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
     stock?: SortOrder
     origin?: SortOrderInput | SortOrder
@@ -44976,7 +46439,8 @@ export namespace Prisma {
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     sku?: string
-    accountancyId?: string
+    hesabfaCode?: string
+    hesabfaId?: number
     AND?: ProductWhereInput | ProductWhereInput[]
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
@@ -45013,7 +46477,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     wishlistedBy?: WishlistItemListRelationFilter
     comparedBy?: CompareItemListRelationFilter
-  }, "id" | "sku" | "accountancyId">
+  }, "id" | "sku" | "hesabfaCode" | "hesabfaId">
 
   export type ProductOrderByWithAggregationInput = {
     id?: SortOrder
@@ -45026,7 +46490,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
     stock?: SortOrder
     origin?: SortOrderInput | SortOrder
@@ -45064,7 +46529,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolWithAggregatesFilter<"Product"> | boolean
-    accountancyId?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    hesabfaCode?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    hesabfaId?: IntNullableWithAggregatesFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
     stock?: IntWithAggregatesFilter<"Product"> | number
     origin?: StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -45784,6 +47250,18 @@ export namespace Prisma {
     headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Desc?: StringNullableFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }
 
@@ -45797,6 +47275,18 @@ export namespace Prisma {
     headerPromo1?: SortOrderInput | SortOrder
     headerPromo2?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
+    footerTrust1Icon?: SortOrderInput | SortOrder
+    footerTrust1Title?: SortOrderInput | SortOrder
+    footerTrust1Desc?: SortOrderInput | SortOrder
+    footerTrust2Icon?: SortOrderInput | SortOrder
+    footerTrust2Title?: SortOrderInput | SortOrder
+    footerTrust2Desc?: SortOrderInput | SortOrder
+    footerTrust3Icon?: SortOrderInput | SortOrder
+    footerTrust3Title?: SortOrderInput | SortOrder
+    footerTrust3Desc?: SortOrderInput | SortOrder
+    footerTrust4Icon?: SortOrderInput | SortOrder
+    footerTrust4Title?: SortOrderInput | SortOrder
+    footerTrust4Desc?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
   }
 
@@ -45813,6 +47303,18 @@ export namespace Prisma {
     headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust1Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust2Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust3Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Title?: StringNullableFilter<"SiteSetting"> | string | null
+    footerTrust4Desc?: StringNullableFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }, "id">
 
@@ -45826,6 +47328,18 @@ export namespace Prisma {
     headerPromo1?: SortOrderInput | SortOrder
     headerPromo2?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
+    footerTrust1Icon?: SortOrderInput | SortOrder
+    footerTrust1Title?: SortOrderInput | SortOrder
+    footerTrust1Desc?: SortOrderInput | SortOrder
+    footerTrust2Icon?: SortOrderInput | SortOrder
+    footerTrust2Title?: SortOrderInput | SortOrder
+    footerTrust2Desc?: SortOrderInput | SortOrder
+    footerTrust3Icon?: SortOrderInput | SortOrder
+    footerTrust3Title?: SortOrderInput | SortOrder
+    footerTrust3Desc?: SortOrderInput | SortOrder
+    footerTrust4Icon?: SortOrderInput | SortOrder
+    footerTrust4Title?: SortOrderInput | SortOrder
+    footerTrust4Desc?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: SiteSettingCountOrderByAggregateInput
     _avg?: SiteSettingAvgOrderByAggregateInput
@@ -45847,7 +47361,73 @@ export namespace Prisma {
     headerPromo1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust1Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust1Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust1Desc?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust2Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust2Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust2Desc?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust3Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust3Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust3Desc?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust4Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust4Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    footerTrust4Desc?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSetting"> | Date | string
+  }
+
+  export type RulesContentWhereInput = {
+    AND?: RulesContentWhereInput | RulesContentWhereInput[]
+    OR?: RulesContentWhereInput[]
+    NOT?: RulesContentWhereInput | RulesContentWhereInput[]
+    id?: IntFilter<"RulesContent"> | number
+    updatedLabel?: StringNullableFilter<"RulesContent"> | string | null
+    intro?: StringNullableFilter<"RulesContent"> | string | null
+    body?: StringFilter<"RulesContent"> | string
+    updatedAt?: DateTimeFilter<"RulesContent"> | Date | string
+  }
+
+  export type RulesContentOrderByWithRelationInput = {
+    id?: SortOrder
+    updatedLabel?: SortOrderInput | SortOrder
+    intro?: SortOrderInput | SortOrder
+    body?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RulesContentWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: RulesContentWhereInput | RulesContentWhereInput[]
+    OR?: RulesContentWhereInput[]
+    NOT?: RulesContentWhereInput | RulesContentWhereInput[]
+    updatedLabel?: StringNullableFilter<"RulesContent"> | string | null
+    intro?: StringNullableFilter<"RulesContent"> | string | null
+    body?: StringFilter<"RulesContent"> | string
+    updatedAt?: DateTimeFilter<"RulesContent"> | Date | string
+  }, "id">
+
+  export type RulesContentOrderByWithAggregationInput = {
+    id?: SortOrder
+    updatedLabel?: SortOrderInput | SortOrder
+    intro?: SortOrderInput | SortOrder
+    body?: SortOrder
+    updatedAt?: SortOrder
+    _count?: RulesContentCountOrderByAggregateInput
+    _avg?: RulesContentAvgOrderByAggregateInput
+    _max?: RulesContentMaxOrderByAggregateInput
+    _min?: RulesContentMinOrderByAggregateInput
+    _sum?: RulesContentSumOrderByAggregateInput
+  }
+
+  export type RulesContentScalarWhereWithAggregatesInput = {
+    AND?: RulesContentScalarWhereWithAggregatesInput | RulesContentScalarWhereWithAggregatesInput[]
+    OR?: RulesContentScalarWhereWithAggregatesInput[]
+    NOT?: RulesContentScalarWhereWithAggregatesInput | RulesContentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"RulesContent"> | number
+    updatedLabel?: StringNullableWithAggregatesFilter<"RulesContent"> | string | null
+    intro?: StringNullableWithAggregatesFilter<"RulesContent"> | string | null
+    body?: StringWithAggregatesFilter<"RulesContent"> | string
+    updatedAt?: DateTimeWithAggregatesFilter<"RulesContent"> | Date | string
   }
 
   export type SocialLinkWhereInput = {
@@ -46101,6 +47681,9 @@ export namespace Prisma {
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
     paymentRefNumber?: StringNullableFilter<"Order"> | string | null
+    hesabfaCode?: StringNullableFilter<"Order"> | string | null
+    hesabfaId?: IntNullableFilter<"Order"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -46139,6 +47722,9 @@ export namespace Prisma {
     trackingCode?: SortOrderInput | SortOrder
     paymentTrackId?: SortOrderInput | SortOrder
     paymentRefNumber?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
+    hesabfaSyncedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     shippedAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
@@ -46155,6 +47741,8 @@ export namespace Prisma {
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     orderNumber?: number
+    hesabfaCode?: string
+    hesabfaId?: number
     AND?: OrderWhereInput | OrderWhereInput[]
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
@@ -46180,6 +47768,7 @@ export namespace Prisma {
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
     paymentRefNumber?: StringNullableFilter<"Order"> | string | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -46191,7 +47780,7 @@ export namespace Prisma {
     coupon?: XOR<DiscountCodeNullableScalarRelationFilter, DiscountCodeWhereInput> | null
     items?: OrderItemListRelationFilter
     survey?: XOR<OrderSurveyNullableScalarRelationFilter, OrderSurveyWhereInput> | null
-  }, "id" | "orderNumber">
+  }, "id" | "orderNumber" | "hesabfaCode" | "hesabfaId">
 
   export type OrderOrderByWithAggregationInput = {
     id?: SortOrder
@@ -46218,6 +47807,9 @@ export namespace Prisma {
     trackingCode?: SortOrderInput | SortOrder
     paymentTrackId?: SortOrderInput | SortOrder
     paymentRefNumber?: SortOrderInput | SortOrder
+    hesabfaCode?: SortOrderInput | SortOrder
+    hesabfaId?: SortOrderInput | SortOrder
+    hesabfaSyncedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     shippedAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
@@ -46258,6 +47850,9 @@ export namespace Prisma {
     trackingCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableWithAggregatesFilter<"Order"> | bigint | number | null
     paymentRefNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    hesabfaCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    hesabfaId?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     paidAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
@@ -46920,6 +48515,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -46953,6 +48551,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -46986,6 +48587,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -47019,6 +48623,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -47052,6 +48659,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -47073,6 +48683,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47094,6 +48707,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47608,7 +49224,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -47647,7 +49264,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -47682,7 +49300,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47721,7 +49340,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47758,7 +49378,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -47786,7 +49407,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47816,7 +49438,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48538,6 +50161,18 @@ export namespace Prisma {
     headerPromo1?: string | null
     headerPromo2?: string | null
     aboutText?: string | null
+    footerTrust1Icon?: string | null
+    footerTrust1Title?: string | null
+    footerTrust1Desc?: string | null
+    footerTrust2Icon?: string | null
+    footerTrust2Title?: string | null
+    footerTrust2Desc?: string | null
+    footerTrust3Icon?: string | null
+    footerTrust3Title?: string | null
+    footerTrust3Desc?: string | null
+    footerTrust4Icon?: string | null
+    footerTrust4Title?: string | null
+    footerTrust4Desc?: string | null
     updatedAt?: Date | string
   }
 
@@ -48551,6 +50186,18 @@ export namespace Prisma {
     headerPromo1?: string | null
     headerPromo2?: string | null
     aboutText?: string | null
+    footerTrust1Icon?: string | null
+    footerTrust1Title?: string | null
+    footerTrust1Desc?: string | null
+    footerTrust2Icon?: string | null
+    footerTrust2Title?: string | null
+    footerTrust2Desc?: string | null
+    footerTrust3Icon?: string | null
+    footerTrust3Title?: string | null
+    footerTrust3Desc?: string | null
+    footerTrust4Icon?: string | null
+    footerTrust4Title?: string | null
+    footerTrust4Desc?: string | null
     updatedAt?: Date | string
   }
 
@@ -48564,6 +50211,18 @@ export namespace Prisma {
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48577,6 +50236,18 @@ export namespace Prisma {
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48590,6 +50261,18 @@ export namespace Prisma {
     headerPromo1?: string | null
     headerPromo2?: string | null
     aboutText?: string | null
+    footerTrust1Icon?: string | null
+    footerTrust1Title?: string | null
+    footerTrust1Desc?: string | null
+    footerTrust2Icon?: string | null
+    footerTrust2Title?: string | null
+    footerTrust2Desc?: string | null
+    footerTrust3Icon?: string | null
+    footerTrust3Title?: string | null
+    footerTrust3Desc?: string | null
+    footerTrust4Icon?: string | null
+    footerTrust4Title?: string | null
+    footerTrust4Desc?: string | null
     updatedAt?: Date | string
   }
 
@@ -48603,6 +50286,18 @@ export namespace Prisma {
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48616,6 +50311,74 @@ export namespace Prisma {
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust1Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust2Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust3Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
+    footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RulesContentCreateInput = {
+    id?: number
+    updatedLabel?: string | null
+    intro?: string | null
+    body?: string
+    updatedAt?: Date | string
+  }
+
+  export type RulesContentUncheckedCreateInput = {
+    id?: number
+    updatedLabel?: string | null
+    intro?: string | null
+    body?: string
+    updatedAt?: Date | string
+  }
+
+  export type RulesContentUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    intro?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RulesContentUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    intro?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RulesContentCreateManyInput = {
+    id?: number
+    updatedLabel?: string | null
+    intro?: string | null
+    body?: string
+    updatedAt?: Date | string
+  }
+
+  export type RulesContentUpdateManyMutationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    intro?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RulesContentUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    intro?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48885,6 +50648,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -48923,6 +50689,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -48952,6 +50721,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -48990,6 +50762,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49024,6 +50799,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -49051,6 +50829,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49083,6 +50864,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49881,6 +51665,17 @@ export namespace Prisma {
     not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type SessionListRelationFilter = {
     every?: SessionWhereInput
     some?: SessionWhereInput
@@ -50008,12 +51803,16 @@ export namespace Prisma {
     partnerCode?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     accountBalance?: SortOrder
+    hesabfaId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -50033,6 +51832,9 @@ export namespace Prisma {
     partnerCode?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -50054,12 +51856,16 @@ export namespace Prisma {
     partnerCode?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     accountBalance?: SortOrder
+    hesabfaId?: SortOrder
   }
 
   export type EnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -50118,6 +51924,22 @@ export namespace Prisma {
     _sum?: NestedBigIntFilter<$PrismaModel>
     _min?: NestedBigIntFilter<$PrismaModel>
     _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type OtpSessionCountOrderByAggregateInput = {
@@ -50496,7 +52318,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
     stock?: SortOrder
     origin?: SortOrder
@@ -50522,6 +52345,7 @@ export namespace Prisma {
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
+    hesabfaId?: SortOrder
     stock?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
@@ -50542,7 +52366,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
     stock?: SortOrder
     origin?: SortOrder
@@ -50572,7 +52397,8 @@ export namespace Prisma {
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
-    accountancyId?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
     lastSyncedAt?: SortOrder
     stock?: SortOrder
     origin?: SortOrder
@@ -50598,6 +52424,7 @@ export namespace Prisma {
     wholesaleDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
+    hesabfaId?: SortOrder
     stock?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
@@ -50933,17 +52760,6 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type PostCategoryNullableScalarRelationFilter = {
     is?: PostCategoryWhereInput | null
     isNot?: PostCategoryWhereInput | null
@@ -51028,22 +52844,6 @@ export namespace Prisma {
     categoryId?: SortOrder
   }
 
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
   export type FaqCountOrderByAggregateInput = {
     id?: SortOrder
     question?: SortOrder
@@ -51088,6 +52888,18 @@ export namespace Prisma {
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
     aboutText?: SortOrder
+    footerTrust1Icon?: SortOrder
+    footerTrust1Title?: SortOrder
+    footerTrust1Desc?: SortOrder
+    footerTrust2Icon?: SortOrder
+    footerTrust2Title?: SortOrder
+    footerTrust2Desc?: SortOrder
+    footerTrust3Icon?: SortOrder
+    footerTrust3Title?: SortOrder
+    footerTrust3Desc?: SortOrder
+    footerTrust4Icon?: SortOrder
+    footerTrust4Title?: SortOrder
+    footerTrust4Desc?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -51105,6 +52917,18 @@ export namespace Prisma {
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
     aboutText?: SortOrder
+    footerTrust1Icon?: SortOrder
+    footerTrust1Title?: SortOrder
+    footerTrust1Desc?: SortOrder
+    footerTrust2Icon?: SortOrder
+    footerTrust2Title?: SortOrder
+    footerTrust2Desc?: SortOrder
+    footerTrust3Icon?: SortOrder
+    footerTrust3Title?: SortOrder
+    footerTrust3Desc?: SortOrder
+    footerTrust4Icon?: SortOrder
+    footerTrust4Title?: SortOrder
+    footerTrust4Desc?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -51118,10 +52942,54 @@ export namespace Prisma {
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
     aboutText?: SortOrder
+    footerTrust1Icon?: SortOrder
+    footerTrust1Title?: SortOrder
+    footerTrust1Desc?: SortOrder
+    footerTrust2Icon?: SortOrder
+    footerTrust2Title?: SortOrder
+    footerTrust2Desc?: SortOrder
+    footerTrust3Icon?: SortOrder
+    footerTrust3Title?: SortOrder
+    footerTrust3Desc?: SortOrder
+    footerTrust4Icon?: SortOrder
+    footerTrust4Title?: SortOrder
+    footerTrust4Desc?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SiteSettingSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type RulesContentCountOrderByAggregateInput = {
+    id?: SortOrder
+    updatedLabel?: SortOrder
+    intro?: SortOrder
+    body?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RulesContentAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type RulesContentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    updatedLabel?: SortOrder
+    intro?: SortOrder
+    body?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RulesContentMinOrderByAggregateInput = {
+    id?: SortOrder
+    updatedLabel?: SortOrder
+    intro?: SortOrder
+    body?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RulesContentSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
@@ -51388,6 +53256,9 @@ export namespace Prisma {
     trackingCode?: SortOrder
     paymentTrackId?: SortOrder
     paymentRefNumber?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     paidAt?: SortOrder
     shippedAt?: SortOrder
     deliveredAt?: SortOrder
@@ -51403,6 +53274,7 @@ export namespace Prisma {
     discountAmount?: SortOrder
     totalAmount?: SortOrder
     paymentTrackId?: SortOrder
+    hesabfaId?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -51430,6 +53302,9 @@ export namespace Prisma {
     trackingCode?: SortOrder
     paymentTrackId?: SortOrder
     paymentRefNumber?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     paidAt?: SortOrder
     shippedAt?: SortOrder
     deliveredAt?: SortOrder
@@ -51462,6 +53337,9 @@ export namespace Prisma {
     trackingCode?: SortOrder
     paymentTrackId?: SortOrder
     paymentRefNumber?: SortOrder
+    hesabfaCode?: SortOrder
+    hesabfaId?: SortOrder
+    hesabfaSyncedAt?: SortOrder
     paidAt?: SortOrder
     shippedAt?: SortOrder
     deliveredAt?: SortOrder
@@ -51477,6 +53355,7 @@ export namespace Prisma {
     discountAmount?: SortOrder
     totalAmount?: SortOrder
     paymentTrackId?: SortOrder
+    hesabfaId?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -52200,6 +54079,14 @@ export namespace Prisma {
     decrement?: bigint | number
     multiply?: bigint | number
     divide?: bigint | number
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type AddressUpdateManyWithoutUserNestedInput = {
@@ -53405,14 +55292,6 @@ export namespace Prisma {
     update?: XOR<XOR<PostCategoryUpdateToOneWithWhereWithoutPostsInput, PostCategoryUpdateWithoutPostsInput>, PostCategoryUncheckedUpdateWithoutPostsInput>
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type UserCreateNestedOneWithoutSmsCampaignsInput = {
     create?: XOR<UserCreateWithoutSmsCampaignsInput, UserUncheckedCreateWithoutSmsCampaignsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSmsCampaignsInput
@@ -54003,6 +55882,17 @@ export namespace Prisma {
     not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
@@ -54028,17 +55918,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -54071,33 +55950,6 @@ export namespace Prisma {
     _max?: NestedBigIntFilter<$PrismaModel>
   }
 
-  export type NestedDecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -54123,6 +55975,33 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type NestedEnumSmsTargetRoleFilter<$PrismaModel = never> = {
@@ -54575,6 +56454,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -54611,6 +56493,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -54964,6 +56849,9 @@ export namespace Prisma {
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
     paymentRefNumber?: StringNullableFilter<"Order"> | string | null
+    hesabfaCode?: StringNullableFilter<"Order"> | string | null
+    hesabfaId?: IntNullableFilter<"Order"> | number | null
+    hesabfaSyncedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -55247,6 +57135,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -55279,6 +57170,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -55327,6 +57221,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -55359,6 +57256,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -55391,6 +57291,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -55423,6 +57326,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -55482,6 +57388,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -55518,6 +57427,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -55565,6 +57477,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -55597,6 +57512,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -55822,7 +57740,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -55859,7 +57778,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -55925,7 +57845,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
-    accountancyId?: StringNullableFilter<"Product"> | string | null
+    hesabfaCode?: StringNullableFilter<"Product"> | string | null
+    hesabfaId?: IntNullableFilter<"Product"> | number | null
     lastSyncedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     stock?: IntFilter<"Product"> | number
     origin?: StringNullableFilter<"Product"> | string | null
@@ -55953,7 +57874,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -55990,7 +57912,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -56496,7 +58419,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -56534,7 +58458,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -56584,7 +58509,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56622,7 +58548,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56656,7 +58583,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -56694,7 +58622,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -56768,7 +58697,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56806,7 +58736,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56870,7 +58801,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -56908,7 +58840,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -56955,6 +58888,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -56987,6 +58923,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -57027,7 +58966,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57065,7 +59005,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57118,6 +59059,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -57150,6 +59094,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -57182,6 +59129,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -57214,6 +59164,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -57286,6 +59239,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -57318,6 +59274,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -57377,7 +59336,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -57415,7 +59375,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -57490,7 +59451,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57528,7 +59490,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57570,6 +59533,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -57602,6 +59568,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -57631,7 +59600,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -57669,7 +59639,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -57727,6 +59698,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -57759,6 +59733,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -57794,7 +59771,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57832,7 +59810,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57874,6 +59853,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -57906,6 +59888,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -57935,7 +59920,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -57973,7 +59959,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -58031,6 +60018,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -58063,6 +60053,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -58098,7 +60091,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58136,7 +60130,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58339,6 +60334,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -58371,6 +60369,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -58419,6 +60420,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -58451,6 +60455,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -58487,6 +60494,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -58523,6 +60533,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -58575,6 +60588,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -58607,6 +60623,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -58815,6 +60834,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -58847,6 +60869,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -59051,6 +61076,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -59088,6 +61116,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -59110,7 +61141,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -59148,7 +61180,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -59209,6 +61242,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59246,6 +61282,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59274,7 +61313,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59312,7 +61352,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59354,6 +61395,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -59386,6 +61430,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -59434,6 +61481,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -59466,6 +61516,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -59502,6 +61555,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -59539,6 +61595,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -59569,6 +61628,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -59601,6 +61663,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -59652,6 +61717,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59689,6 +61757,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59725,6 +61796,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -59757,6 +61831,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -59789,6 +61866,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -59821,6 +61901,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -59869,6 +61952,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -59901,6 +61987,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -59933,6 +62022,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -59965,6 +62057,9 @@ export namespace Prisma {
     partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -60013,6 +62108,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -60045,6 +62143,9 @@ export namespace Prisma {
     partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -60081,6 +62182,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -60117,6 +62221,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -60260,6 +62367,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -60414,6 +62524,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60450,6 +62563,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60483,6 +62599,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60736,6 +62855,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -60763,6 +62885,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60799,6 +62924,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60832,6 +62960,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -60906,7 +63037,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -60934,7 +63066,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60971,7 +63104,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61007,7 +63141,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61036,7 +63171,8 @@ export namespace Prisma {
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
-    accountancyId?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
     lastSyncedAt?: Date | string | null
     stock?: number
     origin?: string | null
@@ -61064,7 +63200,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61101,7 +63238,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61137,7 +63275,8 @@ export namespace Prisma {
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
-    accountancyId?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
     origin?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61515,6 +63654,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -61542,6 +63684,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61578,6 +63723,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61611,6 +63759,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61686,6 +63837,9 @@ export namespace Prisma {
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
     paymentRefNumber?: string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
     paidAt?: Date | string | null
     shippedAt?: Date | string | null
     deliveredAt?: Date | string | null
@@ -61713,6 +63867,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61749,6 +63906,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61782,6 +63942,9 @@ export namespace Prisma {
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     paymentRefNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     shippedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

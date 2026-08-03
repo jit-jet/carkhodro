@@ -19,6 +19,8 @@ import {
   buildAdminProductWhere,
   type AdminProductWhereFilters,
 } from '@/src/lib/admin-product-where';
+import { pushProductToHesabfa } from '@/src/lib/hesabfa/products';
+import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import crypto from 'node:crypto';
 
 export interface ProductInput {
@@ -95,6 +97,7 @@ export async function createProduct(
     await syncProductImages(created.id, input.images);
     await syncProductVehicleType(created.id, input.carModelId ?? null);
     updateTag(tags.products);
+    runHesabfaBackground('pushProduct:create', () => pushProductToHesabfa(created.id));
     return ok(created);
   });
 }
@@ -140,6 +143,7 @@ export async function updateProduct(
     await syncProductVehicleType(id, input.carModelId);
     updateTag(tags.products);
     updateTag(tags.product(id));
+    runHesabfaBackground('pushProduct:update', () => pushProductToHesabfa(id));
     return ok(updated);
   });
 }
@@ -150,6 +154,7 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
     await prisma.product.update({ where: { id }, data: { isActive: false } });
     updateTag(tags.products);
     updateTag(tags.product(id));
+    runHesabfaBackground('pushProduct:delete', () => pushProductToHesabfa(id));
     return ok(undefined);
   });
 }
@@ -160,6 +165,7 @@ export async function reactivateProduct(id: string): Promise<ActionResult> {
     await prisma.product.update({ where: { id }, data: { isActive: true } });
     updateTag(tags.products);
     updateTag(tags.product(id));
+    runHesabfaBackground('pushProduct:reactivate', () => pushProductToHesabfa(id));
     return ok(undefined);
   });
 }

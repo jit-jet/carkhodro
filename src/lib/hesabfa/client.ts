@@ -1,29 +1,24 @@
 /**
- * Hesabfa API client.
- * ───────────────────
- * Thin, serverless-friendly wrapper over the Hesabfa REST API. Every call is a
- * stateless `fetch` POST with credentials in the body and `cache: 'no-store'`
- * (live financial data must never be cached at the network layer). No global
- * connection state, so it is safe to invoke from a cold lambda.
- *
- * All endpoints share the `{ Success, Result, ErrorCode, ErrorMessage }`
- * envelope; `post()` unwraps it and throws `HesabfaError` on a non-2xx HTTP
- * status or a `Success: false` body, so callers can deal in plain `Result`s.
+ * Hesabfa REST client — stateless POSTs with credentials in the body.
+ * Docs: https://www.hesabfa.com/help/api
  */
 
+import { randomUUID } from 'node:crypto';
 import type {
-  HesabfaResponse,
+  HesabfaContact,
+  HesabfaInvoice,
   HesabfaItem,
-  HesabfaItemList,
+  HesabfaPagedList,
+  HesabfaProductCategory,
   HesabfaQueryInfo,
+  HesabfaResponse,
 } from './types';
 
 const DEFAULT_BASE_URL = 'https://api.hesabfa.com/v1';
-
-/** How many items to pull per `getItems` page during a full sync. */
 const PAGE_SIZE = 200;
-/** Hard guard so a misbehaving `TotalCount` can never spin an infinite loop. */
 const MAX_PAGES = 1000;
+const MAX_RETRIES = 3;
+const RETRY_BASE_MS = 400;
 
 export class HesabfaError extends Error {
   constructor(
@@ -35,13 +30,50 @@ export class HesabfaError extends Error {
   }
 }
 
+/** Human-readable labels for Hesabfa ErrorCode values (api/errorcode). */
+const HESABFA_ERROR_LABELS: Record<number, string> = {
+  100: 'InternalServerError',
+  101: 'TooManyRequests',
+  103: 'MissingData',
+  104: 'MissingParameter',
+  105: 'ApiDisabled',
+  106: 'UserIsNotOwner',
+  107: 'BusinessNotFound',
+  108: 'BusinessExpired',
+  109: 'FinanYearNotFound',
+  110: 'IdMustBeZero',
+  111: 'IdMustNotBeZero',
+  112: 'ObjectNotFound',
+  113: 'MissingApiKey',
+  114: 'ParameterIsOutOfRange',
+  120: 'DuplicateRequestId',
+  190: 'ApplicationError',
+};
+
+function formatHesabfaFailure(
+  path: string,
+  errorCode?: number,
+  errorMessage?: string,
+): string {
+  const label =
+    errorCode != null ? (HESABFA_ERROR_LABELS[errorCode] ?? 'Unknown') : 'Unknown';
+  const codePart = errorCode != null ? `ErrorCode ${errorCode} (${label})` : 'unknown ErrorCode';
+  const msg = errorMessage?.trim();
+  return msg
+    ? `Hesabfa ${path}: ${codePart} — ${msg}`
+    : `Hesabfa ${path}: ${codePart}`;
+}
+
 interface HesabfaConfig {
   baseUrl: string;
   apiKey: string;
   loginToken: string;
 }
 
-/** Read + validate credentials from the environment (throws if misconfigured). */
+export function isHesabfaConfigured(): boolean {
+  return Boolean(process.env.HESABFA_API_KEY && process.env.HESABFA_LOGIN_TOKEN);
+}
+
 function getConfig(): HesabfaConfig {
   const apiKey = process.env.HESABFA_API_KEY;
   const loginToken = process.env.HESABFA_LOGIN_TOKEN;
@@ -57,47 +89,90 @@ function getConfig(): HesabfaConfig {
   };
 }
 
-/** POST `body` (plus auth) to `path` and return the unwrapped `Result`. */
-async function post<T>(path: string, body: Record<string, unknown>): Promise<T> {
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function post<T>(
+  path: string,
+  body: Record<string, unknown>,
+  opts?: { unique?: boolean },
+): Promise<T> {
   const { baseUrl, apiKey, loginToken } = getConfig();
-
-  const res = await fetch(`${baseUrl}/${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ apiKey, loginToken, ...body }),
-    cache: 'no-store',
-  });
-
-  if (!res.ok) {
-    throw new HesabfaError(`Hesabfa HTTP ${res.status} on ${path}`);
+  const payload: Record<string, unknown> = {
+    apiKey,
+    loginToken,
+    ...body,
+  };
+  if (opts?.unique) {
+    payload.requestUniqueId = randomUUID();
   }
+console.log("payload",payload)
+  let lastError: unknown;
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      const res = await fetch(`${baseUrl}/${path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        cache: 'no-store',
+      });
 
-  const json = (await res.json()) as HesabfaResponse<T>;
-  if (!json.Success) {
-    throw new HesabfaError(
-      json.ErrorMessage ?? `Hesabfa request to ${path} failed`,
-      json.ErrorCode,
-    );
+      if (res.status === 429 || res.status >= 500) {
+        throw new HesabfaError(`Hesabfa HTTP ${res.status} on ${path}`);
+      }
+      if (!res.ok) {
+        throw new HesabfaError(`Hesabfa HTTP ${res.status} on ${path}`);
+      }
+
+      const json = (await res.json()) as HesabfaResponse<T>;
+      if (!json.Success) {
+        throw new HesabfaError(
+          formatHesabfaFailure(path, json.ErrorCode, json.ErrorMessage),
+          json.ErrorCode,
+        );
+      }
+      return json.Result;
+    } catch (err) {
+      lastError = err;
+      const retryable =
+        err instanceof HesabfaError &&
+        (err.message.includes('HTTP 429') ||
+          err.message.includes('HTTP 5') ||
+          err.message.includes('fetch'));
+      if (!retryable || attempt === MAX_RETRIES - 1) break;
+      await sleep(RETRY_BASE_MS * 2 ** attempt);
+    }
   }
-  return json.Result;
+  throw lastError instanceof Error
+    ? lastError
+    : new HesabfaError(`Hesabfa request to ${path} failed`);
 }
 
-// ── Item reads ────────────────────────────────────────────────────────────────
-
-/**
- * Resolve a batch of items by their Hesabfa numeric `Id` — the identifier the
- * change-hook delivers in `ObjectIdList`. Items that no longer exist (deleted)
- * are simply absent from the returned array.
- */
-export async function getItemsById(ids: number[]): Promise<HesabfaItem[]> {
-  if (ids.length === 0) return [];
-  const result = await post<HesabfaItem[] | HesabfaItemList>('item/getById', {
-    idList: ids,
-  });
-  return Array.isArray(result) ? result : (result.List ?? []);
+async function getAllPages<T>(
+  path: string,
+  extra: Record<string, unknown> = {},
+  sortBy = 'Code',
+): Promise<T[]> {
+  const all: T[] = [];
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const queryInfo: HesabfaQueryInfo = {
+      sortBy,
+      sortDesc: false,
+      take: PAGE_SIZE,
+      skip: page * PAGE_SIZE,
+      filters: [],
+    };
+    const result = await post<HesabfaPagedList<T>>(path, { ...extra, queryInfo });
+    const list = result.List ?? [];
+    all.push(...list);
+    if (list.length === 0 || all.length >= (result.TotalCount ?? 0)) break;
+  }
+  return all;
 }
 
-/** Fetch one item by its accounting `Code`, or `null` if not found. */
+// ── Items ─────────────────────────────────────────────────────────────────────
+
 export async function getItemByCode(code: string): Promise<HesabfaItem | null> {
   try {
     return await post<HesabfaItem>('item/get', { code });
@@ -107,42 +182,153 @@ export async function getItemByCode(code: string): Promise<HesabfaItem | null> {
   }
 }
 
-/**
- * Page through `item/getItems` and return every item in the account. Used by the
- * manual force-sync to rebuild the full picture and reconcile missed webhooks.
- */
-export async function getAllItems(): Promise<HesabfaItem[]> {
-  const all: HesabfaItem[] = [];
-
-  for (let page = 0; page < MAX_PAGES; page++) {
-    const queryInfo: HesabfaQueryInfo = {
-      sortBy: 'Id',
-      sortDesc: false,
-      take: PAGE_SIZE,
-      skip: page * PAGE_SIZE,
-      filters: [],
-    };
-    const { List, TotalCount } = await post<HesabfaItemList>('item/getItems', {
-      queryInfo,
-    });
-
-    all.push(...List);
-    if (List.length === 0 || all.length >= TotalCount) break;
-  }
-
-  return all;
+export async function getItemsById(ids: number[]): Promise<HesabfaItem[]> {
+  if (ids.length === 0) return [];
+  const result = await post<HesabfaItem[] | HesabfaPagedList<HesabfaItem>>('item/getById', {
+    idList: ids,
+  });
+  return Array.isArray(result) ? result : (result.List ?? []);
 }
 
-// ── Webhook registration ───────────────────────────────────────────────────────
+export async function getAllItems(): Promise<HesabfaItem[]> {
+  return getAllPages<HesabfaItem>('item/getItems');
+}
 
-/**
- * Register (or replace) the change-hook so Hesabfa POSTs create/update/delete
- * notifications to `url`. `hookPassword` is echoed back in every payload and is
- * how we authenticate inbound webhooks.
- */
-export async function setChangeHook(
-  url: string,
-  hookPassword: string,
-): Promise<void> {
-  await post('setting/setChangeHook', { url, hookPassword });
+export async function saveItem(
+  item: Record<string, unknown>,
+): Promise<HesabfaItem> {
+  return post<HesabfaItem>('item/save', { item }, { unique: true });
+}
+
+export async function batchSaveItems(
+  items: Record<string, unknown>[],
+): Promise<HesabfaItem[]> {
+  if (items.length === 0) return [];
+  const result = await post<HesabfaItem[] | HesabfaPagedList<HesabfaItem>>(
+    'item/batchSave',
+    { items },
+    { unique: true },
+  );
+  return Array.isArray(result) ? result : (result.List ?? []);
+}
+
+export async function getProductCategories(): Promise<HesabfaProductCategory[]> {
+  const result = await post<HesabfaProductCategory[] | HesabfaPagedList<HesabfaProductCategory>>(
+    'setting/getProductCategories',
+    {},
+  );
+  return Array.isArray(result) ? result : (result.List ?? []);
+}
+
+// ── Contacts ──────────────────────────────────────────────────────────────────
+
+export async function getContactByCode(code: string): Promise<HesabfaContact | null> {
+  try {
+    return await post<HesabfaContact>('contact/get', { code });
+  } catch (err) {
+    if (err instanceof HesabfaError) return null;
+    throw err;
+  }
+}
+
+export async function getContactsById(ids: number[]): Promise<HesabfaContact[]> {
+  if (ids.length === 0) return [];
+  const result = await post<HesabfaContact[] | HesabfaPagedList<HesabfaContact>>(
+    'contact/getById',
+    { idList: ids },
+  );
+  return Array.isArray(result) ? result : (result.List ?? []);
+}
+
+export async function getAllContacts(): Promise<HesabfaContact[]> {
+  return getAllPages<HesabfaContact>('contact/getContacts');
+}
+
+export async function saveContact(
+  contact: Record<string, unknown>,
+): Promise<HesabfaContact> {
+  return post<HesabfaContact>('contact/save', { contact }, { unique: true });
+}
+
+export async function batchSaveContacts(
+  contacts: Record<string, unknown>[],
+): Promise<HesabfaContact[]> {
+  if (contacts.length === 0) return [];
+  const result = await post<HesabfaContact[] | HesabfaPagedList<HesabfaContact>>(
+    'contact/batchSave',
+    { contacts },
+    { unique: true },
+  );
+  return Array.isArray(result) ? result : (result.List ?? []);
+}
+
+// ── Invoices ──────────────────────────────────────────────────────────────────
+
+export async function getInvoiceByNumber(
+  number: string | number,
+  type = 0,
+): Promise<HesabfaInvoice | null> {
+  try {
+    return await post<HesabfaInvoice>('invoice/get', { number, type });
+  } catch (err) {
+    if (err instanceof HesabfaError) return null;
+    throw err;
+  }
+}
+
+export async function getInvoicesById(ids: number[]): Promise<HesabfaInvoice[]> {
+  if (ids.length === 0) return [];
+  const result = await post<HesabfaInvoice | HesabfaInvoice[]>('invoice/getById', {
+    idList: ids,
+  });
+  return Array.isArray(result) ? result : result ? [result] : [];
+}
+
+export async function saveInvoice(
+  invoice: Record<string, unknown>,
+): Promise<HesabfaInvoice> {
+  return post<HesabfaInvoice>('invoice/save', { invoice }, { unique: true });
+}
+
+export async function saveInvoicePayment(body: Record<string, unknown>): Promise<unknown> {
+  return post('invoice/savePayment', body, { unique: true });
+}
+
+export async function changeInvoicePaidStatus(
+  number: string | number,
+  paid: boolean,
+  type = 0,
+): Promise<HesabfaInvoice> {
+  return post<HesabfaInvoice>(
+    'invoice/changePaidStatus',
+    { number, type, paid },
+    { unique: true },
+  );
+}
+
+export async function changeInvoiceSentStatus(
+  number: string | number,
+  sent: boolean,
+  type = 0,
+): Promise<HesabfaInvoice> {
+  return post<HesabfaInvoice>(
+    'invoice/changeSentStatus',
+    { number, type, sent },
+    { unique: true },
+  );
+}
+
+// ── Webhook registration ──────────────────────────────────────────────────────
+
+export async function setChangeHook(url: string, hookPassword: string): Promise<void> {
+  await post('setting/setChangeHook', { url, hookPassword }, { unique: true });
+}
+
+export async function getChangeHook(): Promise<{ url?: string; password?: string } | null> {
+  try {
+    return await post<{ url?: string; password?: string }>('setting/getChangeHook', {});
+  } catch (err) {
+    if (err instanceof HesabfaError) return null;
+    throw err;
+  }
 }

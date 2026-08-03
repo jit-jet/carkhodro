@@ -14,7 +14,11 @@
 import { updateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
-import { toPublicSiteSettingsVM, type PublicSiteSettingsVM } from '@/src/lib/serializers';
+import {
+  footerTrustBadgesToDbFields,
+  toPublicSiteSettingsVM,
+  type PublicSiteSettingsVM,
+} from '@/src/lib/serializers';
 import { tags } from '@/actions/cache-tags';
 
 export type SiteSettingVM = PublicSiteSettingsVM;
@@ -49,6 +53,7 @@ export async function updateSiteSettings(
       headerPromo1: input.headerPromo1?.trim() || null,
       headerPromo2: input.headerPromo2?.trim() || null,
       aboutText: input.aboutText?.trim() || null,
+      ...footerTrustBadgesToDbFields(input.footerTrustBadges),
     };
 
     await prisma.siteSetting.upsert({

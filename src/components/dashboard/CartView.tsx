@@ -18,6 +18,7 @@ import {
   removeInvoiceLines,
   submitInvoice,
 } from '@/actions/dashboard-cart';
+import { previewDiscountCode } from '@/actions/discount-checkout';
 import { useCartUI } from '@/src/store/cart-ui';
 import { formatRial, tomanInWords, formatNumberFa } from '@/src/lib/format';
 import InvoiceProductModal from '@/src/components/dashboard/InvoiceProductModal';
@@ -44,9 +45,26 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
   const [submitting, startSubmit] = useTransition();
   const [error, setError] = useState('');
 
+  const [couponDraft, setCouponDraft] = useState('');
+  const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+  const [couponPending, startCoupon] = useTransition();
+
+  function clearCoupon() {
+    setAppliedCode(null);
+    setDiscountAmount(0);
+    setCouponError('');
+    setCouponDraft('');
+  }
+
   function apply(next: DashboardCartVM) {
     setCart(next);
     setCount(next.totalItems);
+    // Line totals changed — drop any applied coupon so amounts stay in sync.
+    setAppliedCode(null);
+    setDiscountAmount(0);
+    setCouponError('');
   }
 
   function changeQty(id: string, nextQty: number) {
@@ -92,10 +110,30 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
     });
   }
 
+  function applyCoupon() {
+    setCouponError('');
+    startCoupon(async () => {
+      const result = await previewDiscountCode(couponDraft);
+      if (!result.ok) {
+        setAppliedCode(null);
+        setDiscountAmount(0);
+        setCouponError(result.error);
+        return;
+      }
+      setAppliedCode(result.data.code);
+      setDiscountAmount(result.data.discountAmount);
+      setCouponError('');
+    });
+  }
+
   function submit() {
     setError('');
     startSubmit(async () => {
-      const result = await submitInvoice({ paymentTerms: terms, notes });
+      const result = await submitInvoice({
+        paymentTerms: terms,
+        notes,
+        discountCode: appliedCode ?? undefined,
+      });
       if (result.ok) {
         setCount(0);
         router.push(`/dashboard/orders/${result.data.id}`);
@@ -107,6 +145,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
   }
 
   const empty = cart.lines.length === 0;
+  const payableToman = Math.max(0, cart.subtotalToman - discountAmount);
 
   return (
     <div className="space-y-4">
@@ -221,26 +260,73 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
       </div>
 
       {!empty && (
-        <div className="grid lg:grid-cols-2 gap-4">
-          {/* Settlement + notes */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
-            {/* <div>
-              <label className="block text-sm font-semibold text-accent-dark mb-2">
-                روش پرداخت را انتخاب کنید:
-              </label>
-              <select
-                value={terms}
-                onChange={(e) => setTerms(e.target.value)}
-                className="w-full border-2 border-silver focus:border-accent rounded-xl px-4 py-2.5 text-sm outline-none transition-colors bg-white"
-              >
-                {paymentTerms.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div> */}
-            <div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+          {/* Coupon + notes */}
+          <div className="space-y-4 min-w-0">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-5 h-5 text-charcoal/70 shrink-0"
+                  aria-hidden
+                >
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+                  <line x1="7" y1="7" x2="7.01" y2="7" />
+                </svg>
+                <h2 className="text-sm sm:text-base font-bold text-charcoal">کد تخفیف</h2>
+              </div>
+
+              {appliedCode ? (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl bg-green-50 border border-green-100 px-3 py-3 sm:px-4">
+                  <div className="min-w-0">
+                    <p
+                      className="text-sm sm:text-base font-bold text-green-800 tracking-wide break-all"
+                      dir="ltr"
+                    >
+                      {appliedCode}
+                    </p>
+                    <p className="text-xs text-green-700 mt-0.5">اعمال شد</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={clearCoupon}
+                    className="self-end sm:self-auto text-xs font-semibold text-green-800 hover:text-red-600 shrink-0 px-2 py-1"
+                  >
+                    حذف
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    value={couponDraft}
+                    onChange={(e) => setCouponDraft(e.target.value.toUpperCase())}
+                    placeholder="وارد کردن کد"
+                    dir="ltr"
+                    className="w-full min-w-0 flex-1 rounded-xl border-2 border-silver focus:border-accent px-3 py-2.5 text-sm text-left tracking-wide placeholder:text-gray-400 outline-none transition-colors"
+                  />
+                  <button
+                    type="button"
+                    onClick={applyCoupon}
+                    disabled={couponPending || !couponDraft.trim()}
+                    className="w-full sm:w-auto shrink-0 rounded-xl bg-charcoal text-white px-5 py-2.5 text-sm font-bold hover:bg-charcoal/90 disabled:opacity-50 transition-colors"
+                  >
+                    {couponPending ? 'در حال بررسی…' : 'اعمال'}
+                  </button>
+                </div>
+              )}
+              {couponError && (
+                <p className="text-xs text-red-600 mt-2" role="alert">
+                  {couponError}
+                </p>
+              )}
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5">
               <label className="block text-sm font-semibold text-charcoal mb-2">توضیحات</label>
               <textarea
                 value={notes}
@@ -253,14 +339,25 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
           </div>
 
           {/* Totals + submit */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col">
-            <div className="text-center mb-1">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5 flex flex-col">
+            <div className="text-center mb-1 space-y-1">
               <p className="text-sm text-gray-400">جمع کل سبد خرید:</p>
-              <p className="text-2xl font-extrabold text-charcoal mt-1 tabular-nums">
-                {formatRial(cart.subtotalToman)}
+              {discountAmount > 0 && (
+                <>
+                  <p className="text-base sm:text-lg font-bold text-charcoal tabular-nums">
+                    {formatRial(cart.subtotalToman)}
+                  </p>
+                  <p className="text-sm font-semibold text-green-700 tabular-nums break-words px-1">
+                    تخفیف{appliedCode ? ` (${appliedCode})` : ''}: −{' '}
+                    {formatNumberFa(discountAmount * 10)} ریال
+                  </p>
+                </>
+              )}
+              <p className="text-xl sm:text-2xl font-extrabold text-charcoal mt-1 tabular-nums">
+                {formatRial(payableToman)}
               </p>
-              <p className="text-sm font-semibold text-accent-dark mt-1">
-                {tomanInWords(cart.subtotalToman)}
+              <p className="text-sm font-semibold text-accent-dark mt-1 leading-6 px-1">
+                {tomanInWords(payableToman)}
               </p>
             </div>
             <button
@@ -291,6 +388,9 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
         <ConfirmInvoiceModal
           cart={cart}
           notes={notes}
+          discountAmount={discountAmount}
+          discountCode={appliedCode}
+          payableToman={payableToman}
           submitting={submitting}
           onConfirm={submit}
           onClose={() => setConfirmOpen(false)}
@@ -303,12 +403,18 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
 function ConfirmInvoiceModal({
   cart,
   notes,
+  discountAmount,
+  discountCode,
+  payableToman,
   submitting,
   onConfirm,
   onClose,
 }: {
   cart: DashboardCartVM;
   notes: string;
+  discountAmount: number;
+  discountCode: string | null;
+  payableToman: number;
   submitting: boolean;
   onConfirm: () => void;
   onClose: () => void;
@@ -397,13 +503,21 @@ function ConfirmInvoiceModal({
             </div>
           )}
 
-          <div className="text-center pt-1">
+          <div className="text-center pt-1 space-y-1">
             <p className="text-xs text-gray-400">جمع کل</p>
-            <p className="text-xl font-extrabold text-charcoal mt-1 tabular-nums">
+            <p className="text-base font-bold text-charcoal tabular-nums">
               {formatRial(cart.subtotalToman)}
             </p>
+            {discountAmount > 0 && (
+              <p className="text-sm font-semibold text-green-700 tabular-nums">
+                تخفیف{discountCode ? ` (${discountCode})` : ''}: − {formatRial(discountAmount)}
+              </p>
+            )}
+            <p className="text-xl font-extrabold text-charcoal mt-1 tabular-nums">
+              {formatRial(payableToman)}
+            </p>
             <p className="text-xs font-semibold text-accent-dark mt-1">
-              {tomanInWords(cart.subtotalToman)}
+              {tomanInWords(payableToman)}
             </p>
           </div>
 

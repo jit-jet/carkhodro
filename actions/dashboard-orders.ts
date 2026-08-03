@@ -149,6 +149,8 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
         totalItems: lines.reduce((s, l) => s + l.quantity, 0),
         subtotalToman,
         discountToman: subtotalToman - Number(order.subtotal),
+        couponDiscountToman: Number(order.discountAmount),
+        discountCode: order.discountCode,
         payableToman,
         previousBalanceToman: Number(user.accountBalance),
         isRetail: user.role === 'RETAIL',

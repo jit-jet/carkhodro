@@ -17,22 +17,8 @@ import {
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
 import { AdminThumb } from "@/src/components/admin/ImageUploadField";
+import { buildPostsHref, type PostsTableFilters } from "@/src/lib/admin-posts-query";
 import { useCartUI } from "@/src/store/cart-ui";
-
-function buildHref(filters: {
-  search: string;
-  status: string;
-  categoryId: string;
-  page?: number;
-}) {
-  const params = new URLSearchParams();
-  if (filters.search) params.set("search", filters.search);
-  if (filters.status && filters.status !== "all") params.set("status", filters.status);
-  if (filters.categoryId) params.set("categoryId", filters.categoryId);
-  if (filters.page && filters.page > 1) params.set("page", String(filters.page));
-  const q = params.toString();
-  return q ? `/admin/posts?${q}` : "/admin/posts";
-}
 
 export default function PostsTable({
   items,
@@ -42,7 +28,7 @@ export default function PostsTable({
 }: {
   items: AdminPostListItemVM[];
   total: number;
-  filters: { search: string; status: string; categoryId: string };
+  filters: PostsTableFilters;
   categories: { id: number; name: string }[];
 }) {
   const router = useRouter();
@@ -54,7 +40,7 @@ export default function PostsTable({
 
   function applyFilters(e?: React.FormEvent) {
     e?.preventDefault();
-    router.push(buildHref({ search, status, categoryId, page: 1 }));
+    router.push(buildPostsHref({ ...filters, search, status, categoryId }));
   }
 
   function handleToggle(id: number, next: boolean) {

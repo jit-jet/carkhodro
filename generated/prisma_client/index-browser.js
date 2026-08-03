@@ -160,6 +160,9 @@ exports.Prisma.UserScalarFieldEnum = {
   partnerCode: 'partnerCode',
   username: 'username',
   passwordHash: 'passwordHash',
+  hesabfaCode: 'hesabfaCode',
+  hesabfaId: 'hesabfaId',
+  hesabfaSyncedAt: 'hesabfaSyncedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -246,7 +249,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   retailPriceDiffPct: 'retailPriceDiffPct',
   retailDiscountPct: 'retailDiscountPct',
   isOffer: 'isOffer',
-  accountancyId: 'accountancyId',
+  hesabfaCode: 'hesabfaCode',
+  hesabfaId: 'hesabfaId',
   lastSyncedAt: 'lastSyncedAt',
   stock: 'stock',
   origin: 'origin',
@@ -376,6 +380,26 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   headerPromo1: 'headerPromo1',
   headerPromo2: 'headerPromo2',
   aboutText: 'aboutText',
+  footerTrust1Icon: 'footerTrust1Icon',
+  footerTrust1Title: 'footerTrust1Title',
+  footerTrust1Desc: 'footerTrust1Desc',
+  footerTrust2Icon: 'footerTrust2Icon',
+  footerTrust2Title: 'footerTrust2Title',
+  footerTrust2Desc: 'footerTrust2Desc',
+  footerTrust3Icon: 'footerTrust3Icon',
+  footerTrust3Title: 'footerTrust3Title',
+  footerTrust3Desc: 'footerTrust3Desc',
+  footerTrust4Icon: 'footerTrust4Icon',
+  footerTrust4Title: 'footerTrust4Title',
+  footerTrust4Desc: 'footerTrust4Desc',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RulesContentScalarFieldEnum = {
+  id: 'id',
+  updatedLabel: 'updatedLabel',
+  intro: 'intro',
+  body: 'body',
   updatedAt: 'updatedAt'
 };
 
@@ -439,6 +463,9 @@ exports.Prisma.OrderScalarFieldEnum = {
   trackingCode: 'trackingCode',
   paymentTrackId: 'paymentTrackId',
   paymentRefNumber: 'paymentRefNumber',
+  hesabfaCode: 'hesabfaCode',
+  hesabfaId: 'hesabfaId',
+  hesabfaSyncedAt: 'hesabfaSyncedAt',
   paidAt: 'paidAt',
   shippedAt: 'shippedAt',
   deliveredAt: 'deliveredAt',
@@ -634,6 +661,7 @@ exports.Prisma.ModelName = {
   Post: 'Post',
   Faq: 'Faq',
   SiteSetting: 'SiteSetting',
+  RulesContent: 'RulesContent',
   SocialLink: 'SocialLink',
   SmsCampaign: 'SmsCampaign',
   ShippingOption: 'ShippingOption',

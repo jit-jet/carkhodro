@@ -14,6 +14,7 @@ import {
   Label,
   Textarea,
 } from "@/src/components/admin/AdminUI";
+import { useCartUI } from "@/src/store/cart-ui";
 
 export default function SettingsForm({
   initial,
@@ -22,6 +23,7 @@ export default function SettingsForm({
   initial: SiteSettingVM;
   initialSocialLinks: AdminSocialLinkVM[];
 }) {
+  const notify = useCartUI((s) => s.notify);
   const [form, setForm] = useState(initial);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -37,8 +39,17 @@ export default function SettingsForm({
     setSuccess(false);
     startTransition(async () => {
       const result = await updateSiteSettings(form);
-      if (!result.ok) return setError(result.error);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
       setSuccess(true);
+      notify({
+        variant: "success",
+        title: "ذخیره موفق",
+        description: "اطلاعات با موفقیت ذخیره شد.",
+      });
     });
   }
 
@@ -142,6 +153,59 @@ export default function SettingsForm({
               onChange={(e) => set("aboutText", e.target.value)}
               placeholder="متن معرفی فروشگاه…"
             />
+          </div>
+        </Card>
+
+        <Card className="overflow-hidden">
+          <CardHeader
+            title="نشان‌های اعتماد فوتر"
+            description="چهار مورد بالای فوتر — آیکون (ایموجی)، عنوان و توضیح کوتاه."
+          />
+          <div className="p-5 sm:p-6 space-y-5">
+            {form.footerTrustBadges.map((badge, index) => (
+              <div
+                key={index}
+                className="grid sm:grid-cols-[5rem_1fr_1fr] gap-3 rounded-xl border border-gray-100 p-4"
+              >
+                <div>
+                  <Label>آیکون</Label>
+                  <Input
+                    value={badge.icon}
+                    onChange={(e) => {
+                      const next = [...form.footerTrustBadges];
+                      next[index] = { ...next[index], icon: e.target.value };
+                      set("footerTrustBadges", next);
+                    }}
+                    placeholder="🛡️"
+                    className="text-center text-xl"
+                  />
+                </div>
+                <div>
+                  <Label>عنوان {index + 1}</Label>
+                  <Input
+                    value={badge.title}
+                    onChange={(e) => {
+                      const next = [...form.footerTrustBadges];
+                      next[index] = { ...next[index], title: e.target.value };
+                      set("footerTrustBadges", next);
+                    }}
+                    placeholder="عنوان نشان"
+                  />
+                </div>
+                <div>
+                  <Label>توضیح</Label>
+                  <Input
+                    value={badge.desc}
+                    onChange={(e) => {
+                      const next = [...form.footerTrustBadges];
+                      next[index] = { ...next[index], desc: e.target.value };
+                      set("footerTrustBadges", next);
+                    }}
+                    placeholder="توضیح کوتاه"
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         </Card>
 

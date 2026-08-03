@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import type { Metadata } from "next";
 import {
   getOrdersAdmin,
@@ -7,8 +6,9 @@ import {
   type AdminOrderSortDir,
 } from "@/actions/admin-orders";
 import { PageHeader } from "@/src/components/admin/AdminUI";
+import AdminPagination from "@/src/components/admin/AdminPagination";
 import OrdersTable from "@/src/components/admin/OrdersTable";
-import { buildOrdersHref } from "@/src/lib/admin-orders-query";
+import { parsePage, parsePerPage, pickSearchParam } from "@/src/lib/admin-pagination";
 import { formatNumberFa } from "@/src/lib/format";
 import type { OrderStatus, PaymentStatus } from "@/generated/prisma_client";
 
@@ -27,10 +27,6 @@ const SORT_BY_VALUES: AdminOrderSortBy[] = [
   "total",
   "createdAt",
 ];
-
-function pick(value: string | string[] | undefined): string {
-  return (Array.isArray(value) ? value[0] : value) ?? "";
-}
 
 function parseSortBy(value: string): AdminOrderSortBy | undefined {
   return SORT_BY_VALUES.includes(value as AdminOrderSortBy)
@@ -52,15 +48,16 @@ export default function AdminOrdersPage({ searchParams }: Props) {
 
 async function OrdersContent({ searchParams }: Props) {
   const sp = await searchParams;
-  const orderNumber = pick(sp.orderNumber);
-  const customer = pick(sp.customer);
-  const phone = pick(sp.phone);
-  const userId = pick(sp.userId);
-  const status = pick(sp.status);
-  const paymentStatus = pick(sp.paymentStatus);
-  const sortBy = pick(sp.sortBy);
-  const sortDir = pick(sp.sortDir);
-  const page = Number(pick(sp.page)) || 1;
+  const orderNumber = pickSearchParam(sp.orderNumber);
+  const customer = pickSearchParam(sp.customer);
+  const phone = pickSearchParam(sp.phone);
+  const userId = pickSearchParam(sp.userId);
+  const status = pickSearchParam(sp.status);
+  const paymentStatus = pickSearchParam(sp.paymentStatus);
+  const sortBy = pickSearchParam(sp.sortBy);
+  const sortDir = pickSearchParam(sp.sortDir);
+  const page = parsePage(sp.page);
+  const perPage = parsePerPage(sp.perPage);
 
   const filters = {
     orderNumber,
@@ -71,6 +68,7 @@ async function OrdersContent({ searchParams }: Props) {
     paymentStatus,
     sortBy,
     sortDir,
+    perPage,
   };
 
   const data = await getOrdersAdmin({
@@ -83,7 +81,7 @@ async function OrdersContent({ searchParams }: Props) {
     sortBy: parseSortBy(sortBy),
     sortDir: parseSortDir(sortDir),
     page,
-    perPage: 20,
+    perPage,
   });
 
   return (
@@ -95,24 +93,23 @@ async function OrdersContent({ searchParams }: Props) {
 
       <OrdersTable items={data.items} filters={filters} />
 
-      {data.pageCount > 1 && (
-        <div className="flex items-center justify-center gap-1.5 flex-wrap pt-5">
-          {Array.from({ length: data.pageCount }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={buildOrdersHref(filters, p)}
-              className={[
-                "min-w-9 h-9 px-2 flex items-center justify-center rounded-lg text-sm font-semibold transition-colors",
-                p === data.page
-                  ? "bg-accent text-charcoal"
-                  : "bg-white border border-gray-200 text-charcoal hover:bg-silver-light",
-              ].join(" ")}
-            >
-              {p.toLocaleString("fa-IR")}
-            </Link>
-          ))}
-        </div>
-      )}
+      <AdminPagination
+        page={data.page}
+        pageCount={data.pageCount}
+        total={data.total}
+        perPage={data.perPage}
+        pathname="/admin/orders"
+        query={{
+          ...(orderNumber ? { orderNumber } : {}),
+          ...(customer ? { customer } : {}),
+          ...(phone ? { phone } : {}),
+          ...(userId ? { userId } : {}),
+          ...(status ? { status } : {}),
+          ...(paymentStatus ? { paymentStatus } : {}),
+          ...(sortBy ? { sortBy } : {}),
+          ...(sortDir ? { sortDir } : {}),
+        }}
+      />
     </div>
   );
 }

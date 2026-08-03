@@ -129,6 +129,20 @@ export interface AdminNavLinkVM extends NavLinkVM {
   isActive: boolean;
 }
 
+export interface FooterTrustBadgeVM {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+/** Default footer trust badges — used when DB slots are empty (backward compatible). */
+export const DEFAULT_FOOTER_TRUST_BADGES: FooterTrustBadgeVM[] = [
+  { icon: '🛡️', title: 'ضمانت اصالت کالا', desc: 'تمام محصولات اصلی' },
+  { icon: '🚚', title: 'ارسال سریع', desc: 'به سراسر کشور' },
+  { icon: '↩️', title: 'بازگشت آسان', desc: 'تا ۷ روز ضمانت برگشت' },
+  { icon: '🎧', title: 'پشتیبانی ۲۴/۷', desc: 'همیشه در کنار شما' },
+];
+
 export interface PublicSiteSettingsVM {
   phone: string;
   secondaryPhone: string;
@@ -138,6 +152,7 @@ export interface PublicSiteSettingsVM {
   headerPromo1: string;
   headerPromo2: string;
   aboutText: string;
+  footerTrustBadges: FooterTrustBadgeVM[];
 }
 
 export interface SocialLinkVM {
@@ -513,6 +528,73 @@ export function toAdminNavLinkVM(n: {
   return { id: n.id, href: n.href, label: n.label, order: n.sortOrder, isActive: n.isActive };
 }
 
+type SiteSettingTrustFields = {
+  footerTrust1Icon: string | null;
+  footerTrust1Title: string | null;
+  footerTrust1Desc: string | null;
+  footerTrust2Icon: string | null;
+  footerTrust2Title: string | null;
+  footerTrust2Desc: string | null;
+  footerTrust3Icon: string | null;
+  footerTrust3Title: string | null;
+  footerTrust3Desc: string | null;
+  footerTrust4Icon: string | null;
+  footerTrust4Title: string | null;
+  footerTrust4Desc: string | null;
+};
+
+function mapFooterTrustBadge(
+  icon: string | null | undefined,
+  title: string | null | undefined,
+  desc: string | null | undefined,
+  fallback: FooterTrustBadgeVM,
+): FooterTrustBadgeVM {
+  const trimmedTitle = title?.trim() ?? '';
+  const trimmedIcon = icon?.trim() ?? '';
+  const trimmedDesc = desc?.trim() ?? '';
+  if (!trimmedTitle && !trimmedIcon && !trimmedDesc) return { ...fallback };
+  return {
+    icon: trimmedIcon || fallback.icon,
+    title: trimmedTitle || fallback.title,
+    desc: trimmedDesc || fallback.desc,
+  };
+}
+
+export function toFooterTrustBadgesVM(
+  row: Partial<SiteSettingTrustFields> | null | undefined,
+): FooterTrustBadgeVM[] {
+  const [d1, d2, d3, d4] = DEFAULT_FOOTER_TRUST_BADGES;
+  return [
+    mapFooterTrustBadge(row?.footerTrust1Icon, row?.footerTrust1Title, row?.footerTrust1Desc, d1),
+    mapFooterTrustBadge(row?.footerTrust2Icon, row?.footerTrust2Title, row?.footerTrust2Desc, d2),
+    mapFooterTrustBadge(row?.footerTrust3Icon, row?.footerTrust3Title, row?.footerTrust3Desc, d3),
+    mapFooterTrustBadge(row?.footerTrust4Icon, row?.footerTrust4Title, row?.footerTrust4Desc, d4),
+  ];
+}
+
+export function footerTrustBadgesToDbFields(badges: FooterTrustBadgeVM[] | undefined) {
+  const [b1, b2, b3, b4] = [
+    badges?.[0],
+    badges?.[1],
+    badges?.[2],
+    badges?.[3],
+  ];
+  return {
+    footerTrust1Icon: b1?.icon?.trim() || null,
+    footerTrust1Title: b1?.title?.trim() || null,
+    footerTrust1Desc: b1?.desc?.trim() || null,
+    footerTrust2Icon: b2?.icon?.trim() || null,
+    footerTrust2Title: b2?.title?.trim() || null,
+    footerTrust2Desc: b2?.desc?.trim() || null,
+    footerTrust3Icon: b3?.icon?.trim() || null,
+    footerTrust3Title: b3?.title?.trim() || null,
+    footerTrust3Desc: b3?.desc?.trim() || null,
+    footerTrust4Icon: b4?.icon?.trim() || null,
+    footerTrust4Title: b4?.title?.trim() || null,
+    footerTrust4Desc: b4?.desc?.trim() || null,
+  };
+}
+
 export function toPublicSiteSettingsVM(row: {
   phone: string | null;
   secondaryPhone: string | null;
@@ -522,7 +604,7 @@ export function toPublicSiteSettingsVM(row: {
   headerPromo1: string | null;
   headerPromo2: string | null;
   aboutText: string | null;
-} | null): PublicSiteSettingsVM {
+} & Partial<SiteSettingTrustFields> | null): PublicSiteSettingsVM {
   return {
     phone: row?.phone ?? '',
     secondaryPhone: row?.secondaryPhone ?? '',
@@ -532,6 +614,7 @@ export function toPublicSiteSettingsVM(row: {
     headerPromo1: row?.headerPromo1 ?? '',
     headerPromo2: row?.headerPromo2 ?? '',
     aboutText: row?.aboutText ?? '',
+    footerTrustBadges: toFooterTrustBadgesVM(row),
   };
 }
 

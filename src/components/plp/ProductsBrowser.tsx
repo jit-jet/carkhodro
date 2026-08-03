@@ -185,6 +185,7 @@ export default function ProductsBrowser({
   const selectedCarBrands  = searchParams.getAll('carBrand');
   const selectedCarTypes   = searchParams.getAll('car');
   const selectedCategories = searchParams.getAll('category');
+  const offerOnly          = searchParams.get('offer') === '1';
   const sortBy             = (searchParams.get('sort') ?? 'newest') as SortOption;
 
   function buildUrl(updates: Record<string, string | string[] | null>): string {
@@ -210,6 +211,7 @@ export default function ProductsBrowser({
   function handleCarBrandToggle(b: string)  { push(buildUrl({ carBrand: toggleValue(selectedCarBrands,  b) })); }
   function handleCarTypeToggle(ct: string)  { push(buildUrl({ car:      toggleValue(selectedCarTypes,   ct) })); }
   function handleCategoryToggle(c: string)  { push(buildUrl({ category: toggleValue(selectedCategories, c) })); }
+  function handleOfferToggle()              { push(buildUrl({ offer: offerOnly ? null : '1' })); }
   function handleSortChange(s: SortOption)  { push(buildUrl({ sort: s })); }
 
   function removeFilter(type: string, value: string) {
@@ -218,6 +220,7 @@ export default function ProductsBrowser({
       case 'carBrand':  push(buildUrl({ carBrand: selectedCarBrands.filter(b => b !== value)  })); break;
       case 'car':       push(buildUrl({ car:      selectedCarTypes.filter(c => c !== value)    })); break;
       case 'category':  push(buildUrl({ category: selectedCategories.filter(c => c !== value) })); break;
+      case 'offer':     push(buildUrl({ offer: null })); break;
       case 'q':         push(buildUrl({ q: null })); break;
     }
   }
@@ -249,12 +252,13 @@ export default function ProductsBrowser({
     if (selectedCarBrands.length)  result = result.filter(p => selectedCarBrands.includes(p.carBrandSlug));
     if (selectedCarTypes.length)   result = result.filter(p => selectedCarTypes.includes(p.carType));
     if (selectedCategories.length) result = result.filter(p => selectedCategories.includes(p.category));
+    if (offerOnly)                 result = result.filter(p => p.isOffer);
 
     return applySorting(result, sortBy);
-  }, [products, searchQuery, searchResults, selectedBrands, selectedCarBrands, selectedCarTypes, selectedCategories, sortBy]);
+  }, [products, searchQuery, searchResults, selectedBrands, selectedCarBrands, selectedCarTypes, selectedCategories, offerOnly, sortBy]);
 
   // Reset pagination whenever filters or sort change
-  const filterKey = [searchQuery, ...selectedBrands, ...selectedCarBrands, ...selectedCarTypes, ...selectedCategories, sortBy].join('|');
+  const filterKey = [searchQuery, ...selectedBrands, ...selectedCarBrands, ...selectedCarTypes, ...selectedCategories, offerOnly ? '1' : '0', sortBy].join('|');
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
   }, [filterKey]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -287,6 +291,7 @@ export default function ProductsBrowser({
     selectedCarBrands.length +
     selectedCarTypes.length +
     selectedCategories.length +
+    (offerOnly ? 1 : 0) +
     (searchQuery.trim() ? 1 : 0);
 
   type AppliedFilter = { type: string; value: string; label: string };
@@ -307,6 +312,7 @@ export default function ProductsBrowser({
       value: c,
       label: allCategories.find(a => a.key === c)?.label ?? c,
     })),
+    ...(offerOnly ? [{ type: 'offer', value: '1', label: 'پیشنهاد ویژه' }] : []),
     ...(searchQuery.trim() ? [{ type: 'q', value: searchQuery, label: `جستجو: ${searchQuery}` }] : []),
   ];
 
@@ -349,6 +355,8 @@ export default function ProductsBrowser({
             onCarTypeToggle={handleCarTypeToggle}
             selectedCategories={selectedCategories}
             onCategoryToggle={handleCategoryToggle}
+            offerOnly={offerOnly}
+            onOfferToggle={handleOfferToggle}
             onClearAll={clearAll}
             onRemoveFilter={removeFilter}
             onExportPDF={() => openPDFWindow(filteredProducts)}

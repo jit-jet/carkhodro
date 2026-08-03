@@ -5,8 +5,9 @@ import { getProductsAdmin, type AdminProductSortBy, type AdminProductSortDir } f
 import { getCategoriesAdmin } from "@/actions/categories";
 import { getPartsBrandsAdmin, getCarModelsAdmin } from "@/actions/brands";
 import { PageHeader, Button } from "@/src/components/admin/AdminUI";
+import AdminPagination from "@/src/components/admin/AdminPagination";
 import ProductsTable from "@/src/components/admin/ProductsTable";
-import { buildProductsHref } from "@/src/lib/admin-products-query";
+import { parsePage, parsePerPage, pickSearchParam } from "@/src/lib/admin-pagination";
 import { formatNumberFa } from "@/src/lib/format";
 
 export const metadata: Metadata = { title: "محصولات | پنل مدیریت" };
@@ -26,10 +27,6 @@ const SORT_BY_VALUES: AdminProductSortBy[] = [
   "isOffer",
   "createdAt",
 ];
-
-function pick(value: string | string[] | undefined): string {
-  return (Array.isArray(value) ? value[0] : value) ?? "";
-}
 
 function parseSortBy(value: string): AdminProductSortBy | undefined {
   return SORT_BY_VALUES.includes(value as AdminProductSortBy)
@@ -51,15 +48,16 @@ export default function AdminProductsPage({ searchParams }: Props) {
 
 async function ProductsContent({ searchParams }: Props) {
   const sp = await searchParams;
-  const search = pick(sp.search);
-  const categoryId = pick(sp.categoryId);
-  const partsBrandId = pick(sp.partsBrandId);
-  const carModelId = pick(sp.carModelId);
-  const status = pick(sp.status);
-  const offer = pick(sp.offer);
-  const sortBy = pick(sp.sortBy);
-  const sortDir = pick(sp.sortDir);
-  const page = Number(pick(sp.page)) || 1;
+  const search = pickSearchParam(sp.search);
+  const categoryId = pickSearchParam(sp.categoryId);
+  const partsBrandId = pickSearchParam(sp.partsBrandId);
+  const carModelId = pickSearchParam(sp.carModelId);
+  const status = pickSearchParam(sp.status);
+  const offer = pickSearchParam(sp.offer);
+  const sortBy = pickSearchParam(sp.sortBy);
+  const sortDir = pickSearchParam(sp.sortDir);
+  const page = parsePage(sp.page);
+  const perPage = parsePerPage(sp.perPage);
 
   const filters = {
     search,
@@ -70,6 +68,7 @@ async function ProductsContent({ searchParams }: Props) {
     offer,
     sortBy,
     sortDir,
+    perPage,
   };
 
   const [data, categories, partsBrands, carModels] = await Promise.all([
@@ -83,7 +82,7 @@ async function ProductsContent({ searchParams }: Props) {
       sortBy: parseSortBy(sortBy),
       sortDir: parseSortDir(sortDir),
       page,
-      perPage: 20,
+      perPage,
     }),
     getCategoriesAdmin(),
     getPartsBrandsAdmin(),
@@ -111,24 +110,23 @@ async function ProductsContent({ searchParams }: Props) {
         carModels={carModels}
       />
 
-      {data.pageCount > 1 && (
-        <div className="flex items-center justify-center gap-1.5 flex-wrap pt-5">
-          {Array.from({ length: data.pageCount }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={buildProductsHref(filters, p)}
-              className={[
-                "min-w-9 h-9 px-2 flex items-center justify-center rounded-lg text-sm font-semibold transition-colors",
-                p === data.page
-                  ? "bg-accent text-charcoal"
-                  : "bg-white border border-gray-200 text-charcoal hover:bg-silver-light",
-              ].join(" ")}
-            >
-              {p.toLocaleString("fa-IR")}
-            </Link>
-          ))}
-        </div>
-      )}
+      <AdminPagination
+        page={data.page}
+        pageCount={data.pageCount}
+        total={data.total}
+        perPage={data.perPage}
+        pathname="/admin/products"
+        query={{
+          ...(search ? { search } : {}),
+          ...(categoryId ? { categoryId } : {}),
+          ...(partsBrandId ? { partsBrandId } : {}),
+          ...(carModelId ? { carModelId } : {}),
+          ...(status ? { status } : {}),
+          ...(offer ? { offer } : {}),
+          ...(sortBy ? { sortBy } : {}),
+          ...(sortDir ? { sortDir } : {}),
+        }}
+      />
     </div>
   );
 }

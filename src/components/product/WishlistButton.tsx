@@ -117,15 +117,19 @@ export default function WishlistButton({ productId, productName, variant = 'icon
       onClick={toggle}
       disabled={pending}
       aria-pressed={active}
+      aria-label={active ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}
       className={[
-        'flex-1 flex items-center justify-center gap-2 font-semibold text-sm py-2.5 rounded-xl border-2 transition-all duration-150 active:scale-95 disabled:opacity-60',
+        'flex-1 min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 font-semibold text-xs sm:text-sm py-2.5 px-2 sm:px-3 rounded-xl border-2 transition-all duration-150 active:scale-95 disabled:opacity-60',
         active
           ? 'border-red-500 bg-red-50 text-red-600'
           : 'border-gray-200 text-gray-600 hover:border-red-300 hover:text-red-500',
       ].join(' ')}
     >
       {pending ? <Spinner /> : <HeartIcon filled={active} />}
-      {active ? 'در علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}
+      <span className="truncate">
+        <span className="sm:hidden">علاقه‌مندی</span>
+        <span className="hidden sm:inline">{active ? 'در علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}</span>
+      </span>
     </button>
   );
 }

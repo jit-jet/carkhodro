@@ -41,6 +41,8 @@ import { signToken, verifyToken } from '@/src/lib/auth-tokens';
 import { mergeGuestCartIntoUser } from '@/src/lib/guest-cart';
 import { resolveLocation } from '@/src/lib/resolve-location';
 import { sendOtpSms } from '@/src/lib/sms-gateway';
+import { pushContactToHesabfa } from '@/src/lib/hesabfa/contacts';
+import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 
 const PHONE_RE = /^09\d{9}$/;
 const VERIFIED_PHONE_COOKIE = 'verified_phone';
@@ -258,6 +260,7 @@ export async function registerUser(
     await createSession(user.id);
     (await cookies()).delete(VERIFIED_PHONE_COOKIE);
     await mergeGuestCartIntoUser(user.id);
+    runHesabfaBackground('pushContact:register', () => pushContactToHesabfa(user.id));
 
     return ok({ id: user.id });
   });

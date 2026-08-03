@@ -150,10 +150,11 @@ export async function getPostsAdmin(options?: {
   items: AdminPostListItemVM[];
   total: number;
   page: number;
+  perPage: number;
   pageCount: number;
 }> {
   const page = Math.max(1, options?.page ?? 1);
-  const perPage = options?.perPage ?? 20;
+  const perPage = Math.min(100, Math.max(1, options?.perPage ?? 20));
   const search = options?.search?.trim() ?? '';
   const status = options?.status ?? 'all';
 
@@ -214,6 +215,7 @@ export async function getPostsAdmin(options?: {
     })),
     total,
     page,
+    perPage,
     pageCount: Math.max(1, Math.ceil(total / perPage)),
   };
 }

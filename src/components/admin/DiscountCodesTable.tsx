@@ -25,6 +25,10 @@ import {
   tableRowClass,
 } from "@/src/components/admin/AdminUI";
 import { formatJalaliDateTime, formatNumberFa, formatToman } from "@/src/lib/format";
+import {
+  buildDiscountCodesHref,
+  type DiscountCodesTableFilters,
+} from "@/src/lib/admin-discount-codes-query";
 import { useCartUI } from "@/src/store/cart-ui";
 
 const TYPE_LABELS: Record<DiscountType, string> = {
@@ -38,21 +42,6 @@ const TARGET_LABELS: Record<DiscountTargetUserType, string> = {
   WHOLESALE: "عمده",
   RETAIL: "تک‌فروش",
 };
-
-function buildHref(filters: {
-  search: string;
-  status: string;
-  type: string;
-  page?: number;
-}) {
-  const params = new URLSearchParams();
-  if (filters.search) params.set("search", filters.search);
-  if (filters.status && filters.status !== "all") params.set("status", filters.status);
-  if (filters.type && filters.type !== "all") params.set("type", filters.type);
-  if (filters.page && filters.page > 1) params.set("page", String(filters.page));
-  const q = params.toString();
-  return q ? `/admin/discount-codes?${q}` : "/admin/discount-codes";
-}
 
 function formatValue(type: DiscountType, value: number | null): string {
   if (type === "FREE_SHIPPING") return "—";
@@ -68,7 +57,7 @@ export default function DiscountCodesTable({
 }: {
   items: AdminDiscountCodeListItemVM[];
   total: number;
-  filters: { search: string; status: string; type: string };
+  filters: DiscountCodesTableFilters;
 }) {
   const router = useRouter();
   const notify = useCartUI((s) => s.notify);
@@ -79,7 +68,7 @@ export default function DiscountCodesTable({
 
   function applyFilters(e?: React.FormEvent) {
     e?.preventDefault();
-    router.push(buildHref({ search, status, type, page: 1 }));
+    router.push(buildDiscountCodesHref({ ...filters, search, status, type }));
   }
 
   function handleToggle(id: string, next: boolean) {
