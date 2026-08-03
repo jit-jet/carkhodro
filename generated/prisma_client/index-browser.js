@@ -306,6 +306,7 @@ exports.Prisma.ReviewScalarFieldEnum = {
   text: 'text',
   isVerifiedPurchase: 'isVerifiedPurchase',
   isRead: 'isRead',
+  isHidden: 'isHidden',
   adminReply: 'adminReply',
   repliedAt: 'repliedAt',
   createdAt: 'createdAt'

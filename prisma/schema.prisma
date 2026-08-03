@@ -495,6 +495,8 @@ model Review {
   isVerifiedPurchase Boolean  @default(false) @map("is_verified_purchase")
   /// Admin-side read flag for the communications inbox (defaults unread for new reviews).
   isRead             Boolean  @default(false) @map("is_read")
+  /// When true, the review is hidden from the storefront but kept in the admin inbox.
+  isHidden           Boolean  @default(false) @map("is_hidden")
   /// Optional public reply from the shop, shown under the review on the PDP.
   adminReply         String?  @db.Text @map("admin_reply")
   repliedAt          DateTime? @map("replied_at")
@@ -506,6 +508,7 @@ model Review {
   @@index([productId])
   @@index([userId])
   @@index([isRead])
+  @@index([isHidden])
   @@map("reviews")
 }
 

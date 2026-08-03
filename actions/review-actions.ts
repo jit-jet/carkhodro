@@ -68,7 +68,7 @@ export async function createReview(
       });
 
       const agg = await tx.review.aggregate({
-        where: { productId: input.productId },
+        where: { productId: input.productId, isHidden: false },
         _avg: { rating: true },
         _count: { _all: true },
       });

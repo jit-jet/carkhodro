@@ -22598,6 +22598,7 @@ export namespace Prisma {
     text: string | null
     isVerifiedPurchase: boolean | null
     isRead: boolean | null
+    isHidden: boolean | null
     adminReply: string | null
     repliedAt: Date | null
     createdAt: Date | null
@@ -22612,6 +22613,7 @@ export namespace Prisma {
     text: string | null
     isVerifiedPurchase: boolean | null
     isRead: boolean | null
+    isHidden: boolean | null
     adminReply: string | null
     repliedAt: Date | null
     createdAt: Date | null
@@ -22626,6 +22628,7 @@ export namespace Prisma {
     text: number
     isVerifiedPurchase: number
     isRead: number
+    isHidden: number
     adminReply: number
     repliedAt: number
     createdAt: number
@@ -22650,6 +22653,7 @@ export namespace Prisma {
     text?: true
     isVerifiedPurchase?: true
     isRead?: true
+    isHidden?: true
     adminReply?: true
     repliedAt?: true
     createdAt?: true
@@ -22664,6 +22668,7 @@ export namespace Prisma {
     text?: true
     isVerifiedPurchase?: true
     isRead?: true
+    isHidden?: true
     adminReply?: true
     repliedAt?: true
     createdAt?: true
@@ -22678,6 +22683,7 @@ export namespace Prisma {
     text?: true
     isVerifiedPurchase?: true
     isRead?: true
+    isHidden?: true
     adminReply?: true
     repliedAt?: true
     createdAt?: true
@@ -22779,6 +22785,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase: boolean
     isRead: boolean
+    isHidden: boolean
     adminReply: string | null
     repliedAt: Date | null
     createdAt: Date
@@ -22812,6 +22819,7 @@ export namespace Prisma {
     text?: boolean
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: boolean
     repliedAt?: boolean
     createdAt?: boolean
@@ -22828,6 +22836,7 @@ export namespace Prisma {
     text?: boolean
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: boolean
     repliedAt?: boolean
     createdAt?: boolean
@@ -22844,6 +22853,7 @@ export namespace Prisma {
     text?: boolean
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: boolean
     repliedAt?: boolean
     createdAt?: boolean
@@ -22860,12 +22870,13 @@ export namespace Prisma {
     text?: boolean
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: boolean
     repliedAt?: boolean
     createdAt?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "userId" | "authorName" | "rating" | "text" | "isVerifiedPurchase" | "isRead" | "adminReply" | "repliedAt" | "createdAt", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "userId" | "authorName" | "rating" | "text" | "isVerifiedPurchase" | "isRead" | "isHidden" | "adminReply" | "repliedAt" | "createdAt", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     user?: boolean | Review$userArgs<ExtArgs>
@@ -22906,6 +22917,10 @@ export namespace Prisma {
        * Admin-side read flag for the communications inbox (defaults unread for new reviews).
        */
       isRead: boolean
+      /**
+       * When true, the review is hidden from the storefront but kept in the admin inbox.
+       */
+      isHidden: boolean
       /**
        * Optional public reply from the shop, shown under the review on the PDP.
        */
@@ -23345,6 +23360,7 @@ export namespace Prisma {
     readonly text: FieldRef<"Review", 'String'>
     readonly isVerifiedPurchase: FieldRef<"Review", 'Boolean'>
     readonly isRead: FieldRef<"Review", 'Boolean'>
+    readonly isHidden: FieldRef<"Review", 'Boolean'>
     readonly adminReply: FieldRef<"Review", 'String'>
     readonly repliedAt: FieldRef<"Review", 'DateTime'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
@@ -46183,6 +46199,7 @@ export namespace Prisma {
     text: 'text',
     isVerifiedPurchase: 'isVerifiedPurchase',
     isRead: 'isRead',
+    isHidden: 'isHidden',
     adminReply: 'adminReply',
     repliedAt: 'repliedAt',
     createdAt: 'createdAt'
@@ -47991,6 +48008,7 @@ export namespace Prisma {
     text?: StringFilter<"Review"> | string
     isVerifiedPurchase?: BoolFilter<"Review"> | boolean
     isRead?: BoolFilter<"Review"> | boolean
+    isHidden?: BoolFilter<"Review"> | boolean
     adminReply?: StringNullableFilter<"Review"> | string | null
     repliedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
@@ -48007,6 +48025,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrderInput | SortOrder
     repliedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -48026,6 +48045,7 @@ export namespace Prisma {
     text?: StringFilter<"Review"> | string
     isVerifiedPurchase?: BoolFilter<"Review"> | boolean
     isRead?: BoolFilter<"Review"> | boolean
+    isHidden?: BoolFilter<"Review"> | boolean
     adminReply?: StringNullableFilter<"Review"> | string | null
     repliedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
@@ -48042,6 +48062,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrderInput | SortOrder
     repliedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -48064,6 +48085,7 @@ export namespace Prisma {
     text?: StringWithAggregatesFilter<"Review"> | string
     isVerifiedPurchase?: BoolWithAggregatesFilter<"Review"> | boolean
     isRead?: BoolWithAggregatesFilter<"Review"> | boolean
+    isHidden?: BoolWithAggregatesFilter<"Review"> | boolean
     adminReply?: StringNullableWithAggregatesFilter<"Review"> | string | null
     repliedAt?: DateTimeNullableWithAggregatesFilter<"Review"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
@@ -50977,6 +50999,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -50993,6 +51016,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -51005,6 +51029,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51021,6 +51046,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51035,6 +51061,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -51047,6 +51074,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51061,6 +51089,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54052,6 +54081,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrder
     repliedAt?: SortOrder
     createdAt?: SortOrder
@@ -54070,6 +54100,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrder
     repliedAt?: SortOrder
     createdAt?: SortOrder
@@ -54084,6 +54115,7 @@ export namespace Prisma {
     text?: SortOrder
     isVerifiedPurchase?: SortOrder
     isRead?: SortOrder
+    isHidden?: SortOrder
     adminReply?: SortOrder
     repliedAt?: SortOrder
     createdAt?: SortOrder
@@ -57993,6 +58025,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -58007,6 +58040,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -58358,6 +58392,7 @@ export namespace Prisma {
     text?: StringFilter<"Review"> | string
     isVerifiedPurchase?: BoolFilter<"Review"> | boolean
     isRead?: BoolFilter<"Review"> | boolean
+    isHidden?: BoolFilter<"Review"> | boolean
     adminReply?: StringNullableFilter<"Review"> | string | null
     repliedAt?: DateTimeNullableFilter<"Review"> | Date | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
@@ -59554,6 +59589,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -59568,6 +59604,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -63955,6 +63992,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -64186,6 +64224,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64200,6 +64239,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64213,6 +64253,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64909,6 +64950,7 @@ export namespace Prisma {
     text: string
     isVerifiedPurchase?: boolean
     isRead?: boolean
+    isHidden?: boolean
     adminReply?: string | null
     repliedAt?: Date | string | null
     createdAt?: Date | string
@@ -64987,6 +65029,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65001,6 +65044,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65014,6 +65058,7 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isVerifiedPurchase?: BoolFieldUpdateOperationsInput | boolean
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isHidden?: BoolFieldUpdateOperationsInput | boolean
     adminReply?: NullableStringFieldUpdateOperationsInput | string | null
     repliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
