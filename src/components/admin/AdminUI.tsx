@@ -246,15 +246,21 @@ export function TableShell({
   children,
   className = "",
   minWidth,
+  tableClassName = "",
 }: {
   children: React.ReactNode;
   className?: string;
+  /** Optional min-width utility (e.g. min-w-[1100px]) when horizontal scroll is intended. */
   minWidth?: string;
+  /** Extra classes on the <table> element (e.g. table-fixed). */
+  tableClassName?: string;
 }) {
   return (
-    <Card className={`overflow-hidden ${className}`}>
-      <div className="overflow-x-auto">
-        <table className={`w-full text-sm ${minWidth ?? ""}`}>{children}</table>
+    <Card className={`overflow-hidden min-w-0 ${className}`}>
+      <div className="overflow-x-auto max-w-full">
+        <table className={`w-full text-sm ${minWidth ?? ""} ${tableClassName}`.trim()}>
+          {children}
+        </table>
       </div>
     </Card>
   );

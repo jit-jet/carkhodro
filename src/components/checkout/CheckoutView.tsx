@@ -87,6 +87,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
 
   const subtotal = cart.subtotal;
   const shippingCost = shippingOptions.find((s) => s.id === shippingId)?.cost ?? 0;
+  const shippingLabel = shippingOptions.find((s) => s.id === shippingId)?.label ?? null;
   const total = Math.max(0, subtotal + shippingCost - discountAmount);
 
   function clearCoupon() {
@@ -235,6 +236,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
           <OrderSummary
             subtotal={subtotal}
             shippingCost={shippingCost}
+            shippingLabel={shippingLabel}
             discountAmount={discountAmount}
             discountCode={appliedCode}
             total={total}

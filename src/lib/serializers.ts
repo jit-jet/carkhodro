@@ -175,6 +175,10 @@ export interface ShippingOptionVM {
   cost: number;
 }
 
+export interface AdminShippingOptionVM extends ShippingOptionVM {
+  isActive: boolean;
+}
+
 export interface FaqVM {
   id: number;
   question: string;
@@ -668,6 +672,20 @@ export function toShippingOptionVM(s: {
     label: s.label,
     description: s.description ?? '',
     cost: Number(s.cost),
+  };
+}
+
+export function toAdminShippingOptionVM(s: {
+  id: string;
+  method: string;
+  label: string;
+  description: string | null;
+  cost: bigint;
+  isActive: boolean;
+}): AdminShippingOptionVM {
+  return {
+    ...toShippingOptionVM(s),
+    isActive: s.isActive,
   };
 }
 

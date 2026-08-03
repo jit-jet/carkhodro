@@ -27,7 +27,8 @@ type IconKey =
   | "comms"
   | "discount"
   | "rules"
-  | "accounting";
+  | "accounting"
+  | "shipping";
 
 interface NavItem {
   href: string;
@@ -47,6 +48,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/admin/products", label: "محصولات و قیمت‌گذاری", icon: "box" },
       { href: "/admin/discount-codes", label: "کد تخفیف", icon: "discount" },
       { href: "/admin/orders", label: "سفارشات و فاکتورها", icon: "orders" },
+      { href: "/admin/shipping", label: "روش‌های ارسال", icon: "shipping" },
       { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: "category" },
       { href: "/admin/brands", label: "برندها و خودروها", icon: "car" },
       { href: "/admin/users", label: "کاربران", icon: "users" },
@@ -123,6 +125,15 @@ function NavIcon({ icon }: { icon: IconKey }) {
           <line x1="16" y1="13" x2="8" y2="13" />
           <line x1="16" y1="17" x2="8" y2="17" />
           <line x1="10" y1="9" x2="8" y2="9" />
+        </svg>
+      );
+    case "shipping":
+      return (
+        <svg {...common}>
+          <rect x="1" y="3" width="15" height="13" rx="1" />
+          <path d="M16 8h4l3 3v5h-7V8z" />
+          <circle cx="5.5" cy="18.5" r="2.5" />
+          <circle cx="18.5" cy="18.5" r="2.5" />
         </svg>
       );
     case "sms":

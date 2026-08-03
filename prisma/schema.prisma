@@ -71,11 +71,6 @@ enum PaymentStatus {
   REFUNDED
 }
 
-enum ShippingMethod {
-  STANDARD    // post — 3-5 business days
-  EXPRESS     // 1-2 business days
-}
-
 /// How a redeemable coupon reduces the order total.
 enum DiscountType {
   PERCENTAGE     // درصدی — value is 0–100
@@ -729,15 +724,16 @@ model SmsCampaign {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Shipping methods and their current cost — editable by admin.
+/// `method` is a stable unique code (e.g. STANDARD, EXPRESS); free-form codes allowed.
 model ShippingOption {
-  id          String         @id @default(cuid())
-  method      ShippingMethod @unique
+  id          String   @id @default(cuid())
+  method      String   @unique
   label       String
   description String?
   cost        BigInt
-  isActive    Boolean        @default(true) @map("is_active")
-  createdAt   DateTime       @default(now()) @map("created_at")
-  updatedAt   DateTime       @updatedAt @map("updated_at")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   orders Order[]
 

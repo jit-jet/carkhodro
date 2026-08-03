@@ -178,7 +178,7 @@ function ProductRow({
           <span className="text-[11px] font-mono text-gray-400">{product.sku}</span>
           {product.discountPct > 0 && (
             <span className="text-[10px] font-bold text-red-500 bg-red-50 rounded px-1.5 py-0.5">
-              ٪{product.discountPct.toLocaleString('fa-IR')} تخفیف نقدی
+              ٪{product.discountPct.toLocaleString('fa-IR')} تخفیف
             </span>
           )}
         </div>

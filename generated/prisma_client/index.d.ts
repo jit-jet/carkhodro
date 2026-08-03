@@ -152,6 +152,7 @@ export type SmsCampaign = $Result.DefaultSelection<Prisma.$SmsCampaignPayload>
 /**
  * Model ShippingOption
  * Shipping methods and their current cost — editable by admin.
+ * `method` is a stable unique code (e.g. STANDARD, EXPRESS); free-form codes allowed.
  */
 export type ShippingOption = $Result.DefaultSelection<Prisma.$ShippingOptionPayload>
 /**
@@ -274,14 +275,6 @@ export const PaymentStatus: {
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
-export const ShippingMethod: {
-  STANDARD: 'STANDARD',
-  EXPRESS: 'EXPRESS'
-};
-
-export type ShippingMethod = (typeof ShippingMethod)[keyof typeof ShippingMethod]
-
-
 export const DiscountType: {
   PERCENTAGE: 'PERCENTAGE',
   FIXED_AMOUNT: 'FIXED_AMOUNT',
@@ -340,10 +333,6 @@ export const PaymentMethod: typeof $Enums.PaymentMethod
 export type PaymentStatus = $Enums.PaymentStatus
 
 export const PaymentStatus: typeof $Enums.PaymentStatus
-
-export type ShippingMethod = $Enums.ShippingMethod
-
-export const ShippingMethod: typeof $Enums.ShippingMethod
 
 export type DiscountType = $Enums.DiscountType
 
@@ -35030,7 +35019,7 @@ export namespace Prisma {
 
   export type ShippingOptionMinAggregateOutputType = {
     id: string | null
-    method: $Enums.ShippingMethod | null
+    method: string | null
     label: string | null
     description: string | null
     cost: bigint | null
@@ -35041,7 +35030,7 @@ export namespace Prisma {
 
   export type ShippingOptionMaxAggregateOutputType = {
     id: string | null
-    method: $Enums.ShippingMethod | null
+    method: string | null
     label: string | null
     description: string | null
     cost: bigint | null
@@ -35193,7 +35182,7 @@ export namespace Prisma {
 
   export type ShippingOptionGroupByOutputType = {
     id: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description: string | null
     cost: bigint
@@ -35282,7 +35271,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      method: $Enums.ShippingMethod
+      method: string
       label: string
       description: string | null
       cost: bigint
@@ -35714,7 +35703,7 @@ export namespace Prisma {
    */
   interface ShippingOptionFieldRefs {
     readonly id: FieldRef<"ShippingOption", 'String'>
-    readonly method: FieldRef<"ShippingOption", 'ShippingMethod'>
+    readonly method: FieldRef<"ShippingOption", 'String'>
     readonly label: FieldRef<"ShippingOption", 'String'>
     readonly description: FieldRef<"ShippingOption", 'String'>
     readonly cost: FieldRef<"ShippingOption", 'BigInt'>
@@ -45431,20 +45420,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'ShippingMethod'
-   */
-  export type EnumShippingMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShippingMethod'>
-    
-
-
-  /**
-   * Reference to a field of type 'ShippingMethod[]'
-   */
-  export type ListEnumShippingMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShippingMethod[]'>
-    
-
-
-  /**
    * Reference to a field of type 'OrderStatus'
    */
   export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus'>
@@ -47612,7 +47587,7 @@ export namespace Prisma {
     OR?: ShippingOptionWhereInput[]
     NOT?: ShippingOptionWhereInput | ShippingOptionWhereInput[]
     id?: StringFilter<"ShippingOption"> | string
-    method?: EnumShippingMethodFilter<"ShippingOption"> | $Enums.ShippingMethod
+    method?: StringFilter<"ShippingOption"> | string
     label?: StringFilter<"ShippingOption"> | string
     description?: StringNullableFilter<"ShippingOption"> | string | null
     cost?: BigIntFilter<"ShippingOption"> | bigint | number
@@ -47636,7 +47611,7 @@ export namespace Prisma {
 
   export type ShippingOptionWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    method?: $Enums.ShippingMethod
+    method?: string
     AND?: ShippingOptionWhereInput | ShippingOptionWhereInput[]
     OR?: ShippingOptionWhereInput[]
     NOT?: ShippingOptionWhereInput | ShippingOptionWhereInput[]
@@ -47670,7 +47645,7 @@ export namespace Prisma {
     OR?: ShippingOptionScalarWhereWithAggregatesInput[]
     NOT?: ShippingOptionScalarWhereWithAggregatesInput | ShippingOptionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"ShippingOption"> | string
-    method?: EnumShippingMethodWithAggregatesFilter<"ShippingOption"> | $Enums.ShippingMethod
+    method?: StringWithAggregatesFilter<"ShippingOption"> | string
     label?: StringWithAggregatesFilter<"ShippingOption"> | string
     description?: StringNullableWithAggregatesFilter<"ShippingOption"> | string | null
     cost?: BigIntWithAggregatesFilter<"ShippingOption"> | bigint | number
@@ -50581,7 +50556,7 @@ export namespace Prisma {
 
   export type ShippingOptionCreateInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -50593,7 +50568,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedCreateInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -50605,7 +50580,7 @@ export namespace Prisma {
 
   export type ShippingOptionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -50617,7 +50592,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -50629,7 +50604,7 @@ export namespace Prisma {
 
   export type ShippingOptionCreateManyInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -50640,7 +50615,7 @@ export namespace Prisma {
 
   export type ShippingOptionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -50651,7 +50626,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -53186,13 +53161,6 @@ export namespace Prisma {
     _max?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
   }
 
-  export type EnumShippingMethodFilter<$PrismaModel = never> = {
-    equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    not?: NestedEnumShippingMethodFilter<$PrismaModel> | $Enums.ShippingMethod
-  }
-
   export type ShippingOptionCountOrderByAggregateInput = {
     id?: SortOrder
     method?: SortOrder
@@ -53232,16 +53200,6 @@ export namespace Prisma {
 
   export type ShippingOptionSumOrderByAggregateInput = {
     cost?: SortOrder
-  }
-
-  export type EnumShippingMethodWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    not?: NestedEnumShippingMethodWithAggregatesFilter<$PrismaModel> | $Enums.ShippingMethod
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumShippingMethodFilter<$PrismaModel>
-    _max?: NestedEnumShippingMethodFilter<$PrismaModel>
   }
 
   export type EnumOrderStatusFilter<$PrismaModel = never> = {
@@ -55376,10 +55334,6 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
-  export type EnumShippingMethodFieldUpdateOperationsInput = {
-    set?: $Enums.ShippingMethod
-  }
-
   export type OrderUpdateManyWithoutShippingOptionNestedInput = {
     create?: XOR<OrderCreateWithoutShippingOptionInput, OrderUncheckedCreateWithoutShippingOptionInput> | OrderCreateWithoutShippingOptionInput[] | OrderUncheckedCreateWithoutShippingOptionInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutShippingOptionInput | OrderCreateOrConnectWithoutShippingOptionInput[]
@@ -56101,23 +56055,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
     _max?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
-  }
-
-  export type NestedEnumShippingMethodFilter<$PrismaModel = never> = {
-    equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    not?: NestedEnumShippingMethodFilter<$PrismaModel> | $Enums.ShippingMethod
-  }
-
-  export type NestedEnumShippingMethodWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ShippingMethod | EnumShippingMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ShippingMethod[] | ListEnumShippingMethodFieldRefInput<$PrismaModel>
-    not?: NestedEnumShippingMethodWithAggregatesFilter<$PrismaModel> | $Enums.ShippingMethod
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumShippingMethodFilter<$PrismaModel>
-    _max?: NestedEnumShippingMethodFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
@@ -60742,7 +60679,7 @@ export namespace Prisma {
 
   export type ShippingOptionCreateWithoutOrdersInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -60753,7 +60690,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedCreateWithoutOrdersInput = {
     id?: string
-    method: $Enums.ShippingMethod
+    method: string
     label: string
     description?: string | null
     cost: bigint | number
@@ -61000,7 +60937,7 @@ export namespace Prisma {
 
   export type ShippingOptionUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -61011,7 +60948,7 @@ export namespace Prisma {
 
   export type ShippingOptionUncheckedUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    method?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    method?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: BigIntFieldUpdateOperationsInput | bigint | number

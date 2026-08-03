@@ -583,11 +583,6 @@ exports.SmsCampaignStatus = exports.$Enums.SmsCampaignStatus = {
   FAILED: 'FAILED'
 };
 
-exports.ShippingMethod = exports.$Enums.ShippingMethod = {
-  STANDARD: 'STANDARD',
-  EXPRESS: 'EXPRESS'
-};
-
 exports.OrderStatus = exports.$Enums.OrderStatus = {
   NEW: 'NEW',
   AWAITING_CONFIRMATION: 'AWAITING_CONFIRMATION',
