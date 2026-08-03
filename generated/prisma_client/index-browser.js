@@ -143,6 +143,17 @@ exports.Prisma.NavLinkScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FooterLinkScalarFieldEnum = {
+  id: 'id',
+  group: 'group',
+  href: 'href',
+  label: 'label',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   phoneNumber: 'phoneNumber',
@@ -563,6 +574,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.FooterLinkGroup = exports.$Enums.FooterLinkGroup = {
+  QUICK: 'QUICK',
+  CATEGORY: 'CATEGORY'
+};
+
 exports.UserRole = exports.$Enums.UserRole = {
   RETAIL: 'RETAIL',
   WHOLESALE: 'WHOLESALE',
@@ -637,6 +653,7 @@ exports.Prisma.ModelName = {
   Province: 'Province',
   City: 'City',
   NavLink: 'NavLink',
+  FooterLink: 'FooterLink',
   User: 'User',
   OtpSession: 'OtpSession',
   Session: 'Session',

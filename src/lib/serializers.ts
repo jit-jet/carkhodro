@@ -129,6 +129,20 @@ export interface AdminNavLinkVM extends NavLinkVM {
   isActive: boolean;
 }
 
+export type FooterLinkGroupVM = 'QUICK' | 'CATEGORY';
+
+export interface FooterLinkVM {
+  id: number;
+  group: FooterLinkGroupVM;
+  href: string;
+  label: string;
+  order: number;
+}
+
+export interface AdminFooterLinkVM extends FooterLinkVM {
+  isActive: boolean;
+}
+
 export interface FooterTrustBadgeVM {
   icon: string;
   title: string;
@@ -530,6 +544,40 @@ export function toAdminNavLinkVM(n: {
   isActive: boolean;
 }): AdminNavLinkVM {
   return { id: n.id, href: n.href, label: n.label, order: n.sortOrder, isActive: n.isActive };
+}
+
+export function toFooterLinkVM(n: {
+  id: number;
+  group: FooterLinkGroupVM;
+  href: string;
+  label: string;
+  sortOrder: number;
+}): FooterLinkVM {
+  return {
+    id: n.id,
+    group: n.group,
+    href: n.href,
+    label: n.label,
+    order: n.sortOrder,
+  };
+}
+
+export function toAdminFooterLinkVM(n: {
+  id: number;
+  group: FooterLinkGroupVM;
+  href: string;
+  label: string;
+  sortOrder: number;
+  isActive: boolean;
+}): AdminFooterLinkVM {
+  return {
+    id: n.id,
+    group: n.group,
+    href: n.href,
+    label: n.label,
+    order: n.sortOrder,
+    isActive: n.isActive,
+  };
 }
 
 type SiteSettingTrustFields = {

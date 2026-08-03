@@ -62,6 +62,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { href: "/admin/posts", label: "مقالات وبلاگ", icon: "blog" },
       { href: "/admin/navigation", label: "منوی سایت", icon: "menu" },
+      { href: "/admin/footer-links", label: "لینک‌های فوتر", icon: "menu" },
       { href: "/admin/faq", label: "سوالات متداول", icon: "faq" },
       { href: "/admin/rules", label: "قوانین و مقررات", icon: "rules" },
       { href: "/admin/settings", label: "تنظیمات سایت", icon: "settings" },

@@ -13,6 +13,7 @@ export const tags = {
   partsBrands: 'parts-brands',
   provinces: 'provinces',
   navLinks: 'nav-links',
+  footerLinks: 'footer-links',
   shipping: 'shipping-options',
   reviews: (productId: string) => `reviews:${productId}`,
   faqs: 'faqs',
