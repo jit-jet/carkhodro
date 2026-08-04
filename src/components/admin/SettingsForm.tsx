@@ -55,7 +55,7 @@ export default function SettingsForm({ initial }: { initial: SiteSettingVM }) {
         <Card className="overflow-hidden">
           <CardHeader
             title="هدر سایت"
-            description="تلفن و خط اول آدرس (از بخش تماس) در نوار بالای هدر نمایش داده می‌شوند."
+            description="تلفن خرده‌فروشی و خط اول آدرس (از بخش تماس) در نوار بالای هدر نمایش داده می‌شوند."
           />
           <div className="p-5 sm:p-6 space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
@@ -82,27 +82,86 @@ export default function SettingsForm({ initial }: { initial: SiteSettingVM }) {
         <Card className="overflow-hidden">
           <CardHeader
             title="اطلاعات تماس"
-            description="در فوتر، صفحه تماس با ما و سایر بخش‌های سایت استفاده می‌شود."
+            description="اطلاعات تماس فروشگاه — تلفن‌ها بر اساس نقش کاربر (خرده‌فروشی / عمده‌فروشی) در سایت نمایش داده می‌شوند."
           />
           <div className="p-5 sm:p-6 space-y-4">
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <Label>تلفن اصلی</Label>
-                <Input
-                  dir="ltr"
-                  value={form.phone}
-                  onChange={(e) => set("phone", e.target.value)}
-                  placeholder="021xxxxxxx"
-                />
+            <div>
+              <p className="text-sm font-semibold text-charcoal mb-3">
+                تلفن‌های خرده‌فروشی
+              </p>
+              <p className="text-xs text-gray-500 mb-3">
+                برای بازدیدکنندگان مهمان و مشتریان خرده‌فروشی نمایش داده می‌شوند.
+              </p>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <Label>تلفن خرده‌فروشی ۱</Label>
+                  <Input
+                    dir="ltr"
+                    value={form.retailPhone1}
+                    onChange={(e) => set("retailPhone1", e.target.value)}
+                    placeholder="021xxxxxxx"
+                  />
+                </div>
+                <div>
+                  <Label>تلفن خرده‌فروشی ۲</Label>
+                  <Input
+                    dir="ltr"
+                    value={form.retailPhone2}
+                    onChange={(e) => set("retailPhone2", e.target.value)}
+                    placeholder="021xxxxxxx"
+                  />
+                </div>
               </div>
-              <div>
-                <Label>تلفن دوم (اختیاری)</Label>
-                <Input
-                  dir="ltr"
-                  value={form.secondaryPhone}
-                  onChange={(e) => set("secondaryPhone", e.target.value)}
-                />
+            </div>
+
+            <div className="border-t border-gray-100 pt-4">
+              <p className="text-sm font-semibold text-charcoal mb-3">
+                تلفن‌های عمده‌فروشی
+              </p>
+              <p className="text-xs text-gray-500 mb-3">
+                فقط برای کاربران عمده‌فروشی واردشده نمایش داده می‌شوند.
+              </p>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <Label>تلفن عمده‌فروشی ۱</Label>
+                  <Input
+                    dir="ltr"
+                    value={form.wholesalePhone1}
+                    onChange={(e) => set("wholesalePhone1", e.target.value)}
+                    placeholder="021xxxxxxx"
+                  />
+                </div>
+                <div>
+                  <Label>تلفن عمده‌فروشی ۲</Label>
+                  <Input
+                    dir="ltr"
+                    value={form.wholesalePhone2}
+                    onChange={(e) => set("wholesalePhone2", e.target.value)}
+                    placeholder="021xxxxxxx"
+                  />
+                </div>
+                <div>
+                  <Label>تلفن عمده‌فروشی ۳</Label>
+                  <Input
+                    dir="ltr"
+                    value={form.wholesalePhone3}
+                    onChange={(e) => set("wholesalePhone3", e.target.value)}
+                    placeholder="021xxxxxxx"
+                  />
+                </div>
+                <div>
+                  <Label>تلفن عمده‌فروشی ۴</Label>
+                  <Input
+                    dir="ltr"
+                    value={form.wholesalePhone4}
+                    onChange={(e) => set("wholesalePhone4", e.target.value)}
+                    placeholder="021xxxxxxx"
+                  />
+                </div>
               </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4 border-t border-gray-100 pt-4">
               <div>
                 <Label>ایمیل</Label>
                 <Input

@@ -665,8 +665,14 @@ model Faq {
 /// single row — the app upserts `id = 1`.
 model SiteSetting {
   id                Int      @id @default(1)
-  phone             String?
-  secondaryPhone    String?  @map("secondary_phone")
+  /// Shown to guests and RETAIL customers.
+  retailPhone1      String?  @map("retail_phone_1")
+  retailPhone2      String?  @map("retail_phone_2")
+  /// Shown only when a WHOLESALE user is logged in.
+  wholesalePhone1   String?  @map("wholesale_phone_1")
+  wholesalePhone2   String?  @map("wholesale_phone_2")
+  wholesalePhone3   String?  @map("wholesale_phone_3")
+  wholesalePhone4   String?  @map("wholesale_phone_4")
   email             String?
   address           String?  @db.Text
   workingHours      String?  @map("working_hours")

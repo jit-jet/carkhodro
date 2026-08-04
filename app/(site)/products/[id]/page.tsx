@@ -11,6 +11,9 @@ import RelatedProducts from '@/src/components/pdp/RelatedProducts';
 import CallForPrice    from '@/src/components/product/CallForPrice';
 import WishlistButton  from '@/src/components/product/WishlistButton';
 import CompareButton   from '@/src/components/product/CompareButton';
+import { getCurrentUser } from '@/src/lib/session';
+import { primaryContactPhone } from '@/src/lib/site-settings-display';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -71,12 +74,13 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   // Fire-and-forget — do not block PDP render on the view counter.
   void recordProductView(product.id);
 
-  const [relatedProducts, comments, settings] = await Promise.all([
+  const [relatedProducts, comments, settings, user] = await Promise.all([
     withViewerPricing(await getRelatedProducts(product.id, product.categoryId)),
     getProductReviews(product.id),
     getPublicSiteSettings(),
+    getCurrentUser(),
   ]);
-  const shopPhone = settings.phone.trim() || settings.secondaryPhone.trim() || '';
+  const shopPhone = primaryContactPhone(settings, pricingRoleFromUser(user?.role));
   const flag = ORIGIN_FLAGS[product.origin] ?? '🏭';
 
   const attrs: [string, string][] = [

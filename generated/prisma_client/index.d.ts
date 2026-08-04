@@ -31674,8 +31674,12 @@ export namespace Prisma {
 
   export type SiteSettingMinAggregateOutputType = {
     id: number | null
-    phone: string | null
-    secondaryPhone: string | null
+    retailPhone1: string | null
+    retailPhone2: string | null
+    wholesalePhone1: string | null
+    wholesalePhone2: string | null
+    wholesalePhone3: string | null
+    wholesalePhone4: string | null
     email: string | null
     address: string | null
     workingHours: string | null
@@ -31699,8 +31703,12 @@ export namespace Prisma {
 
   export type SiteSettingMaxAggregateOutputType = {
     id: number | null
-    phone: string | null
-    secondaryPhone: string | null
+    retailPhone1: string | null
+    retailPhone2: string | null
+    wholesalePhone1: string | null
+    wholesalePhone2: string | null
+    wholesalePhone3: string | null
+    wholesalePhone4: string | null
     email: string | null
     address: string | null
     workingHours: string | null
@@ -31724,8 +31732,12 @@ export namespace Prisma {
 
   export type SiteSettingCountAggregateOutputType = {
     id: number
-    phone: number
-    secondaryPhone: number
+    retailPhone1: number
+    retailPhone2: number
+    wholesalePhone1: number
+    wholesalePhone2: number
+    wholesalePhone3: number
+    wholesalePhone4: number
     email: number
     address: number
     workingHours: number
@@ -31759,8 +31771,12 @@ export namespace Prisma {
 
   export type SiteSettingMinAggregateInputType = {
     id?: true
-    phone?: true
-    secondaryPhone?: true
+    retailPhone1?: true
+    retailPhone2?: true
+    wholesalePhone1?: true
+    wholesalePhone2?: true
+    wholesalePhone3?: true
+    wholesalePhone4?: true
     email?: true
     address?: true
     workingHours?: true
@@ -31784,8 +31800,12 @@ export namespace Prisma {
 
   export type SiteSettingMaxAggregateInputType = {
     id?: true
-    phone?: true
-    secondaryPhone?: true
+    retailPhone1?: true
+    retailPhone2?: true
+    wholesalePhone1?: true
+    wholesalePhone2?: true
+    wholesalePhone3?: true
+    wholesalePhone4?: true
     email?: true
     address?: true
     workingHours?: true
@@ -31809,8 +31829,12 @@ export namespace Prisma {
 
   export type SiteSettingCountAggregateInputType = {
     id?: true
-    phone?: true
-    secondaryPhone?: true
+    retailPhone1?: true
+    retailPhone2?: true
+    wholesalePhone1?: true
+    wholesalePhone2?: true
+    wholesalePhone3?: true
+    wholesalePhone4?: true
     email?: true
     address?: true
     workingHours?: true
@@ -31921,8 +31945,12 @@ export namespace Prisma {
 
   export type SiteSettingGroupByOutputType = {
     id: number
-    phone: string | null
-    secondaryPhone: string | null
+    retailPhone1: string | null
+    retailPhone2: string | null
+    wholesalePhone1: string | null
+    wholesalePhone2: string | null
+    wholesalePhone3: string | null
+    wholesalePhone4: string | null
     email: string | null
     address: string | null
     workingHours: string | null
@@ -31965,8 +31993,12 @@ export namespace Prisma {
 
   export type SiteSettingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    phone?: boolean
-    secondaryPhone?: boolean
+    retailPhone1?: boolean
+    retailPhone2?: boolean
+    wholesalePhone1?: boolean
+    wholesalePhone2?: boolean
+    wholesalePhone3?: boolean
+    wholesalePhone4?: boolean
     email?: boolean
     address?: boolean
     workingHours?: boolean
@@ -31990,8 +32022,12 @@ export namespace Prisma {
 
   export type SiteSettingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    phone?: boolean
-    secondaryPhone?: boolean
+    retailPhone1?: boolean
+    retailPhone2?: boolean
+    wholesalePhone1?: boolean
+    wholesalePhone2?: boolean
+    wholesalePhone3?: boolean
+    wholesalePhone4?: boolean
     email?: boolean
     address?: boolean
     workingHours?: boolean
@@ -32015,8 +32051,12 @@ export namespace Prisma {
 
   export type SiteSettingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    phone?: boolean
-    secondaryPhone?: boolean
+    retailPhone1?: boolean
+    retailPhone2?: boolean
+    wholesalePhone1?: boolean
+    wholesalePhone2?: boolean
+    wholesalePhone3?: boolean
+    wholesalePhone4?: boolean
     email?: boolean
     address?: boolean
     workingHours?: boolean
@@ -32040,8 +32080,12 @@ export namespace Prisma {
 
   export type SiteSettingSelectScalar = {
     id?: boolean
-    phone?: boolean
-    secondaryPhone?: boolean
+    retailPhone1?: boolean
+    retailPhone2?: boolean
+    wholesalePhone1?: boolean
+    wholesalePhone2?: boolean
+    wholesalePhone3?: boolean
+    wholesalePhone4?: boolean
     email?: boolean
     address?: boolean
     workingHours?: boolean
@@ -32063,15 +32107,25 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "secondaryPhone" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      phone: string | null
-      secondaryPhone: string | null
+      /**
+       * Shown to guests and RETAIL customers.
+       */
+      retailPhone1: string | null
+      retailPhone2: string | null
+      /**
+       * Shown only when a WHOLESALE user is logged in.
+       */
+      wholesalePhone1: string | null
+      wholesalePhone2: string | null
+      wholesalePhone3: string | null
+      wholesalePhone4: string | null
       email: string | null
       address: string | null
       workingHours: string | null
@@ -32521,8 +32575,12 @@ export namespace Prisma {
    */
   interface SiteSettingFieldRefs {
     readonly id: FieldRef<"SiteSetting", 'Int'>
-    readonly phone: FieldRef<"SiteSetting", 'String'>
-    readonly secondaryPhone: FieldRef<"SiteSetting", 'String'>
+    readonly retailPhone1: FieldRef<"SiteSetting", 'String'>
+    readonly retailPhone2: FieldRef<"SiteSetting", 'String'>
+    readonly wholesalePhone1: FieldRef<"SiteSetting", 'String'>
+    readonly wholesalePhone2: FieldRef<"SiteSetting", 'String'>
+    readonly wholesalePhone3: FieldRef<"SiteSetting", 'String'>
+    readonly wholesalePhone4: FieldRef<"SiteSetting", 'String'>
     readonly email: FieldRef<"SiteSetting", 'String'>
     readonly address: FieldRef<"SiteSetting", 'String'>
     readonly workingHours: FieldRef<"SiteSetting", 'String'>
@@ -46304,8 +46362,12 @@ export namespace Prisma {
 
   export const SiteSettingScalarFieldEnum: {
     id: 'id',
-    phone: 'phone',
-    secondaryPhone: 'secondaryPhone',
+    retailPhone1: 'retailPhone1',
+    retailPhone2: 'retailPhone2',
+    wholesalePhone1: 'wholesalePhone1',
+    wholesalePhone2: 'wholesalePhone2',
+    wholesalePhone3: 'wholesalePhone3',
+    wholesalePhone4: 'wholesalePhone4',
     email: 'email',
     address: 'address',
     workingHours: 'workingHours',
@@ -48586,8 +48648,12 @@ export namespace Prisma {
     OR?: SiteSettingWhereInput[]
     NOT?: SiteSettingWhereInput | SiteSettingWhereInput[]
     id?: IntFilter<"SiteSetting"> | number
-    phone?: StringNullableFilter<"SiteSetting"> | string | null
-    secondaryPhone?: StringNullableFilter<"SiteSetting"> | string | null
+    retailPhone1?: StringNullableFilter<"SiteSetting"> | string | null
+    retailPhone2?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone1?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone2?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone3?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone4?: StringNullableFilter<"SiteSetting"> | string | null
     email?: StringNullableFilter<"SiteSetting"> | string | null
     address?: StringNullableFilter<"SiteSetting"> | string | null
     workingHours?: StringNullableFilter<"SiteSetting"> | string | null
@@ -48611,8 +48677,12 @@ export namespace Prisma {
 
   export type SiteSettingOrderByWithRelationInput = {
     id?: SortOrder
-    phone?: SortOrderInput | SortOrder
-    secondaryPhone?: SortOrderInput | SortOrder
+    retailPhone1?: SortOrderInput | SortOrder
+    retailPhone2?: SortOrderInput | SortOrder
+    wholesalePhone1?: SortOrderInput | SortOrder
+    wholesalePhone2?: SortOrderInput | SortOrder
+    wholesalePhone3?: SortOrderInput | SortOrder
+    wholesalePhone4?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     workingHours?: SortOrderInput | SortOrder
@@ -48639,8 +48709,12 @@ export namespace Prisma {
     AND?: SiteSettingWhereInput | SiteSettingWhereInput[]
     OR?: SiteSettingWhereInput[]
     NOT?: SiteSettingWhereInput | SiteSettingWhereInput[]
-    phone?: StringNullableFilter<"SiteSetting"> | string | null
-    secondaryPhone?: StringNullableFilter<"SiteSetting"> | string | null
+    retailPhone1?: StringNullableFilter<"SiteSetting"> | string | null
+    retailPhone2?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone1?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone2?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone3?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone4?: StringNullableFilter<"SiteSetting"> | string | null
     email?: StringNullableFilter<"SiteSetting"> | string | null
     address?: StringNullableFilter<"SiteSetting"> | string | null
     workingHours?: StringNullableFilter<"SiteSetting"> | string | null
@@ -48664,8 +48738,12 @@ export namespace Prisma {
 
   export type SiteSettingOrderByWithAggregationInput = {
     id?: SortOrder
-    phone?: SortOrderInput | SortOrder
-    secondaryPhone?: SortOrderInput | SortOrder
+    retailPhone1?: SortOrderInput | SortOrder
+    retailPhone2?: SortOrderInput | SortOrder
+    wholesalePhone1?: SortOrderInput | SortOrder
+    wholesalePhone2?: SortOrderInput | SortOrder
+    wholesalePhone3?: SortOrderInput | SortOrder
+    wholesalePhone4?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     workingHours?: SortOrderInput | SortOrder
@@ -48697,8 +48775,12 @@ export namespace Prisma {
     OR?: SiteSettingScalarWhereWithAggregatesInput[]
     NOT?: SiteSettingScalarWhereWithAggregatesInput | SiteSettingScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"SiteSetting"> | number
-    phone?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
-    secondaryPhone?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    retailPhone1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    retailPhone2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    wholesalePhone1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    wholesalePhone2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    wholesalePhone3?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    wholesalePhone4?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     email?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     address?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     workingHours?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
@@ -51599,8 +51681,12 @@ export namespace Prisma {
 
   export type SiteSettingCreateInput = {
     id?: number
-    phone?: string | null
-    secondaryPhone?: string | null
+    retailPhone1?: string | null
+    retailPhone2?: string | null
+    wholesalePhone1?: string | null
+    wholesalePhone2?: string | null
+    wholesalePhone3?: string | null
+    wholesalePhone4?: string | null
     email?: string | null
     address?: string | null
     workingHours?: string | null
@@ -51624,8 +51710,12 @@ export namespace Prisma {
 
   export type SiteSettingUncheckedCreateInput = {
     id?: number
-    phone?: string | null
-    secondaryPhone?: string | null
+    retailPhone1?: string | null
+    retailPhone2?: string | null
+    wholesalePhone1?: string | null
+    wholesalePhone2?: string | null
+    wholesalePhone3?: string | null
+    wholesalePhone4?: string | null
     email?: string | null
     address?: string | null
     workingHours?: string | null
@@ -51649,8 +51739,12 @@ export namespace Prisma {
 
   export type SiteSettingUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone3?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone4?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51674,8 +51768,12 @@ export namespace Prisma {
 
   export type SiteSettingUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone3?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone4?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51699,8 +51797,12 @@ export namespace Prisma {
 
   export type SiteSettingCreateManyInput = {
     id?: number
-    phone?: string | null
-    secondaryPhone?: string | null
+    retailPhone1?: string | null
+    retailPhone2?: string | null
+    wholesalePhone1?: string | null
+    wholesalePhone2?: string | null
+    wholesalePhone3?: string | null
+    wholesalePhone4?: string | null
     email?: string | null
     address?: string | null
     workingHours?: string | null
@@ -51724,8 +51826,12 @@ export namespace Prisma {
 
   export type SiteSettingUpdateManyMutationInput = {
     id?: IntFieldUpdateOperationsInput | number
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone3?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone4?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51749,8 +51855,12 @@ export namespace Prisma {
 
   export type SiteSettingUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone3?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone4?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54427,8 +54537,12 @@ export namespace Prisma {
 
   export type SiteSettingCountOrderByAggregateInput = {
     id?: SortOrder
-    phone?: SortOrder
-    secondaryPhone?: SortOrder
+    retailPhone1?: SortOrder
+    retailPhone2?: SortOrder
+    wholesalePhone1?: SortOrder
+    wholesalePhone2?: SortOrder
+    wholesalePhone3?: SortOrder
+    wholesalePhone4?: SortOrder
     email?: SortOrder
     address?: SortOrder
     workingHours?: SortOrder
@@ -54456,8 +54570,12 @@ export namespace Prisma {
 
   export type SiteSettingMaxOrderByAggregateInput = {
     id?: SortOrder
-    phone?: SortOrder
-    secondaryPhone?: SortOrder
+    retailPhone1?: SortOrder
+    retailPhone2?: SortOrder
+    wholesalePhone1?: SortOrder
+    wholesalePhone2?: SortOrder
+    wholesalePhone3?: SortOrder
+    wholesalePhone4?: SortOrder
     email?: SortOrder
     address?: SortOrder
     workingHours?: SortOrder
@@ -54481,8 +54599,12 @@ export namespace Prisma {
 
   export type SiteSettingMinOrderByAggregateInput = {
     id?: SortOrder
-    phone?: SortOrder
-    secondaryPhone?: SortOrder
+    retailPhone1?: SortOrder
+    retailPhone2?: SortOrder
+    wholesalePhone1?: SortOrder
+    wholesalePhone2?: SortOrder
+    wholesalePhone3?: SortOrder
+    wholesalePhone4?: SortOrder
     email?: SortOrder
     address?: SortOrder
     workingHours?: SortOrder

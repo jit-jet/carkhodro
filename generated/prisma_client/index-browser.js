@@ -387,8 +387,12 @@ exports.Prisma.FaqScalarFieldEnum = {
 
 exports.Prisma.SiteSettingScalarFieldEnum = {
   id: 'id',
-  phone: 'phone',
-  secondaryPhone: 'secondaryPhone',
+  retailPhone1: 'retailPhone1',
+  retailPhone2: 'retailPhone2',
+  wholesalePhone1: 'wholesalePhone1',
+  wholesalePhone2: 'wholesalePhone2',
+  wholesalePhone3: 'wholesalePhone3',
+  wholesalePhone4: 'wholesalePhone4',
   email: 'email',
   address: 'address',
   workingHours: 'workingHours',

@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import type { NavLinkVM, ProductVM, PublicSiteSettingsVM } from "@/src/lib/serializers";
-import { phoneTelHref, settingLines } from "@/src/lib/site-settings-display";
+import { phoneTelHref, settingLines, contactPhonesForRole } from "@/src/lib/site-settings-display";
+import type { PricingRole } from "@/src/lib/user-role";
 import { searchProducts } from "@/actions/search";
 import { useCartUI } from "@/src/store/cart-ui";
 import { useListsUI, ensureListsHydrated } from "@/src/store/lists-ui";
@@ -317,12 +318,15 @@ export default function Header({
   mobileMenuAccount,
   cartHref = '/cart',
   contactInfo,
+  viewerRole = null,
 }: {
   navLinks: NavLinkVM[];
   children: React.ReactNode;
   mobileMenuAccount?: React.ReactNode;
   cartHref?: string;
   contactInfo: PublicSiteSettingsVM;
+  /** Current storefront role — drives which contact phones are shown. */
+  viewerRole?: PricingRole;
 }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -418,7 +422,7 @@ export default function Header({
     onSeeAll: () => handleSearch(),
   };
 
-  const headerPhone = contactInfo.phone;
+  const contactPhones = contactPhonesForRole(contactInfo, viewerRole);
   const headerAddress = settingLines(contactInfo.address)[0] ?? '';
   const headerPromo1 = contactInfo.headerPromo1;
   const headerPromo2 = contactInfo.headerPromo2;
@@ -470,10 +474,17 @@ export default function Header({
       <div className="bg-charcoal text-white text-xs">
         <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            {headerPhone && (
+            {contactPhones.length > 0 && (
               <span className="flex items-center gap-1.5 text-white/90">
                 <PhoneIcon />
-                <span>{headerPhone}</span>
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                  {contactPhones.map((phone, i) => (
+                    <span key={phone} className="inline-flex items-center gap-2">
+                      {i > 0 && <span className="text-white/30" aria-hidden>|</span>}
+                      <span>{phone}</span>
+                    </span>
+                  ))}
+                </span>
               </span>
             )}
             {headerAddress && (
@@ -701,14 +712,18 @@ export default function Header({
           </nav>
 
           {/* Bottom contact info */}
-          {(headerPhone || headerAddress) && (
+          {(contactPhones.length > 0 || headerAddress) && (
             <div className="p-4 bg-charcoal text-white text-sm space-y-3 shrink-0">
-              {headerPhone && (
-                <a href={phoneTelHref(headerPhone)} className="flex items-center gap-2.5 hover:text-accent transition-colors">
+              {contactPhones.map((phone) => (
+                <a
+                  key={phone}
+                  href={phoneTelHref(phone)}
+                  className="flex items-center gap-2.5 hover:text-accent transition-colors"
+                >
                   <PhoneIcon />
-                  <span>{headerPhone}</span>
+                  <span>{phone}</span>
                 </a>
-              )}
+              ))}
               {headerAddress && (
                 <div className="flex items-center gap-2.5 text-white/70">
                   <MapPinIcon />

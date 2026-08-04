@@ -1,15 +1,18 @@
 import Link from 'next/link';
 import { getPublicSiteSettings, getSocialLinks } from '@/actions/site-settings';
-import { settingLines } from '@/src/lib/site-settings-display';
+import { contactPhonesForRole, settingLines } from '@/src/lib/site-settings-display';
 import { SocialLinksRow } from '@/src/components/layout/SocialLinksRow';
+import { getCurrentUser } from '@/src/lib/session';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
 
 export default async function ContactPage() {
-  const [settings, socialLinks] = await Promise.all([
+  const [settings, socialLinks, user] = await Promise.all([
     getPublicSiteSettings(),
     getSocialLinks(),
+    getCurrentUser(),
   ]);
 
-  const phoneLines = [settings.phone, settings.secondaryPhone].filter(Boolean);
+  const phoneLines = contactPhonesForRole(settings, pricingRoleFromUser(user?.role));
   const addressLines = settingLines(settings.address);
   const workingHourLines = settingLines(settings.workingHours);
 

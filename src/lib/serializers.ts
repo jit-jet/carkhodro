@@ -164,8 +164,12 @@ export const DEFAULT_FOOTER_TRUST_BADGES: FooterTrustBadgeVM[] = [
 ];
 
 export interface PublicSiteSettingsVM {
-  phone: string;
-  secondaryPhone: string;
+  retailPhone1: string;
+  retailPhone2: string;
+  wholesalePhone1: string;
+  wholesalePhone2: string;
+  wholesalePhone3: string;
+  wholesalePhone4: string;
   email: string;
   address: string;
   workingHours: string;
@@ -689,8 +693,12 @@ export function footerTrustBadgesToDbFields(badges: FooterTrustBadgeVM[] | undef
 }
 
 export function toPublicSiteSettingsVM(row: {
-  phone: string | null;
-  secondaryPhone: string | null;
+  retailPhone1: string | null;
+  retailPhone2: string | null;
+  wholesalePhone1: string | null;
+  wholesalePhone2: string | null;
+  wholesalePhone3: string | null;
+  wholesalePhone4: string | null;
   email: string | null;
   address: string | null;
   workingHours: string | null;
@@ -699,8 +707,12 @@ export function toPublicSiteSettingsVM(row: {
   aboutText: string | null;
 } & Partial<SiteSettingTrustFields> | null): PublicSiteSettingsVM {
   return {
-    phone: row?.phone ?? '',
-    secondaryPhone: row?.secondaryPhone ?? '',
+    retailPhone1: row?.retailPhone1 ?? '',
+    retailPhone2: row?.retailPhone2 ?? '',
+    wholesalePhone1: row?.wholesalePhone1 ?? '',
+    wholesalePhone2: row?.wholesalePhone2 ?? '',
+    wholesalePhone3: row?.wholesalePhone3 ?? '',
+    wholesalePhone4: row?.wholesalePhone4 ?? '',
     email: row?.email ?? '',
     address: row?.address ?? '',
     workingHours: row?.workingHours ?? '',
