@@ -272,6 +272,13 @@ async function main() {
         footerTrust4Icon: '🎧',
         footerTrust4Title: 'پشتیبانی ۲۴/۷',
         footerTrust4Desc: 'همیشه در کنار شما',
+        heroTitle: 'بهترین قیمت قطعات یدکی خودروهای ایرانی و خارجی',
+        heroDescription:
+          'بیش از ۵۰,۰۰۰ قطعه اصل و درجه یک با ضمانت اصالت کالا و ارسال سریع به سراسر کشور.',
+        heroButton1Text: 'مشاهده محصولات',
+        heroButton1Href: '/products',
+        heroButton2Text: 'جستجو بر اساس خودرو',
+        heroButton2Href: '/products',
       },
       update: {},
     });
@@ -295,11 +302,19 @@ async function main() {
       ],
     });
 
+    await prisma.heroBanner.create({
+      data: {
+        imageUrl: '/tranrse-car.png',
+        sortOrder: 0,
+        isActive: true,
+      },
+    });
+
     console.log('Seed complete:');
     console.log(`  ${seedResult.provinceCount} provinces, ${seedResult.cityCount} cities`);
     console.log(`  ${carBrands.length} car brands, ${carModels.length} car models`);
     console.log(`  ${partsBrands.length} parts brands, ${categories.length} categories`);
-    console.log('  nav links, site settings, rules, social links');
+    console.log('  nav links, site settings, rules, social links, hero banners');
   }
 
   await seedShippingOptions();

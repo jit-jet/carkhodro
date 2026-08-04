@@ -22,6 +22,7 @@ export const tags = {
   postCategories: 'post-categories',
   siteSettings: 'site-settings',
   socialLinks: 'social-links',
+  heroBanners: 'hero-banners',
   rulesContent: 'rules-content',
   discountCodes: 'discount-codes',
 } as const;

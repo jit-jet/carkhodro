@@ -414,6 +414,12 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   footerTrust4Icon: 'footerTrust4Icon',
   footerTrust4Title: 'footerTrust4Title',
   footerTrust4Desc: 'footerTrust4Desc',
+  heroTitle: 'heroTitle',
+  heroDescription: 'heroDescription',
+  heroButton1Text: 'heroButton1Text',
+  heroButton1Href: 'heroButton1Href',
+  heroButton2Text: 'heroButton2Text',
+  heroButton2Href: 'heroButton2Href',
   updatedAt: 'updatedAt'
 };
 
@@ -430,6 +436,15 @@ exports.Prisma.SocialLinkScalarFieldEnum = {
   label: 'label',
   url: 'url',
   icon: 'icon',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.HeroBannerScalarFieldEnum = {
+  id: 'id',
+  imageUrl: 'imageUrl',
   sortOrder: 'sortOrder',
   isActive: 'isActive',
   createdAt: 'createdAt',
@@ -686,6 +701,7 @@ exports.Prisma.ModelName = {
   SiteSetting: 'SiteSetting',
   RulesContent: 'RulesContent',
   SocialLink: 'SocialLink',
+  HeroBanner: 'HeroBanner',
   SmsCampaign: 'SmsCampaign',
   ShippingOption: 'ShippingOption',
   Order: 'Order',

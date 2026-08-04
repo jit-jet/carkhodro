@@ -192,6 +192,25 @@ export interface AdminSocialLinkVM extends SocialLinkVM {
   isActive: boolean;
 }
 
+export interface HeroContentVM {
+  title: string;
+  description: string;
+  button1Text: string;
+  button1Href: string;
+  button2Text: string;
+  button2Href: string;
+}
+
+export interface HeroBannerVM {
+  id: number;
+  imageUrl: string;
+  order: number;
+}
+
+export interface AdminHeroBannerVM extends HeroBannerVM {
+  isActive: boolean;
+}
+
 export interface ShippingOptionVM {
   id: string;
   method: string;
@@ -752,6 +771,48 @@ export function toAdminSocialLinkVM(s: {
     icon: s.icon,
     order: s.sortOrder,
     isActive: s.isActive,
+  };
+}
+
+export function toHeroContentVM(row: {
+  heroTitle?: string | null;
+  heroDescription?: string | null;
+  heroButton1Text?: string | null;
+  heroButton1Href?: string | null;
+  heroButton2Text?: string | null;
+  heroButton2Href?: string | null;
+} | null): HeroContentVM {
+  return {
+    title: row?.heroTitle ?? '',
+    description: row?.heroDescription ?? '',
+    button1Text: row?.heroButton1Text ?? '',
+    button1Href: row?.heroButton1Href ?? '',
+    button2Text: row?.heroButton2Text ?? '',
+    button2Href: row?.heroButton2Href ?? '',
+  };
+}
+
+export function toHeroBannerVM(b: {
+  id: number;
+  imageUrl: string;
+  sortOrder: number;
+}): HeroBannerVM {
+  return {
+    id: b.id,
+    imageUrl: b.imageUrl,
+    order: b.sortOrder,
+  };
+}
+
+export function toAdminHeroBannerVM(b: {
+  id: number;
+  imageUrl: string;
+  sortOrder: number;
+  isActive: boolean;
+}): AdminHeroBannerVM {
+  return {
+    ...toHeroBannerVM(b),
+    isActive: b.isActive,
   };
 }
 

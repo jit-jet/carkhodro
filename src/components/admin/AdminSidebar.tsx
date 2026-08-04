@@ -31,6 +31,7 @@ type IconKey =
   | "shipping"
   | "social"
   | "trust"
+  | "banner"
   | "sales"
   | "finance"
   | "reports"
@@ -95,6 +96,7 @@ const NAV_SECTIONS: NavSection[] = [
     icon: "content",
     items: [
       { href: "/admin/posts", label: "مقالات وبلاگ", icon: "blog" },
+      { href: "/admin/hero-banners", label: "بنرهای صفحه اصلی", icon: "banner" },
       { href: "/admin/navigation", label: "منوی سایت", icon: "menu" },
       { href: "/admin/footer-links", label: "لینک‌های فوتر", icon: "menu" },
       { href: "/admin/social-links", label: "شبکه‌های اجتماعی", icon: "social" },
@@ -263,6 +265,14 @@ function NavIcon({ icon }: { icon: IconKey }) {
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
       );
+    case "banner":
+      return (
+        <svg {...common}>
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <circle cx="8.5" cy="10" r="1.5" />
+          <path d="M21 15l-5-5-4 4-2-2-4 4" />
+        </svg>
+      );
     case "sales":
       return (
         <svg {...common}>
@@ -377,7 +387,9 @@ export default function AdminSidebar({
         <div className="flex items-center gap-3">
           <div className="min-w-0">
             <p className="text-[11px] text-white/40 mb-0.5">پنل مدیریت</p>
-            <p className="font-extrabold text-accent text-base leading-tight truncate">کارخودرو</p>
+            <Link href="/">
+              <p className="font-extrabold text-accent text-base leading-tight truncate">کارخودرو</p>
+            </Link>
           </div>
         </div>
       </div>

@@ -699,6 +699,13 @@ model SiteSetting {
   footerTrust4Icon  String? @map("footer_trust_4_icon")
   footerTrust4Title String? @map("footer_trust_4_title")
   footerTrust4Desc  String? @map("footer_trust_4_desc")
+  /// Homepage hero copy (static — images are managed via HeroBanner slides).
+  heroTitle         String? @map("hero_title")
+  heroDescription   String? @db.Text @map("hero_description")
+  heroButton1Text   String? @map("hero_button1_text")
+  heroButton1Href   String? @map("hero_button1_href")
+  heroButton2Text   String? @map("hero_button2_text")
+  heroButton2Href   String? @map("hero_button2_href")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")
@@ -732,6 +739,19 @@ model SocialLink {
 
   @@index([sortOrder])
   @@map("social_links")
+}
+
+/// Homepage hero image slides — copy/CTAs live on SiteSetting; only images rotate.
+model HeroBanner {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String   @map("image_url")
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([sortOrder])
+  @@map("hero_banners")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

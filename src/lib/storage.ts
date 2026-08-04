@@ -13,7 +13,8 @@ export type StorageFolder =
   | 'brands'
   | 'cars'
   | 'posts'
-  | 'settings';
+  | 'settings'
+  | 'banners';
 
 const STORAGE_ROOT = path.join(process.cwd(), 'public', 'storage');
 
@@ -67,6 +68,7 @@ export async function deleteFile(urlPath: string | null | undefined): Promise<vo
     'cars',
     'posts',
     'settings',
+    'banners',
   ];
   if (!allowed.includes(folder as StorageFolder)) return;
 
