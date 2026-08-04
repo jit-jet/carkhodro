@@ -11,6 +11,7 @@ import { Suspense } from "react";
 import SiteHeader from "@/src/components/layout/SiteHeader";
 import HeaderFallback from "@/src/components/layout/HeaderFallback";
 import SiteFooter from "@/src/components/layout/SiteFooter";
+import FooterFallback from "@/src/components/layout/FooterFallback";
 
 export default function SiteLayout({
   children,
@@ -23,7 +24,9 @@ export default function SiteLayout({
         <SiteHeader />
       </Suspense>
       <main className="flex-1">{children}</main>
-      <SiteFooter />
+      <Suspense fallback={<FooterFallback />}>
+        <SiteFooter />
+      </Suspense>
     </div>
   );
 }
