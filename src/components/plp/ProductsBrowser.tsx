@@ -39,13 +39,38 @@ function applySorting(products: Product[], sort: SortOption): Product[] {
   }
 }
 
-const PRICE_LIST_VALID_HOURS = 24;
+function formatCarTypeForPdf(carType: string | null | undefined): string {
+  const name = carType?.trim();
+  if (!name) return '—';
+  return `${name} `;
+}
 
-function openPDFWindow(products: Product[]) {
+/** Build a Persian print/PDF document title from the active PLP filters. */
+function buildPdfTitle(meta: {
+  searchQuery: string;
+  brandNames: string[];
+  carBrandNames: string[];
+  carTypes: string[];
+  categoryLabels: string[];
+  offerOnly: boolean;
+}): string {
+  const parts: string[] = [];
+  const q = meta.searchQuery.trim();
+  if (q) parts.push(`جستجو ${q}`);
+  if (meta.brandNames.length) parts.push(`برند ${meta.brandNames.join('، ')}`);
+  if (meta.carBrandNames.length) parts.push(`خودروساز ${meta.carBrandNames.join('، ')}`);
+  if (meta.carTypes.length) parts.push(`مدل ${meta.carTypes.join('، ')}`);
+  if (meta.categoryLabels.length) parts.push(`دسته ${meta.categoryLabels.join('، ')}`);
+  if (meta.offerOnly) parts.push('پیشنهاد ویژه');
+
+  if (parts.length === 0) return 'لیست قیمت قطعات کارخودرو';
+  return `لیست قیمت ${parts.join(' — ')}`;
+}
+
+function openPDFWindow(products: Product[], documentTitle: string) {
   const now = new Date();
-  const expires = new Date(now.getTime() + PRICE_LIST_VALID_HOURS * 60 * 60 * 1000);
   const issuedAt = formatJalaliDateTime(now);
-  const expiresAt = formatJalaliDateTime(expires);
+  const safeTitle = documentTitle.trim() || 'لیست قیمت قطعات کارخودرو';
 
   const rows = products
     .map(
@@ -55,7 +80,7 @@ function openPDFWindow(products: Product[]) {
         <td class="mono muted">${escapeHtml(p.sku)}</td>
         <td class="name">${escapeHtml(p.name)}</td>
         <td class="muted">${escapeHtml(p.brand)}</td>
-        <td class="muted">${escapeHtml(p.carType || '—')}</td>
+        <td class="muted">${escapeHtml(formatCarTypeForPdf(p.carType))}</td>
         <td class="center price">${formatRial(p.price)}</td>
       </tr>`,
     )
@@ -66,7 +91,7 @@ function openPDFWindow(products: Product[]) {
 <html dir="rtl" lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>لیست قیمت قطعات کارخودرو</title>
+  <title>${escapeHtml(safeTitle)}</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:Tahoma,Arial,sans-serif;direction:rtl;color:#1A1A1A;background:#fff;padding:28px;font-size:13px}
@@ -100,12 +125,11 @@ function openPDFWindow(products: Product[]) {
       <div class="brand">
         <img src="${origin}/logo.png" alt="کارخودرو" />
         <div>
-          <h1>لیست قیمت قطعات کارخودرو</h1>
+          <h1>لیست قیمت قطعات کارخودرو،فروشگاه شاه گل</h1>
           <p class="sub">تاریخ صدور: ${issuedAt}</p>
         </div>
       </div>
       <div class="meta">
-        <p>اعتبار تا: ${expiresAt}</p>
         <p>تعداد اقلام: ${formatNumberFa(products.length)}</p>
       </div>
     </div>
@@ -134,6 +158,7 @@ function openPDFWindow(products: Product[]) {
   if (w) {
     w.document.write(html);
     w.document.close();
+    w.document.title = safeTitle;
     w.focus();
     setTimeout(() => w.print(), 400);
   }
@@ -359,7 +384,25 @@ export default function ProductsBrowser({
             onOfferToggle={handleOfferToggle}
             onClearAll={clearAll}
             onRemoveFilter={removeFilter}
-            onExportPDF={() => openPDFWindow(filteredProducts)}
+            onExportPDF={() => {
+              const brandNames = selectedBrands
+                .map((slug) => allBrands.find((b) => b.slug === slug)?.name ?? slug);
+              const carBrandNames = selectedCarBrands
+                .map((slug) => allCarBrands.find((b) => b.slug === slug)?.name ?? slug);
+              const categoryLabels = selectedCategories
+                .map((key) => allCategories.find((c) => c.key === key)?.label ?? key);
+              openPDFWindow(
+                filteredProducts,
+                buildPdfTitle({
+                  searchQuery,
+                  brandNames,
+                  carBrandNames,
+                  carTypes: selectedCarTypes,
+                  categoryLabels,
+                  offerOnly,
+                }),
+              );
+            }}
             allBrands={allBrands}
             allCarBrands={allCarBrands}
             allCarTypes={allCarTypes}

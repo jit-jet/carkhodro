@@ -4,7 +4,7 @@ import { getPublicSiteSettings, getSocialLinks } from '@/actions/site-settings';
 import { contactPhonesForRole, phoneTelHref, settingLines } from '@/src/lib/site-settings-display';
 import { SocialLinksRow } from '@/src/components/layout/SocialLinksRow';
 import { getCurrentUser } from '@/src/lib/session';
-import { pricingRoleFromUser } from '@/src/lib/user-role';
+import { isWholesaleUser, pricingRoleFromUser } from '@/src/lib/user-role';
 
 export default function ContactPage() {
   return (
@@ -45,6 +45,7 @@ async function ContactContent() {
   const phoneLines = contactPhonesForRole(settings, pricingRoleFromUser(user?.role));
   const addressLines = settingLines(settings.address);
   const workingHourLines = settingLines(settings.workingHours);
+  const showSocialLinks = isWholesaleUser(pricingRoleFromUser(user?.role));
 
   const cards: ContactCard[] = [
     phoneLines.length > 0
@@ -125,7 +126,7 @@ async function ContactContent() {
         <p className="text-sm text-gray-500">اطلاعات تماس هنوز در پنل مدیریت ثبت نشده است.</p>
       )}
 
-      {socialLinks.length > 0 && (
+      {showSocialLinks && socialLinks.length > 0 && (
         <div className="mt-8 border-t border-gray-100 pt-8">
           <h2 className="mb-4 font-bold text-charcoal">شبکه‌های اجتماعی</h2>
           <SocialLinksRow links={socialLinks} size="md" />

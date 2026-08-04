@@ -14,7 +14,7 @@ import { updateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
-import { saveFile } from '@/src/lib/storage';
+import { deleteFile, saveFile } from '@/src/lib/storage';
 import {
   buildAdminProductWhere,
   type AdminProductWhereFilters,
@@ -297,6 +297,52 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
     updateTag(tags.products);
     updateTag(tags.product(id));
     runHesabfaBackground('pushProduct:delete', () => pushProductToHesabfa(id));
+    return ok(undefined);
+  });
+}
+
+/**
+ * Permanently remove a product and its gallery files from disk.
+ * Blocked when the product appears on any order (FK / history).
+ */
+export async function permanentlyDeleteProduct(id: string): Promise<ActionResult> {
+  return runMutation('permanentlyDeleteProduct', async () => {
+    const product = await prisma.product.findUnique({
+      where: { id },
+      include: {
+        images: { select: { url: true } },
+        _count: { select: { orderItems: true } },
+      },
+    });
+    if (!product) return fail('محصول یافت نشد.');
+    if (product._count.orderItems > 0) {
+      return fail(
+        'این محصول در سفارش‌ها ثبت شده و قابل حذف دائمی نیست. می‌توانید آن را غیرفعال کنید.',
+      );
+    }
+
+    const imageUrls = [
+      ...(product.mainImage ? [product.mainImage] : []),
+      ...product.images.map((img) => img.url),
+    ];
+    const uniqueUrls = [...new Set(imageUrls.filter(Boolean))];
+
+    // Mark inactive and sync to Hesabfa while the row still exists.
+    if (product.isActive) {
+      await prisma.product.update({ where: { id }, data: { isActive: false } });
+    }
+    try {
+      await pushProductToHesabfa(id);
+    } catch {
+      // Local delete still proceeds if Hesabfa is unreachable.
+    }
+
+    await prisma.product.delete({ where: { id } });
+
+    await Promise.all(uniqueUrls.map((url) => deleteFile(url)));
+
+    updateTag(tags.products);
+    updateTag(tags.product(id));
     return ok(undefined);
   });
 }

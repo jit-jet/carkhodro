@@ -12,6 +12,7 @@ import {
   Label,
   Textarea,
 } from "@/src/components/admin/AdminUI";
+import ImageUploadField from "@/src/components/admin/ImageUploadField";
 import { useCartUI } from "@/src/store/cart-ui";
 
 export default function SettingsForm({ initial }: { initial: SiteSettingVM }) {
@@ -55,24 +56,40 @@ export default function SettingsForm({ initial }: { initial: SiteSettingVM }) {
         <Card className="overflow-hidden">
           <CardHeader
             title="هدر سایت"
-            description="تلفن خرده‌فروشی و خط اول آدرس (از بخش تماس) در نوار بالای هدر نمایش داده می‌شوند."
+            description="متن‌های تبلیغی نوار بالای هدر. آیکون هر متن اختیاری است و در صورت خالی بودن، آیکونی نمایش داده نمی‌شود."
           />
           <div className="p-5 sm:p-6 space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <Label>متن تبلیغی ۱</Label>
-                <Input
-                  value={form.headerPromo1}
-                  onChange={(e) => set("headerPromo1", e.target.value)}
-                  placeholder="ضمانت اصالت کالا"
+              <div className="space-y-3">
+                <div>
+                  <Label>متن تبلیغی ۱</Label>
+                  <Input
+                    value={form.headerPromo1}
+                    onChange={(e) => set("headerPromo1", e.target.value)}
+                    placeholder="ضمانت اصالت کالا"
+                  />
+                </div>
+                <ImageUploadField
+                  folder="settings"
+                  label="آیکون تبلیغی ۱ (اختیاری)"
+                  value={form.headerPromo1Icon}
+                  onChange={(url) => set("headerPromo1Icon", url)}
                 />
               </div>
-              <div>
-                <Label>متن تبلیغی ۲</Label>
-                <Input
-                  value={form.headerPromo2}
-                  onChange={(e) => set("headerPromo2", e.target.value)}
-                  placeholder="ارسال سریع به سراسر کشور"
+              <div className="space-y-3">
+                <div>
+                  <Label>متن تبلیغی ۲</Label>
+                  <Input
+                    value={form.headerPromo2}
+                    onChange={(e) => set("headerPromo2", e.target.value)}
+                    placeholder="ارسال سریع به سراسر کشور"
+                  />
+                </div>
+                <ImageUploadField
+                  folder="settings"
+                  label="آیکون تبلیغی ۲ (اختیاری)"
+                  value={form.headerPromo2Icon}
+                  onChange={(url) => set("headerPromo2Icon", url)}
                 />
               </div>
             </div>

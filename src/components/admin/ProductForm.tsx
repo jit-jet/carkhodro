@@ -13,7 +13,13 @@
 
 import { useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { createProduct, updateProduct, uploadProductImage, type ProductInput } from "@/actions/admin-products";
+import {
+  createProduct,
+  permanentlyDeleteProduct,
+  updateProduct,
+  uploadProductImage,
+  type ProductInput,
+} from "@/actions/admin-products";
 import { computeRetailPrice, computeRetailFinal, computeWholesaleFinal } from "@/src/lib/pricing";
 import { formatToman } from "@/src/lib/format";
 import { useCartUI } from "@/src/store/cart-ui";
@@ -92,6 +98,7 @@ export default function ProductForm({
   const [success, setSuccess] = useState("");
   const [imageError, setImageError] = useState("");
   const [pending, startTransition] = useTransition();
+  const [deleting, startDelete] = useTransition();
   const [uploading, startUpload] = useTransition();
   const [dragOver, setDragOver] = useState(false);
 
@@ -175,6 +182,34 @@ export default function ProductForm({
       const next = prev.filter((u) => u !== url);
       setMainImage((current) => (current === url ? next[0] ?? "" : current));
       return next;
+    });
+  }
+
+  function handlePermanentDelete() {
+    if (!initial.id) return;
+    if (
+      !window.confirm(
+        `محصول «${name}» به‌همراه همه تصاویر برای همیشه حذف شود؟ این عمل قابل بازگشت نیست.`,
+      )
+    ) {
+      return;
+    }
+    setError("");
+    setSuccess("");
+    startDelete(async () => {
+      const result = await permanentlyDeleteProduct(initial.id!);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
+      notify({
+        variant: "success",
+        title: "حذف شد",
+        description: "محصول و تصاویر مرتبط برای همیشه حذف شدند.",
+      });
+      router.push("/admin/products");
+      router.refresh();
     });
   }
 
@@ -522,13 +557,28 @@ export default function ProductForm({
         </div>
       </Card>
 
-      <div className="flex items-center gap-3 sticky bottom-4 z-10 bg-white/90 backdrop-blur-sm border border-gray-200/80 rounded-2xl shadow-sm px-4 py-3 w-fit">
-        <Button type="submit" disabled={pending || uploading}>
+      <div className="flex flex-wrap items-center gap-3 sticky bottom-4 z-10 bg-white/90 backdrop-blur-sm border border-gray-200/80 rounded-2xl shadow-sm px-4 py-3 w-fit">
+        <Button type="submit" disabled={pending || uploading || deleting}>
           {pending ? "در حال ذخیره…" : isEditing ? "ذخیره تغییرات" : "افزودن محصول"}
         </Button>
-        <Button type="button" variant="ghost" onClick={() => router.push("/admin/products")}>
+        <Button
+          type="button"
+          variant="ghost"
+          disabled={pending || deleting}
+          onClick={() => router.push("/admin/products")}
+        >
           بازگشت
         </Button>
+        {isEditing && (
+          <Button
+            type="button"
+            variant="danger"
+            disabled={pending || uploading || deleting}
+            onClick={handlePermanentDelete}
+          >
+            {deleting ? "در حال حذف…" : "حذف محصول"}
+          </Button>
+        )}
       </div>
     </form>
   );

@@ -681,6 +681,10 @@ model SiteSetting {
   /// Short promo lines shown in the header top bar (e.g. trust badges).
   headerPromo1   String?  @map("header_promo_1")
   headerPromo2   String?  @map("header_promo_2")
+  /// Optional icon for promo line 1 — storage URL or emoji; no built-in default.
+  headerPromo1Icon String? @map("header_promo_1_icon")
+  /// Optional icon for promo line 2 — storage URL or emoji; no built-in default.
+  headerPromo2Icon String? @map("header_promo_2_icon")
   aboutText      String?  @db.Text @map("about_text")
   /// Footer trust badges (icon / title / description) — four fixed slots.
   footerTrust1Icon  String? @map("footer_trust_1_icon")

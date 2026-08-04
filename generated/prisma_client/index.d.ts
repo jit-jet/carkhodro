@@ -31701,6 +31701,8 @@ export namespace Prisma {
     workingHours: string | null
     headerPromo1: string | null
     headerPromo2: string | null
+    headerPromo1Icon: string | null
+    headerPromo2Icon: string | null
     aboutText: string | null
     footerTrust1Icon: string | null
     footerTrust1Title: string | null
@@ -31730,6 +31732,8 @@ export namespace Prisma {
     workingHours: string | null
     headerPromo1: string | null
     headerPromo2: string | null
+    headerPromo1Icon: string | null
+    headerPromo2Icon: string | null
     aboutText: string | null
     footerTrust1Icon: string | null
     footerTrust1Title: string | null
@@ -31759,6 +31763,8 @@ export namespace Prisma {
     workingHours: number
     headerPromo1: number
     headerPromo2: number
+    headerPromo1Icon: number
+    headerPromo2Icon: number
     aboutText: number
     footerTrust1Icon: number
     footerTrust1Title: number
@@ -31798,6 +31804,8 @@ export namespace Prisma {
     workingHours?: true
     headerPromo1?: true
     headerPromo2?: true
+    headerPromo1Icon?: true
+    headerPromo2Icon?: true
     aboutText?: true
     footerTrust1Icon?: true
     footerTrust1Title?: true
@@ -31827,6 +31835,8 @@ export namespace Prisma {
     workingHours?: true
     headerPromo1?: true
     headerPromo2?: true
+    headerPromo1Icon?: true
+    headerPromo2Icon?: true
     aboutText?: true
     footerTrust1Icon?: true
     footerTrust1Title?: true
@@ -31856,6 +31866,8 @@ export namespace Prisma {
     workingHours?: true
     headerPromo1?: true
     headerPromo2?: true
+    headerPromo1Icon?: true
+    headerPromo2Icon?: true
     aboutText?: true
     footerTrust1Icon?: true
     footerTrust1Title?: true
@@ -31972,6 +31984,8 @@ export namespace Prisma {
     workingHours: string | null
     headerPromo1: string | null
     headerPromo2: string | null
+    headerPromo1Icon: string | null
+    headerPromo2Icon: string | null
     aboutText: string | null
     footerTrust1Icon: string | null
     footerTrust1Title: string | null
@@ -32020,6 +32034,8 @@ export namespace Prisma {
     workingHours?: boolean
     headerPromo1?: boolean
     headerPromo2?: boolean
+    headerPromo1Icon?: boolean
+    headerPromo2Icon?: boolean
     aboutText?: boolean
     footerTrust1Icon?: boolean
     footerTrust1Title?: boolean
@@ -32049,6 +32065,8 @@ export namespace Prisma {
     workingHours?: boolean
     headerPromo1?: boolean
     headerPromo2?: boolean
+    headerPromo1Icon?: boolean
+    headerPromo2Icon?: boolean
     aboutText?: boolean
     footerTrust1Icon?: boolean
     footerTrust1Title?: boolean
@@ -32078,6 +32096,8 @@ export namespace Prisma {
     workingHours?: boolean
     headerPromo1?: boolean
     headerPromo2?: boolean
+    headerPromo1Icon?: boolean
+    headerPromo2Icon?: boolean
     aboutText?: boolean
     footerTrust1Icon?: boolean
     footerTrust1Title?: boolean
@@ -32107,6 +32127,8 @@ export namespace Prisma {
     workingHours?: boolean
     headerPromo1?: boolean
     headerPromo2?: boolean
+    headerPromo1Icon?: boolean
+    headerPromo2Icon?: boolean
     aboutText?: boolean
     footerTrust1Icon?: boolean
     footerTrust1Title?: boolean
@@ -32123,7 +32145,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
@@ -32150,6 +32172,14 @@ export namespace Prisma {
        */
       headerPromo1: string | null
       headerPromo2: string | null
+      /**
+       * Optional icon for promo line 1 — storage URL or emoji; no built-in default.
+       */
+      headerPromo1Icon: string | null
+      /**
+       * Optional icon for promo line 2 — storage URL or emoji; no built-in default.
+       */
+      headerPromo2Icon: string | null
       aboutText: string | null
       /**
        * Footer trust badges (icon / title / description) — four fixed slots.
@@ -32602,6 +32632,8 @@ export namespace Prisma {
     readonly workingHours: FieldRef<"SiteSetting", 'String'>
     readonly headerPromo1: FieldRef<"SiteSetting", 'String'>
     readonly headerPromo2: FieldRef<"SiteSetting", 'String'>
+    readonly headerPromo1Icon: FieldRef<"SiteSetting", 'String'>
+    readonly headerPromo2Icon: FieldRef<"SiteSetting", 'String'>
     readonly aboutText: FieldRef<"SiteSetting", 'String'>
     readonly footerTrust1Icon: FieldRef<"SiteSetting", 'String'>
     readonly footerTrust1Title: FieldRef<"SiteSetting", 'String'>
@@ -46390,6 +46422,8 @@ export namespace Prisma {
     workingHours: 'workingHours',
     headerPromo1: 'headerPromo1',
     headerPromo2: 'headerPromo2',
+    headerPromo1Icon: 'headerPromo1Icon',
+    headerPromo2Icon: 'headerPromo2Icon',
     aboutText: 'aboutText',
     footerTrust1Icon: 'footerTrust1Icon',
     footerTrust1Title: 'footerTrust1Title',
@@ -48681,6 +48715,8 @@ export namespace Prisma {
     workingHours?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo1Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo2Icon?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust1Icon?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust1Title?: StringNullableFilter<"SiteSetting"> | string | null
@@ -48710,6 +48746,8 @@ export namespace Prisma {
     workingHours?: SortOrderInput | SortOrder
     headerPromo1?: SortOrderInput | SortOrder
     headerPromo2?: SortOrderInput | SortOrder
+    headerPromo1Icon?: SortOrderInput | SortOrder
+    headerPromo2Icon?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
     footerTrust1Icon?: SortOrderInput | SortOrder
     footerTrust1Title?: SortOrderInput | SortOrder
@@ -48742,6 +48780,8 @@ export namespace Prisma {
     workingHours?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo1Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo2Icon?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust1Icon?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust1Title?: StringNullableFilter<"SiteSetting"> | string | null
@@ -48771,6 +48811,8 @@ export namespace Prisma {
     workingHours?: SortOrderInput | SortOrder
     headerPromo1?: SortOrderInput | SortOrder
     headerPromo2?: SortOrderInput | SortOrder
+    headerPromo1Icon?: SortOrderInput | SortOrder
+    headerPromo2Icon?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
     footerTrust1Icon?: SortOrderInput | SortOrder
     footerTrust1Title?: SortOrderInput | SortOrder
@@ -48808,6 +48850,8 @@ export namespace Prisma {
     workingHours?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     headerPromo1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    headerPromo1Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    headerPromo2Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     footerTrust1Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     footerTrust1Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
@@ -51721,6 +51765,8 @@ export namespace Prisma {
     workingHours?: string | null
     headerPromo1?: string | null
     headerPromo2?: string | null
+    headerPromo1Icon?: string | null
+    headerPromo2Icon?: string | null
     aboutText?: string | null
     footerTrust1Icon?: string | null
     footerTrust1Title?: string | null
@@ -51750,6 +51796,8 @@ export namespace Prisma {
     workingHours?: string | null
     headerPromo1?: string | null
     headerPromo2?: string | null
+    headerPromo1Icon?: string | null
+    headerPromo2Icon?: string | null
     aboutText?: string | null
     footerTrust1Icon?: string | null
     footerTrust1Title?: string | null
@@ -51779,6 +51827,8 @@ export namespace Prisma {
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2Icon?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51808,6 +51858,8 @@ export namespace Prisma {
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2Icon?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51837,6 +51889,8 @@ export namespace Prisma {
     workingHours?: string | null
     headerPromo1?: string | null
     headerPromo2?: string | null
+    headerPromo1Icon?: string | null
+    headerPromo2Icon?: string | null
     aboutText?: string | null
     footerTrust1Icon?: string | null
     footerTrust1Title?: string | null
@@ -51866,6 +51920,8 @@ export namespace Prisma {
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2Icon?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51895,6 +51951,8 @@ export namespace Prisma {
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2Icon?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54580,6 +54638,8 @@ export namespace Prisma {
     workingHours?: SortOrder
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
+    headerPromo1Icon?: SortOrder
+    headerPromo2Icon?: SortOrder
     aboutText?: SortOrder
     footerTrust1Icon?: SortOrder
     footerTrust1Title?: SortOrder
@@ -54613,6 +54673,8 @@ export namespace Prisma {
     workingHours?: SortOrder
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
+    headerPromo1Icon?: SortOrder
+    headerPromo2Icon?: SortOrder
     aboutText?: SortOrder
     footerTrust1Icon?: SortOrder
     footerTrust1Title?: SortOrder
@@ -54642,6 +54704,8 @@ export namespace Prisma {
     workingHours?: SortOrder
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
+    headerPromo1Icon?: SortOrder
+    headerPromo2Icon?: SortOrder
     aboutText?: SortOrder
     footerTrust1Icon?: SortOrder
     footerTrust1Title?: SortOrder

@@ -1,10 +1,28 @@
 'use client';
 
 /** Triggers the browser print dialog (used to "download" the invoice as PDF). */
-export default function PrintButton({ label = 'چاپ فاکتور' }: { label?: string }) {
+export default function PrintButton({
+  label = 'چاپ فاکتور',
+  documentTitle,
+}: {
+  label?: string;
+  /** Sets `document.title` before print so Save as PDF gets a Persian filename. */
+  documentTitle?: string;
+}) {
   return (
     <button
-      onClick={() => window.print()}
+      onClick={() => {
+        const previousTitle = document.title;
+        if (documentTitle?.trim()) {
+          document.title = documentTitle.trim();
+        }
+        window.print();
+        if (documentTitle?.trim()) {
+          window.setTimeout(() => {
+            document.title = previousTitle;
+          }, 1000);
+        }
+      }}
       className="no-print flex items-center gap-2 bg-charcoal hover:bg-charcoal/90 text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors"
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5">

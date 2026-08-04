@@ -399,6 +399,8 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   workingHours: 'workingHours',
   headerPromo1: 'headerPromo1',
   headerPromo2: 'headerPromo2',
+  headerPromo1Icon: 'headerPromo1Icon',
+  headerPromo2Icon: 'headerPromo2Icon',
   aboutText: 'aboutText',
   footerTrust1Icon: 'footerTrust1Icon',
   footerTrust1Title: 'footerTrust1Title',

@@ -174,6 +174,8 @@ export interface PublicSiteSettingsVM {
   workingHours: string;
   headerPromo1: string;
   headerPromo2: string;
+  headerPromo1Icon: string;
+  headerPromo2Icon: string;
   aboutText: string;
   footerTrustBadges: FooterTrustBadgeVM[];
 }
@@ -702,6 +704,8 @@ export function toPublicSiteSettingsVM(row: {
   workingHours: string | null;
   headerPromo1: string | null;
   headerPromo2: string | null;
+  headerPromo1Icon?: string | null;
+  headerPromo2Icon?: string | null;
   aboutText: string | null;
 } & Partial<SiteSettingTrustFields> | null): PublicSiteSettingsVM {
   return {
@@ -716,6 +720,8 @@ export function toPublicSiteSettingsVM(row: {
     workingHours: row?.workingHours ?? '',
     headerPromo1: row?.headerPromo1 ?? '',
     headerPromo2: row?.headerPromo2 ?? '',
+    headerPromo1Icon: row?.headerPromo1Icon ?? '',
+    headerPromo2Icon: row?.headerPromo2Icon ?? '',
     aboutText: row?.aboutText ?? '',
     footerTrustBadges: toFooterTrustBadgesVM(row),
   };

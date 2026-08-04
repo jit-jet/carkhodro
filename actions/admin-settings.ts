@@ -20,6 +20,7 @@ import {
   type PublicSiteSettingsVM,
 } from '@/src/lib/serializers';
 import { tags } from '@/actions/cache-tags';
+import { deleteFile } from '@/src/lib/storage';
 
 export type SiteSettingVM = PublicSiteSettingsVM;
 
@@ -75,6 +76,12 @@ export async function updateSiteSettings(
     if (input.headerPromo2 !== undefined) {
       data.headerPromo2 = input.headerPromo2.trim() || null;
     }
+    if (input.headerPromo1Icon !== undefined) {
+      data.headerPromo1Icon = input.headerPromo1Icon.trim() || null;
+    }
+    if (input.headerPromo2Icon !== undefined) {
+      data.headerPromo2Icon = input.headerPromo2Icon.trim() || null;
+    }
     if (input.aboutText !== undefined) {
       data.aboutText = input.aboutText.trim() || null;
     }
@@ -82,11 +89,32 @@ export async function updateSiteSettings(
       Object.assign(data, footerTrustBadgesToDbFields(input.footerTrustBadges));
     }
 
+    const previous = await prisma.siteSetting.findUnique({
+      where: { id: 1 },
+      select: { headerPromo1Icon: true, headerPromo2Icon: true },
+    });
+
     await prisma.siteSetting.upsert({
       where: { id: 1 },
       create: { id: 1, ...data },
       update: data,
     });
+
+    if (
+      input.headerPromo1Icon !== undefined &&
+      previous?.headerPromo1Icon &&
+      previous.headerPromo1Icon !== data.headerPromo1Icon
+    ) {
+      await deleteFile(previous.headerPromo1Icon);
+    }
+    if (
+      input.headerPromo2Icon !== undefined &&
+      previous?.headerPromo2Icon &&
+      previous.headerPromo2Icon !== data.headerPromo2Icon
+    ) {
+      await deleteFile(previous.headerPromo2Icon);
+    }
+
     updateTag(tags.siteSettings);
     return ok(undefined);
   });

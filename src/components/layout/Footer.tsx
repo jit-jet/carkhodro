@@ -5,7 +5,7 @@ import type {
   SocialLinkVM,
 } from "@/src/lib/serializers";
 import { contactPhonesForRole, settingLines } from "@/src/lib/site-settings-display";
-import type { PricingRole } from "@/src/lib/user-role";
+import { isWholesaleUser, type PricingRole } from "@/src/lib/user-role";
 import { SocialLinksRow } from "@/src/components/layout/SocialLinksRow";
 
 const infoLinks = [
@@ -96,7 +96,7 @@ export default function Footer({
             <p className="text-sm text-gray-400 leading-7 mb-4">
               {settings.aboutText || "اطلاعات فروشگاه از پنل مدیریت قابل ویرایش است."}
             </p>
-            <SocialLinksRow links={socialLinks} />
+            {isWholesaleUser(viewerRole) && <SocialLinksRow links={socialLinks} />}
           </div>
 
           {/* Quick links */}

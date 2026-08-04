@@ -29,24 +29,15 @@ function MapPinIcon() {
   );
 }
 
-function TruckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5 shrink-0">
-      <rect x="1" y="3" width="15" height="13" rx="1" />
-      <path d="M16 8h4l3 5v4h-7V8z" />
-      <circle cx="5.5" cy="18.5" r="2.5" />
-      <circle cx="18.5" cy="18.5" r="2.5" />
-    </svg>
-  );
-}
-
-function ShieldCheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5 shrink-0">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      <polyline points="9 12 11 14 15 10" />
-    </svg>
-  );
+function PromoIcon({ value }: { value: string }) {
+  if (!value) return null;
+  if (value.startsWith("/") || value.startsWith("http")) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={value} alt="" className="w-3.5 h-3.5 shrink-0 object-contain" />
+    );
+  }
+  return <span className="text-sm leading-none shrink-0" aria-hidden>{value}</span>;
 }
 
 function SearchIcon() {
@@ -426,6 +417,8 @@ export default function Header({
   const headerAddress = settingLines(contactInfo.address)[0] ?? '';
   const headerPromo1 = contactInfo.headerPromo1;
   const headerPromo2 = contactInfo.headerPromo2;
+  const headerPromo1Icon = contactInfo.headerPromo1Icon;
+  const headerPromo2Icon = contactInfo.headerPromo2Icon;
 
   const searchInput = (isMobile: boolean) => (
     <form onSubmit={handleSearch}>
@@ -497,13 +490,13 @@ export default function Header({
           <div className="flex items-center gap-4 text-white/70">
             {headerPromo1 && (
               <span className="hidden sm:flex items-center gap-1.5">
-                <ShieldCheckIcon />
+                <PromoIcon value={headerPromo1Icon} />
                 <span>{headerPromo1}</span>
               </span>
             )}
             {headerPromo2 && (
               <span className="flex items-center gap-1.5">
-                <TruckIcon />
+                <PromoIcon value={headerPromo2Icon} />
                 <span>{headerPromo2}</span>
               </span>
             )}

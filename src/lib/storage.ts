@@ -6,7 +6,14 @@
 import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-export type StorageFolder = 'avatars' | 'products' | 'categories' | 'brands' | 'cars' | 'posts';
+export type StorageFolder =
+  | 'avatars'
+  | 'products'
+  | 'categories'
+  | 'brands'
+  | 'cars'
+  | 'posts'
+  | 'settings';
 
 const STORAGE_ROOT = path.join(process.cwd(), 'public', 'storage');
 
@@ -52,7 +59,15 @@ export async function deleteFile(urlPath: string | null | undefined): Promise<vo
   const [folder, filename] = segments;
   if (!isSafeFilename(filename)) return;
 
-  const allowed: StorageFolder[] = ['avatars', 'products', 'categories', 'brands', 'cars', 'posts'];
+  const allowed: StorageFolder[] = [
+    'avatars',
+    'products',
+    'categories',
+    'brands',
+    'cars',
+    'posts',
+    'settings',
+  ];
   if (!allowed.includes(folder as StorageFolder)) return;
 
   try {
