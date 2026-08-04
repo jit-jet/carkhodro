@@ -446,6 +446,7 @@ export async function getProductAdminById(id: string) {
         isActive: row.isActive,
         stock: row.stock,
         origin: row.origin,
+        unit: row.unit,
         mainImage: row.mainImage,
         images,
         description: row.description,

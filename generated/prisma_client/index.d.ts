@@ -18709,6 +18709,7 @@ export namespace Prisma {
     origin: string | null
     packQuantity: number | null
     cartonQuantity: number | null
+    unit: string | null
     isOriginal: boolean | null
     mainImage: string | null
     description: string | null
@@ -18743,6 +18744,7 @@ export namespace Prisma {
     origin: string | null
     packQuantity: number | null
     cartonQuantity: number | null
+    unit: string | null
     isOriginal: boolean | null
     mainImage: string | null
     description: string | null
@@ -18777,6 +18779,7 @@ export namespace Prisma {
     origin: number
     packQuantity: number
     cartonQuantity: number
+    unit: number
     isOriginal: number
     mainImage: number
     description: number
@@ -18849,6 +18852,7 @@ export namespace Prisma {
     origin?: true
     packQuantity?: true
     cartonQuantity?: true
+    unit?: true
     isOriginal?: true
     mainImage?: true
     description?: true
@@ -18883,6 +18887,7 @@ export namespace Prisma {
     origin?: true
     packQuantity?: true
     cartonQuantity?: true
+    unit?: true
     isOriginal?: true
     mainImage?: true
     description?: true
@@ -18917,6 +18922,7 @@ export namespace Prisma {
     origin?: true
     packQuantity?: true
     cartonQuantity?: true
+    unit?: true
     isOriginal?: true
     mainImage?: true
     description?: true
@@ -19038,6 +19044,7 @@ export namespace Prisma {
     origin: string | null
     packQuantity: number
     cartonQuantity: number
+    unit: string
     isOriginal: boolean
     mainImage: string | null
     description: string | null
@@ -19091,6 +19098,7 @@ export namespace Prisma {
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
+    unit?: boolean
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
@@ -19135,6 +19143,7 @@ export namespace Prisma {
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
+    unit?: boolean
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
@@ -19171,6 +19180,7 @@ export namespace Prisma {
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
+    unit?: boolean
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
@@ -19207,6 +19217,7 @@ export namespace Prisma {
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
+    unit?: boolean
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
@@ -19220,7 +19231,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "unit" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -19321,6 +19332,10 @@ export namespace Prisma {
        * Retail packs per master carton — for wholesale order sizing
        */
       cartonQuantity: number
+      /**
+       * Display unit label on the storefront (e.g. "عدد", "بسته", "متر")
+       */
+      unit: string
       /**
        * true = OEM / genuine part; false = aftermarket
        */
@@ -19795,6 +19810,7 @@ export namespace Prisma {
     readonly origin: FieldRef<"Product", 'String'>
     readonly packQuantity: FieldRef<"Product", 'Int'>
     readonly cartonQuantity: FieldRef<"Product", 'Int'>
+    readonly unit: FieldRef<"Product", 'String'>
     readonly isOriginal: FieldRef<"Product", 'Boolean'>
     readonly mainImage: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
@@ -46212,6 +46228,7 @@ export namespace Prisma {
     origin: 'origin',
     packQuantity: 'packQuantity',
     cartonQuantity: 'cartonQuantity',
+    unit: 'unit',
     isOriginal: 'isOriginal',
     mainImage: 'mainImage',
     description: 'description',
@@ -47763,6 +47780,7 @@ export namespace Prisma {
     origin?: StringNullableFilter<"Product"> | string | null
     packQuantity?: IntFilter<"Product"> | number
     cartonQuantity?: IntFilter<"Product"> | number
+    unit?: StringFilter<"Product"> | string
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
@@ -47806,6 +47824,7 @@ export namespace Prisma {
     origin?: SortOrderInput | SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
@@ -47852,6 +47871,7 @@ export namespace Prisma {
     origin?: StringNullableFilter<"Product"> | string | null
     packQuantity?: IntFilter<"Product"> | number
     cartonQuantity?: IntFilter<"Product"> | number
+    unit?: StringFilter<"Product"> | string
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
@@ -47895,6 +47915,7 @@ export namespace Prisma {
     origin?: SortOrderInput | SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
@@ -47937,6 +47958,7 @@ export namespace Prisma {
     origin?: StringNullableWithAggregatesFilter<"Product"> | string | null
     packQuantity?: IntWithAggregatesFilter<"Product"> | number
     cartonQuantity?: IntWithAggregatesFilter<"Product"> | number
+    unit?: StringWithAggregatesFilter<"Product"> | string
     isOriginal?: BoolWithAggregatesFilter<"Product"> | boolean
     mainImage?: StringNullableWithAggregatesFilter<"Product"> | string | null
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -50734,6 +50756,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -50777,6 +50800,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -50816,6 +50840,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50859,6 +50884,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50900,6 +50926,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -50932,6 +50959,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50966,6 +50994,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53955,6 +53984,7 @@ export namespace Prisma {
     origin?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
@@ -54007,6 +54037,7 @@ export namespace Prisma {
     origin?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
@@ -54041,6 +54072,7 @@ export namespace Prisma {
     origin?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
@@ -59378,6 +59410,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -59419,6 +59452,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -59489,6 +59523,7 @@ export namespace Prisma {
     origin?: StringNullableFilter<"Product"> | string | null
     packQuantity?: IntFilter<"Product"> | number
     cartonQuantity?: IntFilter<"Product"> | number
+    unit?: StringFilter<"Product"> | string
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
@@ -59521,6 +59556,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -59562,6 +59598,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60074,6 +60111,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60116,6 +60154,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60170,6 +60209,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60212,6 +60252,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60250,6 +60291,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60292,6 +60334,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60370,6 +60413,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60412,6 +60456,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60480,6 +60525,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60522,6 +60568,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60651,6 +60698,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60693,6 +60741,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61027,6 +61076,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61069,6 +61119,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61148,6 +61199,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61190,6 +61242,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61303,6 +61356,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61345,6 +61399,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61480,6 +61535,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61522,6 +61578,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61635,6 +61692,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61677,6 +61735,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61812,6 +61871,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61854,6 +61914,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62868,6 +62929,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -62910,6 +62972,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -63046,6 +63109,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63088,6 +63152,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64780,6 +64845,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -64812,6 +64878,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64853,6 +64920,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64893,6 +64961,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64926,6 +64995,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -64958,6 +65028,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64999,6 +65070,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65039,6 +65111,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null

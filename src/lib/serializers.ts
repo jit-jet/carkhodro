@@ -93,8 +93,7 @@ export interface ReviewVM {
 }
 
 export interface PDPProductVM extends ProductVM {
-  packQuantity: number;
-  cartonQuantity: number;
+  unit: string;
   isOriginal: boolean;
   description: string;
 }
@@ -493,8 +492,7 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
 export function toPDPProductVM(p: ProductWithRelations, role: PricingRole = null): PDPProductVM {
   return {
     ...toProductVM(p, role),
-    packQuantity: p.packQuantity,
-    cartonQuantity: p.cartonQuantity,
+    unit: p.unit?.trim() || 'عدد',
     isOriginal: p.isOriginal,
     description: p.description ?? '',
   };

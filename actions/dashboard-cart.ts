@@ -244,8 +244,7 @@ function toSearchResult(
     wholesaleDiscountPct: Prisma.Decimal;
     retailPriceDiffPct: Prisma.Decimal;
     retailDiscountPct: Prisma.Decimal;
-    packQuantity: number;
-    cartonQuantity: number;
+    unit: string;
     stock: number;
     callForPriceRetail: boolean;
     callForPriceWholesale: boolean;
@@ -268,8 +267,7 @@ function toSearchResult(
       name: r.name,
       priceToman: resolved.finalPrice,
       discountPct: callForPrice ? 0 : resolved.discountPct,
-      packQuantity: r.packQuantity,
-      cartonQuantity: r.cartonQuantity,
+      unit: r.unit?.trim() || 'عدد',
       stock: r.stock,
       callForPrice,
     };
@@ -284,8 +282,7 @@ const searchSelect = {
   wholesaleDiscountPct: true,
   retailPriceDiffPct: true,
   retailDiscountPct: true,
-  packQuantity: true,
-  cartonQuantity: true,
+  unit: true,
   stock: true,
   callForPriceRetail: true,
   callForPriceWholesale: true,
@@ -293,7 +290,7 @@ const searchSelect = {
 
 /**
  * "Search & add to invoice" lookup — reuses the typo-tolerant pg_trgm ranking in
- * `searchProducts`, then hydrates the ranked hits with the pack/carton/discount
+ * `searchProducts`, then hydrates the ranked hits with the unit/discount
  * columns the modal needs (preserving the search ranking order).
  */
 export async function searchInvoiceProducts(

@@ -73,6 +73,7 @@ export default function ProductForm({
   const [retailDiscountPct, setRetailDiscountPct] = useState(String(initial.retailDiscountPct ?? 0));
   const [stock, setStock] = useState(String(initial.stock ?? 0));
   const [origin, setOrigin] = useState(initial.origin ?? "");
+  const [unit, setUnit] = useState(initial.unit?.trim() || "عدد");
   const [images, setImages] = useState<string[]>(() => initialGallery(initial));
   const [mainImage, setMainImage] = useState(
     () => initial.mainImage || initialGallery(initial)[0] || "",
@@ -199,6 +200,7 @@ export default function ProductForm({
       retailDiscountPct: Number(retailDiscountPct),
       stock: Number(stock),
       origin: origin || null,
+      unit: unit.trim() || "عدد",
       mainImage: mainImage || orderedImages[0] || null,
       images: orderedImages,
       description: description || null,
@@ -293,6 +295,15 @@ export default function ProductForm({
           <div>
             <Label>کشور سازنده (اختیاری)</Label>
             <Input value={origin} onChange={(e) => setOrigin(e.target.value)} placeholder="آلمان، ژاپن، ایران…" />
+          </div>
+          <div>
+            <Label>واحد</Label>
+            <Input
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+              placeholder="عدد"
+              required
+            />
           </div>
           <div>
             <Label>موجودی انبار</Label>

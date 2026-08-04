@@ -407,6 +407,8 @@ model Product {
   packQuantity   Int     @default(1) @map("pack_quantity")
   /// Retail packs per master carton — for wholesale order sizing
   cartonQuantity Int     @default(1) @map("carton_quantity")
+  /// Display unit label on the storefront (e.g. "عدد", "بسته", "متر")
+  unit           String  @default("عدد")
   /// true = OEM / genuine part; false = aftermarket
   isOriginal     Boolean @default(true) @map("is_original")
 

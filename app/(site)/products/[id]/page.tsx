@@ -85,8 +85,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
 
   const attrs: [string, string][] = [
     ['کد',             product.sku],
-    ['تعداد در بسته',  `${product.packQuantity.toLocaleString('fa-IR')} عدد`],
-    ['تعداد در کارتن', `${product.cartonQuantity.toLocaleString('fa-IR')} عدد`],
+    ['واحد',           product.unit],
     ['دسته‌های کالا',  product.categoryLabel],
     ['نام برند',       product.brand],
     ['مدل خودرو',      product.carType],

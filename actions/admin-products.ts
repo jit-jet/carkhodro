@@ -48,6 +48,8 @@ export interface ProductInput {
   isActive?: boolean;
   stock?: number;
   origin?: string | null;
+  /** Storefront unit label (e.g. عدد). Defaults to «عدد». */
+  unit?: string;
   mainImage?: string | null;
   /** Gallery image URLs (including main). Order is preserved as sortOrder. */
   images?: string[];
@@ -154,6 +156,7 @@ export async function createProduct(
         callForPriceWholesale: input.callForPriceWholesale ?? false,
         stock: input.stock ?? 0,
         origin: input.origin ?? null,
+        unit: input.unit?.trim() || 'عدد',
         mainImage: input.mainImage ?? null,
         description: input.description ?? null,
         hesabfaCode: code,
@@ -273,6 +276,7 @@ export async function updateProduct(
         isActive,
         ...(input.stock !== undefined ? { stock: input.stock } : {}),
         ...(input.origin !== undefined ? { origin: input.origin } : {}),
+        ...(input.unit !== undefined ? { unit: input.unit.trim() || 'عدد' } : {}),
         ...(input.mainImage !== undefined ? { mainImage: input.mainImage } : {}),
         description,
       },
