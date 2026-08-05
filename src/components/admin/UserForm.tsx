@@ -328,15 +328,6 @@ export default function UserForm({
             </div>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
-              <label className="flex items-center gap-2 text-sm font-semibold text-charcoal cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isVerified}
-                  onChange={(e) => setIsVerified(e.target.checked)}
-                  className="w-4 h-4 accent-accent"
-                />
-                تأیید شده
-              </label>
               <fieldset className="flex items-center gap-4">
                 <legend className="sr-only">وضعیت حساب</legend>
                 <span className="text-sm font-semibold text-charcoal">وضعیت:</span>
