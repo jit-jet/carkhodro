@@ -37,7 +37,10 @@ export interface ProductVM {
   id: string;
   name: string;
   partsBrandId: number;
+  /** @deprecated Prefer `carModelIds` — kept as first id for legacy callers. */
   carModelId: number;
+  /** All compatible car model ids. */
+  carModelIds: number[];
   categoryId: number;
   /** Payable unit price for the viewer's role. */
   price: number;
@@ -71,11 +74,18 @@ export interface ProductVM {
   reviewCount: number;
   brand: string; // partsBrand.name (display)
   brandSlug: string; // partsBrand.slug (URL / filter)
-  carType: string; // first compatible car model name (“مدل خودرو”)
+  /** Joined compatible model names for compact display (“مدل خودرو”). */
+  carType: string;
+  /** Compatible car model names (for filters / multi display). */
+  carTypes: string[];
   /** First compatible car brand name (“برند خودرو”). */
   carBrand: string;
   /** First compatible car brand slug (URL / filter). */
   carBrandSlug: string;
+  /** All unique compatible car brand slugs (PLP filter). */
+  carBrandSlugs: string[];
+  /** Full compatibility rows for PDP listing. */
+  compatibleCars: { id: number; name: string; brandName: string; brandSlug: string }[];
   category: string; // category.key (filter slug)
   categoryLabel: string; // category.name (display)
 }
@@ -93,8 +103,7 @@ export interface ReviewVM {
 }
 
 export interface PDPProductVM extends ProductVM {
-  packQuantity: number;
-  cartonQuantity: number;
+  unit: string;
   isOriginal: boolean;
   description: string;
 }
@@ -164,13 +173,19 @@ export const DEFAULT_FOOTER_TRUST_BADGES: FooterTrustBadgeVM[] = [
 ];
 
 export interface PublicSiteSettingsVM {
-  phone: string;
-  secondaryPhone: string;
+  retailPhone1: string;
+  retailPhone2: string;
+  wholesalePhone1: string;
+  wholesalePhone2: string;
+  wholesalePhone3: string;
+  wholesalePhone4: string;
   email: string;
   address: string;
   workingHours: string;
   headerPromo1: string;
   headerPromo2: string;
+  headerPromo1Icon: string;
+  headerPromo2Icon: string;
   aboutText: string;
   footerTrustBadges: FooterTrustBadgeVM[];
 }
@@ -184,6 +199,25 @@ export interface SocialLinkVM {
 }
 
 export interface AdminSocialLinkVM extends SocialLinkVM {
+  isActive: boolean;
+}
+
+export interface HeroContentVM {
+  title: string;
+  description: string;
+  button1Text: string;
+  button1Href: string;
+  button2Text: string;
+  button2Href: string;
+}
+
+export interface HeroBannerVM {
+  id: number;
+  imageUrl: string;
+  order: number;
+}
+
+export interface AdminHeroBannerVM extends HeroBannerVM {
   isActive: boolean;
 }
 
@@ -430,7 +464,15 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     role,
   );
 
-  const firstModel = p.compatibilities[0]?.carModel;
+  const compatibleCars = p.compatibilities.map((c) => ({
+    id: c.carModel.id,
+    name: c.carModel.name,
+    brandName: c.carModel.carBrand.name,
+    brandSlug: c.carModel.carBrand.slug,
+  }));
+  const firstModel = compatibleCars[0];
+  const carTypes = compatibleCars.map((c) => c.name);
+  const carBrandSlugs = [...new Set(compatibleCars.map((c) => c.brandSlug))];
   const gallery = [...p.images]
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((img) => img.url);
@@ -444,6 +486,7 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     name: p.name,
     partsBrandId: p.partsBrandId,
     carModelId: firstModel?.id ?? 0,
+    carModelIds: compatibleCars.map((c) => c.id),
     categoryId: p.categoryId,
     price: resolved.finalPrice,
     oldPrice: callForPrice
@@ -478,9 +521,12 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     reviewCount: p.reviewCount,
     brand: p.partsBrand.name,
     brandSlug: p.partsBrand.slug,
-    carType: firstModel?.name ?? '',
-    carBrand: firstModel?.carBrand.name ?? '',
-    carBrandSlug: firstModel?.carBrand.slug ?? '',
+    carType: carTypes.join('، '),
+    carTypes,
+    carBrand: firstModel?.brandName ?? '',
+    carBrandSlug: firstModel?.brandSlug ?? '',
+    carBrandSlugs,
+    compatibleCars,
     category: p.category.key,
     categoryLabel: p.category.name,
   };
@@ -489,8 +535,7 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
 export function toPDPProductVM(p: ProductWithRelations, role: PricingRole = null): PDPProductVM {
   return {
     ...toProductVM(p, role),
-    packQuantity: p.packQuantity,
-    cartonQuantity: p.cartonQuantity,
+    unit: p.unit?.trim() || 'عدد',
     isOriginal: p.isOriginal,
     description: p.description ?? '',
   };
@@ -689,23 +734,35 @@ export function footerTrustBadgesToDbFields(badges: FooterTrustBadgeVM[] | undef
 }
 
 export function toPublicSiteSettingsVM(row: {
-  phone: string | null;
-  secondaryPhone: string | null;
+  retailPhone1: string | null;
+  retailPhone2: string | null;
+  wholesalePhone1: string | null;
+  wholesalePhone2: string | null;
+  wholesalePhone3: string | null;
+  wholesalePhone4: string | null;
   email: string | null;
   address: string | null;
   workingHours: string | null;
   headerPromo1: string | null;
   headerPromo2: string | null;
+  headerPromo1Icon?: string | null;
+  headerPromo2Icon?: string | null;
   aboutText: string | null;
 } & Partial<SiteSettingTrustFields> | null): PublicSiteSettingsVM {
   return {
-    phone: row?.phone ?? '',
-    secondaryPhone: row?.secondaryPhone ?? '',
+    retailPhone1: row?.retailPhone1 ?? '',
+    retailPhone2: row?.retailPhone2 ?? '',
+    wholesalePhone1: row?.wholesalePhone1 ?? '',
+    wholesalePhone2: row?.wholesalePhone2 ?? '',
+    wholesalePhone3: row?.wholesalePhone3 ?? '',
+    wholesalePhone4: row?.wholesalePhone4 ?? '',
     email: row?.email ?? '',
     address: row?.address ?? '',
     workingHours: row?.workingHours ?? '',
     headerPromo1: row?.headerPromo1 ?? '',
     headerPromo2: row?.headerPromo2 ?? '',
+    headerPromo1Icon: row?.headerPromo1Icon ?? '',
+    headerPromo2Icon: row?.headerPromo2Icon ?? '',
     aboutText: row?.aboutText ?? '',
     footerTrustBadges: toFooterTrustBadgesVM(row),
   };
@@ -736,6 +793,48 @@ export function toAdminSocialLinkVM(s: {
     icon: s.icon,
     order: s.sortOrder,
     isActive: s.isActive,
+  };
+}
+
+export function toHeroContentVM(row: {
+  heroTitle?: string | null;
+  heroDescription?: string | null;
+  heroButton1Text?: string | null;
+  heroButton1Href?: string | null;
+  heroButton2Text?: string | null;
+  heroButton2Href?: string | null;
+} | null): HeroContentVM {
+  return {
+    title: row?.heroTitle ?? '',
+    description: row?.heroDescription ?? '',
+    button1Text: row?.heroButton1Text ?? '',
+    button1Href: row?.heroButton1Href ?? '',
+    button2Text: row?.heroButton2Text ?? '',
+    button2Href: row?.heroButton2Href ?? '',
+  };
+}
+
+export function toHeroBannerVM(b: {
+  id: number;
+  imageUrl: string;
+  sortOrder: number;
+}): HeroBannerVM {
+  return {
+    id: b.id,
+    imageUrl: b.imageUrl,
+    order: b.sortOrder,
+  };
+}
+
+export function toAdminHeroBannerVM(b: {
+  id: number;
+  imageUrl: string;
+  sortOrder: number;
+  isActive: boolean;
+}): AdminHeroBannerVM {
+  return {
+    ...toHeroBannerVM(b),
+    isActive: b.isActive,
   };
 }
 

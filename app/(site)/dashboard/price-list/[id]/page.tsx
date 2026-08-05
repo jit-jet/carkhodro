@@ -46,7 +46,16 @@ async function ListContent({ params }: { params: Promise<{ id: string }> }) {
           </svg>
           ساخت لیست جدید
         </Link>
-        {!list.isExpired && <PrintButton label="دانلود / چاپ PDF" />}
+        {!list.isExpired && (
+          <PrintButton
+            label="دانلود / چاپ PDF"
+            documentTitle={
+              list.titles.length > 0
+                ? `لیست قیمت ${list.titles.join('، ')}`
+                : 'لیست قیمت قطعات کارخودرو'
+            }
+          />
+        )}
       </div>
 
       {list.isExpired && (
@@ -65,7 +74,6 @@ async function ListContent({ params }: { params: Promise<{ id: string }> }) {
             </div>
           </div>
           <div className="text-xs text-gray-400 text-left">
-            <p>اعتبار تا: {list.expiresAt}</p>
             <p>تعداد اقلام: {formatNumberFa(list.items.length)}</p>
           </div>
         </div>
@@ -94,7 +102,9 @@ async function ListContent({ params }: { params: Promise<{ id: string }> }) {
                     <td className="py-2.5 px-2 text-right font-mono text-xs text-gray-500">{item.sku}</td>
                     <td className="py-2.5 px-2 text-right font-semibold">{item.name}</td>
                     <td className="py-2.5 px-2 text-right text-gray-500">{item.brand}</td>
-                    <td className="py-2.5 px-2 text-right text-gray-500">{item.carType || '—'}</td>
+                    <td className="py-2.5 px-2 text-right text-gray-500">
+                      {item.carType ? `${item.carType} شاهگل` : '—'}
+                    </td>
                     <td className="py-2.5 px-2 text-center font-bold tabular-nums whitespace-nowrap">
                       {formatRial(item.priceToman)}
                     </td>

@@ -407,6 +407,8 @@ model Product {
   packQuantity   Int     @default(1) @map("pack_quantity")
   /// Retail packs per master carton — for wholesale order sizing
   cartonQuantity Int     @default(1) @map("carton_quantity")
+  /// Display unit label on the storefront (e.g. "عدد", "بسته", "متر")
+  unit           String  @default("عدد")
   /// true = OEM / genuine part; false = aftermarket
   isOriginal     Boolean @default(true) @map("is_original")
 
@@ -665,14 +667,24 @@ model Faq {
 /// single row — the app upserts `id = 1`.
 model SiteSetting {
   id             Int      @id @default(1)
-  phone          String?
-  secondaryPhone String?  @map("secondary_phone")
+  /// Shown to guests and RETAIL customers.
+  retailPhone1   String?  @map("retail_phone_1")
+  retailPhone2   String?  @map("retail_phone_2")
+  /// Shown only when a WHOLESALE user is logged in.
+  wholesalePhone1 String? @map("wholesale_phone_1")
+  wholesalePhone2 String? @map("wholesale_phone_2")
+  wholesalePhone3 String? @map("wholesale_phone_3")
+  wholesalePhone4 String? @map("wholesale_phone_4")
   email          String?
   address        String?  @db.Text
   workingHours   String?  @map("working_hours")
   /// Short promo lines shown in the header top bar (e.g. trust badges).
   headerPromo1   String?  @map("header_promo_1")
   headerPromo2   String?  @map("header_promo_2")
+  /// Optional icon for promo line 1 — storage URL or emoji; no built-in default.
+  headerPromo1Icon String? @map("header_promo_1_icon")
+  /// Optional icon for promo line 2 — storage URL or emoji; no built-in default.
+  headerPromo2Icon String? @map("header_promo_2_icon")
   aboutText      String?  @db.Text @map("about_text")
   /// Footer trust badges (icon / title / description) — four fixed slots.
   footerTrust1Icon  String? @map("footer_trust_1_icon")
@@ -687,6 +699,13 @@ model SiteSetting {
   footerTrust4Icon  String? @map("footer_trust_4_icon")
   footerTrust4Title String? @map("footer_trust_4_title")
   footerTrust4Desc  String? @map("footer_trust_4_desc")
+  /// Homepage hero copy (static — images are managed via HeroBanner slides).
+  heroTitle         String? @map("hero_title")
+  heroDescription   String? @db.Text @map("hero_description")
+  heroButton1Text   String? @map("hero_button1_text")
+  heroButton1Href   String? @map("hero_button1_href")
+  heroButton2Text   String? @map("hero_button2_text")
+  heroButton2Href   String? @map("hero_button2_href")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")
@@ -720,6 +739,19 @@ model SocialLink {
 
   @@index([sortOrder])
   @@map("social_links")
+}
+
+/// Homepage hero image slides — copy/CTAs live on SiteSetting; only images rotate.
+model HeroBanner {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String   @map("image_url")
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([sortOrder])
+  @@map("hero_banners")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

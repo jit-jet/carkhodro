@@ -137,8 +137,9 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
       {/* ── Main content ───────────────────────────────────── */}
       <div className="px-3 pb-3 pt-1.5 flex flex-col flex-1">
         {/* Brand • Car type */}
-        <p className="text-xs text-gray-400 mb-1">
-          {product.brand} • {product.carType}
+        <p className="text-xs text-gray-400 mb-1 line-clamp-1">
+          {product.brand}
+          {product.carType ? ` • ${product.carType}` : ""}
         </p>
 
         {/* Product name */}

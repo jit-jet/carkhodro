@@ -61,8 +61,7 @@ export interface InvoiceSearchResultVM {
   name: string;
   priceToman: number;
   discountPct: number;
-  packQuantity: number;
-  cartonQuantity: number;
+  unit: string;
   stock: number;
   callForPrice: boolean;
 }

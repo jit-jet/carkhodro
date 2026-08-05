@@ -13,7 +13,13 @@
 
 import { useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { createProduct, updateProduct, uploadProductImage, type ProductInput } from "@/actions/admin-products";
+import {
+  createProduct,
+  permanentlyDeleteProduct,
+  updateProduct,
+  uploadProductImage,
+  type ProductInput,
+} from "@/actions/admin-products";
 import { computeRetailPrice, computeRetailFinal, computeWholesaleFinal } from "@/src/lib/pricing";
 import { formatToman } from "@/src/lib/format";
 import { useCartUI } from "@/src/store/cart-ui";
@@ -63,7 +69,9 @@ export default function ProductForm({
   const [name, setName] = useState(initial.name);
   const [partsBrandId, setPartsBrandId] = useState(initial.partsBrandId || partsBrands[0]?.id || 0);
   const [categoryId, setCategoryId] = useState(initial.categoryId || categories[0]?.id || 0);
-  const [carModelId, setCarModelId] = useState<number | "">(initial.carModelId ?? "");
+  const [carModelIds, setCarModelIds] = useState<number[]>(() =>
+    [...new Set((initial.carModelIds ?? []).filter((id) => Number.isFinite(id) && id > 0))],
+  );
   const [wholesalePrice, setWholesalePrice] = useState(String(initial.wholesalePrice ?? ""));
   const [buyPrice, setBuyPrice] = useState(
     initial.buyPrice != null && initial.buyPrice > 0 ? String(initial.buyPrice) : "",
@@ -73,6 +81,7 @@ export default function ProductForm({
   const [retailDiscountPct, setRetailDiscountPct] = useState(String(initial.retailDiscountPct ?? 0));
   const [stock, setStock] = useState(String(initial.stock ?? 0));
   const [origin, setOrigin] = useState(initial.origin ?? "");
+  const [unit, setUnit] = useState(initial.unit?.trim() || "عدد");
   const [images, setImages] = useState<string[]>(() => initialGallery(initial));
   const [mainImage, setMainImage] = useState(
     () => initial.mainImage || initialGallery(initial)[0] || "",
@@ -91,6 +100,7 @@ export default function ProductForm({
   const [success, setSuccess] = useState("");
   const [imageError, setImageError] = useState("");
   const [pending, startTransition] = useTransition();
+  const [deleting, startDelete] = useTransition();
   const [uploading, startUpload] = useTransition();
   const [dragOver, setDragOver] = useState(false);
 
@@ -177,6 +187,34 @@ export default function ProductForm({
     });
   }
 
+  function handlePermanentDelete() {
+    if (!initial.id) return;
+    if (
+      !window.confirm(
+        `محصول «${name}» به‌همراه همه تصاویر برای همیشه حذف شود؟ این عمل قابل بازگشت نیست.`,
+      )
+    ) {
+      return;
+    }
+    setError("");
+    setSuccess("");
+    startDelete(async () => {
+      const result = await permanentlyDeleteProduct(initial.id!);
+      if (!result.ok) {
+        setError(result.error);
+        notify({ variant: "error", title: "خطا", description: result.error });
+        return;
+      }
+      notify({
+        variant: "success",
+        title: "حذف شد",
+        description: "محصول و تصاویر مرتبط برای همیشه حذف شدند.",
+      });
+      router.push("/admin/products");
+      router.refresh();
+    });
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -191,7 +229,7 @@ export default function ProductForm({
       name,
       partsBrandId: Number(partsBrandId),
       categoryId: Number(categoryId),
-      carModelId: carModelId === "" ? null : Number(carModelId),
+      carModelIds,
       wholesalePrice: Number(wholesalePrice),
       buyPrice: buyPrice.trim() === "" ? null : Number(buyPrice),
       wholesaleDiscountPct: Number(wholesaleDiscountPct),
@@ -199,6 +237,7 @@ export default function ProductForm({
       retailDiscountPct: Number(retailDiscountPct),
       stock: Number(stock),
       origin: origin || null,
+      unit: unit.trim() || "عدد",
       mainImage: mainImage || orderedImages[0] || null,
       images: orderedImages,
       description: description || null,
@@ -276,23 +315,60 @@ export default function ProductForm({
               ))}
             </Select>
           </div>
-          <div>
-            <Label>مدل خودرو</Label>
-            <Select
-              value={carModelId}
-              onChange={(e) => setCarModelId(e.target.value ? Number(e.target.value) : "")}
-            >
-              <option value="">انتخاب نشده</option>
-              {carModels.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.brandName} — {m.name}
-                </option>
-              ))}
-            </Select>
+          <div className="sm:col-span-2">
+            <Label>مدل‌های خودرو سازگار</Label>
+            <p className="text-xs text-gray-400 mb-2">
+              می‌توانید چند مدل را انتخاب کنید. خالی = بدون سازگاری مشخص.
+            </p>
+            <div className="max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white divide-y divide-gray-50">
+              {carModels.length === 0 ? (
+                <p className="px-3 py-3 text-sm text-gray-400">مدلی ثبت نشده است.</p>
+              ) : (
+                carModels.map((m) => {
+                  const checked = carModelIds.includes(m.id);
+                  return (
+                    <label
+                      key={m.id}
+                      className="flex items-center gap-2.5 px-3 py-2 text-sm text-charcoal cursor-pointer hover:bg-silver-light/60"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => {
+                          setCarModelIds((prev) =>
+                            checked ? prev.filter((id) => id !== m.id) : [...prev, m.id],
+                          );
+                        }}
+                        className="w-4 h-4 accent-accent shrink-0"
+                      />
+                      <span>
+                        <span className="font-medium">{m.brandName}</span>
+                        <span className="text-gray-400"> — </span>
+                        {m.name}
+                      </span>
+                    </label>
+                  );
+                })
+              )}
+            </div>
+            {carModelIds.length > 0 && (
+              <p className="mt-2 text-xs text-gray-500">
+                {carModelIds.length.toLocaleString("fa-IR")} مدل انتخاب شده
+              </p>
+            )}
           </div>
           <div>
             <Label>کشور سازنده (اختیاری)</Label>
             <Input value={origin} onChange={(e) => setOrigin(e.target.value)} placeholder="آلمان، ژاپن، ایران…" />
+          </div>
+          <div>
+            <Label>واحد</Label>
+            <Input
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+              placeholder="عدد"
+              required
+            />
           </div>
           <div>
             <Label>موجودی انبار</Label>
@@ -511,13 +587,28 @@ export default function ProductForm({
         </div>
       </Card>
 
-      <div className="flex items-center gap-3 sticky bottom-4 z-10 bg-white/90 backdrop-blur-sm border border-gray-200/80 rounded-2xl shadow-sm px-4 py-3 w-fit">
-        <Button type="submit" disabled={pending || uploading}>
+      <div className="flex flex-wrap items-center gap-3 sticky bottom-4 z-10 bg-white/90 backdrop-blur-sm border border-gray-200/80 rounded-2xl shadow-sm px-4 py-3 w-fit">
+        <Button type="submit" disabled={pending || uploading || deleting}>
           {pending ? "در حال ذخیره…" : isEditing ? "ذخیره تغییرات" : "افزودن محصول"}
         </Button>
-        <Button type="button" variant="ghost" onClick={() => router.push("/admin/products")}>
+        <Button
+          type="button"
+          variant="ghost"
+          disabled={pending || deleting}
+          onClick={() => router.push("/admin/products")}
+        >
           بازگشت
         </Button>
+        {isEditing && (
+          <Button
+            type="button"
+            variant="danger"
+            disabled={pending || uploading || deleting}
+            onClick={handlePermanentDelete}
+          >
+            {deleting ? "در حال حذف…" : "حذف محصول"}
+          </Button>
+        )}
       </div>
     </form>
   );

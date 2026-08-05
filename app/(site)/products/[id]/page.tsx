@@ -11,6 +11,9 @@ import RelatedProducts from '@/src/components/pdp/RelatedProducts';
 import CallForPrice    from '@/src/components/product/CallForPrice';
 import WishlistButton  from '@/src/components/product/WishlistButton';
 import CompareButton   from '@/src/components/product/CompareButton';
+import { getCurrentUser } from '@/src/lib/session';
+import { primaryContactPhone } from '@/src/lib/site-settings-display';
+import { pricingRoleFromUser } from '@/src/lib/user-role';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -71,21 +74,26 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   // Fire-and-forget — do not block PDP render on the view counter.
   void recordProductView(product.id);
 
-  const [relatedProducts, comments, settings] = await Promise.all([
+  const [relatedProducts, comments, settings, user] = await Promise.all([
     withViewerPricing(await getRelatedProducts(product.id, product.categoryId)),
     getProductReviews(product.id),
     getPublicSiteSettings(),
+    getCurrentUser(),
   ]);
-  const shopPhone = settings.phone.trim() || settings.secondaryPhone.trim() || '';
+  const shopPhone = primaryContactPhone(settings, pricingRoleFromUser(user?.role));
   const flag = ORIGIN_FLAGS[product.origin] ?? '🏭';
+
+  const compatibleLabel =
+    product.compatibleCars.length > 0
+      ? product.compatibleCars.map((c) => `${c.brandName} — ${c.name}`).join('، ')
+      : '—';
 
   const attrs: [string, string][] = [
     ['کد',             product.sku],
-    ['تعداد در بسته',  `${product.packQuantity.toLocaleString('fa-IR')} عدد`],
-    ['تعداد در کارتن', `${product.cartonQuantity.toLocaleString('fa-IR')} عدد`],
+    ['واحد',           product.unit],
     ['دسته‌های کالا',  product.categoryLabel],
     ['نام برند',       product.brand],
-    ['مدل خودرو',      product.carType],
+    ['مدل خودرو',      compatibleLabel],
     ['اصلی',           product.isOriginal ? 'بله' : 'خیر'],
     ['کشور سازنده',    `${flag} ${product.origin}`],
   ];

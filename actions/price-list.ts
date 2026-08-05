@@ -187,7 +187,7 @@ export async function getPriceListRequest(id: string): Promise<PriceListRequestV
             sku: p.sku,
             name: p.name,
             brand: p.partsBrand.name,
-            carType: p.compatibilities[0]?.carModel.name ?? '',
+            carType: p.compatibilities.map((c) => c.carModel.name).join('، '),
             priceToman: resolved.finalPrice,
           };
         });

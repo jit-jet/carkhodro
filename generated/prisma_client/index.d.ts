@@ -148,6 +148,11 @@ export type RulesContent = $Result.DefaultSelection<Prisma.$RulesContentPayload>
  */
 export type SocialLink = $Result.DefaultSelection<Prisma.$SocialLinkPayload>
 /**
+ * Model HeroBanner
+ * Homepage hero image slides — copy/CTAs live on SiteSetting; only images rotate.
+ */
+export type HeroBanner = $Result.DefaultSelection<Prisma.$HeroBannerPayload>
+/**
  * Model SmsCampaign
  * One row per bulk SMS blast the admin sends («ارسال گروهی پیامک»). Snapshot
  * only — the recipient list itself isn't retained, just the counts, to keep
@@ -745,6 +750,16 @@ export class PrismaClient<
   get socialLink(): Prisma.SocialLinkDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.heroBanner`: Exposes CRUD operations for the **HeroBanner** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more HeroBanners
+    * const heroBanners = await prisma.heroBanner.findMany()
+    * ```
+    */
+  get heroBanner(): Prisma.HeroBannerDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.smsCampaign`: Exposes CRUD operations for the **SmsCampaign** model.
     * Example usage:
     * ```ts
@@ -1293,6 +1308,7 @@ export namespace Prisma {
     SiteSetting: 'SiteSetting',
     RulesContent: 'RulesContent',
     SocialLink: 'SocialLink',
+    HeroBanner: 'HeroBanner',
     SmsCampaign: 'SmsCampaign',
     ShippingOption: 'ShippingOption',
     Order: 'Order',
@@ -1317,7 +1333,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "rulesContent" | "socialLink" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
+      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "rulesContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3245,6 +3261,80 @@ export namespace Prisma {
           }
         }
       }
+      HeroBanner: {
+        payload: Prisma.$HeroBannerPayload<ExtArgs>
+        fields: Prisma.HeroBannerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.HeroBannerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.HeroBannerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload>
+          }
+          findFirst: {
+            args: Prisma.HeroBannerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.HeroBannerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload>
+          }
+          findMany: {
+            args: Prisma.HeroBannerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload>[]
+          }
+          create: {
+            args: Prisma.HeroBannerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload>
+          }
+          createMany: {
+            args: Prisma.HeroBannerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.HeroBannerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload>[]
+          }
+          delete: {
+            args: Prisma.HeroBannerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload>
+          }
+          update: {
+            args: Prisma.HeroBannerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload>
+          }
+          deleteMany: {
+            args: Prisma.HeroBannerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.HeroBannerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.HeroBannerUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload>[]
+          }
+          upsert: {
+            args: Prisma.HeroBannerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HeroBannerPayload>
+          }
+          aggregate: {
+            args: Prisma.HeroBannerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHeroBanner>
+          }
+          groupBy: {
+            args: Prisma.HeroBannerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<HeroBannerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.HeroBannerCountArgs<ExtArgs>
+            result: $Utils.Optional<HeroBannerCountAggregateOutputType> | number
+          }
+        }
+      }
       SmsCampaign: {
         payload: Prisma.$SmsCampaignPayload<ExtArgs>
         fields: Prisma.SmsCampaignFieldRefs
@@ -4045,6 +4135,7 @@ export namespace Prisma {
     siteSetting?: SiteSettingOmit
     rulesContent?: RulesContentOmit
     socialLink?: SocialLinkOmit
+    heroBanner?: HeroBannerOmit
     smsCampaign?: SmsCampaignOmit
     shippingOption?: ShippingOptionOmit
     order?: OrderOmit
@@ -18709,6 +18800,7 @@ export namespace Prisma {
     origin: string | null
     packQuantity: number | null
     cartonQuantity: number | null
+    unit: string | null
     isOriginal: boolean | null
     mainImage: string | null
     description: string | null
@@ -18743,6 +18835,7 @@ export namespace Prisma {
     origin: string | null
     packQuantity: number | null
     cartonQuantity: number | null
+    unit: string | null
     isOriginal: boolean | null
     mainImage: string | null
     description: string | null
@@ -18777,6 +18870,7 @@ export namespace Prisma {
     origin: number
     packQuantity: number
     cartonQuantity: number
+    unit: number
     isOriginal: number
     mainImage: number
     description: number
@@ -18849,6 +18943,7 @@ export namespace Prisma {
     origin?: true
     packQuantity?: true
     cartonQuantity?: true
+    unit?: true
     isOriginal?: true
     mainImage?: true
     description?: true
@@ -18883,6 +18978,7 @@ export namespace Prisma {
     origin?: true
     packQuantity?: true
     cartonQuantity?: true
+    unit?: true
     isOriginal?: true
     mainImage?: true
     description?: true
@@ -18917,6 +19013,7 @@ export namespace Prisma {
     origin?: true
     packQuantity?: true
     cartonQuantity?: true
+    unit?: true
     isOriginal?: true
     mainImage?: true
     description?: true
@@ -19038,6 +19135,7 @@ export namespace Prisma {
     origin: string | null
     packQuantity: number
     cartonQuantity: number
+    unit: string
     isOriginal: boolean
     mainImage: string | null
     description: string | null
@@ -19091,6 +19189,7 @@ export namespace Prisma {
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
+    unit?: boolean
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
@@ -19135,6 +19234,7 @@ export namespace Prisma {
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
+    unit?: boolean
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
@@ -19171,6 +19271,7 @@ export namespace Prisma {
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
+    unit?: boolean
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
@@ -19207,6 +19308,7 @@ export namespace Prisma {
     origin?: boolean
     packQuantity?: boolean
     cartonQuantity?: boolean
+    unit?: boolean
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
@@ -19220,7 +19322,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "unit" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -19321,6 +19423,10 @@ export namespace Prisma {
        * Retail packs per master carton — for wholesale order sizing
        */
       cartonQuantity: number
+      /**
+       * Display unit label on the storefront (e.g. "عدد", "بسته", "متر")
+       */
+      unit: string
       /**
        * true = OEM / genuine part; false = aftermarket
        */
@@ -19795,6 +19901,7 @@ export namespace Prisma {
     readonly origin: FieldRef<"Product", 'String'>
     readonly packQuantity: FieldRef<"Product", 'Int'>
     readonly cartonQuantity: FieldRef<"Product", 'Int'>
+    readonly unit: FieldRef<"Product", 'String'>
     readonly isOriginal: FieldRef<"Product", 'Boolean'>
     readonly mainImage: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
@@ -31674,13 +31781,19 @@ export namespace Prisma {
 
   export type SiteSettingMinAggregateOutputType = {
     id: number | null
-    phone: string | null
-    secondaryPhone: string | null
+    retailPhone1: string | null
+    retailPhone2: string | null
+    wholesalePhone1: string | null
+    wholesalePhone2: string | null
+    wholesalePhone3: string | null
+    wholesalePhone4: string | null
     email: string | null
     address: string | null
     workingHours: string | null
     headerPromo1: string | null
     headerPromo2: string | null
+    headerPromo1Icon: string | null
+    headerPromo2Icon: string | null
     aboutText: string | null
     footerTrust1Icon: string | null
     footerTrust1Title: string | null
@@ -31694,18 +31807,30 @@ export namespace Prisma {
     footerTrust4Icon: string | null
     footerTrust4Title: string | null
     footerTrust4Desc: string | null
+    heroTitle: string | null
+    heroDescription: string | null
+    heroButton1Text: string | null
+    heroButton1Href: string | null
+    heroButton2Text: string | null
+    heroButton2Href: string | null
     updatedAt: Date | null
   }
 
   export type SiteSettingMaxAggregateOutputType = {
     id: number | null
-    phone: string | null
-    secondaryPhone: string | null
+    retailPhone1: string | null
+    retailPhone2: string | null
+    wholesalePhone1: string | null
+    wholesalePhone2: string | null
+    wholesalePhone3: string | null
+    wholesalePhone4: string | null
     email: string | null
     address: string | null
     workingHours: string | null
     headerPromo1: string | null
     headerPromo2: string | null
+    headerPromo1Icon: string | null
+    headerPromo2Icon: string | null
     aboutText: string | null
     footerTrust1Icon: string | null
     footerTrust1Title: string | null
@@ -31719,18 +31844,30 @@ export namespace Prisma {
     footerTrust4Icon: string | null
     footerTrust4Title: string | null
     footerTrust4Desc: string | null
+    heroTitle: string | null
+    heroDescription: string | null
+    heroButton1Text: string | null
+    heroButton1Href: string | null
+    heroButton2Text: string | null
+    heroButton2Href: string | null
     updatedAt: Date | null
   }
 
   export type SiteSettingCountAggregateOutputType = {
     id: number
-    phone: number
-    secondaryPhone: number
+    retailPhone1: number
+    retailPhone2: number
+    wholesalePhone1: number
+    wholesalePhone2: number
+    wholesalePhone3: number
+    wholesalePhone4: number
     email: number
     address: number
     workingHours: number
     headerPromo1: number
     headerPromo2: number
+    headerPromo1Icon: number
+    headerPromo2Icon: number
     aboutText: number
     footerTrust1Icon: number
     footerTrust1Title: number
@@ -31744,6 +31881,12 @@ export namespace Prisma {
     footerTrust4Icon: number
     footerTrust4Title: number
     footerTrust4Desc: number
+    heroTitle: number
+    heroDescription: number
+    heroButton1Text: number
+    heroButton1Href: number
+    heroButton2Text: number
+    heroButton2Href: number
     updatedAt: number
     _all: number
   }
@@ -31759,13 +31902,19 @@ export namespace Prisma {
 
   export type SiteSettingMinAggregateInputType = {
     id?: true
-    phone?: true
-    secondaryPhone?: true
+    retailPhone1?: true
+    retailPhone2?: true
+    wholesalePhone1?: true
+    wholesalePhone2?: true
+    wholesalePhone3?: true
+    wholesalePhone4?: true
     email?: true
     address?: true
     workingHours?: true
     headerPromo1?: true
     headerPromo2?: true
+    headerPromo1Icon?: true
+    headerPromo2Icon?: true
     aboutText?: true
     footerTrust1Icon?: true
     footerTrust1Title?: true
@@ -31779,18 +31928,30 @@ export namespace Prisma {
     footerTrust4Icon?: true
     footerTrust4Title?: true
     footerTrust4Desc?: true
+    heroTitle?: true
+    heroDescription?: true
+    heroButton1Text?: true
+    heroButton1Href?: true
+    heroButton2Text?: true
+    heroButton2Href?: true
     updatedAt?: true
   }
 
   export type SiteSettingMaxAggregateInputType = {
     id?: true
-    phone?: true
-    secondaryPhone?: true
+    retailPhone1?: true
+    retailPhone2?: true
+    wholesalePhone1?: true
+    wholesalePhone2?: true
+    wholesalePhone3?: true
+    wholesalePhone4?: true
     email?: true
     address?: true
     workingHours?: true
     headerPromo1?: true
     headerPromo2?: true
+    headerPromo1Icon?: true
+    headerPromo2Icon?: true
     aboutText?: true
     footerTrust1Icon?: true
     footerTrust1Title?: true
@@ -31804,18 +31965,30 @@ export namespace Prisma {
     footerTrust4Icon?: true
     footerTrust4Title?: true
     footerTrust4Desc?: true
+    heroTitle?: true
+    heroDescription?: true
+    heroButton1Text?: true
+    heroButton1Href?: true
+    heroButton2Text?: true
+    heroButton2Href?: true
     updatedAt?: true
   }
 
   export type SiteSettingCountAggregateInputType = {
     id?: true
-    phone?: true
-    secondaryPhone?: true
+    retailPhone1?: true
+    retailPhone2?: true
+    wholesalePhone1?: true
+    wholesalePhone2?: true
+    wholesalePhone3?: true
+    wholesalePhone4?: true
     email?: true
     address?: true
     workingHours?: true
     headerPromo1?: true
     headerPromo2?: true
+    headerPromo1Icon?: true
+    headerPromo2Icon?: true
     aboutText?: true
     footerTrust1Icon?: true
     footerTrust1Title?: true
@@ -31829,6 +32002,12 @@ export namespace Prisma {
     footerTrust4Icon?: true
     footerTrust4Title?: true
     footerTrust4Desc?: true
+    heroTitle?: true
+    heroDescription?: true
+    heroButton1Text?: true
+    heroButton1Href?: true
+    heroButton2Text?: true
+    heroButton2Href?: true
     updatedAt?: true
     _all?: true
   }
@@ -31921,13 +32100,19 @@ export namespace Prisma {
 
   export type SiteSettingGroupByOutputType = {
     id: number
-    phone: string | null
-    secondaryPhone: string | null
+    retailPhone1: string | null
+    retailPhone2: string | null
+    wholesalePhone1: string | null
+    wholesalePhone2: string | null
+    wholesalePhone3: string | null
+    wholesalePhone4: string | null
     email: string | null
     address: string | null
     workingHours: string | null
     headerPromo1: string | null
     headerPromo2: string | null
+    headerPromo1Icon: string | null
+    headerPromo2Icon: string | null
     aboutText: string | null
     footerTrust1Icon: string | null
     footerTrust1Title: string | null
@@ -31941,6 +32126,12 @@ export namespace Prisma {
     footerTrust4Icon: string | null
     footerTrust4Title: string | null
     footerTrust4Desc: string | null
+    heroTitle: string | null
+    heroDescription: string | null
+    heroButton1Text: string | null
+    heroButton1Href: string | null
+    heroButton2Text: string | null
+    heroButton2Href: string | null
     updatedAt: Date
     _count: SiteSettingCountAggregateOutputType | null
     _avg: SiteSettingAvgAggregateOutputType | null
@@ -31965,13 +32156,19 @@ export namespace Prisma {
 
   export type SiteSettingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    phone?: boolean
-    secondaryPhone?: boolean
+    retailPhone1?: boolean
+    retailPhone2?: boolean
+    wholesalePhone1?: boolean
+    wholesalePhone2?: boolean
+    wholesalePhone3?: boolean
+    wholesalePhone4?: boolean
     email?: boolean
     address?: boolean
     workingHours?: boolean
     headerPromo1?: boolean
     headerPromo2?: boolean
+    headerPromo1Icon?: boolean
+    headerPromo2Icon?: boolean
     aboutText?: boolean
     footerTrust1Icon?: boolean
     footerTrust1Title?: boolean
@@ -31985,18 +32182,30 @@ export namespace Prisma {
     footerTrust4Icon?: boolean
     footerTrust4Title?: boolean
     footerTrust4Desc?: boolean
+    heroTitle?: boolean
+    heroDescription?: boolean
+    heroButton1Text?: boolean
+    heroButton1Href?: boolean
+    heroButton2Text?: boolean
+    heroButton2Href?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
   export type SiteSettingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    phone?: boolean
-    secondaryPhone?: boolean
+    retailPhone1?: boolean
+    retailPhone2?: boolean
+    wholesalePhone1?: boolean
+    wholesalePhone2?: boolean
+    wholesalePhone3?: boolean
+    wholesalePhone4?: boolean
     email?: boolean
     address?: boolean
     workingHours?: boolean
     headerPromo1?: boolean
     headerPromo2?: boolean
+    headerPromo1Icon?: boolean
+    headerPromo2Icon?: boolean
     aboutText?: boolean
     footerTrust1Icon?: boolean
     footerTrust1Title?: boolean
@@ -32010,18 +32219,30 @@ export namespace Prisma {
     footerTrust4Icon?: boolean
     footerTrust4Title?: boolean
     footerTrust4Desc?: boolean
+    heroTitle?: boolean
+    heroDescription?: boolean
+    heroButton1Text?: boolean
+    heroButton1Href?: boolean
+    heroButton2Text?: boolean
+    heroButton2Href?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
   export type SiteSettingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    phone?: boolean
-    secondaryPhone?: boolean
+    retailPhone1?: boolean
+    retailPhone2?: boolean
+    wholesalePhone1?: boolean
+    wholesalePhone2?: boolean
+    wholesalePhone3?: boolean
+    wholesalePhone4?: boolean
     email?: boolean
     address?: boolean
     workingHours?: boolean
     headerPromo1?: boolean
     headerPromo2?: boolean
+    headerPromo1Icon?: boolean
+    headerPromo2Icon?: boolean
     aboutText?: boolean
     footerTrust1Icon?: boolean
     footerTrust1Title?: boolean
@@ -32035,18 +32256,30 @@ export namespace Prisma {
     footerTrust4Icon?: boolean
     footerTrust4Title?: boolean
     footerTrust4Desc?: boolean
+    heroTitle?: boolean
+    heroDescription?: boolean
+    heroButton1Text?: boolean
+    heroButton1Href?: boolean
+    heroButton2Text?: boolean
+    heroButton2Href?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
   export type SiteSettingSelectScalar = {
     id?: boolean
-    phone?: boolean
-    secondaryPhone?: boolean
+    retailPhone1?: boolean
+    retailPhone2?: boolean
+    wholesalePhone1?: boolean
+    wholesalePhone2?: boolean
+    wholesalePhone3?: boolean
+    wholesalePhone4?: boolean
     email?: boolean
     address?: boolean
     workingHours?: boolean
     headerPromo1?: boolean
     headerPromo2?: boolean
+    headerPromo1Icon?: boolean
+    headerPromo2Icon?: boolean
     aboutText?: boolean
     footerTrust1Icon?: boolean
     footerTrust1Title?: boolean
@@ -32060,18 +32293,34 @@ export namespace Prisma {
     footerTrust4Icon?: boolean
     footerTrust4Title?: boolean
     footerTrust4Desc?: boolean
+    heroTitle?: boolean
+    heroDescription?: boolean
+    heroButton1Text?: boolean
+    heroButton1Href?: boolean
+    heroButton2Text?: boolean
+    heroButton2Href?: boolean
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "secondaryPhone" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "heroTitle" | "heroDescription" | "heroButton1Text" | "heroButton1Href" | "heroButton2Text" | "heroButton2Href" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      phone: string | null
-      secondaryPhone: string | null
+      /**
+       * Shown to guests and RETAIL customers.
+       */
+      retailPhone1: string | null
+      retailPhone2: string | null
+      /**
+       * Shown only when a WHOLESALE user is logged in.
+       */
+      wholesalePhone1: string | null
+      wholesalePhone2: string | null
+      wholesalePhone3: string | null
+      wholesalePhone4: string | null
       email: string | null
       address: string | null
       workingHours: string | null
@@ -32080,6 +32329,14 @@ export namespace Prisma {
        */
       headerPromo1: string | null
       headerPromo2: string | null
+      /**
+       * Optional icon for promo line 1 — storage URL or emoji; no built-in default.
+       */
+      headerPromo1Icon: string | null
+      /**
+       * Optional icon for promo line 2 — storage URL or emoji; no built-in default.
+       */
+      headerPromo2Icon: string | null
       aboutText: string | null
       /**
        * Footer trust badges (icon / title / description) — four fixed slots.
@@ -32096,6 +32353,15 @@ export namespace Prisma {
       footerTrust4Icon: string | null
       footerTrust4Title: string | null
       footerTrust4Desc: string | null
+      /**
+       * Homepage hero copy (static — images are managed via HeroBanner slides).
+       */
+      heroTitle: string | null
+      heroDescription: string | null
+      heroButton1Text: string | null
+      heroButton1Href: string | null
+      heroButton2Text: string | null
+      heroButton2Href: string | null
       updatedAt: Date
     }, ExtArgs["result"]["siteSetting"]>
     composites: {}
@@ -32521,13 +32787,19 @@ export namespace Prisma {
    */
   interface SiteSettingFieldRefs {
     readonly id: FieldRef<"SiteSetting", 'Int'>
-    readonly phone: FieldRef<"SiteSetting", 'String'>
-    readonly secondaryPhone: FieldRef<"SiteSetting", 'String'>
+    readonly retailPhone1: FieldRef<"SiteSetting", 'String'>
+    readonly retailPhone2: FieldRef<"SiteSetting", 'String'>
+    readonly wholesalePhone1: FieldRef<"SiteSetting", 'String'>
+    readonly wholesalePhone2: FieldRef<"SiteSetting", 'String'>
+    readonly wholesalePhone3: FieldRef<"SiteSetting", 'String'>
+    readonly wholesalePhone4: FieldRef<"SiteSetting", 'String'>
     readonly email: FieldRef<"SiteSetting", 'String'>
     readonly address: FieldRef<"SiteSetting", 'String'>
     readonly workingHours: FieldRef<"SiteSetting", 'String'>
     readonly headerPromo1: FieldRef<"SiteSetting", 'String'>
     readonly headerPromo2: FieldRef<"SiteSetting", 'String'>
+    readonly headerPromo1Icon: FieldRef<"SiteSetting", 'String'>
+    readonly headerPromo2Icon: FieldRef<"SiteSetting", 'String'>
     readonly aboutText: FieldRef<"SiteSetting", 'String'>
     readonly footerTrust1Icon: FieldRef<"SiteSetting", 'String'>
     readonly footerTrust1Title: FieldRef<"SiteSetting", 'String'>
@@ -32541,6 +32813,12 @@ export namespace Prisma {
     readonly footerTrust4Icon: FieldRef<"SiteSetting", 'String'>
     readonly footerTrust4Title: FieldRef<"SiteSetting", 'String'>
     readonly footerTrust4Desc: FieldRef<"SiteSetting", 'String'>
+    readonly heroTitle: FieldRef<"SiteSetting", 'String'>
+    readonly heroDescription: FieldRef<"SiteSetting", 'String'>
+    readonly heroButton1Text: FieldRef<"SiteSetting", 'String'>
+    readonly heroButton1Href: FieldRef<"SiteSetting", 'String'>
+    readonly heroButton2Text: FieldRef<"SiteSetting", 'String'>
+    readonly heroButton2Href: FieldRef<"SiteSetting", 'String'>
     readonly updatedAt: FieldRef<"SiteSetting", 'DateTime'>
   }
     
@@ -35033,6 +35311,1057 @@ export namespace Prisma {
      * Omit specific fields from the SocialLink
      */
     omit?: SocialLinkOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model HeroBanner
+   */
+
+  export type AggregateHeroBanner = {
+    _count: HeroBannerCountAggregateOutputType | null
+    _avg: HeroBannerAvgAggregateOutputType | null
+    _sum: HeroBannerSumAggregateOutputType | null
+    _min: HeroBannerMinAggregateOutputType | null
+    _max: HeroBannerMaxAggregateOutputType | null
+  }
+
+  export type HeroBannerAvgAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type HeroBannerSumAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type HeroBannerMinAggregateOutputType = {
+    id: number | null
+    imageUrl: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type HeroBannerMaxAggregateOutputType = {
+    id: number | null
+    imageUrl: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type HeroBannerCountAggregateOutputType = {
+    id: number
+    imageUrl: number
+    sortOrder: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type HeroBannerAvgAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type HeroBannerSumAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type HeroBannerMinAggregateInputType = {
+    id?: true
+    imageUrl?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type HeroBannerMaxAggregateInputType = {
+    id?: true
+    imageUrl?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type HeroBannerCountAggregateInputType = {
+    id?: true
+    imageUrl?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type HeroBannerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HeroBanner to aggregate.
+     */
+    where?: HeroBannerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HeroBanners to fetch.
+     */
+    orderBy?: HeroBannerOrderByWithRelationInput | HeroBannerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: HeroBannerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HeroBanners from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HeroBanners.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned HeroBanners
+    **/
+    _count?: true | HeroBannerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: HeroBannerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: HeroBannerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: HeroBannerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: HeroBannerMaxAggregateInputType
+  }
+
+  export type GetHeroBannerAggregateType<T extends HeroBannerAggregateArgs> = {
+        [P in keyof T & keyof AggregateHeroBanner]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHeroBanner[P]>
+      : GetScalarType<T[P], AggregateHeroBanner[P]>
+  }
+
+
+
+
+  export type HeroBannerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HeroBannerWhereInput
+    orderBy?: HeroBannerOrderByWithAggregationInput | HeroBannerOrderByWithAggregationInput[]
+    by: HeroBannerScalarFieldEnum[] | HeroBannerScalarFieldEnum
+    having?: HeroBannerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: HeroBannerCountAggregateInputType | true
+    _avg?: HeroBannerAvgAggregateInputType
+    _sum?: HeroBannerSumAggregateInputType
+    _min?: HeroBannerMinAggregateInputType
+    _max?: HeroBannerMaxAggregateInputType
+  }
+
+  export type HeroBannerGroupByOutputType = {
+    id: number
+    imageUrl: string
+    sortOrder: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: HeroBannerCountAggregateOutputType | null
+    _avg: HeroBannerAvgAggregateOutputType | null
+    _sum: HeroBannerSumAggregateOutputType | null
+    _min: HeroBannerMinAggregateOutputType | null
+    _max: HeroBannerMaxAggregateOutputType | null
+  }
+
+  type GetHeroBannerGroupByPayload<T extends HeroBannerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<HeroBannerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof HeroBannerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], HeroBannerGroupByOutputType[P]>
+            : GetScalarType<T[P], HeroBannerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type HeroBannerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    imageUrl?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["heroBanner"]>
+
+  export type HeroBannerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    imageUrl?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["heroBanner"]>
+
+  export type HeroBannerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    imageUrl?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["heroBanner"]>
+
+  export type HeroBannerSelectScalar = {
+    id?: boolean
+    imageUrl?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type HeroBannerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "imageUrl" | "sortOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["heroBanner"]>
+
+  export type $HeroBannerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "HeroBanner"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      imageUrl: string
+      sortOrder: number
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["heroBanner"]>
+    composites: {}
+  }
+
+  type HeroBannerGetPayload<S extends boolean | null | undefined | HeroBannerDefaultArgs> = $Result.GetResult<Prisma.$HeroBannerPayload, S>
+
+  type HeroBannerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<HeroBannerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: HeroBannerCountAggregateInputType | true
+    }
+
+  export interface HeroBannerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['HeroBanner'], meta: { name: 'HeroBanner' } }
+    /**
+     * Find zero or one HeroBanner that matches the filter.
+     * @param {HeroBannerFindUniqueArgs} args - Arguments to find a HeroBanner
+     * @example
+     * // Get one HeroBanner
+     * const heroBanner = await prisma.heroBanner.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends HeroBannerFindUniqueArgs>(args: SelectSubset<T, HeroBannerFindUniqueArgs<ExtArgs>>): Prisma__HeroBannerClient<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one HeroBanner that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {HeroBannerFindUniqueOrThrowArgs} args - Arguments to find a HeroBanner
+     * @example
+     * // Get one HeroBanner
+     * const heroBanner = await prisma.heroBanner.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends HeroBannerFindUniqueOrThrowArgs>(args: SelectSubset<T, HeroBannerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__HeroBannerClient<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HeroBanner that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroBannerFindFirstArgs} args - Arguments to find a HeroBanner
+     * @example
+     * // Get one HeroBanner
+     * const heroBanner = await prisma.heroBanner.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends HeroBannerFindFirstArgs>(args?: SelectSubset<T, HeroBannerFindFirstArgs<ExtArgs>>): Prisma__HeroBannerClient<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HeroBanner that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroBannerFindFirstOrThrowArgs} args - Arguments to find a HeroBanner
+     * @example
+     * // Get one HeroBanner
+     * const heroBanner = await prisma.heroBanner.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends HeroBannerFindFirstOrThrowArgs>(args?: SelectSubset<T, HeroBannerFindFirstOrThrowArgs<ExtArgs>>): Prisma__HeroBannerClient<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more HeroBanners that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroBannerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all HeroBanners
+     * const heroBanners = await prisma.heroBanner.findMany()
+     * 
+     * // Get first 10 HeroBanners
+     * const heroBanners = await prisma.heroBanner.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const heroBannerWithIdOnly = await prisma.heroBanner.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends HeroBannerFindManyArgs>(args?: SelectSubset<T, HeroBannerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a HeroBanner.
+     * @param {HeroBannerCreateArgs} args - Arguments to create a HeroBanner.
+     * @example
+     * // Create one HeroBanner
+     * const HeroBanner = await prisma.heroBanner.create({
+     *   data: {
+     *     // ... data to create a HeroBanner
+     *   }
+     * })
+     * 
+     */
+    create<T extends HeroBannerCreateArgs>(args: SelectSubset<T, HeroBannerCreateArgs<ExtArgs>>): Prisma__HeroBannerClient<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many HeroBanners.
+     * @param {HeroBannerCreateManyArgs} args - Arguments to create many HeroBanners.
+     * @example
+     * // Create many HeroBanners
+     * const heroBanner = await prisma.heroBanner.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends HeroBannerCreateManyArgs>(args?: SelectSubset<T, HeroBannerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many HeroBanners and returns the data saved in the database.
+     * @param {HeroBannerCreateManyAndReturnArgs} args - Arguments to create many HeroBanners.
+     * @example
+     * // Create many HeroBanners
+     * const heroBanner = await prisma.heroBanner.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many HeroBanners and only return the `id`
+     * const heroBannerWithIdOnly = await prisma.heroBanner.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends HeroBannerCreateManyAndReturnArgs>(args?: SelectSubset<T, HeroBannerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a HeroBanner.
+     * @param {HeroBannerDeleteArgs} args - Arguments to delete one HeroBanner.
+     * @example
+     * // Delete one HeroBanner
+     * const HeroBanner = await prisma.heroBanner.delete({
+     *   where: {
+     *     // ... filter to delete one HeroBanner
+     *   }
+     * })
+     * 
+     */
+    delete<T extends HeroBannerDeleteArgs>(args: SelectSubset<T, HeroBannerDeleteArgs<ExtArgs>>): Prisma__HeroBannerClient<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one HeroBanner.
+     * @param {HeroBannerUpdateArgs} args - Arguments to update one HeroBanner.
+     * @example
+     * // Update one HeroBanner
+     * const heroBanner = await prisma.heroBanner.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends HeroBannerUpdateArgs>(args: SelectSubset<T, HeroBannerUpdateArgs<ExtArgs>>): Prisma__HeroBannerClient<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more HeroBanners.
+     * @param {HeroBannerDeleteManyArgs} args - Arguments to filter HeroBanners to delete.
+     * @example
+     * // Delete a few HeroBanners
+     * const { count } = await prisma.heroBanner.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends HeroBannerDeleteManyArgs>(args?: SelectSubset<T, HeroBannerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HeroBanners.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroBannerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many HeroBanners
+     * const heroBanner = await prisma.heroBanner.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends HeroBannerUpdateManyArgs>(args: SelectSubset<T, HeroBannerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HeroBanners and returns the data updated in the database.
+     * @param {HeroBannerUpdateManyAndReturnArgs} args - Arguments to update many HeroBanners.
+     * @example
+     * // Update many HeroBanners
+     * const heroBanner = await prisma.heroBanner.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more HeroBanners and only return the `id`
+     * const heroBannerWithIdOnly = await prisma.heroBanner.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends HeroBannerUpdateManyAndReturnArgs>(args: SelectSubset<T, HeroBannerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one HeroBanner.
+     * @param {HeroBannerUpsertArgs} args - Arguments to update or create a HeroBanner.
+     * @example
+     * // Update or create a HeroBanner
+     * const heroBanner = await prisma.heroBanner.upsert({
+     *   create: {
+     *     // ... data to create a HeroBanner
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the HeroBanner we want to update
+     *   }
+     * })
+     */
+    upsert<T extends HeroBannerUpsertArgs>(args: SelectSubset<T, HeroBannerUpsertArgs<ExtArgs>>): Prisma__HeroBannerClient<$Result.GetResult<Prisma.$HeroBannerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of HeroBanners.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroBannerCountArgs} args - Arguments to filter HeroBanners to count.
+     * @example
+     * // Count the number of HeroBanners
+     * const count = await prisma.heroBanner.count({
+     *   where: {
+     *     // ... the filter for the HeroBanners we want to count
+     *   }
+     * })
+    **/
+    count<T extends HeroBannerCountArgs>(
+      args?: Subset<T, HeroBannerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], HeroBannerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a HeroBanner.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroBannerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends HeroBannerAggregateArgs>(args: Subset<T, HeroBannerAggregateArgs>): Prisma.PrismaPromise<GetHeroBannerAggregateType<T>>
+
+    /**
+     * Group by HeroBanner.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HeroBannerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends HeroBannerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: HeroBannerGroupByArgs['orderBy'] }
+        : { orderBy?: HeroBannerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, HeroBannerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHeroBannerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the HeroBanner model
+   */
+  readonly fields: HeroBannerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for HeroBanner.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__HeroBannerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the HeroBanner model
+   */
+  interface HeroBannerFieldRefs {
+    readonly id: FieldRef<"HeroBanner", 'Int'>
+    readonly imageUrl: FieldRef<"HeroBanner", 'String'>
+    readonly sortOrder: FieldRef<"HeroBanner", 'Int'>
+    readonly isActive: FieldRef<"HeroBanner", 'Boolean'>
+    readonly createdAt: FieldRef<"HeroBanner", 'DateTime'>
+    readonly updatedAt: FieldRef<"HeroBanner", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * HeroBanner findUnique
+   */
+  export type HeroBannerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroBanner to fetch.
+     */
+    where: HeroBannerWhereUniqueInput
+  }
+
+  /**
+   * HeroBanner findUniqueOrThrow
+   */
+  export type HeroBannerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroBanner to fetch.
+     */
+    where: HeroBannerWhereUniqueInput
+  }
+
+  /**
+   * HeroBanner findFirst
+   */
+  export type HeroBannerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroBanner to fetch.
+     */
+    where?: HeroBannerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HeroBanners to fetch.
+     */
+    orderBy?: HeroBannerOrderByWithRelationInput | HeroBannerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HeroBanners.
+     */
+    cursor?: HeroBannerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HeroBanners from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HeroBanners.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HeroBanners.
+     */
+    distinct?: HeroBannerScalarFieldEnum | HeroBannerScalarFieldEnum[]
+  }
+
+  /**
+   * HeroBanner findFirstOrThrow
+   */
+  export type HeroBannerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroBanner to fetch.
+     */
+    where?: HeroBannerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HeroBanners to fetch.
+     */
+    orderBy?: HeroBannerOrderByWithRelationInput | HeroBannerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HeroBanners.
+     */
+    cursor?: HeroBannerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HeroBanners from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HeroBanners.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HeroBanners.
+     */
+    distinct?: HeroBannerScalarFieldEnum | HeroBannerScalarFieldEnum[]
+  }
+
+  /**
+   * HeroBanner findMany
+   */
+  export type HeroBannerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * Filter, which HeroBanners to fetch.
+     */
+    where?: HeroBannerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HeroBanners to fetch.
+     */
+    orderBy?: HeroBannerOrderByWithRelationInput | HeroBannerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing HeroBanners.
+     */
+    cursor?: HeroBannerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HeroBanners from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HeroBanners.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HeroBanners.
+     */
+    distinct?: HeroBannerScalarFieldEnum | HeroBannerScalarFieldEnum[]
+  }
+
+  /**
+   * HeroBanner create
+   */
+  export type HeroBannerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * The data needed to create a HeroBanner.
+     */
+    data: XOR<HeroBannerCreateInput, HeroBannerUncheckedCreateInput>
+  }
+
+  /**
+   * HeroBanner createMany
+   */
+  export type HeroBannerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many HeroBanners.
+     */
+    data: HeroBannerCreateManyInput | HeroBannerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HeroBanner createManyAndReturn
+   */
+  export type HeroBannerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * The data used to create many HeroBanners.
+     */
+    data: HeroBannerCreateManyInput | HeroBannerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HeroBanner update
+   */
+  export type HeroBannerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * The data needed to update a HeroBanner.
+     */
+    data: XOR<HeroBannerUpdateInput, HeroBannerUncheckedUpdateInput>
+    /**
+     * Choose, which HeroBanner to update.
+     */
+    where: HeroBannerWhereUniqueInput
+  }
+
+  /**
+   * HeroBanner updateMany
+   */
+  export type HeroBannerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update HeroBanners.
+     */
+    data: XOR<HeroBannerUpdateManyMutationInput, HeroBannerUncheckedUpdateManyInput>
+    /**
+     * Filter which HeroBanners to update
+     */
+    where?: HeroBannerWhereInput
+    /**
+     * Limit how many HeroBanners to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * HeroBanner updateManyAndReturn
+   */
+  export type HeroBannerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * The data used to update HeroBanners.
+     */
+    data: XOR<HeroBannerUpdateManyMutationInput, HeroBannerUncheckedUpdateManyInput>
+    /**
+     * Filter which HeroBanners to update
+     */
+    where?: HeroBannerWhereInput
+    /**
+     * Limit how many HeroBanners to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * HeroBanner upsert
+   */
+  export type HeroBannerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * The filter to search for the HeroBanner to update in case it exists.
+     */
+    where: HeroBannerWhereUniqueInput
+    /**
+     * In case the HeroBanner found by the `where` argument doesn't exist, create a new HeroBanner with this data.
+     */
+    create: XOR<HeroBannerCreateInput, HeroBannerUncheckedCreateInput>
+    /**
+     * In case the HeroBanner was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<HeroBannerUpdateInput, HeroBannerUncheckedUpdateInput>
+  }
+
+  /**
+   * HeroBanner delete
+   */
+  export type HeroBannerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
+    /**
+     * Filter which HeroBanner to delete.
+     */
+    where: HeroBannerWhereUniqueInput
+  }
+
+  /**
+   * HeroBanner deleteMany
+   */
+  export type HeroBannerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HeroBanners to delete
+     */
+    where?: HeroBannerWhereInput
+    /**
+     * Limit how many HeroBanners to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * HeroBanner without action
+   */
+  export type HeroBannerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HeroBanner
+     */
+    select?: HeroBannerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HeroBanner
+     */
+    omit?: HeroBannerOmit<ExtArgs> | null
   }
 
 
@@ -46154,6 +47483,7 @@ export namespace Prisma {
     origin: 'origin',
     packQuantity: 'packQuantity',
     cartonQuantity: 'cartonQuantity',
+    unit: 'unit',
     isOriginal: 'isOriginal',
     mainImage: 'mainImage',
     description: 'description',
@@ -46304,13 +47634,19 @@ export namespace Prisma {
 
   export const SiteSettingScalarFieldEnum: {
     id: 'id',
-    phone: 'phone',
-    secondaryPhone: 'secondaryPhone',
+    retailPhone1: 'retailPhone1',
+    retailPhone2: 'retailPhone2',
+    wholesalePhone1: 'wholesalePhone1',
+    wholesalePhone2: 'wholesalePhone2',
+    wholesalePhone3: 'wholesalePhone3',
+    wholesalePhone4: 'wholesalePhone4',
     email: 'email',
     address: 'address',
     workingHours: 'workingHours',
     headerPromo1: 'headerPromo1',
     headerPromo2: 'headerPromo2',
+    headerPromo1Icon: 'headerPromo1Icon',
+    headerPromo2Icon: 'headerPromo2Icon',
     aboutText: 'aboutText',
     footerTrust1Icon: 'footerTrust1Icon',
     footerTrust1Title: 'footerTrust1Title',
@@ -46324,6 +47660,12 @@ export namespace Prisma {
     footerTrust4Icon: 'footerTrust4Icon',
     footerTrust4Title: 'footerTrust4Title',
     footerTrust4Desc: 'footerTrust4Desc',
+    heroTitle: 'heroTitle',
+    heroDescription: 'heroDescription',
+    heroButton1Text: 'heroButton1Text',
+    heroButton1Href: 'heroButton1Href',
+    heroButton2Text: 'heroButton2Text',
+    heroButton2Href: 'heroButton2Href',
     updatedAt: 'updatedAt'
   };
 
@@ -46353,6 +47695,18 @@ export namespace Prisma {
   };
 
   export type SocialLinkScalarFieldEnum = (typeof SocialLinkScalarFieldEnum)[keyof typeof SocialLinkScalarFieldEnum]
+
+
+  export const HeroBannerScalarFieldEnum: {
+    id: 'id',
+    imageUrl: 'imageUrl',
+    sortOrder: 'sortOrder',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type HeroBannerScalarFieldEnum = (typeof HeroBannerScalarFieldEnum)[keyof typeof HeroBannerScalarFieldEnum]
 
 
   export const SmsCampaignScalarFieldEnum: {
@@ -47701,6 +49055,7 @@ export namespace Prisma {
     origin?: StringNullableFilter<"Product"> | string | null
     packQuantity?: IntFilter<"Product"> | number
     cartonQuantity?: IntFilter<"Product"> | number
+    unit?: StringFilter<"Product"> | string
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
@@ -47744,6 +49099,7 @@ export namespace Prisma {
     origin?: SortOrderInput | SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
@@ -47790,6 +49146,7 @@ export namespace Prisma {
     origin?: StringNullableFilter<"Product"> | string | null
     packQuantity?: IntFilter<"Product"> | number
     cartonQuantity?: IntFilter<"Product"> | number
+    unit?: StringFilter<"Product"> | string
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
@@ -47833,6 +49190,7 @@ export namespace Prisma {
     origin?: SortOrderInput | SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
@@ -47875,6 +49233,7 @@ export namespace Prisma {
     origin?: StringNullableWithAggregatesFilter<"Product"> | string | null
     packQuantity?: IntWithAggregatesFilter<"Product"> | number
     cartonQuantity?: IntWithAggregatesFilter<"Product"> | number
+    unit?: StringWithAggregatesFilter<"Product"> | string
     isOriginal?: BoolWithAggregatesFilter<"Product"> | boolean
     mainImage?: StringNullableWithAggregatesFilter<"Product"> | string | null
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -48586,13 +49945,19 @@ export namespace Prisma {
     OR?: SiteSettingWhereInput[]
     NOT?: SiteSettingWhereInput | SiteSettingWhereInput[]
     id?: IntFilter<"SiteSetting"> | number
-    phone?: StringNullableFilter<"SiteSetting"> | string | null
-    secondaryPhone?: StringNullableFilter<"SiteSetting"> | string | null
+    retailPhone1?: StringNullableFilter<"SiteSetting"> | string | null
+    retailPhone2?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone1?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone2?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone3?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone4?: StringNullableFilter<"SiteSetting"> | string | null
     email?: StringNullableFilter<"SiteSetting"> | string | null
     address?: StringNullableFilter<"SiteSetting"> | string | null
     workingHours?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo1Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo2Icon?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust1Icon?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust1Title?: StringNullableFilter<"SiteSetting"> | string | null
@@ -48606,18 +49971,30 @@ export namespace Prisma {
     footerTrust4Icon?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust4Title?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust4Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    heroTitle?: StringNullableFilter<"SiteSetting"> | string | null
+    heroDescription?: StringNullableFilter<"SiteSetting"> | string | null
+    heroButton1Text?: StringNullableFilter<"SiteSetting"> | string | null
+    heroButton1Href?: StringNullableFilter<"SiteSetting"> | string | null
+    heroButton2Text?: StringNullableFilter<"SiteSetting"> | string | null
+    heroButton2Href?: StringNullableFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }
 
   export type SiteSettingOrderByWithRelationInput = {
     id?: SortOrder
-    phone?: SortOrderInput | SortOrder
-    secondaryPhone?: SortOrderInput | SortOrder
+    retailPhone1?: SortOrderInput | SortOrder
+    retailPhone2?: SortOrderInput | SortOrder
+    wholesalePhone1?: SortOrderInput | SortOrder
+    wholesalePhone2?: SortOrderInput | SortOrder
+    wholesalePhone3?: SortOrderInput | SortOrder
+    wholesalePhone4?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     workingHours?: SortOrderInput | SortOrder
     headerPromo1?: SortOrderInput | SortOrder
     headerPromo2?: SortOrderInput | SortOrder
+    headerPromo1Icon?: SortOrderInput | SortOrder
+    headerPromo2Icon?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
     footerTrust1Icon?: SortOrderInput | SortOrder
     footerTrust1Title?: SortOrderInput | SortOrder
@@ -48631,6 +50008,12 @@ export namespace Prisma {
     footerTrust4Icon?: SortOrderInput | SortOrder
     footerTrust4Title?: SortOrderInput | SortOrder
     footerTrust4Desc?: SortOrderInput | SortOrder
+    heroTitle?: SortOrderInput | SortOrder
+    heroDescription?: SortOrderInput | SortOrder
+    heroButton1Text?: SortOrderInput | SortOrder
+    heroButton1Href?: SortOrderInput | SortOrder
+    heroButton2Text?: SortOrderInput | SortOrder
+    heroButton2Href?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
   }
 
@@ -48639,13 +50022,19 @@ export namespace Prisma {
     AND?: SiteSettingWhereInput | SiteSettingWhereInput[]
     OR?: SiteSettingWhereInput[]
     NOT?: SiteSettingWhereInput | SiteSettingWhereInput[]
-    phone?: StringNullableFilter<"SiteSetting"> | string | null
-    secondaryPhone?: StringNullableFilter<"SiteSetting"> | string | null
+    retailPhone1?: StringNullableFilter<"SiteSetting"> | string | null
+    retailPhone2?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone1?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone2?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone3?: StringNullableFilter<"SiteSetting"> | string | null
+    wholesalePhone4?: StringNullableFilter<"SiteSetting"> | string | null
     email?: StringNullableFilter<"SiteSetting"> | string | null
     address?: StringNullableFilter<"SiteSetting"> | string | null
     workingHours?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo1?: StringNullableFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo1Icon?: StringNullableFilter<"SiteSetting"> | string | null
+    headerPromo2Icon?: StringNullableFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust1Icon?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust1Title?: StringNullableFilter<"SiteSetting"> | string | null
@@ -48659,18 +50048,30 @@ export namespace Prisma {
     footerTrust4Icon?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust4Title?: StringNullableFilter<"SiteSetting"> | string | null
     footerTrust4Desc?: StringNullableFilter<"SiteSetting"> | string | null
+    heroTitle?: StringNullableFilter<"SiteSetting"> | string | null
+    heroDescription?: StringNullableFilter<"SiteSetting"> | string | null
+    heroButton1Text?: StringNullableFilter<"SiteSetting"> | string | null
+    heroButton1Href?: StringNullableFilter<"SiteSetting"> | string | null
+    heroButton2Text?: StringNullableFilter<"SiteSetting"> | string | null
+    heroButton2Href?: StringNullableFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }, "id">
 
   export type SiteSettingOrderByWithAggregationInput = {
     id?: SortOrder
-    phone?: SortOrderInput | SortOrder
-    secondaryPhone?: SortOrderInput | SortOrder
+    retailPhone1?: SortOrderInput | SortOrder
+    retailPhone2?: SortOrderInput | SortOrder
+    wholesalePhone1?: SortOrderInput | SortOrder
+    wholesalePhone2?: SortOrderInput | SortOrder
+    wholesalePhone3?: SortOrderInput | SortOrder
+    wholesalePhone4?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     workingHours?: SortOrderInput | SortOrder
     headerPromo1?: SortOrderInput | SortOrder
     headerPromo2?: SortOrderInput | SortOrder
+    headerPromo1Icon?: SortOrderInput | SortOrder
+    headerPromo2Icon?: SortOrderInput | SortOrder
     aboutText?: SortOrderInput | SortOrder
     footerTrust1Icon?: SortOrderInput | SortOrder
     footerTrust1Title?: SortOrderInput | SortOrder
@@ -48684,6 +50085,12 @@ export namespace Prisma {
     footerTrust4Icon?: SortOrderInput | SortOrder
     footerTrust4Title?: SortOrderInput | SortOrder
     footerTrust4Desc?: SortOrderInput | SortOrder
+    heroTitle?: SortOrderInput | SortOrder
+    heroDescription?: SortOrderInput | SortOrder
+    heroButton1Text?: SortOrderInput | SortOrder
+    heroButton1Href?: SortOrderInput | SortOrder
+    heroButton2Text?: SortOrderInput | SortOrder
+    heroButton2Href?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: SiteSettingCountOrderByAggregateInput
     _avg?: SiteSettingAvgOrderByAggregateInput
@@ -48697,13 +50104,19 @@ export namespace Prisma {
     OR?: SiteSettingScalarWhereWithAggregatesInput[]
     NOT?: SiteSettingScalarWhereWithAggregatesInput | SiteSettingScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"SiteSetting"> | number
-    phone?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
-    secondaryPhone?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    retailPhone1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    retailPhone2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    wholesalePhone1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    wholesalePhone2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    wholesalePhone3?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    wholesalePhone4?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     email?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     address?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     workingHours?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     headerPromo1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     headerPromo2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    headerPromo1Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    headerPromo2Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     aboutText?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     footerTrust1Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     footerTrust1Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
@@ -48717,6 +50130,12 @@ export namespace Prisma {
     footerTrust4Icon?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     footerTrust4Title?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     footerTrust4Desc?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    heroTitle?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    heroDescription?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    heroButton1Text?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    heroButton1Href?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    heroButton2Text?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    heroButton2Href?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSetting"> | Date | string
   }
 
@@ -48841,6 +50260,65 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"SocialLink"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"SocialLink"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"SocialLink"> | Date | string
+  }
+
+  export type HeroBannerWhereInput = {
+    AND?: HeroBannerWhereInput | HeroBannerWhereInput[]
+    OR?: HeroBannerWhereInput[]
+    NOT?: HeroBannerWhereInput | HeroBannerWhereInput[]
+    id?: IntFilter<"HeroBanner"> | number
+    imageUrl?: StringFilter<"HeroBanner"> | string
+    sortOrder?: IntFilter<"HeroBanner"> | number
+    isActive?: BoolFilter<"HeroBanner"> | boolean
+    createdAt?: DateTimeFilter<"HeroBanner"> | Date | string
+    updatedAt?: DateTimeFilter<"HeroBanner"> | Date | string
+  }
+
+  export type HeroBannerOrderByWithRelationInput = {
+    id?: SortOrder
+    imageUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HeroBannerWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: HeroBannerWhereInput | HeroBannerWhereInput[]
+    OR?: HeroBannerWhereInput[]
+    NOT?: HeroBannerWhereInput | HeroBannerWhereInput[]
+    imageUrl?: StringFilter<"HeroBanner"> | string
+    sortOrder?: IntFilter<"HeroBanner"> | number
+    isActive?: BoolFilter<"HeroBanner"> | boolean
+    createdAt?: DateTimeFilter<"HeroBanner"> | Date | string
+    updatedAt?: DateTimeFilter<"HeroBanner"> | Date | string
+  }, "id">
+
+  export type HeroBannerOrderByWithAggregationInput = {
+    id?: SortOrder
+    imageUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: HeroBannerCountOrderByAggregateInput
+    _avg?: HeroBannerAvgOrderByAggregateInput
+    _max?: HeroBannerMaxOrderByAggregateInput
+    _min?: HeroBannerMinOrderByAggregateInput
+    _sum?: HeroBannerSumOrderByAggregateInput
+  }
+
+  export type HeroBannerScalarWhereWithAggregatesInput = {
+    AND?: HeroBannerScalarWhereWithAggregatesInput | HeroBannerScalarWhereWithAggregatesInput[]
+    OR?: HeroBannerScalarWhereWithAggregatesInput[]
+    NOT?: HeroBannerScalarWhereWithAggregatesInput | HeroBannerScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"HeroBanner"> | number
+    imageUrl?: StringWithAggregatesFilter<"HeroBanner"> | string
+    sortOrder?: IntWithAggregatesFilter<"HeroBanner"> | number
+    isActive?: BoolWithAggregatesFilter<"HeroBanner"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"HeroBanner"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"HeroBanner"> | Date | string
   }
 
   export type SmsCampaignWhereInput = {
@@ -50652,6 +52130,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -50695,6 +52174,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -50734,6 +52214,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50777,6 +52258,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50818,6 +52300,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -50850,6 +52333,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50884,6 +52368,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51599,13 +53084,19 @@ export namespace Prisma {
 
   export type SiteSettingCreateInput = {
     id?: number
-    phone?: string | null
-    secondaryPhone?: string | null
+    retailPhone1?: string | null
+    retailPhone2?: string | null
+    wholesalePhone1?: string | null
+    wholesalePhone2?: string | null
+    wholesalePhone3?: string | null
+    wholesalePhone4?: string | null
     email?: string | null
     address?: string | null
     workingHours?: string | null
     headerPromo1?: string | null
     headerPromo2?: string | null
+    headerPromo1Icon?: string | null
+    headerPromo2Icon?: string | null
     aboutText?: string | null
     footerTrust1Icon?: string | null
     footerTrust1Title?: string | null
@@ -51619,18 +53110,30 @@ export namespace Prisma {
     footerTrust4Icon?: string | null
     footerTrust4Title?: string | null
     footerTrust4Desc?: string | null
+    heroTitle?: string | null
+    heroDescription?: string | null
+    heroButton1Text?: string | null
+    heroButton1Href?: string | null
+    heroButton2Text?: string | null
+    heroButton2Href?: string | null
     updatedAt?: Date | string
   }
 
   export type SiteSettingUncheckedCreateInput = {
     id?: number
-    phone?: string | null
-    secondaryPhone?: string | null
+    retailPhone1?: string | null
+    retailPhone2?: string | null
+    wholesalePhone1?: string | null
+    wholesalePhone2?: string | null
+    wholesalePhone3?: string | null
+    wholesalePhone4?: string | null
     email?: string | null
     address?: string | null
     workingHours?: string | null
     headerPromo1?: string | null
     headerPromo2?: string | null
+    headerPromo1Icon?: string | null
+    headerPromo2Icon?: string | null
     aboutText?: string | null
     footerTrust1Icon?: string | null
     footerTrust1Title?: string | null
@@ -51644,18 +53147,30 @@ export namespace Prisma {
     footerTrust4Icon?: string | null
     footerTrust4Title?: string | null
     footerTrust4Desc?: string | null
+    heroTitle?: string | null
+    heroDescription?: string | null
+    heroButton1Text?: string | null
+    heroButton1Href?: string | null
+    heroButton2Text?: string | null
+    heroButton2Href?: string | null
     updatedAt?: Date | string
   }
 
   export type SiteSettingUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone3?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone4?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2Icon?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51669,18 +53184,30 @@ export namespace Prisma {
     footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton1Text?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton1Href?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton2Text?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton2Href?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SiteSettingUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone3?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone4?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2Icon?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51694,18 +53221,30 @@ export namespace Prisma {
     footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton1Text?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton1Href?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton2Text?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton2Href?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SiteSettingCreateManyInput = {
     id?: number
-    phone?: string | null
-    secondaryPhone?: string | null
+    retailPhone1?: string | null
+    retailPhone2?: string | null
+    wholesalePhone1?: string | null
+    wholesalePhone2?: string | null
+    wholesalePhone3?: string | null
+    wholesalePhone4?: string | null
     email?: string | null
     address?: string | null
     workingHours?: string | null
     headerPromo1?: string | null
     headerPromo2?: string | null
+    headerPromo1Icon?: string | null
+    headerPromo2Icon?: string | null
     aboutText?: string | null
     footerTrust1Icon?: string | null
     footerTrust1Title?: string | null
@@ -51719,18 +53258,30 @@ export namespace Prisma {
     footerTrust4Icon?: string | null
     footerTrust4Title?: string | null
     footerTrust4Desc?: string | null
+    heroTitle?: string | null
+    heroDescription?: string | null
+    heroButton1Text?: string | null
+    heroButton1Href?: string | null
+    heroButton2Text?: string | null
+    heroButton2Href?: string | null
     updatedAt?: Date | string
   }
 
   export type SiteSettingUpdateManyMutationInput = {
     id?: IntFieldUpdateOperationsInput | number
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone3?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone4?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2Icon?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51744,18 +53295,30 @@ export namespace Prisma {
     footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton1Text?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton1Href?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton2Text?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton2Href?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SiteSettingUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    secondaryPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone2?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone3?: NullableStringFieldUpdateOperationsInput | string | null
+    wholesalePhone4?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     workingHours?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo1?: NullableStringFieldUpdateOperationsInput | string | null
     headerPromo2?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo1Icon?: NullableStringFieldUpdateOperationsInput | string | null
+    headerPromo2Icon?: NullableStringFieldUpdateOperationsInput | string | null
     aboutText?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust1Title?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51769,6 +53332,12 @@ export namespace Prisma {
     footerTrust4Icon?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust4Title?: NullableStringFieldUpdateOperationsInput | string | null
     footerTrust4Desc?: NullableStringFieldUpdateOperationsInput | string | null
+    heroTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    heroDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton1Text?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton1Href?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton2Text?: NullableStringFieldUpdateOperationsInput | string | null
+    heroButton2Href?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -51896,6 +53465,66 @@ export namespace Prisma {
     label?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
     icon?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HeroBannerCreateInput = {
+    imageUrl: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HeroBannerUncheckedCreateInput = {
+    id?: number
+    imageUrl: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HeroBannerUpdateInput = {
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HeroBannerUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HeroBannerCreateManyInput = {
+    id?: number
+    imageUrl: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HeroBannerUpdateManyMutationInput = {
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HeroBannerUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    imageUrl?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53845,6 +55474,7 @@ export namespace Prisma {
     origin?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
@@ -53897,6 +55527,7 @@ export namespace Prisma {
     origin?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
@@ -53931,6 +55562,7 @@ export namespace Prisma {
     origin?: SortOrder
     packQuantity?: SortOrder
     cartonQuantity?: SortOrder
+    unit?: SortOrder
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
@@ -54427,13 +56059,19 @@ export namespace Prisma {
 
   export type SiteSettingCountOrderByAggregateInput = {
     id?: SortOrder
-    phone?: SortOrder
-    secondaryPhone?: SortOrder
+    retailPhone1?: SortOrder
+    retailPhone2?: SortOrder
+    wholesalePhone1?: SortOrder
+    wholesalePhone2?: SortOrder
+    wholesalePhone3?: SortOrder
+    wholesalePhone4?: SortOrder
     email?: SortOrder
     address?: SortOrder
     workingHours?: SortOrder
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
+    headerPromo1Icon?: SortOrder
+    headerPromo2Icon?: SortOrder
     aboutText?: SortOrder
     footerTrust1Icon?: SortOrder
     footerTrust1Title?: SortOrder
@@ -54447,6 +56085,12 @@ export namespace Prisma {
     footerTrust4Icon?: SortOrder
     footerTrust4Title?: SortOrder
     footerTrust4Desc?: SortOrder
+    heroTitle?: SortOrder
+    heroDescription?: SortOrder
+    heroButton1Text?: SortOrder
+    heroButton1Href?: SortOrder
+    heroButton2Text?: SortOrder
+    heroButton2Href?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -54456,13 +56100,19 @@ export namespace Prisma {
 
   export type SiteSettingMaxOrderByAggregateInput = {
     id?: SortOrder
-    phone?: SortOrder
-    secondaryPhone?: SortOrder
+    retailPhone1?: SortOrder
+    retailPhone2?: SortOrder
+    wholesalePhone1?: SortOrder
+    wholesalePhone2?: SortOrder
+    wholesalePhone3?: SortOrder
+    wholesalePhone4?: SortOrder
     email?: SortOrder
     address?: SortOrder
     workingHours?: SortOrder
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
+    headerPromo1Icon?: SortOrder
+    headerPromo2Icon?: SortOrder
     aboutText?: SortOrder
     footerTrust1Icon?: SortOrder
     footerTrust1Title?: SortOrder
@@ -54476,18 +56126,30 @@ export namespace Prisma {
     footerTrust4Icon?: SortOrder
     footerTrust4Title?: SortOrder
     footerTrust4Desc?: SortOrder
+    heroTitle?: SortOrder
+    heroDescription?: SortOrder
+    heroButton1Text?: SortOrder
+    heroButton1Href?: SortOrder
+    heroButton2Text?: SortOrder
+    heroButton2Href?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SiteSettingMinOrderByAggregateInput = {
     id?: SortOrder
-    phone?: SortOrder
-    secondaryPhone?: SortOrder
+    retailPhone1?: SortOrder
+    retailPhone2?: SortOrder
+    wholesalePhone1?: SortOrder
+    wholesalePhone2?: SortOrder
+    wholesalePhone3?: SortOrder
+    wholesalePhone4?: SortOrder
     email?: SortOrder
     address?: SortOrder
     workingHours?: SortOrder
     headerPromo1?: SortOrder
     headerPromo2?: SortOrder
+    headerPromo1Icon?: SortOrder
+    headerPromo2Icon?: SortOrder
     aboutText?: SortOrder
     footerTrust1Icon?: SortOrder
     footerTrust1Title?: SortOrder
@@ -54501,6 +56163,12 @@ export namespace Prisma {
     footerTrust4Icon?: SortOrder
     footerTrust4Title?: SortOrder
     footerTrust4Desc?: SortOrder
+    heroTitle?: SortOrder
+    heroDescription?: SortOrder
+    heroButton1Text?: SortOrder
+    heroButton1Href?: SortOrder
+    heroButton2Text?: SortOrder
+    heroButton2Href?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -54579,6 +56247,43 @@ export namespace Prisma {
   }
 
   export type SocialLinkSumOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type HeroBannerCountOrderByAggregateInput = {
+    id?: SortOrder
+    imageUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HeroBannerAvgOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type HeroBannerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    imageUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HeroBannerMinOrderByAggregateInput = {
+    id?: SortOrder
+    imageUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HeroBannerSumOrderByAggregateInput = {
     id?: SortOrder
     sortOrder?: SortOrder
   }
@@ -59256,6 +60961,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -59297,6 +61003,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -59367,6 +61074,7 @@ export namespace Prisma {
     origin?: StringNullableFilter<"Product"> | string | null
     packQuantity?: IntFilter<"Product"> | number
     cartonQuantity?: IntFilter<"Product"> | number
+    unit?: StringFilter<"Product"> | string
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
@@ -59399,6 +61107,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -59440,6 +61149,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -59952,6 +61662,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -59994,6 +61705,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60048,6 +61760,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60090,6 +61803,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60128,6 +61842,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60170,6 +61885,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60248,6 +61964,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60290,6 +62007,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60358,6 +62076,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60400,6 +62119,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60529,6 +62249,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60571,6 +62292,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60905,6 +62627,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -60947,6 +62670,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61026,6 +62750,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61068,6 +62793,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61181,6 +62907,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61223,6 +62950,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61358,6 +63086,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61400,6 +63129,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61513,6 +63243,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61555,6 +63286,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -61690,6 +63422,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61732,6 +63465,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62746,6 +64480,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -62788,6 +64523,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -62924,6 +64660,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62966,6 +64703,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64658,6 +66396,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -64690,6 +66429,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64731,6 +66471,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64771,6 +66512,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64804,6 +66546,7 @@ export namespace Prisma {
     origin?: string | null
     packQuantity?: number
     cartonQuantity?: number
+    unit?: string
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
@@ -64836,6 +66579,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64877,6 +66621,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64917,6 +66662,7 @@ export namespace Prisma {
     origin?: NullableStringFieldUpdateOperationsInput | string | null
     packQuantity?: IntFieldUpdateOperationsInput | number
     cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null

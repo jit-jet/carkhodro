@@ -4,7 +4,8 @@ import type {
   PublicSiteSettingsVM,
   SocialLinkVM,
 } from "@/src/lib/serializers";
-import { settingLines } from "@/src/lib/site-settings-display";
+import { contactPhonesForRole, settingLines } from "@/src/lib/site-settings-display";
+import { isWholesaleUser, type PricingRole } from "@/src/lib/user-role";
 import { SocialLinksRow } from "@/src/components/layout/SocialLinksRow";
 
 const infoLinks = [
@@ -55,13 +56,15 @@ export default function Footer({
   socialLinks,
   quickLinks,
   categoryLinks,
+  viewerRole = null,
 }: {
   settings: PublicSiteSettingsVM;
   socialLinks: SocialLinkVM[];
   quickLinks: FooterLinkVM[];
   categoryLinks: FooterLinkVM[];
+  viewerRole?: PricingRole;
 }) {
-  const phoneLines = [settings.phone, settings.secondaryPhone].filter(Boolean);
+  const phoneLines = contactPhonesForRole(settings, viewerRole);
   const addressLines = settingLines(settings.address);
   const workingHourLines = settingLines(settings.workingHours);
 
@@ -93,7 +96,7 @@ export default function Footer({
             <p className="text-sm text-gray-400 leading-7 mb-4">
               {settings.aboutText || "اطلاعات فروشگاه از پنل مدیریت قابل ویرایش است."}
             </p>
-            <SocialLinksRow links={socialLinks} />
+            {isWholesaleUser(viewerRole) && <SocialLinksRow links={socialLinks} />}
           </div>
 
           {/* Quick links */}

@@ -8,10 +8,20 @@ import { useEffect, useState } from 'react';
 import { CALL_FOR_PRICE_LABEL } from '@/src/lib/call-for-price';
 import { getShopContactPhone } from '@/actions/shop-phone';
 
+/** In-flight dedupe for sibling cards on the same page (role-aware server action). */
 let phonePromise: Promise<string> | null = null;
 
 function loadPhone(): Promise<string> {
-  if (!phonePromise) phonePromise = getShopContactPhone();
+  if (!phonePromise) {
+    const request = getShopContactPhone();
+    phonePromise = request;
+    // Allow a fresh fetch after login/logout remounts (module cache otherwise sticks).
+    void request.finally(() => {
+      setTimeout(() => {
+        if (phonePromise === request) phonePromise = null;
+      }, 30_000);
+    });
+  }
   return phonePromise;
 }
 

@@ -14,7 +14,7 @@ import { updateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
-import { saveFile } from '@/src/lib/storage';
+import { deleteFile, saveFile } from '@/src/lib/storage';
 import {
   buildAdminProductWhere,
   type AdminProductWhereFilters,
@@ -34,8 +34,11 @@ export interface ProductInput {
   name: string;
   partsBrandId: number;
   categoryId: number;
-  /** Compatible car model (“مدل خودرو”). Null clears compatibility. */
-  carModelId?: number | null;
+  /**
+   * Compatible car models (“مدل خودرو”). Empty / omitted-on-create clears
+   * compatibility; on update, `undefined` leaves existing rows unchanged.
+   */
+  carModelIds?: number[];
   wholesalePrice: number;
   /** Optional buy/cost price in Toman (Hesabfa BuyPrice). */
   buyPrice?: number | null;
@@ -48,6 +51,8 @@ export interface ProductInput {
   isActive?: boolean;
   stock?: number;
   origin?: string | null;
+  /** Storefront unit label (e.g. عدد). Defaults to «عدد». */
+  unit?: string;
   mainImage?: string | null;
   /** Gallery image URLs (including main). Order is preserved as sortOrder. */
   images?: string[];
@@ -73,15 +78,35 @@ async function syncProductImages(productId: string, images: string[] | undefined
   });
 }
 
-async function syncProductVehicleType(productId: string, carModelId: number | null | undefined) {
-  if (carModelId === undefined) return;
+async function syncProductCompatibilities(
+  productId: string,
+  carModelIds: number[] | undefined,
+) {
+  if (carModelIds === undefined) return;
+
+  const uniqueIds = [...new Set(carModelIds.filter((id) => Number.isFinite(id) && id > 0))];
   await prisma.productCompatibility.deleteMany({ where: { productId } });
-  if (carModelId === null) return;
-  const carModel = await prisma.carModel.findUnique({ where: { id: carModelId } });
-  if (!carModel) return;
-  await prisma.productCompatibility.create({
-    data: { productId, carModelId },
+  if (uniqueIds.length === 0) return;
+
+  const existing = await prisma.carModel.findMany({
+    where: { id: { in: uniqueIds } },
+    select: { id: true },
   });
+  if (existing.length === 0) return;
+
+  await prisma.productCompatibility.createMany({
+    data: existing.map((m) => ({ productId, carModelId: m.id })),
+    skipDuplicates: true,
+  });
+}
+
+async function assertCarModelsExist(carModelIds: number[] | undefined): Promise<string | null> {
+  if (carModelIds === undefined) return null;
+  const uniqueIds = [...new Set(carModelIds.filter((id) => Number.isFinite(id) && id > 0))];
+  if (uniqueIds.length === 0) return null;
+  const count = await prisma.carModel.count({ where: { id: { in: uniqueIds } } });
+  if (count !== uniqueIds.length) return 'یکی از مدل‌های خودرو انتخاب‌شده معتبر نیست.';
+  return null;
 }
 
 export async function createProduct(
@@ -96,10 +121,8 @@ export async function createProduct(
         'Saving product to Hesabfa failed. Please try again. Hesabfa is not configured.',
       );
     }
-    if (input.carModelId != null) {
-      const carModel = await prisma.carModel.findUnique({ where: { id: input.carModelId } });
-      if (!carModel) return fail('مدل خودرو انتخاب‌شده معتبر نیست.');
-    }
+    const carModelError = await assertCarModelsExist(input.carModelIds);
+    if (carModelError) return fail(carModelError);
 
     const category = await prisma.category.findUnique({
       where: { id: input.categoryId },
@@ -154,6 +177,7 @@ export async function createProduct(
         callForPriceWholesale: input.callForPriceWholesale ?? false,
         stock: input.stock ?? 0,
         origin: input.origin ?? null,
+        unit: input.unit?.trim() || 'عدد',
         mainImage: input.mainImage ?? null,
         description: input.description ?? null,
         hesabfaCode: code,
@@ -163,7 +187,7 @@ export async function createProduct(
       select: { id: true },
     });
     await syncProductImages(created.id, input.images);
-    await syncProductVehicleType(created.id, input.carModelId ?? null);
+    await syncProductCompatibilities(created.id, input.carModelIds ?? []);
     updateTag(tags.products);
     return ok(created);
   });
@@ -179,10 +203,8 @@ export async function updateProduct(
         'Saving product to Hesabfa failed. Please try again. Hesabfa is not configured.',
       );
     }
-    if (input.carModelId != null) {
-      const carModel = await prisma.carModel.findUnique({ where: { id: input.carModelId } });
-      if (!carModel) return fail('مدل خودرو انتخاب‌شده معتبر نیست.');
-    }
+    const carModelError = await assertCarModelsExist(input.carModelIds);
+    if (carModelError) return fail(carModelError);
 
     const existing = await prisma.product.findUnique({
       where: { id },
@@ -273,13 +295,14 @@ export async function updateProduct(
         isActive,
         ...(input.stock !== undefined ? { stock: input.stock } : {}),
         ...(input.origin !== undefined ? { origin: input.origin } : {}),
+        ...(input.unit !== undefined ? { unit: input.unit.trim() || 'عدد' } : {}),
         ...(input.mainImage !== undefined ? { mainImage: input.mainImage } : {}),
         description,
       },
       select: { id: true },
     });
     await syncProductImages(id, input.images);
-    await syncProductVehicleType(id, input.carModelId);
+    await syncProductCompatibilities(id, input.carModelIds);
     updateTag(tags.products);
     updateTag(tags.product(id));
     return ok(updated);
@@ -293,6 +316,52 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
     updateTag(tags.products);
     updateTag(tags.product(id));
     runHesabfaBackground('pushProduct:delete', () => pushProductToHesabfa(id));
+    return ok(undefined);
+  });
+}
+
+/**
+ * Permanently remove a product and its gallery files from disk.
+ * Blocked when the product appears on any order (FK / history).
+ */
+export async function permanentlyDeleteProduct(id: string): Promise<ActionResult> {
+  return runMutation('permanentlyDeleteProduct', async () => {
+    const product = await prisma.product.findUnique({
+      where: { id },
+      include: {
+        images: { select: { url: true } },
+        _count: { select: { orderItems: true } },
+      },
+    });
+    if (!product) return fail('محصول یافت نشد.');
+    if (product._count.orderItems > 0) {
+      return fail(
+        'این محصول در سفارش‌ها ثبت شده و قابل حذف دائمی نیست. می‌توانید آن را غیرفعال کنید.',
+      );
+    }
+
+    const imageUrls = [
+      ...(product.mainImage ? [product.mainImage] : []),
+      ...product.images.map((img) => img.url),
+    ];
+    const uniqueUrls = [...new Set(imageUrls.filter(Boolean))];
+
+    // Mark inactive and sync to Hesabfa while the row still exists.
+    if (product.isActive) {
+      await prisma.product.update({ where: { id }, data: { isActive: false } });
+    }
+    try {
+      await pushProductToHesabfa(id);
+    } catch {
+      // Local delete still proceeds if Hesabfa is unreachable.
+    }
+
+    await prisma.product.delete({ where: { id } });
+
+    await Promise.all(uniqueUrls.map((url) => deleteFile(url)));
+
+    updateTag(tags.products);
+    updateTag(tags.product(id));
     return ok(undefined);
   });
 }

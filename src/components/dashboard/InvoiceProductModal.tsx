@@ -184,8 +184,7 @@ function ProductRow({
         </div>
         <p className="text-sm font-semibold text-charcoal truncate mt-0.5">{product.name}</p>
         <p className="text-[11px] text-gray-400 mt-0.5">
-          بسته: {product.packQuantity.toLocaleString('fa-IR')} تایی | کارتن:{' '}
-          {product.cartonQuantity.toLocaleString('fa-IR')} تایی
+          واحد: {product.unit}
         </p>
       </div>
 

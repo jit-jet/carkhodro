@@ -270,6 +270,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   origin: 'origin',
   packQuantity: 'packQuantity',
   cartonQuantity: 'cartonQuantity',
+  unit: 'unit',
   isOriginal: 'isOriginal',
   mainImage: 'mainImage',
   description: 'description',
@@ -387,13 +388,19 @@ exports.Prisma.FaqScalarFieldEnum = {
 
 exports.Prisma.SiteSettingScalarFieldEnum = {
   id: 'id',
-  phone: 'phone',
-  secondaryPhone: 'secondaryPhone',
+  retailPhone1: 'retailPhone1',
+  retailPhone2: 'retailPhone2',
+  wholesalePhone1: 'wholesalePhone1',
+  wholesalePhone2: 'wholesalePhone2',
+  wholesalePhone3: 'wholesalePhone3',
+  wholesalePhone4: 'wholesalePhone4',
   email: 'email',
   address: 'address',
   workingHours: 'workingHours',
   headerPromo1: 'headerPromo1',
   headerPromo2: 'headerPromo2',
+  headerPromo1Icon: 'headerPromo1Icon',
+  headerPromo2Icon: 'headerPromo2Icon',
   aboutText: 'aboutText',
   footerTrust1Icon: 'footerTrust1Icon',
   footerTrust1Title: 'footerTrust1Title',
@@ -407,6 +414,12 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   footerTrust4Icon: 'footerTrust4Icon',
   footerTrust4Title: 'footerTrust4Title',
   footerTrust4Desc: 'footerTrust4Desc',
+  heroTitle: 'heroTitle',
+  heroDescription: 'heroDescription',
+  heroButton1Text: 'heroButton1Text',
+  heroButton1Href: 'heroButton1Href',
+  heroButton2Text: 'heroButton2Text',
+  heroButton2Href: 'heroButton2Href',
   updatedAt: 'updatedAt'
 };
 
@@ -423,6 +436,15 @@ exports.Prisma.SocialLinkScalarFieldEnum = {
   label: 'label',
   url: 'url',
   icon: 'icon',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.HeroBannerScalarFieldEnum = {
+  id: 'id',
+  imageUrl: 'imageUrl',
   sortOrder: 'sortOrder',
   isActive: 'isActive',
   createdAt: 'createdAt',
@@ -679,6 +701,7 @@ exports.Prisma.ModelName = {
   SiteSetting: 'SiteSetting',
   RulesContent: 'RulesContent',
   SocialLink: 'SocialLink',
+  HeroBanner: 'HeroBanner',
   SmsCampaign: 'SmsCampaign',
   ShippingOption: 'ShippingOption',
   Order: 'Order',
