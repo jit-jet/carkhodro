@@ -171,38 +171,8 @@ export default function FilterSidebar({
         </div>
       )}
 
-      {/* Search */}
-      <div className="relative mb-4">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={e => onSearchChange(e.target.value)}
-          placeholder="جستجو در محصولات..."
-          className="w-full border border-gray-200 rounded-xl py-2.5 ps-3 pe-9 text-sm text-charcoal placeholder-gray-400 focus:outline-none focus:border-accent transition-colors"
-        />
-        <svg
-          className="absolute top-1/2 -translate-y-1/2 inset-e-3 w-4 h-4 text-gray-400 pointer-events-none"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="M21 21l-4.35-4.35" />
-        </svg>
-      </div>
-
       <div className="h-px bg-gray-100 mb-1" />
 
-      {/* Special offers */}
-      <div className="py-3 border-b border-gray-100">
-        <CheckItem
-          label="پیشنهاد ویژه"
-          checked={offerOnly}
-          onChange={onOfferToggle}
-        />
-      </div>
 
       {/* Parts brand */}
       <AccordionSection title="برند قطعه">
@@ -251,6 +221,16 @@ export default function FilterSidebar({
           />
         ))}
       </AccordionSection>
+
+      {/* Special offers */}
+      <div className="py-3 border-b border-gray-100">
+        <CheckItem
+          label="پیشنهاد ویژه"
+          checked={offerOnly}
+          onChange={onOfferToggle}
+        />
+      </div>
+
 
       {/* PDF export */}
       <button
