@@ -37,7 +37,10 @@ export interface ProductVM {
   id: string;
   name: string;
   partsBrandId: number;
+  /** @deprecated Prefer `carModelIds` — kept as first id for legacy callers. */
   carModelId: number;
+  /** All compatible car model ids. */
+  carModelIds: number[];
   categoryId: number;
   /** Payable unit price for the viewer's role. */
   price: number;
@@ -71,11 +74,18 @@ export interface ProductVM {
   reviewCount: number;
   brand: string; // partsBrand.name (display)
   brandSlug: string; // partsBrand.slug (URL / filter)
-  carType: string; // first compatible car model name (“مدل خودرو”)
+  /** Joined compatible model names for compact display (“مدل خودرو”). */
+  carType: string;
+  /** Compatible car model names (for filters / multi display). */
+  carTypes: string[];
   /** First compatible car brand name (“برند خودرو”). */
   carBrand: string;
   /** First compatible car brand slug (URL / filter). */
   carBrandSlug: string;
+  /** All unique compatible car brand slugs (PLP filter). */
+  carBrandSlugs: string[];
+  /** Full compatibility rows for PDP listing. */
+  compatibleCars: { id: number; name: string; brandName: string; brandSlug: string }[];
   category: string; // category.key (filter slug)
   categoryLabel: string; // category.name (display)
 }
@@ -454,7 +464,15 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     role,
   );
 
-  const firstModel = p.compatibilities[0]?.carModel;
+  const compatibleCars = p.compatibilities.map((c) => ({
+    id: c.carModel.id,
+    name: c.carModel.name,
+    brandName: c.carModel.carBrand.name,
+    brandSlug: c.carModel.carBrand.slug,
+  }));
+  const firstModel = compatibleCars[0];
+  const carTypes = compatibleCars.map((c) => c.name);
+  const carBrandSlugs = [...new Set(compatibleCars.map((c) => c.brandSlug))];
   const gallery = [...p.images]
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((img) => img.url);
@@ -468,6 +486,7 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     name: p.name,
     partsBrandId: p.partsBrandId,
     carModelId: firstModel?.id ?? 0,
+    carModelIds: compatibleCars.map((c) => c.id),
     categoryId: p.categoryId,
     price: resolved.finalPrice,
     oldPrice: callForPrice
@@ -502,9 +521,12 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     reviewCount: p.reviewCount,
     brand: p.partsBrand.name,
     brandSlug: p.partsBrand.slug,
-    carType: firstModel?.name ?? '',
-    carBrand: firstModel?.carBrand.name ?? '',
-    carBrandSlug: firstModel?.carBrand.slug ?? '',
+    carType: carTypes.join('، '),
+    carTypes,
+    carBrand: firstModel?.brandName ?? '',
+    carBrandSlug: firstModel?.brandSlug ?? '',
+    carBrandSlugs,
+    compatibleCars,
     category: p.category.key,
     categoryLabel: p.category.name,
   };

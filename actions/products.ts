@@ -225,9 +225,9 @@ export interface AdminProductListItemVM {
   partsBrandId: number;
   /** Parts brand name — shown as “نوع برند”. */
   partsBrandName: string;
-  /** First compatible car model id — used as “مدل خودرو”. */
-  carModelId: number | null;
-  /** First compatible car model name — “مدل خودرو”. */
+  /** Compatible car model ids. */
+  carModelIds: number[];
+  /** Joined compatible car model names — “مدل خودرو”. */
   carType: string;
   wholesalePrice: number;
   wholesaleDiscountPct: number;
@@ -293,7 +293,7 @@ function toAdminProductListItem(p: {
     retailPriceDiffPct: Number(p.retailPriceDiffPct),
     retailDiscountPct: Number(p.retailDiscountPct),
   };
-  const firstCompat = p.compatibilities[0];
+  const carTypes = p.compatibilities.map((c) => c.carModel.name);
   return {
     id: p.id,
     sku: p.sku,
@@ -302,8 +302,8 @@ function toAdminProductListItem(p: {
     categoryName: p.category.name,
     partsBrandId: p.partsBrandId,
     partsBrandName: p.partsBrand.name,
-    carModelId: firstCompat?.carModelId ?? null,
-    carType: firstCompat?.carModel.name ?? '',
+    carModelIds: p.compatibilities.map((c) => c.carModelId),
+    carType: carTypes.join('، '),
     wholesalePrice: Number(p.wholesalePrice),
     wholesaleDiscountPct: fields.wholesaleDiscountPct,
     retailPriceDiffPct: fields.retailPriceDiffPct,
@@ -380,7 +380,6 @@ export async function getProductsAdmin(
             compatibilities: {
               include: { carModel: true },
               orderBy: { id: 'asc' },
-              take: 1,
             },
           },
           orderBy,
@@ -413,7 +412,6 @@ export async function getProductAdminById(id: string) {
           compatibilities: {
             include: { carModel: true },
             orderBy: { id: 'asc' },
-            take: 1,
           },
         },
       });
@@ -434,7 +432,7 @@ export async function getProductAdminById(id: string) {
         name: row.name,
         partsBrandId: row.partsBrandId,
         categoryId: row.categoryId,
-        carModelId: row.compatibilities[0]?.carModelId ?? null,
+        carModelIds: row.compatibilities.map((c) => c.carModelId),
         wholesalePrice: Number(row.wholesalePrice),
         buyPrice: row.buyPrice != null ? Number(row.buyPrice) : null,
         wholesaleDiscountPct: Number(row.wholesaleDiscountPct),

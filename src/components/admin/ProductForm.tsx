@@ -69,7 +69,9 @@ export default function ProductForm({
   const [name, setName] = useState(initial.name);
   const [partsBrandId, setPartsBrandId] = useState(initial.partsBrandId || partsBrands[0]?.id || 0);
   const [categoryId, setCategoryId] = useState(initial.categoryId || categories[0]?.id || 0);
-  const [carModelId, setCarModelId] = useState<number | "">(initial.carModelId ?? "");
+  const [carModelIds, setCarModelIds] = useState<number[]>(() =>
+    [...new Set((initial.carModelIds ?? []).filter((id) => Number.isFinite(id) && id > 0))],
+  );
   const [wholesalePrice, setWholesalePrice] = useState(String(initial.wholesalePrice ?? ""));
   const [buyPrice, setBuyPrice] = useState(
     initial.buyPrice != null && initial.buyPrice > 0 ? String(initial.buyPrice) : "",
@@ -227,7 +229,7 @@ export default function ProductForm({
       name,
       partsBrandId: Number(partsBrandId),
       categoryId: Number(categoryId),
-      carModelId: carModelId === "" ? null : Number(carModelId),
+      carModelIds,
       wholesalePrice: Number(wholesalePrice),
       buyPrice: buyPrice.trim() === "" ? null : Number(buyPrice),
       wholesaleDiscountPct: Number(wholesaleDiscountPct),
@@ -313,19 +315,47 @@ export default function ProductForm({
               ))}
             </Select>
           </div>
-          <div>
-            <Label>مدل خودرو</Label>
-            <Select
-              value={carModelId}
-              onChange={(e) => setCarModelId(e.target.value ? Number(e.target.value) : "")}
-            >
-              <option value="">انتخاب نشده</option>
-              {carModels.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.brandName} — {m.name}
-                </option>
-              ))}
-            </Select>
+          <div className="sm:col-span-2">
+            <Label>مدل‌های خودرو سازگار</Label>
+            <p className="text-xs text-gray-400 mb-2">
+              می‌توانید چند مدل را انتخاب کنید. خالی = بدون سازگاری مشخص.
+            </p>
+            <div className="max-h-48 overflow-y-auto rounded-xl border border-gray-200 bg-white divide-y divide-gray-50">
+              {carModels.length === 0 ? (
+                <p className="px-3 py-3 text-sm text-gray-400">مدلی ثبت نشده است.</p>
+              ) : (
+                carModels.map((m) => {
+                  const checked = carModelIds.includes(m.id);
+                  return (
+                    <label
+                      key={m.id}
+                      className="flex items-center gap-2.5 px-3 py-2 text-sm text-charcoal cursor-pointer hover:bg-silver-light/60"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => {
+                          setCarModelIds((prev) =>
+                            checked ? prev.filter((id) => id !== m.id) : [...prev, m.id],
+                          );
+                        }}
+                        className="w-4 h-4 accent-accent shrink-0"
+                      />
+                      <span>
+                        <span className="font-medium">{m.brandName}</span>
+                        <span className="text-gray-400"> — </span>
+                        {m.name}
+                      </span>
+                    </label>
+                  );
+                })
+              )}
+            </div>
+            {carModelIds.length > 0 && (
+              <p className="mt-2 text-xs text-gray-500">
+                {carModelIds.length.toLocaleString("fa-IR")} مدل انتخاب شده
+              </p>
+            )}
           </div>
           <div>
             <Label>کشور سازنده (اختیاری)</Label>

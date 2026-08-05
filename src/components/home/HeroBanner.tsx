@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { HeroBannerVM, HeroContentVM } from "@/src/lib/serializers";
 
 const AUTOPLAY_MS = 5500;
+/** Minimum horizontal drag (px) before a slide change commits. */
+const DRAG_THRESHOLD = 48;
 
 const anim = (name: string, dur: string, delay: string) =>
   ({ animation: `${name} ${dur} ease-out ${delay} both` }) as React.CSSProperties;
@@ -50,6 +52,10 @@ export default function HeroBanner({
 }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [dragX, setDragX] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const dragStartX = useRef(0);
+  const dragActive = useRef(false);
   const count = images.length;
 
   function goTo(next: number) {
@@ -58,18 +64,60 @@ export default function HeroBanner({
   }
 
   useEffect(() => {
-    if (count <= 1 || paused) return;
+    if (count <= 1 || paused || dragging) return;
     const timer = window.setInterval(() => {
       setIndex((prev) => (prev + 1) % count);
     }, AUTOPLAY_MS);
     return () => window.clearInterval(timer);
-  }, [count, paused]);
+  }, [count, paused, dragging]);
+
+  function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    if (count <= 1 || e.button !== 0) return;
+    dragActive.current = true;
+    dragStartX.current = e.clientX;
+    setDragging(true);
+    setDragX(0);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+
+  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!dragActive.current) return;
+    setDragX(e.clientX - dragStartX.current);
+  }
+
+  function endDrag(clientX: number) {
+    if (!dragActive.current) return;
+    dragActive.current = false;
+    const delta = clientX - dragStartX.current;
+    setDragging(false);
+    setDragX(0);
+
+    if (count <= 1 || Math.abs(delta) < DRAG_THRESHOLD) return;
+    // Drag image left → next; drag right → previous (works for mouse + touch).
+    setIndex((prev) => {
+      if (delta < 0) return (prev + 1) % count;
+      return (prev - 1 + count) % count;
+    });
+  }
+
+  function onPointerUp(e: React.PointerEvent<HTMLDivElement>) {
+    endDrag(e.clientX);
+  }
+
+  function onPointerCancel() {
+    dragActive.current = false;
+    setDragging(false);
+    setDragX(0);
+  }
 
   const hasCopy = Boolean(content.title.trim() || content.description.trim());
   if (!hasCopy && count === 0) return null;
 
-  const showNav = count > 1;
+  const showDots = count > 1;
   const safeIndex = count > 0 ? Math.min(index, count - 1) : 0;
+  const dragOpacity = dragging
+    ? Math.max(0.35, 1 - Math.abs(dragX) / 280)
+    : 1;
 
   return (
     <section
@@ -152,79 +200,83 @@ export default function HeroBanner({
             )}
           </div>
 
-          {/* Image slider — left in RTL */}
+          {/* Image slider — left in RTL; drag/swipe to change slides */}
           <div className="order-1 lg:order-2">
             <div className="relative mx-auto w-full max-w-lg lg:max-w-xl">
               <div className="absolute inset-6 sm:inset-10 rounded-full bg-accent/10 blur-2xl pointer-events-none" />
-              <div className="relative aspect-[5/4] overflow-hidden">
+              <div
+                className={[
+                  "relative aspect-[5/4] overflow-hidden select-none touch-pan-y",
+                  showDots ? (dragging ? "cursor-grabbing" : "cursor-grab") : "",
+                ].join(" ")}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerCancel}
+                role={showDots ? "region" : undefined}
+                aria-roledescription={showDots ? "carousel" : undefined}
+                aria-label={showDots ? "اسلایدر تصاویر هیرو — برای تعویض بکشید" : undefined}
+              >
                 {count === 0 ? (
                   <div className="absolute inset-0 flex items-center justify-center text-white/30 text-sm">
                     تصویری ثبت نشده
                   </div>
                 ) : (
-                  images.map((image, i) => (
-                    <div
-                      key={image.id}
-                      className={[
-                        "absolute inset-0 transition-all duration-700 ease-out",
-                        i === safeIndex
-                          ? "opacity-100 scale-100 z-[1]"
-                          : "opacity-0 scale-[0.96] z-0 pointer-events-none",
-                      ].join(" ")}
-                      aria-hidden={i !== safeIndex}
-                    >
-                      <Image
-                        src={image.imageUrl}
-                        alt={content.title || "بنر صفحه اصلی"}
-                        fill
-                        priority={i === 0}
-                        sizes="(max-width: 1024px) 90vw, 42vw"
-                        className="object-contain object-center drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)] p-1 sm:p-3"
-                      />
-                    </div>
-                  ))
+                  images.map((image, i) => {
+                    const isActive = i === safeIndex;
+                    return (
+                      <div
+                        key={image.id}
+                        className={[
+                          "absolute inset-0",
+                          dragging && isActive
+                            ? "transition-none z-[1]"
+                            : "transition-all duration-700 ease-out",
+                          isActive
+                            ? "opacity-100 scale-100 z-[1]"
+                            : "opacity-0 scale-[0.96] z-0 pointer-events-none",
+                        ].join(" ")}
+                        style={
+                          isActive
+                            ? {
+                                opacity: dragOpacity,
+                                transform: `translateX(${dragging ? dragX * 0.35 : 0}px) scale(1)`,
+                              }
+                            : undefined
+                        }
+                        aria-hidden={!isActive}
+                      >
+                        <Image
+                          src={image.imageUrl}
+                          alt={content.title || "بنر صفحه اصلی"}
+                          fill
+                          priority={i === 0}
+                          draggable={false}
+                          sizes="(max-width: 1024px) 90vw, 42vw"
+                          className="object-contain object-center drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)] p-1 sm:p-3 pointer-events-none"
+                        />
+                      </div>
+                    );
+                  })
                 )}
               </div>
 
-              {showNav && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => goTo(safeIndex - 1)}
-                    aria-label="اسلاید قبلی"
-                    className="absolute top-1/2 start-0 -translate-y-1/2 z-10 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 text-charcoal shadow-lg flex items-center justify-center hover:bg-accent transition-colors"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-4 h-4">
-                      <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => goTo(safeIndex + 1)}
-                    aria-label="اسلاید بعدی"
-                    className="absolute top-1/2 end-0 -translate-y-1/2 z-10 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 text-charcoal shadow-lg flex items-center justify-center hover:bg-accent transition-colors"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-4 h-4">
-                      <polyline points="15 18 9 12 15 6" />
-                    </svg>
-                  </button>
-
-                  <div className="mt-5 flex justify-center gap-2">
-                    {images.map((image, i) => (
-                      <button
-                        key={image.id}
-                        type="button"
-                        aria-label={`اسلاید ${i + 1}`}
-                        aria-current={i === safeIndex}
-                        onClick={() => goTo(i)}
-                        className={[
-                          "h-2 rounded-full transition-all duration-300",
-                          i === safeIndex ? "w-7 bg-accent" : "w-2 bg-white/40 hover:bg-white/70",
-                        ].join(" ")}
-                      />
-                    ))}
-                  </div>
-                </>
+              {showDots && (
+                <div className="mt-5 flex justify-center gap-2">
+                  {images.map((image, i) => (
+                    <button
+                      key={image.id}
+                      type="button"
+                      aria-label={`اسلاید ${i + 1}`}
+                      aria-current={i === safeIndex}
+                      onClick={() => goTo(i)}
+                      className={[
+                        "h-2 rounded-full transition-all duration-300",
+                        i === safeIndex ? "w-7 bg-accent" : "w-2 bg-white/40 hover:bg-white/70",
+                      ].join(" ")}
+                    />
+                  ))}
+                </div>
               )}
             </div>
           </div>

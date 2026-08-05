@@ -274,8 +274,12 @@ export default function ProductsBrowser({
     let result = searchQuery.trim() ? (searchResults ?? []) : products;
 
     if (selectedBrands.length)     result = result.filter(p => selectedBrands.includes(p.brandSlug));
-    if (selectedCarBrands.length)  result = result.filter(p => selectedCarBrands.includes(p.carBrandSlug));
-    if (selectedCarTypes.length)   result = result.filter(p => selectedCarTypes.includes(p.carType));
+    if (selectedCarBrands.length)  result = result.filter(p =>
+      selectedCarBrands.some((slug) => p.carBrandSlugs.includes(slug)),
+    );
+    if (selectedCarTypes.length)   result = result.filter(p =>
+      selectedCarTypes.some((type) => p.carTypes.includes(type)),
+    );
     if (selectedCategories.length) result = result.filter(p => selectedCategories.includes(p.category));
     if (offerOnly)                 result = result.filter(p => p.isOffer);
 

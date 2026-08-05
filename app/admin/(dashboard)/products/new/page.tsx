@@ -22,7 +22,7 @@ export default async function NewProductPage() {
           name: "",
           partsBrandId: partsBrands[0]?.id ?? 0,
           categoryId: categories[0]?.id ?? 0,
-          carModelId: null,
+          carModelIds: [],
           wholesalePrice: 0,
           buyPrice: null,
           wholesaleDiscountPct: 0,

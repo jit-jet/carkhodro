@@ -34,8 +34,11 @@ export interface ProductInput {
   name: string;
   partsBrandId: number;
   categoryId: number;
-  /** Compatible car model (“مدل خودرو”). Null clears compatibility. */
-  carModelId?: number | null;
+  /**
+   * Compatible car models (“مدل خودرو”). Empty / omitted-on-create clears
+   * compatibility; on update, `undefined` leaves existing rows unchanged.
+   */
+  carModelIds?: number[];
   wholesalePrice: number;
   /** Optional buy/cost price in Toman (Hesabfa BuyPrice). */
   buyPrice?: number | null;
@@ -75,15 +78,35 @@ async function syncProductImages(productId: string, images: string[] | undefined
   });
 }
 
-async function syncProductVehicleType(productId: string, carModelId: number | null | undefined) {
-  if (carModelId === undefined) return;
+async function syncProductCompatibilities(
+  productId: string,
+  carModelIds: number[] | undefined,
+) {
+  if (carModelIds === undefined) return;
+
+  const uniqueIds = [...new Set(carModelIds.filter((id) => Number.isFinite(id) && id > 0))];
   await prisma.productCompatibility.deleteMany({ where: { productId } });
-  if (carModelId === null) return;
-  const carModel = await prisma.carModel.findUnique({ where: { id: carModelId } });
-  if (!carModel) return;
-  await prisma.productCompatibility.create({
-    data: { productId, carModelId },
+  if (uniqueIds.length === 0) return;
+
+  const existing = await prisma.carModel.findMany({
+    where: { id: { in: uniqueIds } },
+    select: { id: true },
   });
+  if (existing.length === 0) return;
+
+  await prisma.productCompatibility.createMany({
+    data: existing.map((m) => ({ productId, carModelId: m.id })),
+    skipDuplicates: true,
+  });
+}
+
+async function assertCarModelsExist(carModelIds: number[] | undefined): Promise<string | null> {
+  if (carModelIds === undefined) return null;
+  const uniqueIds = [...new Set(carModelIds.filter((id) => Number.isFinite(id) && id > 0))];
+  if (uniqueIds.length === 0) return null;
+  const count = await prisma.carModel.count({ where: { id: { in: uniqueIds } } });
+  if (count !== uniqueIds.length) return 'یکی از مدل‌های خودرو انتخاب‌شده معتبر نیست.';
+  return null;
 }
 
 export async function createProduct(
@@ -98,10 +121,8 @@ export async function createProduct(
         'Saving product to Hesabfa failed. Please try again. Hesabfa is not configured.',
       );
     }
-    if (input.carModelId != null) {
-      const carModel = await prisma.carModel.findUnique({ where: { id: input.carModelId } });
-      if (!carModel) return fail('مدل خودرو انتخاب‌شده معتبر نیست.');
-    }
+    const carModelError = await assertCarModelsExist(input.carModelIds);
+    if (carModelError) return fail(carModelError);
 
     const category = await prisma.category.findUnique({
       where: { id: input.categoryId },
@@ -166,7 +187,7 @@ export async function createProduct(
       select: { id: true },
     });
     await syncProductImages(created.id, input.images);
-    await syncProductVehicleType(created.id, input.carModelId ?? null);
+    await syncProductCompatibilities(created.id, input.carModelIds ?? []);
     updateTag(tags.products);
     return ok(created);
   });
@@ -182,10 +203,8 @@ export async function updateProduct(
         'Saving product to Hesabfa failed. Please try again. Hesabfa is not configured.',
       );
     }
-    if (input.carModelId != null) {
-      const carModel = await prisma.carModel.findUnique({ where: { id: input.carModelId } });
-      if (!carModel) return fail('مدل خودرو انتخاب‌شده معتبر نیست.');
-    }
+    const carModelError = await assertCarModelsExist(input.carModelIds);
+    if (carModelError) return fail(carModelError);
 
     const existing = await prisma.product.findUnique({
       where: { id },
@@ -283,7 +302,7 @@ export async function updateProduct(
       select: { id: true },
     });
     await syncProductImages(id, input.images);
-    await syncProductVehicleType(id, input.carModelId);
+    await syncProductCompatibilities(id, input.carModelIds);
     updateTag(tags.products);
     updateTag(tags.product(id));
     return ok(updated);

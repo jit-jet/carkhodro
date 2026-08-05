@@ -83,12 +83,17 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const shopPhone = primaryContactPhone(settings, pricingRoleFromUser(user?.role));
   const flag = ORIGIN_FLAGS[product.origin] ?? '🏭';
 
+  const compatibleLabel =
+    product.compatibleCars.length > 0
+      ? product.compatibleCars.map((c) => `${c.brandName} — ${c.name}`).join('، ')
+      : '—';
+
   const attrs: [string, string][] = [
     ['کد',             product.sku],
     ['واحد',           product.unit],
     ['دسته‌های کالا',  product.categoryLabel],
     ['نام برند',       product.brand],
-    ['مدل خودرو',      product.carType],
+    ['مدل خودرو',      compatibleLabel],
     ['اصلی',           product.isOriginal ? 'بله' : 'خیر'],
     ['کشور سازنده',    `${flag} ${product.origin}`],
   ];
