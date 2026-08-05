@@ -2,12 +2,13 @@
  * Proxy (this Next.js version's renamed `middleware`).
  * ────────────────────────────────────────────────────
  * Optimistic auth gate: bounces signed-out visitors away from account-only
- * routes, and signed-in visitors away from /login and /signup, before they
- * render. It only checks for the *presence* of the session cookie — fast, and
- * runs on every matched request including prefetches — so it deliberately does
- * NOT hit the database. The authoritative check still happens in the Server
- * Actions / data layer (`getCurrentUser`), which is the real line of defense;
- * this is purely a UX redirect.
+ * routes before they render. It only checks for the *presence* of the session
+ * cookie — fast, and runs on every matched request including prefetches — so it
+ * deliberately does NOT hit the database. It does NOT bounce cookie-holders
+ * away from /login|/signup|/admin/login: a revoked session still leaves an
+ * httpOnly cookie, and optimistic redirects caused a refresh loop with
+ * page-level `redirect('/login')`. Those pages validate the DB session and
+ * clear a stale cookie via `/api/auth/clear-session`.
  */
 
 import { NextResponse } from 'next/server';
@@ -34,9 +35,10 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname === ADMIN_LOGIN_PATH) {
-    // Already-authenticated admins skip straight past the login screen.
-    const hasAdminSession = Boolean(request.cookies.get(ADMIN_SESSION_COOKIE)?.value);
-    if (hasAdminSession) return NextResponse.redirect(new URL('/admin', request.url));
+    // Do NOT bounce to /admin based on cookie presence alone. A revoked or
+    // deactivated admin still has the cookie; the login page validates the
+    // session in the DB and clears a stale cookie. Optimistic redirects here
+    // caused a /admin ↔ /admin/login refresh loop.
     return NextResponse.next();
   }
 
@@ -49,12 +51,13 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Already-authenticated customers skip login/signup → dashboard.
-  // Mid-signup visitors only have VERIFIED_PHONE_COOKIE, not SESSION_COOKIE,
-  // so they still reach /signup.
+  // Do NOT bounce cookie-holders away from /login|/signup. After an admin
+  // deactivates a user, DB sessions are deleted but the httpOnly cookie
+  // remains; pages then redirect to /login while this gate sent them back to
+  // /dashboard — an infinite refresh loop. The login page validates the
+  // session server-side and clears a stale cookie when needed.
+  // Mid-signup visitors only have VERIFIED_PHONE_COOKIE, not SESSION_COOKIE.
   if (AUTH_PAGES.includes(pathname)) {
-    const hasSession = Boolean(request.cookies.get(SESSION_COOKIE)?.value);
-    if (hasSession) return NextResponse.redirect(new URL('/dashboard', request.url));
     return NextResponse.next();
   }
 

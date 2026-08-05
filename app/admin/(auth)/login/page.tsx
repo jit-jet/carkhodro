@@ -1,7 +1,8 @@
 import { Suspense } from "react";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { getCurrentAdmin } from "@/src/lib/admin-session";
+import { ADMIN_SESSION_COOKIE, getCurrentAdmin } from "@/src/lib/admin-session";
 import AdminLoginForm from "@/src/components/admin/AdminLoginForm";
 
 export const metadata: Metadata = {
@@ -19,6 +20,14 @@ export default function AdminLoginPage() {
 async function AdminLoginContent() {
   const admin = await getCurrentAdmin();
   if (admin) redirect("/admin");
+
+  // Revoked admin session: cookie remains → clear it (same loop class as storefront).
+  const token = (await cookies()).get(ADMIN_SESSION_COOKIE)?.value;
+  if (token) {
+    redirect(
+      `/api/auth/clear-session?kind=admin&next=${encodeURIComponent("/admin/login")}`,
+    );
+  }
 
   return (
     <div className="w-full max-w-md" dir="rtl">
