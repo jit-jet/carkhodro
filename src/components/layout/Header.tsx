@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import type { NavLinkVM, ProductVM, PublicSiteSettingsVM } from "@/src/lib/serializers";
 import { phoneTelHref, settingLines, contactPhonesForRole } from "@/src/lib/site-settings-display";
+import { resolvedLogoUrl, resolvedSiteName } from "@/src/lib/site-branding";
 import type { PricingRole } from "@/src/lib/user-role";
 import { searchProducts } from "@/actions/search";
 import { useCartUI } from "@/src/store/cart-ui";
@@ -332,6 +333,8 @@ export default function Header({
   const cartCount = useCartUI((s) => s.count);
   const wishlistCount = useListsUI((s) => s.wishlist.size);
   const compareCount = useListsUI((s) => s.compare.size);
+  const logoUrl = resolvedLogoUrl(contactInfo);
+  const siteName = resolvedSiteName(contactInfo);
 
   useEffect(() => {
     let active = true;
@@ -531,7 +534,7 @@ export default function Header({
               className="shrink-0 lg:static absolute left-1/2 -translate-x-1/2 lg:translate-x-0 z-10"
             >
               <div className="flex items-center justify-center relative w-32 h-10 sm:w-40 sm:h-12">
-                <Image src="/logo.png" alt="کارخودرو" height={30} width={80} className="object-contain h-11 sm:h-12" priority />
+                <Image src={logoUrl} alt={siteName} height={30} width={80} className="object-contain h-11 sm:h-12" priority />
               </div>
             </Link>
 
@@ -632,7 +635,7 @@ export default function Header({
           {/* Panel header */}
           <div className="flex items-center justify-between px-4 py-3 bg-accent shrink-0">
             <div className="relative w-28 h-9">
-              <Image src="/logo.png" alt="کارخودرو" fill  className="object-contain h-11 sm:h-12" />
+              <Image src={logoUrl} alt={siteName} fill className="object-contain h-11 sm:h-12" />
             </div>
             <button
               onClick={() => setMenuOpen(false)}

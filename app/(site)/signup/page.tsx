@@ -14,19 +14,29 @@ import { redirect } from 'next/navigation';
 import AuthCard from '@/src/components/auth/AuthCard';
 import SignupForm from '@/src/components/auth/SignupForm';
 import { getProvinces } from '@/actions/locations';
+import { getPublicSiteSettings } from '@/actions/site-settings';
 import { getCurrentUser } from '@/src/lib/session';
 import { safeInternalPath } from '@/src/lib/safe-internal-path';
+import { resolvedLogoUrl, resolvedSiteName } from '@/src/lib/site-branding';
 
 interface Props {
   searchParams: Promise<{ phone?: string; redirect?: string }>;
 }
 
 export default async function SignupPage({ searchParams }: Props) {
-  const provinces = await getProvinces();
+  const [provinces, settings] = await Promise.all([
+    getProvinces(),
+    getPublicSiteSettings(),
+  ]);
+  const logoUrl = resolvedLogoUrl(settings);
+  const siteName = resolvedSiteName(settings);
+
   return (
     <AuthCard
       title="تکمیل اطلاعات"
       subtitle="برای تکمیل ثبت‌نام، لطفاً اطلاعات زیر را وارد کنید."
+      logoUrl={logoUrl}
+      siteName={siteName}
     >
       <Suspense fallback={<SignupForm phoneNumber="" redirectTo="/dashboard" provinces={provinces} />}>
         <SignupGate searchParams={searchParams} provinces={provinces} />

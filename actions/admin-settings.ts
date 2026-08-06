@@ -26,6 +26,20 @@ export type SiteSettingVM = PublicSiteSettingsVM;
 
 const EMPTY_SETTINGS: SiteSettingVM = toPublicSiteSettingsVM(null);
 
+const ASSET_KEYS = [
+  'headerPromo1Icon',
+  'headerPromo2Icon',
+  'logoUrl',
+  'faviconUrl',
+  'appleTouchIconUrl',
+  'ogImageUrl',
+] as const;
+
+function trimOrNull(value: string | undefined): string | null | undefined {
+  if (value === undefined) return undefined;
+  return value.trim() || null;
+}
+
 export async function getSiteSettings(): Promise<SiteSettingVM> {
   return safeQuery(
     'getSiteSettings',
@@ -43,6 +57,19 @@ export async function updateSiteSettings(
   return runMutation('updateSiteSettings', async () => {
     if (input.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) {
       return fail('ایمیل معتبر نیست.');
+    }
+
+    if (input.analyticsId !== undefined) {
+      const id = input.analyticsId.trim();
+      if (
+        id &&
+        !/^GTM-[A-Z0-9]+$/i.test(id) &&
+        !/^(G|UA|AW|GT)-[A-Z0-9-]+$/i.test(id)
+      ) {
+        return fail(
+          'شناسه آنالیتیکس معتبر نیست. مقدار باید با GTM-، G-، UA-، AW- یا GT- شروع شود.',
+        );
+      }
     }
 
     const data: Record<string, string | null> = {};
@@ -89,9 +116,31 @@ export async function updateSiteSettings(
       Object.assign(data, footerTrustBadgesToDbFields(input.footerTrustBadges));
     }
 
+    const branding = {
+      siteName: trimOrNull(input.siteName),
+      logoUrl: trimOrNull(input.logoUrl),
+      faviconUrl: trimOrNull(input.faviconUrl),
+      appleTouchIconUrl: trimOrNull(input.appleTouchIconUrl),
+      metaTitle: trimOrNull(input.metaTitle),
+      metaDescription: trimOrNull(input.metaDescription),
+      ogImageUrl: trimOrNull(input.ogImageUrl),
+      copyrightText: trimOrNull(input.copyrightText),
+      analyticsId: trimOrNull(input.analyticsId),
+    };
+    for (const [key, value] of Object.entries(branding)) {
+      if (value !== undefined) data[key] = value;
+    }
+
     const previous = await prisma.siteSetting.findUnique({
       where: { id: 1 },
-      select: { headerPromo1Icon: true, headerPromo2Icon: true },
+      select: {
+        headerPromo1Icon: true,
+        headerPromo2Icon: true,
+        logoUrl: true,
+        faviconUrl: true,
+        appleTouchIconUrl: true,
+        ogImageUrl: true,
+      },
     });
 
     await prisma.siteSetting.upsert({
@@ -100,19 +149,12 @@ export async function updateSiteSettings(
       update: data,
     });
 
-    if (
-      input.headerPromo1Icon !== undefined &&
-      previous?.headerPromo1Icon &&
-      previous.headerPromo1Icon !== data.headerPromo1Icon
-    ) {
-      await deleteFile(previous.headerPromo1Icon);
-    }
-    if (
-      input.headerPromo2Icon !== undefined &&
-      previous?.headerPromo2Icon &&
-      previous.headerPromo2Icon !== data.headerPromo2Icon
-    ) {
-      await deleteFile(previous.headerPromo2Icon);
+    for (const key of ASSET_KEYS) {
+      if (input[key] === undefined || !previous?.[key]) continue;
+      const nextValue = data[key];
+      if (previous[key] !== nextValue) {
+        await deleteFile(previous[key] as string);
+      }
     }
 
     updateTag(tags.siteSettings);

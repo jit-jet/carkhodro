@@ -17,7 +17,13 @@ import { safeInternalPath } from '@/src/lib/safe-internal-path';
 
 type Step = 'phone' | 'otp';
 
-export default function LoginFlow() {
+export default function LoginFlow({
+  logoUrl,
+  siteName,
+}: {
+  logoUrl?: string;
+  siteName?: string;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = safeInternalPath(searchParams.get('redirect'), '/dashboard');
@@ -100,7 +106,7 @@ export default function LoginFlow() {
       : { title: 'تأیید شماره موبایل', subtitle: 'کد ارسال‌شده را وارد کنید.' };
 
   return (
-    <AuthCard {...cardProps}>
+    <AuthCard {...cardProps} logoUrl={logoUrl} siteName={siteName}>
       {step === 'phone' ? (
         <PhoneStep onSubmit={handleSendOtp} loading={loading} error={error} />
       ) : (

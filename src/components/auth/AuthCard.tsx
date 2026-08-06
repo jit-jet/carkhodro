@@ -6,14 +6,23 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { SITE_SETTING_DEFAULTS } from '@/src/lib/site-branding';
 
 interface Props {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
+  logoUrl?: string;
+  siteName?: string;
 }
 
-export default function AuthCard({ title, subtitle, children }: Props) {
+export default function AuthCard({
+  title,
+  subtitle,
+  children,
+  logoUrl = SITE_SETTING_DEFAULTS.logoUrl,
+  siteName = SITE_SETTING_DEFAULTS.siteName,
+}: Props) {
   return (
     <div className="min-h-[calc(100vh-110px)] flex items-center justify-center bg-dark-bg px-4 py-12">
       <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
@@ -26,8 +35,8 @@ export default function AuthCard({ title, subtitle, children }: Props) {
             <Link href="/" aria-label="بازگشت به صفحه اصلی">
               <div className="relative w-36 h-12">
                 <Image
-                  src="/logo.png"
-                  alt="کارخودرو"
+                  src={logoUrl}
+                  alt={siteName}
                   fill
                   className="object-contain"
                   priority

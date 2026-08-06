@@ -5,6 +5,7 @@ import type {
   SocialLinkVM,
 } from "@/src/lib/serializers";
 import { contactPhonesForRole, settingLines } from "@/src/lib/site-settings-display";
+import { resolvedCopyrightText, resolvedSiteName } from "@/src/lib/site-branding";
 import { isWholesaleUser, type PricingRole } from "@/src/lib/user-role";
 import { SocialLinksRow } from "@/src/components/layout/SocialLinksRow";
 
@@ -67,6 +68,8 @@ export default function Footer({
   const phoneLines = contactPhonesForRole(settings, viewerRole);
   const addressLines = settingLines(settings.address);
   const workingHourLines = settingLines(settings.workingHours);
+  const siteName = resolvedSiteName(settings);
+  const copyrightText = resolvedCopyrightText(settings);
 
   return (
     <footer className="bg-charcoal text-white">
@@ -92,7 +95,7 @@ export default function Footer({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand column */}
           <div className="lg:col-span-1">
-            <div className="text-2xl font-black text-accent mb-3">کارخودرو</div>
+            <div className="text-2xl font-black text-accent mb-3">{siteName}</div>
             <p className="text-sm text-gray-400 leading-7 mb-4">
               {settings.aboutText || "اطلاعات فروشگاه از پنل مدیریت قابل ویرایش است."}
             </p>
@@ -181,7 +184,7 @@ export default function Footer({
       {/* Bottom bar */}
       <div className="border-t border-white/10 bg-black/20">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
-          <p>© ۱۴۰۳ کارخودرو — تمامی حقوق محفوظ است.</p>
+          <p>{copyrightText}</p>
           <div className="flex gap-4">
             {infoLinks.slice(0, 3).map((link) => (
               <Link key={link.href} href={link.href} className="hover:text-accent transition-colors">

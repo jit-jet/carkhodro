@@ -11,8 +11,10 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import AuthCard from '@/src/components/auth/AuthCard';
 import LoginFlow from '@/src/components/auth/LoginFlow';
+import { getPublicSiteSettings } from '@/actions/site-settings';
 import { getCurrentUser, SESSION_COOKIE } from '@/src/lib/session';
 import { safeInternalPath } from '@/src/lib/safe-internal-path';
+import { resolvedLogoUrl, resolvedSiteName } from '@/src/lib/site-branding';
 
 interface Props {
   searchParams: Promise<{ redirect?: string }>;
@@ -20,7 +22,10 @@ interface Props {
 
 function LoginFallback() {
   return (
-    <AuthCard title="ورود به حساب کاربری" subtitle="شماره موبایل خود را وارد کنید.">
+    <AuthCard
+      title="ورود به حساب کاربری"
+      subtitle="شماره موبایل خود را وارد کنید."
+    >
       <div className="h-40" />
     </AuthCard>
   );
@@ -38,7 +43,10 @@ async function LoginGate({ searchParams }: Props) {
   const { redirect: redirectParam } = await searchParams;
   const redirectTo = safeInternalPath(redirectParam, '/dashboard');
 
-  const user = await getCurrentUser();
+  const [user, settings] = await Promise.all([
+    getCurrentUser(),
+    getPublicSiteSettings(),
+  ]);
   if (user) redirect(redirectTo);
 
   // Session row gone / user inactive, but httpOnly cookie still present.
@@ -48,5 +56,10 @@ async function LoginGate({ searchParams }: Props) {
     redirect(`/api/auth/clear-session?next=${encodeURIComponent(next)}`);
   }
 
-  return <LoginFlow />;
+  return (
+    <LoginFlow
+      logoUrl={resolvedLogoUrl(settings)}
+      siteName={resolvedSiteName(settings)}
+    />
+  );
 }

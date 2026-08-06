@@ -279,6 +279,12 @@ async function main() {
         heroButton1Href: '/products',
         heroButton2Text: 'جستجو بر اساس خودرو',
         heroButton2Href: '/products',
+        siteName: 'کارخودرو',
+        logoUrl: '/logo.png',
+        metaTitle: 'کارخودرو | فروشگاه قطعات یدکی خودرو',
+        metaDescription:
+          'خرید آنلاین قطعات یدکی خودروهای ایرانی و خارجی با بهترین قیمت و ضمانت اصالت کالا',
+        copyrightText: '© ۱۴۰۳ کارخودرو — تمامی حقوق محفوظ است.',
       },
       update: {},
     });

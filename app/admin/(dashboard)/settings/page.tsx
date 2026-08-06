@@ -11,7 +11,7 @@ export default function AdminSettingsPage() {
     <div>
       <PageHeader
         title="تنظیمات سایت"
-        description="مدیریت اطلاعات هدر، فوتر و تماس فروشگاه"
+        description="مدیریت برند، سئو، آنالیتیکس، اطلاعات هدر، فوتر و تماس فروشگاه"
       />
       <Suspense fallback={<SettingsSkeleton />}>
         <AdminSettingsContent />

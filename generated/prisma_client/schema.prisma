@@ -706,6 +706,17 @@ model SiteSetting {
   heroButton1Href   String?  @map("hero_button1_href")
   heroButton2Text   String?  @map("hero_button2_text")
   heroButton2Href   String?  @map("hero_button2_href")
+  /// Branding, default SEO, and analytics (admin-managed).
+  siteName          String?  @map("site_name")
+  logoUrl           String?  @map("logo_url")
+  faviconUrl        String?  @map("favicon_url")
+  appleTouchIconUrl String?  @map("apple_touch_icon_url")
+  metaTitle         String?  @map("meta_title")
+  metaDescription   String?  @map("meta_description") @db.Text
+  ogImageUrl        String?  @map("og_image_url")
+  copyrightText     String?  @map("copyright_text")
+  /// Google Analytics (`G-…` / `UA-…`) or Google Tag Manager (`GTM-…`) container ID.
+  analyticsId       String?  @map("analytics_id")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")

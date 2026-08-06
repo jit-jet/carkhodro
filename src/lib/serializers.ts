@@ -188,6 +188,15 @@ export interface PublicSiteSettingsVM {
   headerPromo2Icon: string;
   aboutText: string;
   footerTrustBadges: FooterTrustBadgeVM[];
+  siteName: string;
+  logoUrl: string;
+  faviconUrl: string;
+  appleTouchIconUrl: string;
+  metaTitle: string;
+  metaDescription: string;
+  ogImageUrl: string;
+  copyrightText: string;
+  analyticsId: string;
 }
 
 export interface SocialLinkVM {
@@ -748,6 +757,15 @@ export function toPublicSiteSettingsVM(row: {
   headerPromo1Icon?: string | null;
   headerPromo2Icon?: string | null;
   aboutText: string | null;
+  siteName?: string | null;
+  logoUrl?: string | null;
+  faviconUrl?: string | null;
+  appleTouchIconUrl?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  ogImageUrl?: string | null;
+  copyrightText?: string | null;
+  analyticsId?: string | null;
 } & Partial<SiteSettingTrustFields> | null): PublicSiteSettingsVM {
   return {
     retailPhone1: row?.retailPhone1 ?? '',
@@ -765,6 +783,15 @@ export function toPublicSiteSettingsVM(row: {
     headerPromo2Icon: row?.headerPromo2Icon ?? '',
     aboutText: row?.aboutText ?? '',
     footerTrustBadges: toFooterTrustBadgesVM(row),
+    siteName: row?.siteName ?? '',
+    logoUrl: row?.logoUrl ?? '',
+    faviconUrl: row?.faviconUrl ?? '',
+    appleTouchIconUrl: row?.appleTouchIconUrl ?? '',
+    metaTitle: row?.metaTitle ?? '',
+    metaDescription: row?.metaDescription ?? '',
+    ogImageUrl: row?.ogImageUrl ?? '',
+    copyrightText: row?.copyrightText ?? '',
+    analyticsId: row?.analyticsId ?? '',
   };
 }
 
