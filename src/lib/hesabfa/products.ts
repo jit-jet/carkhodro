@@ -13,16 +13,21 @@ import {
   isHesabfaConfigured,
   saveItem,
 } from './client';
+import {
+  FALLBACK_CATEGORY_KEY,
+  FALLBACK_CATEGORY_NAME,
+  syncCategoriesFromHesabfa,
+} from './categories';
+import { topCategoryNameFromNodeFamily } from './category-path';
 import { rialToToman, tomanToRial } from './currency';
-import { computeRetailPrice } from '@/src/lib/pricing';
+import { stockFromHesabfaItem } from './stock';
+import { computeRetailPrice, computeWholesaleFinal } from '@/src/lib/pricing';
 import {
   HESABFA_ITEM_TYPE_PRODUCT,
   HESABFA_TAG,
   type HesabfaItem,
 } from './types';
 
-const FALLBACK_CATEGORY_KEY = 'uncategorized';
-const FALLBACK_CATEGORY_NAME = 'دسته‌بندی نشده';
 const FALLBACK_BRAND_NAME = 'نامشخص';
 const FALLBACK_BRAND_SLUG = 'unknown';
 
@@ -39,14 +44,11 @@ function codeOf(item: HesabfaItem): string {
   return item.Code != null ? String(item.Code).trim() : '';
 }
 
-function stockOf(n: number | null | undefined): number {
-  return Math.max(0, Math.round(n ?? 0));
-}
-
-/** Prefer PriceList «عمده»; fall back to SellPrice (legacy). */
+/** Prefer PriceList «عمده» / «همکار» / «کلی فروشی»; fall back to SellPrice. */
 function wholesaleFromItem(item: HesabfaItem): bigint {
   const list = item.PriceList ?? [];
-  const entry = list.find((e) => (e.Title ?? e.title ?? '').trim() === 'عمده');
+  const titles = new Set(['عمده', 'همکار', 'کلی فروشی']);
+  const entry = list.find((e) => titles.has((e.Title ?? e.title ?? '').trim()));
   const price = entry?.Price ?? entry?.price;
   if (price != null && Number(price) > 0) return rialToToman(price);
   return rialToToman(item.SellPrice);
@@ -101,21 +103,19 @@ async function mapPool<T>(
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, () => run()));
 }
 
+/**
+ * Map product NodeFamily → local category id.
+ * Uses the top-level category only (first segment after «کالا»/«کالاها»).
+ * Missing / unknown → «دسته‌بندی نشده».
+ */
 function resolveCategoryId(
   nodeFamily: string | null | undefined,
   categoryMap: Map<string, number>,
   fallbackId: number,
 ): number {
-  if (!nodeFamily) return fallbackId;
-  const parts = nodeFamily
-    .split(/[:：]/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-  for (let i = parts.length - 1; i >= 0; i--) {
-    const hit = categoryMap.get(parts[i]!);
-    if (hit != null) return hit;
-  }
-  return fallbackId;
+  const top = topCategoryNameFromNodeFamily(nodeFamily);
+  if (!top) return fallbackId;
+  return categoryMap.get(top) ?? fallbackId;
 }
 
 function invalidate(productIds: string[]): void {
@@ -153,6 +153,13 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
   };
   if (items.length === 0) return stats;
 
+  // Ensure Hesabfa categories exist locally before resolving NodeFamily → categoryId.
+  try {
+    await syncCategoriesFromHesabfa();
+  } catch (err) {
+    console.error('[hesabfa:syncCategories]', err);
+  }
+
   // 1) Normalize + dedupe by code (last wins).
   const prepared = new Map<string, PreparedItem>();
   for (const item of items) {
@@ -167,7 +174,7 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
       name,
       wholesalePrice: wholesaleFromItem(item),
       buyPrice: item.BuyPrice != null && item.BuyPrice > 0 ? rialToToman(item.BuyPrice) : null,
-      stock: stockOf(item.Stock),
+      stock: stockFromHesabfaItem(item),
       hesabfaId: typeof item.Id === 'number' ? item.Id : undefined,
       active: item.Active === true ? true : item.Active === false ? false : null,
       nodeFamily: item.NodeFamily,
@@ -228,8 +235,12 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
   }
 
   const now = new Date();
+  const [fallbackCategoryId, categoryMap] = await Promise.all([
+    getFallbackCategoryId(),
+    buildCategoryMap(),
+  ]);
 
-  // 3) Concurrent updates (bounded) instead of serial await.
+  // 3) Concurrent updates (bounded) — including category from NodeFamily.
   await mapPool(toUpdate, UPDATE_CONCURRENCY, async ({ id, item }) => {
     await prisma.product.update({
       where: { id },
@@ -238,6 +249,7 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
         wholesalePrice: item.wholesalePrice,
         buyPrice: item.buyPrice,
         stock: item.stock,
+        categoryId: resolveCategoryId(item.nodeFamily, categoryMap, fallbackCategoryId),
         hesabfaCode: item.code,
         ...(item.hesabfaId != null ? { hesabfaId: item.hesabfaId } : {}),
         lastSyncedAt: now,
@@ -251,11 +263,7 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
 
   // 4) Bulk create for brand-new items.
   if (toCreate.length > 0) {
-    const [fallbackCategoryId, fallbackBrandId, categoryMap] = await Promise.all([
-      getFallbackCategoryId(),
-      getFallbackBrandId(),
-      buildCategoryMap(),
-    ]);
+    const fallbackBrandId = await getFallbackBrandId();
 
     for (let i = 0; i < toCreate.length; i += CREATE_CHUNK) {
       const chunk = toCreate.slice(i, i + CREATE_CHUNK);
@@ -362,13 +370,16 @@ export interface HesabfaProductPayloadInput {
 
 /** Build the Hesabfa `item/save` body (amounts converted Toman → Rial). */
 export function toHesabfaItemPayload(input: HesabfaProductPayloadInput): Record<string, unknown> {
-  const wholesale = Number(input.wholesalePrice);
-  const retailPrice = computeRetailPrice({
-    wholesalePrice: wholesale,
+  const priceFields = {
+    wholesalePrice: Number(input.wholesalePrice),
     wholesaleDiscountPct: Number(input.wholesaleDiscountPct ?? 0),
     retailPriceDiffPct: Number(input.retailPriceDiffPct ?? 25),
     retailDiscountPct: Number(input.retailDiscountPct ?? 0),
-  });
+  };
+  // «قیمت کلی فروشی» — base wholesale / seller price entered in admin.
+  const wholesale = priceFields.wholesalePrice;
+  const wholesaleFinal = computeWholesaleFinal(priceFields);
+  const retailPrice = computeRetailPrice(priceFields);
   const buy =
     input.buyPrice != null && Number(input.buyPrice) > 0 ? Number(input.buyPrice) : null;
 
@@ -377,16 +388,22 @@ export function toHesabfaItemPayload(input: HesabfaProductPayloadInput): Record<
     name: input.name,
     itemType: HESABFA_ITEM_TYPE_PRODUCT,
     buyPrice: buy != null ? tomanToRial(buy) : 0,
-    sellPrice: tomanToRial(retailPrice),
+    // Main Hesabfa SellPrice = wholesale (کلی فروشی) so it shows on the item form.
+    sellPrice: tomanToRial(wholesale),
     active: input.active ?? true,
     description: input.description ?? '',
     tag: HESABFA_TAG,
-    nodeFamily: `کالا : کالاها : ${input.categoryName}`,
+    nodeFamily: `کالاها : ${input.categoryName}`,
     priceList: [
       {
         title: 'عمده',
         currency: 'IRR',
         price: tomanToRial(wholesale),
+      },
+      {
+        title: 'همکار',
+        currency: 'IRR',
+        price: tomanToRial(wholesaleFinal),
       },
       {
         title: 'تک فروشی',
@@ -470,5 +487,3 @@ export async function pushProductToHesabfa(productId: string): Promise<void> {
     },
   });
 }
-
-

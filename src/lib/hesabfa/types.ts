@@ -46,6 +46,7 @@ export interface HesabfaItem {
   Barcode?: string | null;
   ItemType?: number | null;
   Unit?: string | null;
+  /** Inventory from item/get* (`Stock` field). */
   Stock?: number | null;
   BuyPrice?: number | null;
   SellPrice?: number | null;
@@ -115,19 +116,28 @@ export interface HesabfaInvoice {
   InvoiceItems?: HesabfaInvoiceItem[];
 }
 
-export interface HesabfaProductCategory {
-  Id?: number;
+/** Node in the `setting/getProductCategories` tree (not a flat list). */
+export interface HesabfaProductCategoryNode {
   Name?: string;
   FullPath?: string;
-  ParentId?: number | null;
+  Children?: HesabfaProductCategoryNode[] | null;
 }
+
+export interface HesabfaProductCategoryTree {
+  Root?: HesabfaProductCategoryNode | null;
+}
+
+/** @deprecated Use HesabfaProductCategoryNode — kept for call-site compatibility. */
+export type HesabfaProductCategory = HesabfaProductCategoryNode;
 
 /** Payload Hesabfa POSTs to the change-hook URL. */
 export interface HesabfaWebhookPayload {
   Password: string;
   Action: number;
-  ObjectType: 'Product' | 'Invoice' | 'Contact' | string;
+  ObjectType: 'Product' | 'Invoice' | 'Contact' | 'WarehouseReceipt' | 'Receipt' | string;
   ObjectIdList: number[];
+  /** Often contains item/contact codes for the changed entity. */
+  Extra?: string | null;
 }
 
 /** Common Hesabfa action codes observed in docs / change feed. */
@@ -137,6 +147,12 @@ export const HESABFA_ACTION = {
 } as const;
 
 export const HESABFA_INVOICE_TYPE_SALE = 0;
+/** Purchase invoice (فاکتور خرید) — used to add inventory. */
+export const HESABFA_INVOICE_TYPE_PURCHASE = 1;
+/** Purchase return (برگشت از خرید) — used to reduce inventory. */
+export const HESABFA_INVOICE_TYPE_PURCHASE_RETURN = 3;
+/** Issue warehouse receipt with the invoice so stock updates. */
+export const HESABFA_WAREHOUSE_RECEIPT_ISSUED = 1;
 export const HESABFA_CONTACT_TYPE_CUSTOMER = 2;
 export const HESABFA_ITEM_TYPE_PRODUCT = 0;
 export const HESABFA_CONTACT_NODE_FAMILY = 'اشخاص : مشتریان فروشگاه آنلاین';

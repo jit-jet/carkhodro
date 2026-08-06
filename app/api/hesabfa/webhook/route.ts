@@ -1,6 +1,7 @@
 /**
  * Hesabfa change-hook receiver.
- * Authenticates via shared Password, then syncs Product / Contact / Invoice.
+ * Authenticates via shared Password, then syncs Product / Contact / Invoice /
+ * WarehouseReceipt (stock) / Receipt.
  */
 
 import { NextResponse } from 'next/server';
@@ -10,7 +11,6 @@ import type { HesabfaWebhookPayload } from '@/src/lib/hesabfa/types';
 
 export async function POST(request: NextRequest) {
   let payload: HesabfaWebhookPayload;
-  console.log('request', request);
   try {
     payload = (await request.json()) as HesabfaWebhookPayload;
   } catch {
@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
     ObjectType: payload?.ObjectType,
     Action: payload?.Action,
     ObjectIdList: payload?.ObjectIdList,
+    Extra: payload?.Extra ?? null,
     // Password intentionally omitted
   });
 

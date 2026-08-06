@@ -39,6 +39,8 @@ import type {
   CheckoutContact,
 } from '@/src/lib/serializers';
 import type { DiscountCartLine } from '@/src/lib/apply-discount-code';
+import { formatCartStockIssues } from '@/src/lib/cart-stock';
+import { validateLinesAgainstHesabfaStock } from '@/src/lib/hesabfa/stock';
 
 /**
  * VAT / tax rate applied to the order subtotal at checkout. Kept at 0 so totals
@@ -213,6 +215,8 @@ export async function submitCheckout(
                   id: true,
                   name: true,
                   sku: true,
+                  hesabfaCode: true,
+                  stock: true,
                   categoryId: true,
                   partsBrandId: true,
                   wholesalePrice: true,
@@ -251,6 +255,40 @@ export async function submitCheckout(
         )
       ) {
         return fail(`«${item.product.name}» ${CALL_FOR_PRICE_BLOCKED_MSG}`);
+      }
+    }
+
+    const stockRows = cart.items
+      .map((item) => {
+        const code = item.product.hesabfaCode?.trim() || item.product.sku.trim();
+        if (!code) return null;
+        return {
+          productId: item.product.id,
+          name: item.product.name,
+          quantity: item.quantity,
+          hesabfaCode: code,
+        };
+      })
+      .filter(Boolean) as Array<{
+      productId: string;
+      name: string;
+      quantity: number;
+      hesabfaCode: string;
+    }>;
+
+    if (stockRows.length > 0) {
+      const fallbackStock = new Map(
+        cart.items.map((item) => [item.product.id, item.product.stock]),
+      );
+      const { issues } = await validateLinesAgainstHesabfaStock(stockRows, fallbackStock);
+      if (issues.length > 0) return fail(formatCartStockIssues(issues));
+    } else {
+      for (const item of cart.items) {
+        if (item.product.stock < item.quantity) {
+          return fail(
+            `موجودی «${item.product.name}» کافی نیست. ${Math.max(0, item.product.stock).toLocaleString('fa-IR')} عدد باقی‌مانده است.`,
+          );
+        }
       }
     }
 

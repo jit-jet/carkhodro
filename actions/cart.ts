@@ -46,6 +46,7 @@ import {
   collectCartStockIssues,
   formatCartStockIssues,
 } from '@/src/lib/cart-stock';
+import { validateLinesAgainstHesabfaStock } from '@/src/lib/hesabfa/stock';
 import type { CartMutationVM, CartVM } from '@/src/lib/serializers';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
@@ -218,8 +219,8 @@ export async function clearCart(): Promise<ActionResult> {
 }
 
 /**
- * Validate retail cart lines against live stock before proceeding to checkout.
- * Returns every shortfall (with remaining qty ≥ 0) in one message.
+ * Validate retail cart lines against live Hesabfa stock before proceeding to checkout.
+ * Falls back to local DB stock when Hesabfa is not configured.
  */
 export async function validateCartStockForCheckout(): Promise<ActionResult> {
   return runMutation('validateCartStockForCheckout', async () => {
@@ -229,22 +230,55 @@ export async function validateCartStockForCheckout(): Promise<ActionResult> {
     }
 
     const role = pricingRoleFromUser(user?.role);
-    let lines: {
+    type CartRow = {
+      productId: string;
       name: string;
       quantity: number;
-      stock: number;
-      callForPrice: boolean;
-    }[];
+      localStock: number;
+      hesabfaCode: string | null;
+    };
+    const rows: CartRow[] = [];
 
     if (!user) {
-      const cart = await buildGuestCartVM(await readGuestCart());
-      if (cart.items.length === 0) return fail('سبد خرید شما خالی است.');
-      lines = cart.items.map((i) => ({
-        name: i.name,
-        quantity: i.quantity,
-        stock: i.stock,
-        callForPrice: i.callForPrice,
-      }));
+      const guestLines = await readGuestCart();
+      if (guestLines.length === 0) return fail('سبد خرید شما خالی است.');
+
+      const products = await prisma.product.findMany({
+        where: { id: { in: guestLines.map((l) => l.productId) }, isActive: true },
+        select: {
+          id: true,
+          name: true,
+          stock: true,
+          hesabfaCode: true,
+          sku: true,
+          callForPriceRetail: true,
+          callForPriceWholesale: true,
+        },
+      });
+      const byId = new Map(products.map((p) => [p.id, p]));
+
+      for (const line of guestLines) {
+        const product = byId.get(line.productId);
+        if (!product) continue;
+        if (
+          isCallForPriceForRole(
+            {
+              callForPriceRetail: product.callForPriceRetail,
+              callForPriceWholesale: product.callForPriceWholesale,
+            },
+            role,
+          )
+        ) {
+          return fail(`«${product.name}» ${CALL_FOR_PRICE_BLOCKED_MSG}`);
+        }
+        rows.push({
+          productId: product.id,
+          name: product.name,
+          quantity: line.quantity,
+          localStock: product.stock,
+          hesabfaCode: product.hesabfaCode?.trim() || product.sku.trim() || null,
+        });
+      }
     } else {
       const cart = await prisma.cart.findUnique({
         where: { userId: user.id },
@@ -253,8 +287,11 @@ export async function validateCartStockForCheckout(): Promise<ActionResult> {
             include: {
               product: {
                 select: {
+                  id: true,
                   name: true,
                   stock: true,
+                  hesabfaCode: true,
+                  sku: true,
                   callForPriceRetail: true,
                   callForPriceWholesale: true,
                 },
@@ -264,27 +301,56 @@ export async function validateCartStockForCheckout(): Promise<ActionResult> {
         },
       });
       if (!cart || cart.items.length === 0) return fail('سبد خرید شما خالی است.');
-      lines = cart.items.map((i) => ({
-        name: i.product.name,
-        quantity: i.quantity,
-        stock: i.product.stock,
-        callForPrice: isCallForPriceForRole(
-          {
-            callForPriceRetail: i.product.callForPriceRetail,
-            callForPriceWholesale: i.product.callForPriceWholesale,
-          },
-          role,
-        ),
-      }));
+
+      for (const item of cart.items) {
+        if (
+          isCallForPriceForRole(
+            {
+              callForPriceRetail: item.product.callForPriceRetail,
+              callForPriceWholesale: item.product.callForPriceWholesale,
+            },
+            role,
+          )
+        ) {
+          return fail(`«${item.product.name}» ${CALL_FOR_PRICE_BLOCKED_MSG}`);
+        }
+        rows.push({
+          productId: item.product.id,
+          name: item.product.name,
+          quantity: item.quantity,
+          localStock: item.product.stock,
+          hesabfaCode: item.product.hesabfaCode?.trim() || item.product.sku.trim() || null,
+        });
+      }
     }
 
-    const blocked = lines.find((i) => i.callForPrice);
-    if (blocked) {
-      return fail(`«${blocked.name}» ${CALL_FOR_PRICE_BLOCKED_MSG}`);
+    const linked = rows.filter((r): r is CartRow & { hesabfaCode: string } => Boolean(r.hesabfaCode));
+    const fallbackStock = new Map(rows.map((r) => [r.productId, r.localStock]));
+    let effectiveStock = new Map(fallbackStock);
+
+    if (linked.length > 0) {
+      const { issues, stockByProduct } = await validateLinesAgainstHesabfaStock(
+        linked.map((r) => ({
+          productId: r.productId,
+          name: r.name,
+          quantity: r.quantity,
+          hesabfaCode: r.hesabfaCode,
+        })),
+        fallbackStock,
+      );
+      if (issues.length > 0) return fail(formatCartStockIssues(issues));
+      effectiveStock = new Map([...fallbackStock, ...stockByProduct]);
     }
 
-    const issues = collectCartStockIssues(lines);
-    if (issues.length > 0) return fail(formatCartStockIssues(issues));
+    const localIssues = collectCartStockIssues(
+      rows.map((r) => ({
+        name: r.name,
+        quantity: r.quantity,
+        stock: effectiveStock.get(r.productId) ?? r.localStock,
+      })),
+    );
+    if (localIssues.length > 0) return fail(formatCartStockIssues(localIssues));
+
     return ok(undefined);
   });
 }

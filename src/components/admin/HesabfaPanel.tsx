@@ -32,10 +32,11 @@ export default function HesabfaPanel({ configured, hookUrl, appWebhookUrl }: Pro
     startTransition(async () => {
       const res = await forceSyncHesabfa();
       if (res.ok) {
-        const { products, contacts } = res.data;
+        const { categories, products, contacts } = res.data;
         const msg =
-          `همگام‌سازی کامل شد — کالا: ${fa(products.created)} جدید / ${fa(products.updated)} به‌روزرسانی / ${fa(products.deleted)} حذف‌شده، ` +
-          `اشخاص: ${fa(contacts.created)} جدید / ${fa(contacts.updated)} به‌روزرسانی / ${fa(contacts.skipped)} ردشده، ` 
+          `همگام‌سازی کامل شد — دسته‌بندی: ${fa(categories.created)} جدید / ${fa(categories.updated)} به‌روزرسانی، ` +
+          `کالا: ${fa(products.created)} جدید / ${fa(products.updated)} به‌روزرسانی / ${fa(products.deleted)} حذف‌شده، ` +
+          `اشخاص: ${fa(contacts.created)} جدید / ${fa(contacts.updated)} به‌روزرسانی / ${fa(contacts.skipped)} ردشده`;
         setLastMessage(msg);
         notify({ variant: 'success', title: 'همگام‌سازی حسابفا', description: msg });
       } else {
@@ -98,7 +99,7 @@ export default function HesabfaPanel({ configured, hookUrl, appWebhookUrl }: Pro
       <Card>
         <CardHeader
           title="همگام‌سازی دستی"
-          description="دریافت کالاها و اشخاص از حسابفا، حذف نرم کالاهای حذف‌شده، و ارسال کالا/اشخاص محلی به حسابفا. فاکتورها از طریق وب‌هوک فقط روی سفارش‌های موجود به‌روز می‌شوند."
+          description="دریافت دسته‌بندی‌ها، کالاها و اشخاص از حسابفا. موجودی از فیلد Stock در item/get خوانده می‌شود. فاکتورها از طریق وب‌هوک فقط روی سفارش‌های موجود به‌روز می‌شوند."
         />
         <div className="px-5 sm:px-6 py-5 space-y-4">
           <div className="flex flex-wrap gap-3">

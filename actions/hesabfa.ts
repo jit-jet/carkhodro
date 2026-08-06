@@ -34,7 +34,7 @@ export async function getHesabfaIntegrationStatus(): Promise<{
   }
 }
 
-/** Full two-way sync (products + contacts pull/push). Admin only. */
+/** Full sync (categories + products + contacts pull). Admin only. */
 export async function forceSyncHesabfa(): Promise<ActionResult<FullSyncSummary>> {
   return runMutation('forceSyncHesabfa', async () => {
     const admin = await getCurrentAdmin();

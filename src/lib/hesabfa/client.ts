@@ -9,10 +9,12 @@ import type {
   HesabfaInvoice,
   HesabfaItem,
   HesabfaPagedList,
-  HesabfaProductCategory,
+  HesabfaProductCategoryNode,
+  HesabfaProductCategoryTree,
   HesabfaQueryInfo,
   HesabfaResponse,
 } from './types';
+import { extractTopLevelCategories, isHesabfaRootCategoryName } from './category-path';
 
 const DEFAULT_BASE_URL = 'https://api.hesabfa.com/v1';
 const PAGE_SIZE = 200;
@@ -199,12 +201,32 @@ export async function saveItem(
   return post<HesabfaItem>('item/save', { item }, { unique: true });
 }
 
-export async function getProductCategories(): Promise<HesabfaProductCategory[]> {
-  const result = await post<HesabfaProductCategory[] | HesabfaPagedList<HesabfaProductCategory>>(
-    'setting/getProductCategories',
-    {},
-  );
-  return Array.isArray(result) ? result : (result.List ?? []);
+/**
+ * Top-level product categories from Hesabfa (`setting/getProductCategories`).
+ * Skips «کالا» / «کالاها» and returns only their direct children
+ * (e.g. «موتوری», not nested «یاتاقان»).
+ */
+export async function getProductCategories(): Promise<HesabfaProductCategoryNode[]> {
+  const result = await post<
+    HesabfaProductCategoryTree | HesabfaProductCategoryNode[] | HesabfaPagedList<HesabfaProductCategoryNode>
+  >('setting/getProductCategories', {});
+
+  if (Array.isArray(result)) {
+    return result.filter((n) => {
+      const name = n.Name?.trim();
+      return Boolean(name) && !isHesabfaRootCategoryName(name);
+    });
+  }
+  if (result && typeof result === 'object' && 'List' in result && Array.isArray(result.List)) {
+    return result.List.filter((n) => {
+      const name = n.Name?.trim();
+      return Boolean(name) && !isHesabfaRootCategoryName(name);
+    });
+  }
+  if (result && typeof result === 'object' && 'Root' in result) {
+    return extractTopLevelCategories(result.Root);
+  }
+  return [];
 }
 
 // ── Contacts ──────────────────────────────────────────────────────────────────

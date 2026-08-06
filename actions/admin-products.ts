@@ -25,6 +25,7 @@ import {
   pushProductToHesabfa,
   saveProductItemToHesabfa,
 } from '@/src/lib/hesabfa/products';
+import { syncHesabfaStockToTarget } from '@/src/lib/hesabfa/stock';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import crypto from 'node:crypto';
 
@@ -161,6 +162,19 @@ export async function createProduct(
       );
     }
 
+    const targetStock = Math.max(0, Math.round(input.stock ?? 0));
+    try {
+      await syncHesabfaStockToTarget({
+        itemCode: code,
+        itemName: input.name.trim(),
+        targetStock,
+        unitPriceToman: Number(buyPrice ?? wholesalePrice),
+        reference: `create:${code}`,
+      });
+    } catch (err) {
+      console.error('[hesabfa:stock:create]', err);
+    }
+
     const created = await prisma.product.create({
       data: {
         sku: code,
@@ -175,7 +189,7 @@ export async function createProduct(
         isOffer: input.isOffer ?? false,
         callForPriceRetail: input.callForPriceRetail ?? false,
         callForPriceWholesale: input.callForPriceWholesale ?? false,
-        stock: input.stock ?? 0,
+        stock: targetStock,
         origin: input.origin ?? null,
         unit: input.unit?.trim() || 'عدد',
         mainImage: input.mainImage ?? null,
@@ -268,6 +282,20 @@ export async function updateProduct(
     }
 
     const code = hesabfaCodeOf(saved) || hesabfaCode;
+    const targetStock =
+      input.stock !== undefined ? Math.max(0, Math.round(input.stock)) : existing.stock;
+
+    try {
+      await syncHesabfaStockToTarget({
+        itemCode: code,
+        itemName: name,
+        targetStock,
+        unitPriceToman: Number(buyPrice ?? wholesalePrice),
+        reference: `update:${id}`,
+      });
+    } catch (err) {
+      console.error('[hesabfa:stock:update]', err);
+    }
 
     const updated = await prisma.product.update({
       where: { id },
@@ -293,7 +321,7 @@ export async function updateProduct(
           ? { callForPriceWholesale: input.callForPriceWholesale }
           : {}),
         isActive,
-        ...(input.stock !== undefined ? { stock: input.stock } : {}),
+        ...(input.stock !== undefined ? { stock: targetStock } : {}),
         ...(input.origin !== undefined ? { origin: input.origin } : {}),
         ...(input.unit !== undefined ? { unit: input.unit.trim() || 'عدد' } : {}),
         ...(input.mainImage !== undefined ? { mainImage: input.mainImage } : {}),

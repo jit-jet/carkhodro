@@ -246,6 +246,8 @@ export async function updateUser(
     if (!ASSIGNABLE_ROLES.includes(input.role)) {
       return fail('این نقش از این بخش قابل تنظیم نیست.');
     }
+    const promotedToPartner =
+      target.role !== 'WHOLESALE' && input.role === 'WHOLESALE';
 
     if (!input.firstName?.trim() || !input.lastName?.trim()) {
       return fail('نام و نام خانوادگی الزامی است.');
@@ -338,7 +340,11 @@ export async function updateUser(
       }
     });
 
-    runHesabfaBackground('pushContact:adminUpdate', () => pushContactToHesabfa(userId));
+    // Hesabfa contact create/update only when an admin promotes to همکار.
+    // Other admin edits and website profile changes do not push to Hesabfa.
+    if (promotedToPartner) {
+      runHesabfaBackground('pushContact:partnerPromote', () => pushContactToHesabfa(userId));
+    }
     return ok(undefined);
   });
 }

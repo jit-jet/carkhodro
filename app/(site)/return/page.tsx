@@ -44,7 +44,7 @@ export default function ReturnPage() {
               <h2 className="text-base font-bold text-charcoal mb-3">موارد عدم پذیرش مرجوعی</h2>
               <ul className="space-y-2">
                 {[
-                  'کالاهای نصب یا مورد استفاده قرار گرفته.',
+                  ' ی نصب یا مورد استفاده قرار گرفته.',
                   'کالاهای آسیب‌دیده توسط خریدار.',
                   'گذشت بیش از ۷ روز از تاریخ دریافت.',
                 ].map(item => (

@@ -57,9 +57,18 @@ export interface AdminCategoryVM extends CategoryVM {
 
 export async function getCategoriesAdmin(): Promise<AdminCategoryVM[]> {
   return safeQuery('getCategoriesAdmin', async () => {
-    const rows = await prisma.category.findMany({ orderBy: { sortOrder: 'asc' } });
+    const rows = await prisma.category.findMany({
+      orderBy: { sortOrder: 'asc' },
+      include: { _count: { select: { products: true } } },
+    });
     return rows.map((c) => ({
-      ...toCategoryVM(c),
+      ...toCategoryVM({
+        id: c.id,
+        key: c.key,
+        name: c.name,
+        image: c.image,
+        productCount: c._count.products,
+      }),
       isActive: c.isActive,
     }));
   }, []);

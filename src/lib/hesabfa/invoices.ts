@@ -157,25 +157,31 @@ async function persistInvoiceLink(orderId: string, saved: HesabfaInvoice): Promi
 
 async function markInvoicePaid(number: string, amountRial: number, ref?: string | null) {
   const bankCode = process.env.HESABFA_BANK_CODE?.trim();
-  if (bankCode) {
-    try {
-      await saveInvoicePayment({
-        type: HESABFA_INVOICE_TYPE_SALE,
-        number,
-        bankCode,
-        date: formatHesabfaDate(new Date()),
-        amount: amountRial,
-        transactionNumber: ref ?? undefined,
-        description: HESABFA_INVOICE_NOTE,
-        transactionFee: 0,
-        currency: 'IRR',
-      });
-      return;
-    } catch (err) {
-      console.error('[hesabfa:savePayment]', err);
-    }
+  if (!bankCode) {
+    console.warn(
+      '[hesabfa:savePayment] HESABFA_BANK_CODE is empty — falling back to changePaidStatus',
+    );
+    await changeInvoicePaidStatus(number, true);
+    return;
   }
-  await changeInvoicePaidStatus(number, true);
+
+  // Prefer invoice/savePayment (Set Payment) immediately after successful IPG pay.
+  try {
+    await saveInvoicePayment({
+      type: HESABFA_INVOICE_TYPE_SALE,
+      number,
+      bankCode,
+      date: formatHesabfaDate(new Date()),
+      amount: amountRial,
+      transactionNumber: ref ?? undefined,
+      description: HESABFA_INVOICE_NOTE,
+      transactionFee: 0,
+      currency: 'IRR',
+    });
+  } catch (err) {
+    console.error('[hesabfa:savePayment] failed, falling back to changePaidStatus', err);
+    await changeInvoicePaidStatus(number, true);
+  }
 }
 
 /**
@@ -185,6 +191,7 @@ export async function pushPaidRetailInvoice(orderId: string): Promise<void> {
   if (!isHesabfaConfigured()) return;
 
   const order = await loadOrder(orderId);
+  console.log('order', order);
   if (!order) return;
   if (order.hesabfaCode) {
     // Already linked — refresh paid status.

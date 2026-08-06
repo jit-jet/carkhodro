@@ -6,6 +6,7 @@
 import { prisma } from '@/src/lib/prisma';
 import {
   getAllContacts,
+  getContactByCode,
   getContactsById,
   isHesabfaConfigured,
   saveContact,
@@ -122,10 +123,8 @@ interface PreparedContact {
   lastName: string;
   hesabfaId: number | undefined;
   shopName: string | null;
-  /** Same semantics as before: only force false when Active === false on update. */
-  activeFalse: boolean;
-  /** create: Active !== false */
-  isActiveOnCreate: boolean;
+  /** Explicit Active from Hesabfa; null when the API omitted it. */
+  active: boolean | null;
   street: string | null;
   postalRaw: string;
   state: string | null | undefined;
@@ -145,8 +144,7 @@ function prepareContact(contact: HesabfaContact): PreparedContact | null {
     lastName,
     hesabfaId: typeof contact.Id === 'number' ? contact.Id : undefined,
     shopName: contact.Company?.trim() || null,
-    activeFalse: contact.Active === false,
-    isActiveOnCreate: contact.Active !== false,
+    active: contact.Active === true ? true : contact.Active === false ? false : null,
     street: contact.Address?.trim() || null,
     postalRaw: contact.PostalCode?.replace(/\D/g, '') ?? '',
     state: contact.State,
@@ -303,7 +301,8 @@ export async function syncContactsFromHesabfa(
         hesabfaCode: contact.code,
         ...(contact.hesabfaId != null ? { hesabfaId: contact.hesabfaId } : {}),
         hesabfaSyncedAt: now,
-        ...(contact.activeFalse ? { isActive: false } : {}),
+        ...(contact.active === false ? { isActive: false } : {}),
+        ...(contact.active === true ? { isActive: true } : {}),
       },
     });
   });
@@ -321,7 +320,7 @@ export async function syncContactsFromHesabfa(
           shopName: contact.shopName,
           role: 'RETAIL' as const,
           isVerified: false,
-          isActive: contact.isActiveOnCreate,
+          isActive: contact.active !== false,
           hesabfaCode: contact.code,
           hesabfaId: contact.hesabfaId ?? null,
           hesabfaSyncedAt: now,
@@ -364,6 +363,28 @@ export async function syncContactsFromHesabfa(
 
 export async function syncContactsByIds(ids: number[]): Promise<ContactSyncStats> {
   const contacts = await getContactsById(ids);
+  return syncContactsFromHesabfa(contacts);
+}
+
+/**
+ * Webhook helper: fetch contacts by Hesabfa numeric Ids, falling back to
+ * codes from the hook `Extra` field when getById returns nothing.
+ */
+export async function syncContactsFromWebhook(
+  ids: number[],
+  extraCodes: string[] = [],
+): Promise<ContactSyncStats> {
+  let contacts = ids.length > 0 ? await getContactsById(ids) : [];
+
+  if (contacts.length === 0 && extraCodes.length > 0) {
+    const byCode: HesabfaContact[] = [];
+    for (const code of extraCodes) {
+      const row = await getContactByCode(code);
+      if (row) byCode.push(row);
+    }
+    contacts = byCode;
+  }
+
   return syncContactsFromHesabfa(contacts);
 }
 
