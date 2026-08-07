@@ -23,6 +23,7 @@ import { useCartUI } from '@/src/store/cart-ui';
 import { formatRial, tomanInWords, formatNumberFa } from '@/src/lib/format';
 import InvoiceProductModal from '@/src/components/dashboard/InvoiceProductModal';
 import type { DashboardCartVM, InvoiceSearchResultVM } from '@/src/lib/dashboard-types';
+import Link from 'next/link';
 
 interface Props {
   initialCart: DashboardCartVM;
@@ -489,7 +490,9 @@ function ConfirmInvoiceModal({
               {previewLines.map((line) => (
                 <li key={line.id} className="flex items-start justify-between gap-3 px-3 py-2.5 text-sm">
                   <div className="min-w-0 text-right">
+                  <Link href={`/products/${line.id}`} className="inline-block">
                     <p className="font-semibold text-charcoal truncate">{line.name}</p>
+                  </Link>
                     <p className="text-[11px] font-mono text-gray-400 mt-0.5">{line.sku}</p>
                   </div>
                   <div className="shrink-0 text-left">

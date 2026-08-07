@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import type { CartItemVM } from '@/src/lib/serializers';
+import Link from 'next/link';
 
 function formatPrice(n: number) {
   return n.toLocaleString('fa-IR') + ' تومان';
@@ -17,15 +18,17 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: Props)
   return (
     <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5">
       {/* Product image */}
-      <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-gray-50 border border-gray-100 shrink-0">
-        <Image
-          src={item.image}
-          alt={item.name}
-          fill
-          sizes="96px"
-          className="object-contain p-2"
-        />
-      </div>
+      <Link href={`/products/${item.id}`} className="inline-block">
+        <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-gray-50 border border-gray-100 shrink-0">
+          <Image
+            src={item.image}
+            alt={item.name}
+            fill
+            sizes="96px"
+            className="object-contain p-2"
+          />
+        </div>
+      </Link>
 
       {/* Info + controls */}
       <div className="flex-1 min-w-0 flex flex-col gap-2">
@@ -33,7 +36,9 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: Props)
         <span className="text-[10px] font-mono text-gray-400 tracking-wider">{item.sku}</span>
 
         {/* Name */}
-        <h3 className="text-sm font-semibold text-charcoal leading-5 line-clamp-2">{item.name}</h3>
+        <Link href={`/products/${item.id}`} className="inline-block">
+          <h3 className="text-sm font-semibold text-charcoal leading-5 line-clamp-2">{item.name}</h3>
+        </Link>
 
         {item.callForPrice ? (
           <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-2 py-1.5">
