@@ -38,6 +38,12 @@ enum SmsCampaignStatus {
   FAILED
 }
 
+enum AdminActivityStatus {
+  SUCCESS
+  FAILURE
+  BLOCKED
+}
+
 /// Wholesale-order lifecycle, surfaced in the partner dashboard's order list and
 /// status filter. Ordered roughly by progression; cancellation/archive are
 /// terminal side-states. Persian labels live in `src/lib/order-labels.ts`.
@@ -224,6 +230,7 @@ model User {
   priceListRequests  PriceListRequest[]
   productSuggestions ProductSuggestion[]
   smsCampaigns       SmsCampaign[]
+  adminActivityLogs  AdminActivityLog[]
 
   @@index([phoneNumber])
   @@index([isActive])
@@ -728,6 +735,28 @@ model SiteSetting {
   updatedAt         DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")
+}
+
+/// Append-only security/activity audit trail for admin authentication and
+/// important back-office mutations. Inputs and secrets are never stored.
+model AdminActivityLog {
+  id            String              @id @default(cuid())
+  actorId       String?             @map("actor_id")
+  actorUsername String?             @map("actor_username")
+  action        String
+  status        AdminActivityStatus
+  ipAddress     String?             @map("ip_address")
+  userAgent     String?             @map("user_agent")
+  metadata      Json?
+  createdAt     DateTime            @default(now()) @map("created_at")
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
+  @@index([status, createdAt])
+  @@map("admin_activity_logs")
 }
 
 /// Encrypted integration configuration. The application only ever decrypts

@@ -10,6 +10,11 @@
  *                        Client Components / forms can branch on success.
  */
 
+import {
+  captureAdminAuditContext,
+  recordAdminMutation,
+} from '@/src/lib/admin-audit';
+
 export type ActionResult<T = void> =
   | { ok: true; data: T }
   | { ok: false; error: string };
@@ -48,10 +53,14 @@ export async function runMutation<T>(
   label: string,
   fn: () => Promise<ActionResult<T>>,
 ): Promise<ActionResult<T>> {
+  const auditContext = await captureAdminAuditContext(label);
   try {
-    return await fn();
+    const result = await fn();
+    await recordAdminMutation(auditContext, label, result.ok ? 'SUCCESS' : 'FAILURE');
+    return result;
   } catch (err) {
     console.error(`[mutation:${label}]`, err);
+    await recordAdminMutation(auditContext, label, 'FAILURE');
     return fail('خطای غیرمنتظره رخ داد. لطفاً دوباره تلاش کنید.');
   }
 }

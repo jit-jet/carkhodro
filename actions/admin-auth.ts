@@ -13,6 +13,7 @@ import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { verifyPassword } from '@/src/lib/password';
 import { createAdminSession, destroyAdminSession, getCurrentAdmin } from '@/src/lib/admin-session';
+import { recordAdminLoginAttempt } from '@/src/lib/admin-audit';
 
 const MAX_FAILED_ADMIN_LOGINS = 5;
 const ADMIN_LOCKOUT_MS = 60 * 60 * 1000;
@@ -25,20 +26,35 @@ export async function adminLogin(
 ): Promise<ActionResult<{ id: string }>> {
   return runMutation('adminLogin', async () => {
     const login = username.trim();
+    async function loginFailure(
+      message: string,
+      status: 'FAILURE' | 'BLOCKED',
+      reason: 'invalid_credentials' | 'locked' | 'inactive',
+      actorId?: string,
+    ): Promise<ActionResult<never>> {
+      await recordAdminLoginAttempt({
+        actorId,
+        attemptedUsername: login,
+        status,
+        reason,
+      });
+      return fail(message);
+    }
+
     if (!login || !password) {
-      return fail('نام کاربری و رمز عبور الزامی است.');
+      return loginFailure('نام کاربری و رمز عبور الزامی است.', 'FAILURE', 'invalid_credentials');
     }
 
     const user = await prisma.user.findUnique({ where: { username: login } });
     // Same generic error for "no such user" and "wrong password" — avoids
     // leaking which admin usernames exist.
     if (!user || user.role !== 'ADMIN') {
-      return fail(INVALID_CREDENTIALS);
+      return loginFailure(INVALID_CREDENTIALS, 'FAILURE', 'invalid_credentials');
     }
 
     const now = new Date();
     if (user.adminLockedUntil && user.adminLockedUntil > now) {
-      return fail(LOCKED_ACCOUNT);
+      return loginFailure(LOCKED_ACCOUNT, 'BLOCKED', 'locked', user.id);
     }
 
     // An elapsed lock starts a fresh sequence; its first wrong password must
@@ -65,13 +81,18 @@ export async function adminLogin(
             adminLockedUntil: new Date(Date.now() + ADMIN_LOCKOUT_MS),
           },
         });
-        return fail(LOCKED_ACCOUNT);
+        return loginFailure(LOCKED_ACCOUNT, 'BLOCKED', 'locked', user.id);
       }
-      return fail(INVALID_CREDENTIALS);
+      return loginFailure(INVALID_CREDENTIALS, 'FAILURE', 'invalid_credentials', user.id);
     }
 
     if (!user.isActive) {
-      return fail('حساب کاربری شما غیرفعال شده است. لطفاً با ادمین در ارتباط باشید.');
+      return loginFailure(
+        'حساب کاربری شما غیرفعال شده است. لطفاً با ادمین در ارتباط باشید.',
+        'FAILURE',
+        'inactive',
+        user.id,
+      );
     }
 
     if (user.failedAdminLoginAttempts !== 0 || user.adminLockedUntil) {
@@ -82,6 +103,12 @@ export async function adminLogin(
     }
 
     await createAdminSession(user.id);
+    await recordAdminLoginAttempt({
+      actorId: user.id,
+      attemptedUsername: login,
+      status: 'SUCCESS',
+      reason: 'success',
+    });
     return ok({ id: user.id });
   });
 }

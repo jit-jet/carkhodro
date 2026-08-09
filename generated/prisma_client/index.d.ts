@@ -138,6 +138,12 @@ export type Faq = $Result.DefaultSelection<Prisma.$FaqPayload>
  */
 export type SiteSetting = $Result.DefaultSelection<Prisma.$SiteSettingPayload>
 /**
+ * Model AdminActivityLog
+ * Append-only security/activity audit trail for admin authentication and
+ * important back-office mutations. Inputs and secrets are never stored.
+ */
+export type AdminActivityLog = $Result.DefaultSelection<Prisma.$AdminActivityLogPayload>
+/**
  * Model SystemSetting
  * Encrypted integration configuration. The application only ever decrypts
  * this singleton inside its server-only settings DAL.
@@ -250,6 +256,15 @@ export const SmsCampaignStatus: {
 export type SmsCampaignStatus = (typeof SmsCampaignStatus)[keyof typeof SmsCampaignStatus]
 
 
+export const AdminActivityStatus: {
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
+  BLOCKED: 'BLOCKED'
+};
+
+export type AdminActivityStatus = (typeof AdminActivityStatus)[keyof typeof AdminActivityStatus]
+
+
 export const OrderStatus: {
   NEW: 'NEW',
   AWAITING_CONFIRMATION: 'AWAITING_CONFIRMATION',
@@ -341,6 +356,10 @@ export const SmsTargetRole: typeof $Enums.SmsTargetRole
 export type SmsCampaignStatus = $Enums.SmsCampaignStatus
 
 export const SmsCampaignStatus: typeof $Enums.SmsCampaignStatus
+
+export type AdminActivityStatus = $Enums.AdminActivityStatus
+
+export const AdminActivityStatus: typeof $Enums.AdminActivityStatus
 
 export type OrderStatus = $Enums.OrderStatus
 
@@ -734,6 +753,16 @@ export class PrismaClient<
     * ```
     */
   get siteSetting(): Prisma.SiteSettingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.adminActivityLog`: Exposes CRUD operations for the **AdminActivityLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AdminActivityLogs
+    * const adminActivityLogs = await prisma.adminActivityLog.findMany()
+    * ```
+    */
+  get adminActivityLog(): Prisma.AdminActivityLogDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.systemSetting`: Exposes CRUD operations for the **SystemSetting** model.
@@ -1322,6 +1351,7 @@ export namespace Prisma {
     Post: 'Post',
     Faq: 'Faq',
     SiteSetting: 'SiteSetting',
+    AdminActivityLog: 'AdminActivityLog',
     SystemSetting: 'SystemSetting',
     RulesContent: 'RulesContent',
     SocialLink: 'SocialLink',
@@ -1350,7 +1380,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "systemSetting" | "rulesContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
+      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "adminActivityLog" | "systemSetting" | "rulesContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3130,6 +3160,80 @@ export namespace Prisma {
           }
         }
       }
+      AdminActivityLog: {
+        payload: Prisma.$AdminActivityLogPayload<ExtArgs>
+        fields: Prisma.AdminActivityLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AdminActivityLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AdminActivityLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload>
+          }
+          findFirst: {
+            args: Prisma.AdminActivityLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AdminActivityLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload>
+          }
+          findMany: {
+            args: Prisma.AdminActivityLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload>[]
+          }
+          create: {
+            args: Prisma.AdminActivityLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload>
+          }
+          createMany: {
+            args: Prisma.AdminActivityLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AdminActivityLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload>[]
+          }
+          delete: {
+            args: Prisma.AdminActivityLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload>
+          }
+          update: {
+            args: Prisma.AdminActivityLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.AdminActivityLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AdminActivityLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AdminActivityLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.AdminActivityLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminActivityLogPayload>
+          }
+          aggregate: {
+            args: Prisma.AdminActivityLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAdminActivityLog>
+          }
+          groupBy: {
+            args: Prisma.AdminActivityLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AdminActivityLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AdminActivityLogCountArgs<ExtArgs>
+            result: $Utils.Optional<AdminActivityLogCountAggregateOutputType> | number
+          }
+        }
+      }
       SystemSetting: {
         payload: Prisma.$SystemSettingPayload<ExtArgs>
         fields: Prisma.SystemSettingFieldRefs
@@ -4224,6 +4328,7 @@ export namespace Prisma {
     post?: PostOmit
     faq?: FaqOmit
     siteSetting?: SiteSettingOmit
+    adminActivityLog?: AdminActivityLogOmit
     systemSetting?: SystemSettingOmit
     rulesContent?: RulesContentOmit
     socialLink?: SocialLinkOmit
@@ -4390,6 +4495,7 @@ export namespace Prisma {
     priceListRequests: number
     productSuggestions: number
     smsCampaigns: number
+    adminActivityLogs: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4404,6 +4510,7 @@ export namespace Prisma {
     priceListRequests?: boolean | UserCountOutputTypeCountPriceListRequestsArgs
     productSuggestions?: boolean | UserCountOutputTypeCountProductSuggestionsArgs
     smsCampaigns?: boolean | UserCountOutputTypeCountSmsCampaignsArgs
+    adminActivityLogs?: boolean | UserCountOutputTypeCountAdminActivityLogsArgs
   }
 
   // Custom InputTypes
@@ -4492,6 +4599,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSmsCampaignsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SmsCampaignWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAdminActivityLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminActivityLogWhereInput
   }
 
 
@@ -9606,6 +9720,7 @@ export namespace Prisma {
     priceListRequests?: boolean | User$priceListRequestsArgs<ExtArgs>
     productSuggestions?: boolean | User$productSuggestionsArgs<ExtArgs>
     smsCampaigns?: boolean | User$smsCampaignsArgs<ExtArgs>
+    adminActivityLogs?: boolean | User$adminActivityLogsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -9704,6 +9819,7 @@ export namespace Prisma {
     priceListRequests?: boolean | User$priceListRequestsArgs<ExtArgs>
     productSuggestions?: boolean | User$productSuggestionsArgs<ExtArgs>
     smsCampaigns?: boolean | User$smsCampaignsArgs<ExtArgs>
+    adminActivityLogs?: boolean | User$adminActivityLogsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -9724,6 +9840,7 @@ export namespace Prisma {
       priceListRequests: Prisma.$PriceListRequestPayload<ExtArgs>[]
       productSuggestions: Prisma.$ProductSuggestionPayload<ExtArgs>[]
       smsCampaigns: Prisma.$SmsCampaignPayload<ExtArgs>[]
+      adminActivityLogs: Prisma.$AdminActivityLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10209,6 +10326,7 @@ export namespace Prisma {
     priceListRequests<T extends User$priceListRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$priceListRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PriceListRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     productSuggestions<T extends User$productSuggestionsArgs<ExtArgs> = {}>(args?: Subset<T, User$productSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     smsCampaigns<T extends User$smsCampaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$smsCampaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    adminActivityLogs<T extends User$adminActivityLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$adminActivityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10935,6 +11053,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SmsCampaignScalarFieldEnum | SmsCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * User.adminActivityLogs
+   */
+  export type User$adminActivityLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    where?: AdminActivityLogWhereInput
+    orderBy?: AdminActivityLogOrderByWithRelationInput | AdminActivityLogOrderByWithRelationInput[]
+    cursor?: AdminActivityLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AdminActivityLogScalarFieldEnum | AdminActivityLogScalarFieldEnum[]
   }
 
   /**
@@ -33461,6 +33603,1136 @@ export namespace Prisma {
 
 
   /**
+   * Model AdminActivityLog
+   */
+
+  export type AggregateAdminActivityLog = {
+    _count: AdminActivityLogCountAggregateOutputType | null
+    _min: AdminActivityLogMinAggregateOutputType | null
+    _max: AdminActivityLogMaxAggregateOutputType | null
+  }
+
+  export type AdminActivityLogMinAggregateOutputType = {
+    id: string | null
+    actorId: string | null
+    actorUsername: string | null
+    action: string | null
+    status: $Enums.AdminActivityStatus | null
+    ipAddress: string | null
+    userAgent: string | null
+    createdAt: Date | null
+  }
+
+  export type AdminActivityLogMaxAggregateOutputType = {
+    id: string | null
+    actorId: string | null
+    actorUsername: string | null
+    action: string | null
+    status: $Enums.AdminActivityStatus | null
+    ipAddress: string | null
+    userAgent: string | null
+    createdAt: Date | null
+  }
+
+  export type AdminActivityLogCountAggregateOutputType = {
+    id: number
+    actorId: number
+    actorUsername: number
+    action: number
+    status: number
+    ipAddress: number
+    userAgent: number
+    metadata: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AdminActivityLogMinAggregateInputType = {
+    id?: true
+    actorId?: true
+    actorUsername?: true
+    action?: true
+    status?: true
+    ipAddress?: true
+    userAgent?: true
+    createdAt?: true
+  }
+
+  export type AdminActivityLogMaxAggregateInputType = {
+    id?: true
+    actorId?: true
+    actorUsername?: true
+    action?: true
+    status?: true
+    ipAddress?: true
+    userAgent?: true
+    createdAt?: true
+  }
+
+  export type AdminActivityLogCountAggregateInputType = {
+    id?: true
+    actorId?: true
+    actorUsername?: true
+    action?: true
+    status?: true
+    ipAddress?: true
+    userAgent?: true
+    metadata?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AdminActivityLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminActivityLog to aggregate.
+     */
+    where?: AdminActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminActivityLogs to fetch.
+     */
+    orderBy?: AdminActivityLogOrderByWithRelationInput | AdminActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AdminActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AdminActivityLogs
+    **/
+    _count?: true | AdminActivityLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AdminActivityLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AdminActivityLogMaxAggregateInputType
+  }
+
+  export type GetAdminActivityLogAggregateType<T extends AdminActivityLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateAdminActivityLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAdminActivityLog[P]>
+      : GetScalarType<T[P], AggregateAdminActivityLog[P]>
+  }
+
+
+
+
+  export type AdminActivityLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminActivityLogWhereInput
+    orderBy?: AdminActivityLogOrderByWithAggregationInput | AdminActivityLogOrderByWithAggregationInput[]
+    by: AdminActivityLogScalarFieldEnum[] | AdminActivityLogScalarFieldEnum
+    having?: AdminActivityLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AdminActivityLogCountAggregateInputType | true
+    _min?: AdminActivityLogMinAggregateInputType
+    _max?: AdminActivityLogMaxAggregateInputType
+  }
+
+  export type AdminActivityLogGroupByOutputType = {
+    id: string
+    actorId: string | null
+    actorUsername: string | null
+    action: string
+    status: $Enums.AdminActivityStatus
+    ipAddress: string | null
+    userAgent: string | null
+    metadata: JsonValue | null
+    createdAt: Date
+    _count: AdminActivityLogCountAggregateOutputType | null
+    _min: AdminActivityLogMinAggregateOutputType | null
+    _max: AdminActivityLogMaxAggregateOutputType | null
+  }
+
+  type GetAdminActivityLogGroupByPayload<T extends AdminActivityLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AdminActivityLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AdminActivityLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AdminActivityLogGroupByOutputType[P]>
+            : GetScalarType<T[P], AdminActivityLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AdminActivityLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actorId?: boolean
+    actorUsername?: boolean
+    action?: boolean
+    status?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    actor?: boolean | AdminActivityLog$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["adminActivityLog"]>
+
+  export type AdminActivityLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actorId?: boolean
+    actorUsername?: boolean
+    action?: boolean
+    status?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    actor?: boolean | AdminActivityLog$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["adminActivityLog"]>
+
+  export type AdminActivityLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actorId?: boolean
+    actorUsername?: boolean
+    action?: boolean
+    status?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    actor?: boolean | AdminActivityLog$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["adminActivityLog"]>
+
+  export type AdminActivityLogSelectScalar = {
+    id?: boolean
+    actorId?: boolean
+    actorUsername?: boolean
+    action?: boolean
+    status?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }
+
+  export type AdminActivityLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "actorId" | "actorUsername" | "action" | "status" | "ipAddress" | "userAgent" | "metadata" | "createdAt", ExtArgs["result"]["adminActivityLog"]>
+  export type AdminActivityLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    actor?: boolean | AdminActivityLog$actorArgs<ExtArgs>
+  }
+  export type AdminActivityLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    actor?: boolean | AdminActivityLog$actorArgs<ExtArgs>
+  }
+  export type AdminActivityLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    actor?: boolean | AdminActivityLog$actorArgs<ExtArgs>
+  }
+
+  export type $AdminActivityLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AdminActivityLog"
+    objects: {
+      actor: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      actorId: string | null
+      actorUsername: string | null
+      action: string
+      status: $Enums.AdminActivityStatus
+      ipAddress: string | null
+      userAgent: string | null
+      metadata: Prisma.JsonValue | null
+      createdAt: Date
+    }, ExtArgs["result"]["adminActivityLog"]>
+    composites: {}
+  }
+
+  type AdminActivityLogGetPayload<S extends boolean | null | undefined | AdminActivityLogDefaultArgs> = $Result.GetResult<Prisma.$AdminActivityLogPayload, S>
+
+  type AdminActivityLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AdminActivityLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AdminActivityLogCountAggregateInputType | true
+    }
+
+  export interface AdminActivityLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AdminActivityLog'], meta: { name: 'AdminActivityLog' } }
+    /**
+     * Find zero or one AdminActivityLog that matches the filter.
+     * @param {AdminActivityLogFindUniqueArgs} args - Arguments to find a AdminActivityLog
+     * @example
+     * // Get one AdminActivityLog
+     * const adminActivityLog = await prisma.adminActivityLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AdminActivityLogFindUniqueArgs>(args: SelectSubset<T, AdminActivityLogFindUniqueArgs<ExtArgs>>): Prisma__AdminActivityLogClient<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AdminActivityLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AdminActivityLogFindUniqueOrThrowArgs} args - Arguments to find a AdminActivityLog
+     * @example
+     * // Get one AdminActivityLog
+     * const adminActivityLog = await prisma.adminActivityLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AdminActivityLogFindUniqueOrThrowArgs>(args: SelectSubset<T, AdminActivityLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AdminActivityLogClient<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminActivityLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminActivityLogFindFirstArgs} args - Arguments to find a AdminActivityLog
+     * @example
+     * // Get one AdminActivityLog
+     * const adminActivityLog = await prisma.adminActivityLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AdminActivityLogFindFirstArgs>(args?: SelectSubset<T, AdminActivityLogFindFirstArgs<ExtArgs>>): Prisma__AdminActivityLogClient<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminActivityLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminActivityLogFindFirstOrThrowArgs} args - Arguments to find a AdminActivityLog
+     * @example
+     * // Get one AdminActivityLog
+     * const adminActivityLog = await prisma.adminActivityLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AdminActivityLogFindFirstOrThrowArgs>(args?: SelectSubset<T, AdminActivityLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__AdminActivityLogClient<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AdminActivityLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminActivityLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AdminActivityLogs
+     * const adminActivityLogs = await prisma.adminActivityLog.findMany()
+     * 
+     * // Get first 10 AdminActivityLogs
+     * const adminActivityLogs = await prisma.adminActivityLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const adminActivityLogWithIdOnly = await prisma.adminActivityLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AdminActivityLogFindManyArgs>(args?: SelectSubset<T, AdminActivityLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AdminActivityLog.
+     * @param {AdminActivityLogCreateArgs} args - Arguments to create a AdminActivityLog.
+     * @example
+     * // Create one AdminActivityLog
+     * const AdminActivityLog = await prisma.adminActivityLog.create({
+     *   data: {
+     *     // ... data to create a AdminActivityLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends AdminActivityLogCreateArgs>(args: SelectSubset<T, AdminActivityLogCreateArgs<ExtArgs>>): Prisma__AdminActivityLogClient<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AdminActivityLogs.
+     * @param {AdminActivityLogCreateManyArgs} args - Arguments to create many AdminActivityLogs.
+     * @example
+     * // Create many AdminActivityLogs
+     * const adminActivityLog = await prisma.adminActivityLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AdminActivityLogCreateManyArgs>(args?: SelectSubset<T, AdminActivityLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AdminActivityLogs and returns the data saved in the database.
+     * @param {AdminActivityLogCreateManyAndReturnArgs} args - Arguments to create many AdminActivityLogs.
+     * @example
+     * // Create many AdminActivityLogs
+     * const adminActivityLog = await prisma.adminActivityLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AdminActivityLogs and only return the `id`
+     * const adminActivityLogWithIdOnly = await prisma.adminActivityLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AdminActivityLogCreateManyAndReturnArgs>(args?: SelectSubset<T, AdminActivityLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AdminActivityLog.
+     * @param {AdminActivityLogDeleteArgs} args - Arguments to delete one AdminActivityLog.
+     * @example
+     * // Delete one AdminActivityLog
+     * const AdminActivityLog = await prisma.adminActivityLog.delete({
+     *   where: {
+     *     // ... filter to delete one AdminActivityLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AdminActivityLogDeleteArgs>(args: SelectSubset<T, AdminActivityLogDeleteArgs<ExtArgs>>): Prisma__AdminActivityLogClient<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AdminActivityLog.
+     * @param {AdminActivityLogUpdateArgs} args - Arguments to update one AdminActivityLog.
+     * @example
+     * // Update one AdminActivityLog
+     * const adminActivityLog = await prisma.adminActivityLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AdminActivityLogUpdateArgs>(args: SelectSubset<T, AdminActivityLogUpdateArgs<ExtArgs>>): Prisma__AdminActivityLogClient<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AdminActivityLogs.
+     * @param {AdminActivityLogDeleteManyArgs} args - Arguments to filter AdminActivityLogs to delete.
+     * @example
+     * // Delete a few AdminActivityLogs
+     * const { count } = await prisma.adminActivityLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AdminActivityLogDeleteManyArgs>(args?: SelectSubset<T, AdminActivityLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminActivityLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminActivityLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AdminActivityLogs
+     * const adminActivityLog = await prisma.adminActivityLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AdminActivityLogUpdateManyArgs>(args: SelectSubset<T, AdminActivityLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminActivityLogs and returns the data updated in the database.
+     * @param {AdminActivityLogUpdateManyAndReturnArgs} args - Arguments to update many AdminActivityLogs.
+     * @example
+     * // Update many AdminActivityLogs
+     * const adminActivityLog = await prisma.adminActivityLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AdminActivityLogs and only return the `id`
+     * const adminActivityLogWithIdOnly = await prisma.adminActivityLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AdminActivityLogUpdateManyAndReturnArgs>(args: SelectSubset<T, AdminActivityLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AdminActivityLog.
+     * @param {AdminActivityLogUpsertArgs} args - Arguments to update or create a AdminActivityLog.
+     * @example
+     * // Update or create a AdminActivityLog
+     * const adminActivityLog = await prisma.adminActivityLog.upsert({
+     *   create: {
+     *     // ... data to create a AdminActivityLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AdminActivityLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AdminActivityLogUpsertArgs>(args: SelectSubset<T, AdminActivityLogUpsertArgs<ExtArgs>>): Prisma__AdminActivityLogClient<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AdminActivityLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminActivityLogCountArgs} args - Arguments to filter AdminActivityLogs to count.
+     * @example
+     * // Count the number of AdminActivityLogs
+     * const count = await prisma.adminActivityLog.count({
+     *   where: {
+     *     // ... the filter for the AdminActivityLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends AdminActivityLogCountArgs>(
+      args?: Subset<T, AdminActivityLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AdminActivityLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AdminActivityLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminActivityLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AdminActivityLogAggregateArgs>(args: Subset<T, AdminActivityLogAggregateArgs>): Prisma.PrismaPromise<GetAdminActivityLogAggregateType<T>>
+
+    /**
+     * Group by AdminActivityLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminActivityLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AdminActivityLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AdminActivityLogGroupByArgs['orderBy'] }
+        : { orderBy?: AdminActivityLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AdminActivityLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAdminActivityLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AdminActivityLog model
+   */
+  readonly fields: AdminActivityLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AdminActivityLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AdminActivityLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    actor<T extends AdminActivityLog$actorArgs<ExtArgs> = {}>(args?: Subset<T, AdminActivityLog$actorArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AdminActivityLog model
+   */
+  interface AdminActivityLogFieldRefs {
+    readonly id: FieldRef<"AdminActivityLog", 'String'>
+    readonly actorId: FieldRef<"AdminActivityLog", 'String'>
+    readonly actorUsername: FieldRef<"AdminActivityLog", 'String'>
+    readonly action: FieldRef<"AdminActivityLog", 'String'>
+    readonly status: FieldRef<"AdminActivityLog", 'AdminActivityStatus'>
+    readonly ipAddress: FieldRef<"AdminActivityLog", 'String'>
+    readonly userAgent: FieldRef<"AdminActivityLog", 'String'>
+    readonly metadata: FieldRef<"AdminActivityLog", 'Json'>
+    readonly createdAt: FieldRef<"AdminActivityLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AdminActivityLog findUnique
+   */
+  export type AdminActivityLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminActivityLog to fetch.
+     */
+    where: AdminActivityLogWhereUniqueInput
+  }
+
+  /**
+   * AdminActivityLog findUniqueOrThrow
+   */
+  export type AdminActivityLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminActivityLog to fetch.
+     */
+    where: AdminActivityLogWhereUniqueInput
+  }
+
+  /**
+   * AdminActivityLog findFirst
+   */
+  export type AdminActivityLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminActivityLog to fetch.
+     */
+    where?: AdminActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminActivityLogs to fetch.
+     */
+    orderBy?: AdminActivityLogOrderByWithRelationInput | AdminActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminActivityLogs.
+     */
+    cursor?: AdminActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminActivityLogs.
+     */
+    distinct?: AdminActivityLogScalarFieldEnum | AdminActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * AdminActivityLog findFirstOrThrow
+   */
+  export type AdminActivityLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminActivityLog to fetch.
+     */
+    where?: AdminActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminActivityLogs to fetch.
+     */
+    orderBy?: AdminActivityLogOrderByWithRelationInput | AdminActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminActivityLogs.
+     */
+    cursor?: AdminActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminActivityLogs.
+     */
+    distinct?: AdminActivityLogScalarFieldEnum | AdminActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * AdminActivityLog findMany
+   */
+  export type AdminActivityLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminActivityLogs to fetch.
+     */
+    where?: AdminActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminActivityLogs to fetch.
+     */
+    orderBy?: AdminActivityLogOrderByWithRelationInput | AdminActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AdminActivityLogs.
+     */
+    cursor?: AdminActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminActivityLogs.
+     */
+    distinct?: AdminActivityLogScalarFieldEnum | AdminActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * AdminActivityLog create
+   */
+  export type AdminActivityLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AdminActivityLog.
+     */
+    data: XOR<AdminActivityLogCreateInput, AdminActivityLogUncheckedCreateInput>
+  }
+
+  /**
+   * AdminActivityLog createMany
+   */
+  export type AdminActivityLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AdminActivityLogs.
+     */
+    data: AdminActivityLogCreateManyInput | AdminActivityLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdminActivityLog createManyAndReturn
+   */
+  export type AdminActivityLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many AdminActivityLogs.
+     */
+    data: AdminActivityLogCreateManyInput | AdminActivityLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdminActivityLog update
+   */
+  export type AdminActivityLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AdminActivityLog.
+     */
+    data: XOR<AdminActivityLogUpdateInput, AdminActivityLogUncheckedUpdateInput>
+    /**
+     * Choose, which AdminActivityLog to update.
+     */
+    where: AdminActivityLogWhereUniqueInput
+  }
+
+  /**
+   * AdminActivityLog updateMany
+   */
+  export type AdminActivityLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AdminActivityLogs.
+     */
+    data: XOR<AdminActivityLogUpdateManyMutationInput, AdminActivityLogUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminActivityLogs to update
+     */
+    where?: AdminActivityLogWhereInput
+    /**
+     * Limit how many AdminActivityLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminActivityLog updateManyAndReturn
+   */
+  export type AdminActivityLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * The data used to update AdminActivityLogs.
+     */
+    data: XOR<AdminActivityLogUpdateManyMutationInput, AdminActivityLogUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminActivityLogs to update
+     */
+    where?: AdminActivityLogWhereInput
+    /**
+     * Limit how many AdminActivityLogs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdminActivityLog upsert
+   */
+  export type AdminActivityLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AdminActivityLog to update in case it exists.
+     */
+    where: AdminActivityLogWhereUniqueInput
+    /**
+     * In case the AdminActivityLog found by the `where` argument doesn't exist, create a new AdminActivityLog with this data.
+     */
+    create: XOR<AdminActivityLogCreateInput, AdminActivityLogUncheckedCreateInput>
+    /**
+     * In case the AdminActivityLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AdminActivityLogUpdateInput, AdminActivityLogUncheckedUpdateInput>
+  }
+
+  /**
+   * AdminActivityLog delete
+   */
+  export type AdminActivityLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter which AdminActivityLog to delete.
+     */
+    where: AdminActivityLogWhereUniqueInput
+  }
+
+  /**
+   * AdminActivityLog deleteMany
+   */
+  export type AdminActivityLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminActivityLogs to delete
+     */
+    where?: AdminActivityLogWhereInput
+    /**
+     * Limit how many AdminActivityLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminActivityLog.actor
+   */
+  export type AdminActivityLog$actorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * AdminActivityLog without action
+   */
+  export type AdminActivityLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminActivityLog
+     */
+    select?: AdminActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminActivityLog
+     */
+    omit?: AdminActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminActivityLogInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model SystemSetting
    */
 
@@ -48987,6 +50259,21 @@ export namespace Prisma {
   export type SiteSettingScalarFieldEnum = (typeof SiteSettingScalarFieldEnum)[keyof typeof SiteSettingScalarFieldEnum]
 
 
+  export const AdminActivityLogScalarFieldEnum: {
+    id: 'id',
+    actorId: 'actorId',
+    actorUsername: 'actorUsername',
+    action: 'action',
+    status: 'status',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    metadata: 'metadata',
+    createdAt: 'createdAt'
+  };
+
+  export type AdminActivityLogScalarFieldEnum = (typeof AdminActivityLogScalarFieldEnum)[keyof typeof AdminActivityLogScalarFieldEnum]
+
+
   export const SystemSettingScalarFieldEnum: {
     id: 'id',
     encryptedConfig: 'encryptedConfig',
@@ -49204,6 +50491,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -49218,6 +50513,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -49327,6 +50631,34 @@ export namespace Prisma {
    * Reference to a field of type 'Decimal[]'
    */
   export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AdminActivityStatus'
+   */
+  export type EnumAdminActivityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminActivityStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AdminActivityStatus[]'
+   */
+  export type ListEnumAdminActivityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminActivityStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -49749,6 +51081,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestListRelationFilter
     productSuggestions?: ProductSuggestionListRelationFilter
     smsCampaigns?: SmsCampaignListRelationFilter
+    adminActivityLogs?: AdminActivityLogListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -49788,6 +51121,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestOrderByRelationAggregateInput
     productSuggestions?: ProductSuggestionOrderByRelationAggregateInput
     smsCampaigns?: SmsCampaignOrderByRelationAggregateInput
+    adminActivityLogs?: AdminActivityLogOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -49830,6 +51164,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestListRelationFilter
     productSuggestions?: ProductSuggestionListRelationFilter
     smsCampaigns?: SmsCampaignListRelationFilter
+    adminActivityLogs?: AdminActivityLogListRelationFilter
   }, "id" | "phoneNumber" | "partnerCode" | "username" | "hesabfaCode" | "hesabfaId">
 
   export type UserOrderByWithAggregationInput = {
@@ -51525,6 +52860,81 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSetting"> | Date | string
   }
 
+  export type AdminActivityLogWhereInput = {
+    AND?: AdminActivityLogWhereInput | AdminActivityLogWhereInput[]
+    OR?: AdminActivityLogWhereInput[]
+    NOT?: AdminActivityLogWhereInput | AdminActivityLogWhereInput[]
+    id?: StringFilter<"AdminActivityLog"> | string
+    actorId?: StringNullableFilter<"AdminActivityLog"> | string | null
+    actorUsername?: StringNullableFilter<"AdminActivityLog"> | string | null
+    action?: StringFilter<"AdminActivityLog"> | string
+    status?: EnumAdminActivityStatusFilter<"AdminActivityLog"> | $Enums.AdminActivityStatus
+    ipAddress?: StringNullableFilter<"AdminActivityLog"> | string | null
+    userAgent?: StringNullableFilter<"AdminActivityLog"> | string | null
+    metadata?: JsonNullableFilter<"AdminActivityLog">
+    createdAt?: DateTimeFilter<"AdminActivityLog"> | Date | string
+    actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type AdminActivityLogOrderByWithRelationInput = {
+    id?: SortOrder
+    actorId?: SortOrderInput | SortOrder
+    actorUsername?: SortOrderInput | SortOrder
+    action?: SortOrder
+    status?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    actor?: UserOrderByWithRelationInput
+  }
+
+  export type AdminActivityLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AdminActivityLogWhereInput | AdminActivityLogWhereInput[]
+    OR?: AdminActivityLogWhereInput[]
+    NOT?: AdminActivityLogWhereInput | AdminActivityLogWhereInput[]
+    actorId?: StringNullableFilter<"AdminActivityLog"> | string | null
+    actorUsername?: StringNullableFilter<"AdminActivityLog"> | string | null
+    action?: StringFilter<"AdminActivityLog"> | string
+    status?: EnumAdminActivityStatusFilter<"AdminActivityLog"> | $Enums.AdminActivityStatus
+    ipAddress?: StringNullableFilter<"AdminActivityLog"> | string | null
+    userAgent?: StringNullableFilter<"AdminActivityLog"> | string | null
+    metadata?: JsonNullableFilter<"AdminActivityLog">
+    createdAt?: DateTimeFilter<"AdminActivityLog"> | Date | string
+    actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type AdminActivityLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    actorId?: SortOrderInput | SortOrder
+    actorUsername?: SortOrderInput | SortOrder
+    action?: SortOrder
+    status?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: AdminActivityLogCountOrderByAggregateInput
+    _max?: AdminActivityLogMaxOrderByAggregateInput
+    _min?: AdminActivityLogMinOrderByAggregateInput
+  }
+
+  export type AdminActivityLogScalarWhereWithAggregatesInput = {
+    AND?: AdminActivityLogScalarWhereWithAggregatesInput | AdminActivityLogScalarWhereWithAggregatesInput[]
+    OR?: AdminActivityLogScalarWhereWithAggregatesInput[]
+    NOT?: AdminActivityLogScalarWhereWithAggregatesInput | AdminActivityLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AdminActivityLog"> | string
+    actorId?: StringNullableWithAggregatesFilter<"AdminActivityLog"> | string | null
+    actorUsername?: StringNullableWithAggregatesFilter<"AdminActivityLog"> | string | null
+    action?: StringWithAggregatesFilter<"AdminActivityLog"> | string
+    status?: EnumAdminActivityStatusWithAggregatesFilter<"AdminActivityLog"> | $Enums.AdminActivityStatus
+    ipAddress?: StringNullableWithAggregatesFilter<"AdminActivityLog"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"AdminActivityLog"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"AdminActivityLog">
+    createdAt?: DateTimeWithAggregatesFilter<"AdminActivityLog"> | Date | string
+  }
+
   export type SystemSettingWhereInput = {
     AND?: SystemSettingWhereInput | SystemSettingWhereInput[]
     OR?: SystemSettingWhereInput[]
@@ -52871,6 +54281,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -52910,6 +54321,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserUpdateInput = {
@@ -52949,6 +54361,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -52988,6 +54401,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -54865,6 +56279,89 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AdminActivityLogCreateInput = {
+    id?: string
+    actorUsername?: string | null
+    action: string
+    status: $Enums.AdminActivityStatus
+    ipAddress?: string | null
+    userAgent?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    actor?: UserCreateNestedOneWithoutAdminActivityLogsInput
+  }
+
+  export type AdminActivityLogUncheckedCreateInput = {
+    id?: string
+    actorId?: string | null
+    actorUsername?: string | null
+    action: string
+    status: $Enums.AdminActivityStatus
+    ipAddress?: string | null
+    userAgent?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AdminActivityLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    status?: EnumAdminActivityStatusFieldUpdateOperationsInput | $Enums.AdminActivityStatus
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actor?: UserUpdateOneWithoutAdminActivityLogsNestedInput
+  }
+
+  export type AdminActivityLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    actorUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    status?: EnumAdminActivityStatusFieldUpdateOperationsInput | $Enums.AdminActivityStatus
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminActivityLogCreateManyInput = {
+    id?: string
+    actorId?: string | null
+    actorUsername?: string | null
+    action: string
+    status: $Enums.AdminActivityStatus
+    ipAddress?: string | null
+    userAgent?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AdminActivityLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    status?: EnumAdminActivityStatusFieldUpdateOperationsInput | $Enums.AdminActivityStatus
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminActivityLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    actorUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    status?: EnumAdminActivityStatusFieldUpdateOperationsInput | $Enums.AdminActivityStatus
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type SystemSettingCreateInput = {
     id?: number
     encryptedConfig: string
@@ -56456,6 +57953,12 @@ export namespace Prisma {
     none?: SmsCampaignWhereInput
   }
 
+  export type AdminActivityLogListRelationFilter = {
+    every?: AdminActivityLogWhereInput
+    some?: AdminActivityLogWhereInput
+    none?: AdminActivityLogWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -56498,6 +58001,10 @@ export namespace Prisma {
   }
 
   export type SmsCampaignOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AdminActivityLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -57794,6 +59301,106 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type EnumAdminActivityStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdminActivityStatus | EnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdminActivityStatusFilter<$PrismaModel> | $Enums.AdminActivityStatus
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type AdminActivityLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    actorId?: SortOrder
+    actorUsername?: SortOrder
+    action?: SortOrder
+    status?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdminActivityLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    actorId?: SortOrder
+    actorUsername?: SortOrder
+    action?: SortOrder
+    status?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdminActivityLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    actorId?: SortOrder
+    actorUsername?: SortOrder
+    action?: SortOrder
+    status?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumAdminActivityStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdminActivityStatus | EnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdminActivityStatusWithAggregatesFilter<$PrismaModel> | $Enums.AdminActivityStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
+    _max?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
   export type SystemSettingCountOrderByAggregateInput = {
     id?: SortOrder
     encryptedConfig?: SortOrder
@@ -58840,6 +60447,13 @@ export namespace Prisma {
     connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
   }
 
+  export type AdminActivityLogCreateNestedManyWithoutActorInput = {
+    create?: XOR<AdminActivityLogCreateWithoutActorInput, AdminActivityLogUncheckedCreateWithoutActorInput> | AdminActivityLogCreateWithoutActorInput[] | AdminActivityLogUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AdminActivityLogCreateOrConnectWithoutActorInput | AdminActivityLogCreateOrConnectWithoutActorInput[]
+    createMany?: AdminActivityLogCreateManyActorInputEnvelope
+    connect?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+  }
+
   export type AddressUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -58921,6 +60535,13 @@ export namespace Prisma {
     connectOrCreate?: SmsCampaignCreateOrConnectWithoutCreatedByInput | SmsCampaignCreateOrConnectWithoutCreatedByInput[]
     createMany?: SmsCampaignCreateManyCreatedByInputEnvelope
     connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+  }
+
+  export type AdminActivityLogUncheckedCreateNestedManyWithoutActorInput = {
+    create?: XOR<AdminActivityLogCreateWithoutActorInput, AdminActivityLogUncheckedCreateWithoutActorInput> | AdminActivityLogCreateWithoutActorInput[] | AdminActivityLogUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AdminActivityLogCreateOrConnectWithoutActorInput | AdminActivityLogCreateOrConnectWithoutActorInput[]
+    createMany?: AdminActivityLogCreateManyActorInputEnvelope
+    connect?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
   }
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -59115,6 +60736,20 @@ export namespace Prisma {
     deleteMany?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
   }
 
+  export type AdminActivityLogUpdateManyWithoutActorNestedInput = {
+    create?: XOR<AdminActivityLogCreateWithoutActorInput, AdminActivityLogUncheckedCreateWithoutActorInput> | AdminActivityLogCreateWithoutActorInput[] | AdminActivityLogUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AdminActivityLogCreateOrConnectWithoutActorInput | AdminActivityLogCreateOrConnectWithoutActorInput[]
+    upsert?: AdminActivityLogUpsertWithWhereUniqueWithoutActorInput | AdminActivityLogUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: AdminActivityLogCreateManyActorInputEnvelope
+    set?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+    disconnect?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+    delete?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+    connect?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+    update?: AdminActivityLogUpdateWithWhereUniqueWithoutActorInput | AdminActivityLogUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: AdminActivityLogUpdateManyWithWhereWithoutActorInput | AdminActivityLogUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: AdminActivityLogScalarWhereInput | AdminActivityLogScalarWhereInput[]
+  }
+
   export type AddressUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -59277,6 +60912,20 @@ export namespace Prisma {
     update?: SmsCampaignUpdateWithWhereUniqueWithoutCreatedByInput | SmsCampaignUpdateWithWhereUniqueWithoutCreatedByInput[]
     updateMany?: SmsCampaignUpdateManyWithWhereWithoutCreatedByInput | SmsCampaignUpdateManyWithWhereWithoutCreatedByInput[]
     deleteMany?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
+  }
+
+  export type AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput = {
+    create?: XOR<AdminActivityLogCreateWithoutActorInput, AdminActivityLogUncheckedCreateWithoutActorInput> | AdminActivityLogCreateWithoutActorInput[] | AdminActivityLogUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AdminActivityLogCreateOrConnectWithoutActorInput | AdminActivityLogCreateOrConnectWithoutActorInput[]
+    upsert?: AdminActivityLogUpsertWithWhereUniqueWithoutActorInput | AdminActivityLogUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: AdminActivityLogCreateManyActorInputEnvelope
+    set?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+    disconnect?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+    delete?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+    connect?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+    update?: AdminActivityLogUpdateWithWhereUniqueWithoutActorInput | AdminActivityLogUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: AdminActivityLogUpdateManyWithWhereWithoutActorInput | AdminActivityLogUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: AdminActivityLogScalarWhereInput | AdminActivityLogScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -60162,6 +61811,26 @@ export namespace Prisma {
     update?: XOR<XOR<PostCategoryUpdateToOneWithWhereWithoutPostsInput, PostCategoryUpdateWithoutPostsInput>, PostCategoryUncheckedUpdateWithoutPostsInput>
   }
 
+  export type UserCreateNestedOneWithoutAdminActivityLogsInput = {
+    create?: XOR<UserCreateWithoutAdminActivityLogsInput, UserUncheckedCreateWithoutAdminActivityLogsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAdminActivityLogsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumAdminActivityStatusFieldUpdateOperationsInput = {
+    set?: $Enums.AdminActivityStatus
+  }
+
+  export type UserUpdateOneWithoutAdminActivityLogsNestedInput = {
+    create?: XOR<UserCreateWithoutAdminActivityLogsInput, UserUncheckedCreateWithoutAdminActivityLogsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAdminActivityLogsInput
+    upsert?: UserUpsertWithoutAdminActivityLogsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAdminActivityLogsInput, UserUpdateWithoutAdminActivityLogsInput>, UserUncheckedUpdateWithoutAdminActivityLogsInput>
+  }
+
   export type UserCreateNestedOneWithoutSmsCampaignsInput = {
     create?: XOR<UserCreateWithoutSmsCampaignsInput, UserUncheckedCreateWithoutSmsCampaignsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSmsCampaignsInput
@@ -60906,6 +62575,46 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
+  export type NestedEnumAdminActivityStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdminActivityStatus | EnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdminActivityStatusFilter<$PrismaModel> | $Enums.AdminActivityStatus
+  }
+
+  export type NestedEnumAdminActivityStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdminActivityStatus | EnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdminActivityStatusWithAggregatesFilter<$PrismaModel> | $Enums.AdminActivityStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
+    _max?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
   export type NestedEnumSmsTargetRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.SmsTargetRole | EnumSmsTargetRoleFieldRefInput<$PrismaModel>
     in?: $Enums.SmsTargetRole[] | ListEnumSmsTargetRoleFieldRefInput<$PrismaModel>
@@ -61622,6 +63331,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AdminActivityLogCreateWithoutActorInput = {
+    id?: string
+    actorUsername?: string | null
+    action: string
+    status: $Enums.AdminActivityStatus
+    ipAddress?: string | null
+    userAgent?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AdminActivityLogUncheckedCreateWithoutActorInput = {
+    id?: string
+    actorUsername?: string | null
+    action: string
+    status: $Enums.AdminActivityStatus
+    ipAddress?: string | null
+    userAgent?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AdminActivityLogCreateOrConnectWithoutActorInput = {
+    where: AdminActivityLogWhereUniqueInput
+    create: XOR<AdminActivityLogCreateWithoutActorInput, AdminActivityLogUncheckedCreateWithoutActorInput>
+  }
+
+  export type AdminActivityLogCreateManyActorInputEnvelope = {
+    data: AdminActivityLogCreateManyActorInput | AdminActivityLogCreateManyActorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AddressUpsertWithWhereUniqueWithoutUserInput = {
     where: AddressWhereUniqueInput
     update: XOR<AddressUpdateWithoutUserInput, AddressUncheckedUpdateWithoutUserInput>
@@ -61979,6 +63720,37 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"SmsCampaign"> | Date | string | null
   }
 
+  export type AdminActivityLogUpsertWithWhereUniqueWithoutActorInput = {
+    where: AdminActivityLogWhereUniqueInput
+    update: XOR<AdminActivityLogUpdateWithoutActorInput, AdminActivityLogUncheckedUpdateWithoutActorInput>
+    create: XOR<AdminActivityLogCreateWithoutActorInput, AdminActivityLogUncheckedCreateWithoutActorInput>
+  }
+
+  export type AdminActivityLogUpdateWithWhereUniqueWithoutActorInput = {
+    where: AdminActivityLogWhereUniqueInput
+    data: XOR<AdminActivityLogUpdateWithoutActorInput, AdminActivityLogUncheckedUpdateWithoutActorInput>
+  }
+
+  export type AdminActivityLogUpdateManyWithWhereWithoutActorInput = {
+    where: AdminActivityLogScalarWhereInput
+    data: XOR<AdminActivityLogUpdateManyMutationInput, AdminActivityLogUncheckedUpdateManyWithoutActorInput>
+  }
+
+  export type AdminActivityLogScalarWhereInput = {
+    AND?: AdminActivityLogScalarWhereInput | AdminActivityLogScalarWhereInput[]
+    OR?: AdminActivityLogScalarWhereInput[]
+    NOT?: AdminActivityLogScalarWhereInput | AdminActivityLogScalarWhereInput[]
+    id?: StringFilter<"AdminActivityLog"> | string
+    actorId?: StringNullableFilter<"AdminActivityLog"> | string | null
+    actorUsername?: StringNullableFilter<"AdminActivityLog"> | string | null
+    action?: StringFilter<"AdminActivityLog"> | string
+    status?: EnumAdminActivityStatusFilter<"AdminActivityLog"> | $Enums.AdminActivityStatus
+    ipAddress?: StringNullableFilter<"AdminActivityLog"> | string | null
+    userAgent?: StringNullableFilter<"AdminActivityLog"> | string | null
+    metadata?: JsonNullableFilter<"AdminActivityLog">
+    createdAt?: DateTimeFilter<"AdminActivityLog"> | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id?: string
     phoneNumber: string
@@ -62015,6 +63787,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -62053,6 +63826,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -62107,6 +63881,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -62145,6 +63920,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type UserCreateWithoutAddressesInput = {
@@ -62183,6 +63959,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutAddressesInput = {
@@ -62221,6 +63998,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutAddressesInput = {
@@ -62375,6 +64153,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAddressesInput = {
@@ -62413,6 +64192,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type CityUpsertWithoutAddressesInput = {
@@ -63854,6 +65634,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -63892,6 +65673,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -64039,6 +65821,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -64077,6 +65860,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type UserCreateWithoutCartInput = {
@@ -64115,6 +65899,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutCartInput = {
@@ -64153,6 +65938,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutCartInput = {
@@ -64231,6 +66017,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCartInput = {
@@ -64269,6 +66056,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type CartItemUpsertWithWhereUniqueWithoutCartInput = {
@@ -64547,6 +66335,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutWishlistInput = {
@@ -64585,6 +66374,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutWishlistInput = {
@@ -64726,6 +66516,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWishlistInput = {
@@ -64764,6 +66555,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type ProductUpsertWithoutWishlistedByInput = {
@@ -64895,6 +66687,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutCompareItemsInput = {
@@ -64933,6 +66726,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutCompareItemsInput = {
@@ -65074,6 +66868,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompareItemsInput = {
@@ -65112,6 +66907,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type ProductUpsertWithoutComparedByInput = {
@@ -65368,6 +67164,178 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserCreateWithoutAdminActivityLogsInput = {
+    id?: string
+    phoneNumber: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserRole
+    isVerified?: boolean
+    isActive?: boolean
+    shopName?: string | null
+    birthDate?: Date | string | null
+    profileImage?: string | null
+    accountBalance?: bigint | number
+    referredBy?: string | null
+    activityField?: string | null
+    partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
+    isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addresses?: AddressCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    cart?: CartCreateNestedOneWithoutUserInput
+    wishlist?: WishlistItemCreateNestedManyWithoutUserInput
+    compareItems?: CompareItemCreateNestedManyWithoutUserInput
+    supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
+    orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
+    priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutAdminActivityLogsInput = {
+    id?: string
+    phoneNumber: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserRole
+    isVerified?: boolean
+    isActive?: boolean
+    shopName?: string | null
+    birthDate?: Date | string | null
+    profileImage?: string | null
+    accountBalance?: bigint | number
+    referredBy?: string | null
+    activityField?: string | null
+    partnerCode?: string | null
+    username?: string | null
+    passwordHash?: string | null
+    isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    cart?: CartUncheckedCreateNestedOneWithoutUserInput
+    wishlist?: WishlistItemUncheckedCreateNestedManyWithoutUserInput
+    compareItems?: CompareItemUncheckedCreateNestedManyWithoutUserInput
+    supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
+    orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
+    priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutAdminActivityLogsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAdminActivityLogsInput, UserUncheckedCreateWithoutAdminActivityLogsInput>
+  }
+
+  export type UserUpsertWithoutAdminActivityLogsInput = {
+    update: XOR<UserUpdateWithoutAdminActivityLogsInput, UserUncheckedUpdateWithoutAdminActivityLogsInput>
+    create: XOR<UserCreateWithoutAdminActivityLogsInput, UserUncheckedCreateWithoutAdminActivityLogsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAdminActivityLogsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAdminActivityLogsInput, UserUncheckedUpdateWithoutAdminActivityLogsInput>
+  }
+
+  export type UserUpdateWithoutAdminActivityLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    shopName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    activityField?: NullableStringFieldUpdateOperationsInput | string | null
+    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: AddressUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    cart?: CartUpdateOneWithoutUserNestedInput
+    wishlist?: WishlistItemUpdateManyWithoutUserNestedInput
+    compareItems?: CompareItemUpdateManyWithoutUserNestedInput
+    supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
+    orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
+    priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAdminActivityLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    shopName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    activityField?: NullableStringFieldUpdateOperationsInput | string | null
+    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    cart?: CartUncheckedUpdateOneWithoutUserNestedInput
+    wishlist?: WishlistItemUncheckedUpdateManyWithoutUserNestedInput
+    compareItems?: CompareItemUncheckedUpdateManyWithoutUserNestedInput
+    supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
+    orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
+    priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
   export type UserCreateWithoutSmsCampaignsInput = {
     id?: string
     phoneNumber: string
@@ -65404,6 +67372,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutSmsCampaignsInput = {
@@ -65442,6 +67411,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutSmsCampaignsInput = {
@@ -65496,6 +67466,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSmsCampaignsInput = {
@@ -65534,6 +67505,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type OrderCreateWithoutShippingOptionInput = {
@@ -65670,6 +67642,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -65708,6 +67681,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -65922,6 +67896,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -65960,6 +67935,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type AddressUpsertWithoutOrdersInput = {
@@ -66505,6 +68481,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutSupportMessagesInput = {
@@ -66543,6 +68520,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutSupportMessagesInput = {
@@ -66597,6 +68575,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSupportMessagesInput = {
@@ -66635,6 +68614,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type OrderCreateWithoutSurveyInput = {
@@ -66750,6 +68730,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutOrderSurveysInput = {
@@ -66788,6 +68769,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutOrderSurveysInput = {
@@ -66924,6 +68906,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrderSurveysInput = {
@@ -66962,6 +68945,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type UserCreateWithoutPriceListRequestsInput = {
@@ -67000,6 +68984,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutPriceListRequestsInput = {
@@ -67038,6 +69023,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutPriceListRequestsInput = {
@@ -67092,6 +69078,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPriceListRequestsInput = {
@@ -67130,6 +69117,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type UserCreateWithoutProductSuggestionsInput = {
@@ -67168,6 +69156,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutProductSuggestionsInput = {
@@ -67206,6 +69195,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutProductSuggestionsInput = {
@@ -67260,6 +69250,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProductSuggestionsInput = {
@@ -67298,6 +69289,7 @@ export namespace Prisma {
     orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type OrderCreateWithoutCouponInput = {
@@ -67589,6 +69581,17 @@ export namespace Prisma {
     status?: $Enums.SmsCampaignStatus
     createdAt?: Date | string
     completedAt?: Date | string | null
+  }
+
+  export type AdminActivityLogCreateManyActorInput = {
+    id?: string
+    actorUsername?: string | null
+    action: string
+    status: $Enums.AdminActivityStatus
+    ipAddress?: string | null
+    userAgent?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
   }
 
   export type AddressUpdateWithoutUserInput = {
@@ -67972,6 +69975,39 @@ export namespace Prisma {
     status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AdminActivityLogUpdateWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    status?: EnumAdminActivityStatusFieldUpdateOperationsInput | $Enums.AdminActivityStatus
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminActivityLogUncheckedUpdateWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    status?: EnumAdminActivityStatusFieldUpdateOperationsInput | $Enums.AdminActivityStatus
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminActivityLogUncheckedUpdateManyWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    status?: EnumAdminActivityStatusFieldUpdateOperationsInput | $Enums.AdminActivityStatus
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderCreateManyAddressInput = {

@@ -112,6 +112,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { href: "/admin/settings", label: "تنظیمات سایت", icon: "settings" },
       { href: "/admin/system-settings", label: "تنظیمات سیستم", icon: "settings" },
+      { href: "/admin/admin-logs", label: "گزارش فعالیت مدیران", icon: "reports" },
     ],
   },
 ];

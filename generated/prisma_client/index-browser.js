@@ -435,6 +435,18 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AdminActivityLogScalarFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  actorUsername: 'actorUsername',
+  action: 'action',
+  status: 'status',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SystemSettingScalarFieldEnum = {
   id: 'id',
   encryptedConfig: 'encryptedConfig',
@@ -610,6 +622,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -618,6 +635,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.FooterLinkGroup = exports.$Enums.FooterLinkGroup = {
   QUICK: 'QUICK',
@@ -629,6 +652,12 @@ exports.UserRole = exports.$Enums.UserRole = {
   WHOLESALE: 'WHOLESALE',
   ADMIN: 'ADMIN',
   SUPPORT: 'SUPPORT'
+};
+
+exports.AdminActivityStatus = exports.$Enums.AdminActivityStatus = {
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
+  BLOCKED: 'BLOCKED'
 };
 
 exports.SmsTargetRole = exports.$Enums.SmsTargetRole = {
@@ -719,6 +748,7 @@ exports.Prisma.ModelName = {
   Post: 'Post',
   Faq: 'Faq',
   SiteSetting: 'SiteSetting',
+  AdminActivityLog: 'AdminActivityLog',
   SystemSetting: 'SystemSetting',
   RulesContent: 'RulesContent',
   SocialLink: 'SocialLink',
