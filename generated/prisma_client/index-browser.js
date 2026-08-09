@@ -172,6 +172,8 @@ exports.Prisma.UserScalarFieldEnum = {
   username: 'username',
   passwordHash: 'passwordHash',
   isSuperAdmin: 'isSuperAdmin',
+  failedAdminLoginAttempts: 'failedAdminLoginAttempts',
+  adminLockedUntil: 'adminLockedUntil',
   hesabfaCode: 'hesabfaCode',
   hesabfaId: 'hesabfaId',
   hesabfaSyncedAt: 'hesabfaSyncedAt',

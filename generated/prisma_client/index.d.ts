@@ -9250,11 +9250,13 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     accountBalance: number | null
+    failedAdminLoginAttempts: number | null
     hesabfaId: number | null
   }
 
   export type UserSumAggregateOutputType = {
     accountBalance: bigint | null
+    failedAdminLoginAttempts: number | null
     hesabfaId: number | null
   }
 
@@ -9276,6 +9278,8 @@ export namespace Prisma {
     username: string | null
     passwordHash: string | null
     isSuperAdmin: boolean | null
+    failedAdminLoginAttempts: number | null
+    adminLockedUntil: Date | null
     hesabfaCode: string | null
     hesabfaId: number | null
     hesabfaSyncedAt: Date | null
@@ -9301,6 +9305,8 @@ export namespace Prisma {
     username: string | null
     passwordHash: string | null
     isSuperAdmin: boolean | null
+    failedAdminLoginAttempts: number | null
+    adminLockedUntil: Date | null
     hesabfaCode: string | null
     hesabfaId: number | null
     hesabfaSyncedAt: Date | null
@@ -9326,6 +9332,8 @@ export namespace Prisma {
     username: number
     passwordHash: number
     isSuperAdmin: number
+    failedAdminLoginAttempts: number
+    adminLockedUntil: number
     hesabfaCode: number
     hesabfaId: number
     hesabfaSyncedAt: number
@@ -9337,11 +9345,13 @@ export namespace Prisma {
 
   export type UserAvgAggregateInputType = {
     accountBalance?: true
+    failedAdminLoginAttempts?: true
     hesabfaId?: true
   }
 
   export type UserSumAggregateInputType = {
     accountBalance?: true
+    failedAdminLoginAttempts?: true
     hesabfaId?: true
   }
 
@@ -9363,6 +9373,8 @@ export namespace Prisma {
     username?: true
     passwordHash?: true
     isSuperAdmin?: true
+    failedAdminLoginAttempts?: true
+    adminLockedUntil?: true
     hesabfaCode?: true
     hesabfaId?: true
     hesabfaSyncedAt?: true
@@ -9388,6 +9400,8 @@ export namespace Prisma {
     username?: true
     passwordHash?: true
     isSuperAdmin?: true
+    failedAdminLoginAttempts?: true
+    adminLockedUntil?: true
     hesabfaCode?: true
     hesabfaId?: true
     hesabfaSyncedAt?: true
@@ -9413,6 +9427,8 @@ export namespace Prisma {
     username?: true
     passwordHash?: true
     isSuperAdmin?: true
+    failedAdminLoginAttempts?: true
+    adminLockedUntil?: true
     hesabfaCode?: true
     hesabfaId?: true
     hesabfaSyncedAt?: true
@@ -9525,6 +9541,8 @@ export namespace Prisma {
     username: string | null
     passwordHash: string | null
     isSuperAdmin: boolean
+    failedAdminLoginAttempts: number
+    adminLockedUntil: Date | null
     hesabfaCode: string | null
     hesabfaId: number | null
     hesabfaSyncedAt: Date | null
@@ -9569,6 +9587,8 @@ export namespace Prisma {
     username?: boolean
     passwordHash?: boolean
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: boolean
+    adminLockedUntil?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     hesabfaSyncedAt?: boolean
@@ -9607,6 +9627,8 @@ export namespace Prisma {
     username?: boolean
     passwordHash?: boolean
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: boolean
+    adminLockedUntil?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     hesabfaSyncedAt?: boolean
@@ -9632,6 +9654,8 @@ export namespace Prisma {
     username?: boolean
     passwordHash?: boolean
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: boolean
+    adminLockedUntil?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     hesabfaSyncedAt?: boolean
@@ -9657,6 +9681,8 @@ export namespace Prisma {
     username?: boolean
     passwordHash?: boolean
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: boolean
+    adminLockedUntil?: boolean
     hesabfaCode?: boolean
     hesabfaId?: boolean
     hesabfaSyncedAt?: boolean
@@ -9664,7 +9690,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "isActive" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "isSuperAdmin" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "isActive" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "isSuperAdmin" | "failedAdminLoginAttempts" | "adminLockedUntil" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addresses?: boolean | User$addressesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -9754,6 +9780,15 @@ export namespace Prisma {
        * separate from ADMIN so future back-office accounts are least-privileged.
        */
       isSuperAdmin: boolean
+      /**
+       * Consecutive failed password attempts for the admin login only.
+       */
+      failedAdminLoginAttempts: number
+      /**
+       * Admin password login is rejected until this timestamp. Storefront OTP
+       * authentication is intentionally unaffected.
+       */
+      adminLockedUntil: Date | null
       /**
        * Hesabfa contact `Code` — unique link key for two-way contact sync.
        */
@@ -10220,6 +10255,8 @@ export namespace Prisma {
     readonly username: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly isSuperAdmin: FieldRef<"User", 'Boolean'>
+    readonly failedAdminLoginAttempts: FieldRef<"User", 'Int'>
+    readonly adminLockedUntil: FieldRef<"User", 'DateTime'>
     readonly hesabfaCode: FieldRef<"User", 'String'>
     readonly hesabfaId: FieldRef<"User", 'Int'>
     readonly hesabfaSyncedAt: FieldRef<"User", 'DateTime'>
@@ -48627,6 +48664,8 @@ export namespace Prisma {
     username: 'username',
     passwordHash: 'passwordHash',
     isSuperAdmin: 'isSuperAdmin',
+    failedAdminLoginAttempts: 'failedAdminLoginAttempts',
+    adminLockedUntil: 'adminLockedUntil',
     hesabfaCode: 'hesabfaCode',
     hesabfaId: 'hesabfaId',
     hesabfaSyncedAt: 'hesabfaSyncedAt',
@@ -49691,6 +49730,8 @@ export namespace Prisma {
     username?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
     isSuperAdmin?: BoolFilter<"User"> | boolean
+    failedAdminLoginAttempts?: IntFilter<"User"> | number
+    adminLockedUntil?: DateTimeNullableFilter<"User"> | Date | string | null
     hesabfaCode?: StringNullableFilter<"User"> | string | null
     hesabfaId?: IntNullableFilter<"User"> | number | null
     hesabfaSyncedAt?: DateTimeNullableFilter<"User"> | Date | string | null
@@ -49728,6 +49769,8 @@ export namespace Prisma {
     username?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     isSuperAdmin?: SortOrder
+    failedAdminLoginAttempts?: SortOrder
+    adminLockedUntil?: SortOrderInput | SortOrder
     hesabfaCode?: SortOrderInput | SortOrder
     hesabfaId?: SortOrderInput | SortOrder
     hesabfaSyncedAt?: SortOrderInput | SortOrder
@@ -49770,6 +49813,8 @@ export namespace Prisma {
     activityField?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
     isSuperAdmin?: BoolFilter<"User"> | boolean
+    failedAdminLoginAttempts?: IntFilter<"User"> | number
+    adminLockedUntil?: DateTimeNullableFilter<"User"> | Date | string | null
     hesabfaSyncedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -49805,6 +49850,8 @@ export namespace Prisma {
     username?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     isSuperAdmin?: SortOrder
+    failedAdminLoginAttempts?: SortOrder
+    adminLockedUntil?: SortOrderInput | SortOrder
     hesabfaCode?: SortOrderInput | SortOrder
     hesabfaId?: SortOrderInput | SortOrder
     hesabfaSyncedAt?: SortOrderInput | SortOrder
@@ -49838,6 +49885,8 @@ export namespace Prisma {
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     isSuperAdmin?: BoolWithAggregatesFilter<"User"> | boolean
+    failedAdminLoginAttempts?: IntWithAggregatesFilter<"User"> | number
+    adminLockedUntil?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     hesabfaCode?: StringNullableWithAggregatesFilter<"User"> | string | null
     hesabfaId?: IntNullableWithAggregatesFilter<"User"> | number | null
     hesabfaSyncedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -52803,6 +52852,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -52840,6 +52891,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -52877,6 +52930,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -52914,6 +52969,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -52951,6 +53008,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -52976,6 +53035,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53001,6 +53062,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -56456,6 +56519,8 @@ export namespace Prisma {
     username?: SortOrder
     passwordHash?: SortOrder
     isSuperAdmin?: SortOrder
+    failedAdminLoginAttempts?: SortOrder
+    adminLockedUntil?: SortOrder
     hesabfaCode?: SortOrder
     hesabfaId?: SortOrder
     hesabfaSyncedAt?: SortOrder
@@ -56465,6 +56530,7 @@ export namespace Prisma {
 
   export type UserAvgOrderByAggregateInput = {
     accountBalance?: SortOrder
+    failedAdminLoginAttempts?: SortOrder
     hesabfaId?: SortOrder
   }
 
@@ -56486,6 +56552,8 @@ export namespace Prisma {
     username?: SortOrder
     passwordHash?: SortOrder
     isSuperAdmin?: SortOrder
+    failedAdminLoginAttempts?: SortOrder
+    adminLockedUntil?: SortOrder
     hesabfaCode?: SortOrder
     hesabfaId?: SortOrder
     hesabfaSyncedAt?: SortOrder
@@ -56511,6 +56579,8 @@ export namespace Prisma {
     username?: SortOrder
     passwordHash?: SortOrder
     isSuperAdmin?: SortOrder
+    failedAdminLoginAttempts?: SortOrder
+    adminLockedUntil?: SortOrder
     hesabfaCode?: SortOrder
     hesabfaId?: SortOrder
     hesabfaSyncedAt?: SortOrder
@@ -56520,6 +56590,7 @@ export namespace Prisma {
 
   export type UserSumOrderByAggregateInput = {
     accountBalance?: SortOrder
+    failedAdminLoginAttempts?: SortOrder
     hesabfaId?: SortOrder
   }
 
@@ -61926,6 +61997,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -61962,6 +62035,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -62014,6 +62089,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62050,6 +62127,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62086,6 +62165,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -62122,6 +62203,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -62274,6 +62357,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62310,6 +62395,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63749,6 +63836,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -63785,6 +63874,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -63930,6 +64021,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -63966,6 +64059,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64002,6 +64097,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -64038,6 +64135,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -64114,6 +64213,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64150,6 +64251,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64426,6 +64529,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -64462,6 +64567,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -64601,6 +64708,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64637,6 +64746,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64766,6 +64877,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -64802,6 +64915,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -64941,6 +65056,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64977,6 +65094,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -65267,6 +65386,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -65303,6 +65424,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -65355,6 +65478,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -65391,6 +65516,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -65525,6 +65652,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -65561,6 +65690,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -65773,6 +65904,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -65809,6 +65942,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66352,6 +66487,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -66388,6 +66525,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -66440,6 +66579,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66476,6 +66617,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66589,6 +66732,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -66625,6 +66770,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -66759,6 +66906,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66795,6 +66944,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66831,6 +66982,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -66867,6 +67020,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -66919,6 +67074,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66955,6 +67112,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66991,6 +67150,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -67027,6 +67188,8 @@ export namespace Prisma {
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
     hesabfaCode?: string | null
     hesabfaId?: number | null
     hesabfaSyncedAt?: Date | string | null
@@ -67079,6 +67242,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -67115,6 +67280,8 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
     hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
     hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

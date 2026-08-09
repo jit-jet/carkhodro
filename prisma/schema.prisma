@@ -198,6 +198,11 @@ model User {
   /// Grants access to security-sensitive system configuration. This is kept
   /// separate from ADMIN so future back-office accounts are least-privileged.
   isSuperAdmin Boolean @default(false) @map("is_super_admin")
+  /// Consecutive failed password attempts for the admin login only.
+  failedAdminLoginAttempts Int @default(0) @map("failed_admin_login_attempts")
+  /// Admin password login is rejected until this timestamp. Storefront OTP
+  /// authentication is intentionally unaffected.
+  adminLockedUntil DateTime? @map("admin_locked_until")
   /// Hesabfa contact `Code` — unique link key for two-way contact sync.
   hesabfaCode  String?  @unique @map("hesabfa_code")
   /// Hesabfa internal numeric contact Id (webhook ObjectIdList).

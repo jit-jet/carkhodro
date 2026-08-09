@@ -166,46 +166,51 @@ model FooterLink {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model User {
-  id              String    @id @default(cuid())
+  id                       String    @id @default(cuid())
   /// Iranian mobile format: 09XXXXXXXXX (11 digits)
-  phoneNumber     String    @unique @map("phone_number")
-  firstName       String    @map("first_name")
-  lastName        String    @map("last_name")
-  role            UserRole  @default(RETAIL)
+  phoneNumber              String    @unique @map("phone_number")
+  firstName                String    @map("first_name")
+  lastName                 String    @map("last_name")
+  role                     UserRole  @default(RETAIL)
   /// Set to true after the first successful OTP verification
-  isVerified      Boolean   @default(false) @map("is_verified")
+  isVerified               Boolean   @default(false) @map("is_verified")
   /// When false, the user cannot log in (storefront OTP or admin password).
-  isActive        Boolean   @default(true) @map("is_active")
+  isActive                 Boolean   @default(true) @map("is_active")
   /// Wholesale customers must supply a shop/business name
-  shopName        String?   @map("shop_name")
-  birthDate       DateTime? @map("birth_date")
-  profileImage    String?   @map("profile_image")
+  shopName                 String?   @map("shop_name")
+  birthDate                DateTime? @map("birth_date")
+  profileImage             String?   @map("profile_image")
   /// Partner's running ledger balance with the shop, in the same magnitude as
   /// product prices (Toman). Shown as «مانده حساب» on the dashboard.
-  accountBalance  BigInt    @default(0) @map("account_balance")
+  accountBalance           BigInt    @default(0) @map("account_balance")
   /// Who referred this partner («معرف») — free text captured on the profile.
-  referredBy      String?   @map("referred_by")
+  referredBy               String?   @map("referred_by")
   /// The partner's line of business («زمینه فعالیت») — free text.
-  activityField   String?   @map("activity_field")
+  activityField            String?   @map("activity_field")
   /// Short, unique partner/affiliate code («کد اختصاصی») — null for retail users.
-  partnerCode     String?   @unique @map("partner_code")
+  partnerCode              String?   @unique @map("partner_code")
   /// Admin login username — only set for ADMIN-role users; storefront customers
   /// authenticate with SMS OTP and never get one.
-  username        String?   @unique
+  username                 String?   @unique
   /// Scrypt password hash — only set for admin/back-office logins (ADMIN role).
   /// Storefront customers keep authenticating with SMS OTP and never get one.
-  passwordHash    String?   @map("password_hash")
+  passwordHash             String?   @map("password_hash")
   /// Grants access to security-sensitive system configuration. This is kept
   /// separate from ADMIN so future back-office accounts are least-privileged.
-  isSuperAdmin    Boolean   @default(false) @map("is_super_admin")
+  isSuperAdmin             Boolean   @default(false) @map("is_super_admin")
+  /// Consecutive failed password attempts for the admin login only.
+  failedAdminLoginAttempts Int       @default(0) @map("failed_admin_login_attempts")
+  /// Admin password login is rejected until this timestamp. Storefront OTP
+  /// authentication is intentionally unaffected.
+  adminLockedUntil         DateTime? @map("admin_locked_until")
   /// Hesabfa contact `Code` — unique link key for two-way contact sync.
-  hesabfaCode     String?   @unique @map("hesabfa_code")
+  hesabfaCode              String?   @unique @map("hesabfa_code")
   /// Hesabfa internal numeric contact Id (webhook ObjectIdList).
-  hesabfaId       Int?      @unique @map("hesabfa_id")
+  hesabfaId                Int?      @unique @map("hesabfa_id")
   /// Last successful Hesabfa contact sync timestamp.
-  hesabfaSyncedAt DateTime? @map("hesabfa_synced_at")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  hesabfaSyncedAt          DateTime? @map("hesabfa_synced_at")
+  createdAt                DateTime  @default(now()) @map("created_at")
+  updatedAt                DateTime  @updatedAt @map("updated_at")
 
   addresses          Address[]
   sessions           Session[]
