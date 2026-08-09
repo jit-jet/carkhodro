@@ -38,7 +38,7 @@ export async function sendOtpSms(
   phoneNumber: string,
   code: string,
 ): Promise<SendOtpResult> {
-  if (isSmsConsoleMode()) {
+  if (await isSmsConsoleMode()) {
     console.info(`[otp] code for ${phoneNumber}: ${code} (console — no SMS sent)`);
     return { ok: true, consoleMode: true };
   }
@@ -59,7 +59,7 @@ export async function sendOtpSms(
 /** Send one free-text message to one recipient. Never throws. */
 async function sendOne(phoneNumber: string, body: string): Promise<SmsSendResult> {
   try {
-    if (isSmsConsoleMode()) {
+    if (await isSmsConsoleMode()) {
       console.info(`[sms] → ${phoneNumber}: ${body}`);
       return { phoneNumber, ok: true };
     }
@@ -81,7 +81,7 @@ export async function sendBulkSms(
   body: string,
   batchSize = 50,
 ): Promise<SmsSendResult[]> {
-  if (isSmsConsoleMode()) {
+  if (await isSmsConsoleMode()) {
     const results: SmsSendResult[] = [];
     for (const phone of phoneNumbers) {
       console.info(`[sms] → ${phone}: ${body}`);

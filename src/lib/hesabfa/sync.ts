@@ -41,7 +41,7 @@ function codesFromExtra(extra: string | null | undefined): string[] {
 
 /** Run a full sync (pull categories/products/contacts). */
 export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
-  if (!isHesabfaConfigured()) {
+  if (!(await isHesabfaConfigured())) {
     throw new Error('حسابفا پیکربندی نشده است.');
   }
 
@@ -118,8 +118,10 @@ export async function handleHesabfaWebhook(
 
 /** Fire-and-forget wrapper so Hesabfa never breaks checkout/admin flows. */
 export function runHesabfaBackground(label: string, fn: () => Promise<void>): void {
-  if (!isHesabfaConfigured()) return;
-  void fn().catch((err) => {
+  void (async () => {
+    if (!(await isHesabfaConfigured())) return;
+    await fn();
+  })().catch((err) => {
     console.error(`[hesabfa:${label}]`, err);
   });
 }

@@ -117,7 +117,7 @@ export async function createProduct(
     if (!input.name?.trim()) {
       return fail('نام محصول الزامی است.');
     }
-    if (!isHesabfaConfigured()) {
+    if (!(await isHesabfaConfigured())) {
       return fail(
         'Saving product to Hesabfa failed. Please try again. Hesabfa is not configured.',
       );
@@ -212,7 +212,7 @@ export async function updateProduct(
   input: Partial<ProductInput>,
 ): Promise<ActionResult<{ id: string }>> {
   return runMutation('updateProduct', async () => {
-    if (!isHesabfaConfigured()) {
+    if (!(await isHesabfaConfigured())) {
       return fail(
         'Saving product to Hesabfa failed. Please try again. Hesabfa is not configured.',
       );

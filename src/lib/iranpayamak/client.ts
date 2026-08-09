@@ -49,7 +49,7 @@ async function postJson<T>(
   path: string,
   body: unknown,
 ): Promise<ApiResult<T>> {
-  const { baseUrl, apiKey } = getIranPayamakConfig();
+  const { baseUrl, apiKey } = await getIranPayamakConfig();
 
   const res = await fetch(`${baseUrl}${path}`, {
     method: 'POST',
@@ -88,7 +88,7 @@ export async function sendPatternOtp(
   recipient: string,
   code: string,
 ): Promise<void> {
-  const config = getIranPayamakConfig();
+  const config = await getIranPayamakConfig();
   const patternCode = requireOtpPattern(config);
 
   const body: PatternSendBody = {
@@ -113,7 +113,7 @@ export async function sendSimpleSms(
 ): Promise<void> {
   if (recipients.length === 0) return;
 
-  const config = getIranPayamakConfig();
+  const config = await getIranPayamakConfig();
   const body: SimpleSendBody = {
     text,
     line_number: config.lineNumber,

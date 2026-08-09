@@ -54,7 +54,7 @@ export async function syncCategoriesFromHesabfa(
   nodes?: HesabfaProductCategoryNode[],
 ): Promise<CategorySyncStats> {
   const stats: CategorySyncStats = { created: 0, updated: 0, skipped: 0 };
-  if (!isHesabfaConfigured() && nodes == null) return stats;
+  if (!(await isHesabfaConfigured()) && nodes == null) return stats;
 
   const list = nodes ?? (await getProductCategories());
   if (list.length === 0) return stats;

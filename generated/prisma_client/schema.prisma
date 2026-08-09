@@ -195,6 +195,9 @@ model User {
   /// Scrypt password hash — only set for admin/back-office logins (ADMIN role).
   /// Storefront customers keep authenticating with SMS OTP and never get one.
   passwordHash    String?   @map("password_hash")
+  /// Grants access to security-sensitive system configuration. This is kept
+  /// separate from ADMIN so future back-office accounts are least-privileged.
+  isSuperAdmin    Boolean   @default(false) @map("is_super_admin")
   /// Hesabfa contact `Code` — unique link key for two-way contact sync.
   hesabfaCode     String?   @unique @map("hesabfa_code")
   /// Hesabfa internal numeric contact Id (webhook ObjectIdList).
@@ -720,6 +723,18 @@ model SiteSetting {
   updatedAt         DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")
+}
+
+/// Encrypted integration configuration. The application only ever decrypts
+/// this singleton inside its server-only settings DAL.
+model SystemSetting {
+  id              Int      @id @default(1)
+  encryptedConfig String   @map("encrypted_config") @db.Text
+  updatedById     String?  @map("updated_by_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("system_settings")
 }
 
 /// Terms & rules page content — singleton row (`id = 1`), admin-edited via TipTap.

@@ -171,6 +171,7 @@ exports.Prisma.UserScalarFieldEnum = {
   partnerCode: 'partnerCode',
   username: 'username',
   passwordHash: 'passwordHash',
+  isSuperAdmin: 'isSuperAdmin',
   hesabfaCode: 'hesabfaCode',
   hesabfaId: 'hesabfaId',
   hesabfaSyncedAt: 'hesabfaSyncedAt',
@@ -429,6 +430,14 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   ogImageUrl: 'ogImageUrl',
   copyrightText: 'copyrightText',
   analyticsId: 'analyticsId',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SystemSettingScalarFieldEnum = {
+  id: 'id',
+  encryptedConfig: 'encryptedConfig',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
@@ -708,6 +717,7 @@ exports.Prisma.ModelName = {
   Post: 'Post',
   Faq: 'Faq',
   SiteSetting: 'SiteSetting',
+  SystemSetting: 'SystemSetting',
   RulesContent: 'RulesContent',
   SocialLink: 'SocialLink',
   HeroBanner: 'HeroBanner',

@@ -4,6 +4,7 @@
  */
 
 import { randomUUID } from 'node:crypto';
+import { getSystemConfig } from '@/src/lib/system-settings';
 import type {
   HesabfaContact,
   HesabfaInvoice,
@@ -72,20 +73,22 @@ interface HesabfaConfig {
   loginToken: string;
 }
 
-export function isHesabfaConfigured(): boolean {
-  return Boolean(process.env.HESABFA_API_KEY && process.env.HESABFA_LOGIN_TOKEN);
+export async function isHesabfaConfigured(): Promise<boolean> {
+  const config = await getSystemConfig();
+  return Boolean(config.hesabfaApiKey && config.hesabfaLoginToken);
 }
 
-function getConfig(): HesabfaConfig {
-  const apiKey = process.env.HESABFA_API_KEY;
-  const loginToken = process.env.HESABFA_LOGIN_TOKEN;
+async function getConfig(): Promise<HesabfaConfig> {
+  const settings = await getSystemConfig();
+  const apiKey = settings.hesabfaApiKey;
+  const loginToken = settings.hesabfaLoginToken;
   if (!apiKey || !loginToken) {
     throw new HesabfaError(
-      'Hesabfa is not configured — set HESABFA_API_KEY and HESABFA_LOGIN_TOKEN.',
+      'Hesabfa is not configured in System Settings.',
     );
   }
   return {
-    baseUrl: process.env.HESABFA_API_URL?.replace(/\/$/, '') ?? DEFAULT_BASE_URL,
+    baseUrl: settings.hesabfaApiUrl.replace(/\/$/, '') || DEFAULT_BASE_URL,
     apiKey,
     loginToken,
   };
@@ -100,7 +103,7 @@ async function post<T>(
   body: Record<string, unknown>,
   opts?: { unique?: boolean },
 ): Promise<T> {
-  const { baseUrl, apiKey, loginToken } = getConfig();
+  const { baseUrl, apiKey, loginToken } = await getConfig();
   const payload: Record<string, unknown> = {
     apiKey,
     loginToken,

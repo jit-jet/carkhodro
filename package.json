@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:seed": "tsx prisma/seed.ts",
+    "db:import-system-settings": "node --conditions=react-server --import tsx scripts/import-system-settings.ts",
     "db:deploy": "npx prisma migrate deploy && npx prisma generate"
   },
   "prisma": {

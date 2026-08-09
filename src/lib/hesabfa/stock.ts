@@ -13,6 +13,7 @@ import {
   HESABFA_WAREHOUSE_RECEIPT_ISSUED,
   type HesabfaItem,
 } from './types';
+import { getSystemConfig } from '@/src/lib/system-settings';
 
 export interface LiveStockLine {
   productId: string;
@@ -46,7 +47,7 @@ export async function fetchHesabfaStockByCodes(
   codes: string[],
 ): Promise<Map<string, number>> {
   const map = new Map<string, number>();
-  if (!isHesabfaConfigured()) return map;
+  if (!(await isHesabfaConfigured())) return map;
 
   const unique = [...new Set(codes.map((c) => c.trim()).filter(Boolean))];
   await Promise.all(
@@ -64,7 +65,7 @@ export async function fetchHesabfaStockByCodes(
 
 /** Refresh local Product.stock from Hesabfa item/get `Stock` (by numeric ids). */
 export async function refreshLocalStockFromHesabfaIds(ids: number[]): Promise<number> {
-  if (!isHesabfaConfigured() || ids.length === 0) return 0;
+  if (!(await isHesabfaConfigured()) || ids.length === 0) return 0;
 
   const items = await getItemsById(ids);
   const now = new Date();
@@ -116,7 +117,7 @@ export async function validateLinesAgainstHesabfaStock(
     return { issues: [], stockByProduct: new Map() };
   }
 
-  const liveByProduct = isHesabfaConfigured()
+  const liveByProduct = (await isHesabfaConfigured())
     ? await resolveLiveStockForLines(lines)
     : new Map(
         lines.map((line) => [
@@ -139,8 +140,8 @@ export async function validateLinesAgainstHesabfaStock(
   return { issues, stockByProduct: liveByProduct };
 }
 
-function purchaseContactCode(): string | null {
-  const code = process.env.HESABFA_PURCHASE_CONTACT_CODE?.trim();
+async function purchaseContactCode(): Promise<string | null> {
+  const code = (await getSystemConfig()).hesabfaPurchaseContactCode.trim();
   return code || null;
 }
 
@@ -161,15 +162,15 @@ export interface PushStockViaPurchaseInput {
 export async function pushStockViaPurchaseInvoice(
   input: PushStockViaPurchaseInput,
 ): Promise<void> {
-  if (!isHesabfaConfigured()) return;
+  if (!(await isHesabfaConfigured())) return;
 
   const qty = Math.round(input.quantity);
   if (qty === 0) return;
 
-  const contactCode = purchaseContactCode();
+  const contactCode = await purchaseContactCode();
   if (!contactCode) {
     console.warn(
-      '[hesabfa:purchaseStock] HESABFA_PURCHASE_CONTACT_CODE is not set — skipping stock push',
+      '[hesabfa:purchaseStock] purchase contact is not configured — skipping stock push',
     );
     return;
   }
@@ -222,7 +223,7 @@ export async function syncHesabfaStockToTarget(input: {
   unitPriceToman: number;
   reference?: string;
 }): Promise<void> {
-  if (!isHesabfaConfigured()) return;
+  if (!(await isHesabfaConfigured())) return;
 
   const code = itemCodeOf(input.itemCode);
   if (!code) return;

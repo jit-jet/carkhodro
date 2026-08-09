@@ -431,9 +431,9 @@ export function formatHesabfaSaveError(err: unknown): string {
 export async function saveProductItemToHesabfa(
   input: HesabfaProductPayloadInput,
 ): Promise<HesabfaItem> {
-  if (!isHesabfaConfigured()) {
+  if (!(await isHesabfaConfigured())) {
     throw new HesabfaError(
-      'Hesabfa is not configured — set HESABFA_API_KEY and HESABFA_LOGIN_TOKEN.',
+      'Hesabfa is not configured in System Settings.',
     );
   }
   return saveItem(toHesabfaItemPayload(input));
@@ -441,7 +441,7 @@ export async function saveProductItemToHesabfa(
 
 /** Push one local product to Hesabfa immediately (create/update). */
 export async function pushProductToHesabfa(productId: string): Promise<void> {
-  if (!isHesabfaConfigured()) return;
+  if (!(await isHesabfaConfigured())) return;
 
   const product = await prisma.product.findUnique({
     where: { id: productId },

@@ -7,7 +7,7 @@ import type {
 } from './types';
 
 async function zibalPost<T>(path: string, body: unknown): Promise<T> {
-  const { gatewayBase } = getZibalConfig();
+  const { gatewayBase } = await getZibalConfig();
   const res = await fetch(`${gatewayBase}${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -24,7 +24,7 @@ async function zibalPost<T>(path: string, body: unknown): Promise<T> {
 export async function zibalRequestPayment(
   input: Omit<ZibalRequestPayload, 'merchant' | 'callbackUrl'>,
 ): Promise<ZibalRequestResponse> {
-  const { merchant, callbackUrl } = getZibalConfig();
+  const { merchant, callbackUrl } = await getZibalConfig();
   return zibalPost<ZibalRequestResponse>('/v1/request', {
     merchant,
     callbackUrl,
@@ -34,7 +34,7 @@ export async function zibalRequestPayment(
 
 /** Step 3 — confirm a successful callback (must be called before closing the session). */
 export async function zibalVerifyPayment(trackId: number): Promise<ZibalVerifyResponse> {
-  const { merchant } = getZibalConfig();
+  const { merchant } = await getZibalConfig();
   return zibalPost<ZibalVerifyResponse>('/v1/verify', {
     merchant,
     trackId,
@@ -42,7 +42,7 @@ export async function zibalVerifyPayment(trackId: number): Promise<ZibalVerifyRe
 }
 
 /** Step 2 — browser redirect URL to open the Zibal payment page. */
-export function zibalStartUrl(trackId: number | bigint): string {
-  const { gatewayBase } = getZibalConfig();
+export async function zibalStartUrl(trackId: number | bigint): Promise<string> {
+  const { gatewayBase } = await getZibalConfig();
   return `${gatewayBase}/start/${trackId}`;
 }

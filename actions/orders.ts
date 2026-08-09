@@ -491,7 +491,7 @@ export async function submitCheckout(
         data: { paymentTrackId: BigInt(payment.trackId) },
       });
 
-      return ok({ id: order.id, gatewayUrl: zibalStartUrl(payment.trackId) });
+      return ok({ id: order.id, gatewayUrl: await zibalStartUrl(payment.trackId) });
     }
 
     await clearUserCart(user.id);

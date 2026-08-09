@@ -8,6 +8,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { handleHesabfaWebhook } from '@/src/lib/hesabfa/sync';
 import type { HesabfaWebhookPayload } from '@/src/lib/hesabfa/types';
+import { getSystemConfig } from '@/src/lib/system-settings';
+import crypto from 'node:crypto';
 
 export async function POST(request: NextRequest) {
   let payload: HesabfaWebhookPayload;
@@ -26,14 +28,17 @@ export async function POST(request: NextRequest) {
     // Password intentionally omitted
   });
 
-  const expected = process.env.HESABFA_HOOK_PASSWORD;
-  if (!expected || payload?.Password !== expected) {
+  const expected = (await getSystemConfig()).hesabfaHookPassword;
+  const supplied = payload?.Password ?? '';
+  const matches = expected.length === supplied.length &&
+    crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(supplied));
+  if (!expected || !matches) {
     console.warn('[hesabfa:webhook] unauthorized');
     return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 });
   }
 
   if (!payload.ObjectType || !Array.isArray(payload.ObjectIdList)) {
-    console.warn('[hesabfa:webhook] invalid_payload', payload);
+    console.warn('[hesabfa:webhook] invalid_payload');
     return NextResponse.json({ ok: false, error: 'invalid_payload' }, { status: 400 });
   }
 

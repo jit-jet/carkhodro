@@ -109,7 +109,10 @@ const NAV_SECTIONS: NavSection[] = [
     id: "settings",
     label: "تنظیمات",
     icon: "settings",
-    items: [{ href: "/admin/settings", label: "تنظیمات سایت", icon: "settings" }],
+    items: [
+      { href: "/admin/settings", label: "تنظیمات سایت", icon: "settings" },
+      { href: "/admin/system-settings", label: "تنظیمات سیستم", icon: "settings" },
+    ],
   },
 ];
 
@@ -330,9 +333,11 @@ function sectionHasActive(pathname: string, section: NavSection): boolean {
 
 export default function AdminSidebar({
   adminName,
+  isSuperAdmin,
   onNavigate,
 }: {
   adminName: string;
+  isSuperAdmin: boolean;
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
@@ -449,7 +454,9 @@ export default function AdminSidebar({
                   ].join(" ")}
                 >
                   <ul className="overflow-hidden space-y-0.5 mt-0.5 mr-2 border-r border-white/10 pr-1">
-                    {section.items.map((item) => {
+                    {section.items
+                      .filter((item) => item.href !== "/admin/system-settings" || isSuperAdmin)
+                      .map((item) => {
                       const active = isItemActive(pathname, item.href);
                       return (
                         <li key={item.href}>

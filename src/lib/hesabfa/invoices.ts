@@ -22,6 +22,7 @@ import {
   HESABFA_TAG,
   type HesabfaInvoice,
 } from './types';
+import { getSystemConfig } from '@/src/lib/system-settings';
 
 export interface InvoiceSyncStats {
   updated: number;
@@ -156,10 +157,10 @@ async function persistInvoiceLink(orderId: string, saved: HesabfaInvoice): Promi
 }
 
 async function markInvoicePaid(number: string, amountRial: number, ref?: string | null) {
-  const bankCode = process.env.HESABFA_BANK_CODE?.trim();
+  const bankCode = (await getSystemConfig()).hesabfaBankCode.trim();
   if (!bankCode) {
     console.warn(
-      '[hesabfa:savePayment] HESABFA_BANK_CODE is empty — falling back to changePaidStatus',
+      '[hesabfa:savePayment] bank code is not configured — falling back to changePaidStatus',
     );
     await changeInvoicePaidStatus(number, true);
     return;
@@ -188,7 +189,7 @@ async function markInvoicePaid(number: string, amountRial: number, ref?: string 
  * Create a paid sales invoice in Hesabfa after successful retail payment.
  */
 export async function pushPaidRetailInvoice(orderId: string): Promise<void> {
-  if (!isHesabfaConfigured()) return;
+  if (!(await isHesabfaConfigured())) return;
 
   const order = await loadOrder(orderId);
   console.log('order', order);
@@ -228,7 +229,7 @@ export async function pushPaidRetailInvoice(orderId: string): Promise<void> {
  * Create a sales invoice for a wholesale (COD) order submission.
  */
 export async function pushWholesaleInvoice(orderId: string): Promise<void> {
-  if (!isHesabfaConfigured()) return;
+  if (!(await isHesabfaConfigured())) return;
 
   const order = await loadOrder(orderId);
   if (!order || order.hesabfaCode) return;
@@ -249,7 +250,7 @@ export async function pushWholesaleInvoice(orderId: string): Promise<void> {
  * Push local order/payment/shipping status changes to Hesabfa.
  */
 export async function syncOrderStatusToHesabfa(orderId: string): Promise<void> {
-  if (!isHesabfaConfigured()) return;
+  if (!(await isHesabfaConfigured())) return;
 
   const order = await loadOrder(orderId);
   if (!order) return;

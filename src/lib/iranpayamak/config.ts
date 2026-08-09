@@ -9,6 +9,9 @@
  * SMS_OTP_PATTERN_CODE from the FarazSMS panel.
  */
 
+import 'server-only';
+import { getSystemConfig } from '@/src/lib/system-settings';
+
 const DEFAULT_BASE_URL = 'https://api.iranpayamak.com';
 
 export class IranPayamakConfigError extends Error {
@@ -19,8 +22,8 @@ export class IranPayamakConfigError extends Error {
 }
 
 /** True when SMS must not hit the network (dev / testing). */
-export function isSmsConsoleMode(): boolean {
-  const key = (process.env.SMS_API_KEY ?? '').trim();
+export async function isSmsConsoleMode(): Promise<boolean> {
+  const key = (await getSystemConfig()).smsApiKey.trim();
   return key === '' || key === 'console';
 }
 
@@ -37,18 +40,18 @@ export interface IranPayamakConfig {
  * Validate and return live-send credentials.
  * Throws {@link IranPayamakConfigError} when console mode or misconfigured.
  */
-export function getIranPayamakConfig(): IranPayamakConfig {
-  if (isSmsConsoleMode()) {
+export async function getIranPayamakConfig(): Promise<IranPayamakConfig> {
+  const settings = await getSystemConfig();
+  if (!settings.smsApiKey || settings.smsApiKey === 'console') {
     throw new IranPayamakConfigError(
       'SMS is in console mode — set a real SMS_API_KEY to send messages.',
     );
   }
 
-  const apiKey = (process.env.SMS_API_KEY ?? '').trim();
-  const lineNumber = (process.env.SMS_LINE_NUMBER ?? '').trim();
-  const otpPatternCode = (process.env.SMS_OTP_PATTERN_CODE ?? '').trim();
-  const otpPatternAttr =
-    (process.env.SMS_OTP_PATTERN_ATTR ?? 'code').trim() || 'code';
+  const apiKey = settings.smsApiKey.trim();
+  const lineNumber = settings.smsLineNumber.trim();
+  const otpPatternCode = settings.smsOtpPatternCode.trim();
+  const otpPatternAttr = settings.smsOtpPatternAttr.trim() || 'code';
 
   if (!apiKey) {
     throw new IranPayamakConfigError('SMS_API_KEY is not configured.');
@@ -61,7 +64,7 @@ export function getIranPayamakConfig(): IranPayamakConfig {
 
   return {
     baseUrl:
-      (process.env.SMS_API_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/$/, '') ||
+      settings.smsApiBaseUrl.replace(/\/$/, '') ||
       DEFAULT_BASE_URL,
     apiKey,
     lineNumber,

@@ -39,26 +39,37 @@ function ToastCard({ toast }: { toast: Toast }) {
   }, [toast.id, dismiss]);
 
   const isError = toast.variant === 'error';
+  const isWarning = toast.variant === 'warning';
 
   return (
     <div
       className={[
         'pointer-events-auto w-full max-w-sm rounded-2xl shadow-lg border px-4 py-3',
         'flex items-start gap-3 animate-[fadeIn_0.2s_ease-out] bg-white',
-        isError ? 'border-red-200' : 'border-green-200',
+        isError ? 'border-red-200' : isWarning ? 'border-amber-200' : 'border-green-200',
       ].join(' ')}
       role="status"
     >
       <span
         className={[
           'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
-          isError ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600',
+          isError
+            ? 'bg-red-100 text-red-600'
+            : isWarning
+              ? 'bg-amber-100 text-amber-700'
+              : 'bg-green-100 text-green-600',
         ].join(' ')}
       >
         {isError ? (
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        ) : isWarning ? (
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 9v4" />
+            <path d="M12 17h.01" />
+            <path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
           </svg>
         ) : (
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

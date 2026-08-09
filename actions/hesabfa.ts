@@ -8,6 +8,7 @@ import { getCurrentAdmin } from '@/src/lib/admin-session';
 import { getChangeHook, isHesabfaConfigured, setChangeHook } from '@/src/lib/hesabfa/client';
 import { fullSyncHesabfa, type FullSyncSummary } from '@/src/lib/hesabfa/sync';
 import { fail, ok, runMutation, type ActionResult } from '@/src/lib/result';
+import { getSystemConfig } from '@/src/lib/system-settings';
 
 export async function getHesabfaIntegrationStatus(): Promise<{
   configured: boolean;
@@ -17,7 +18,7 @@ export async function getHesabfaIntegrationStatus(): Promise<{
   const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? null;
   const appWebhookUrl = appUrl ? `${appUrl}/api/hesabfa/webhook` : null;
 
-  if (!isHesabfaConfigured()) {
+  if (!(await isHesabfaConfigured())) {
     return { configured: false, hookUrl: null, appWebhookUrl };
   }
 
@@ -40,8 +41,8 @@ export async function forceSyncHesabfa(): Promise<ActionResult<FullSyncSummary>>
     const admin = await getCurrentAdmin();
     if (!admin) return fail('دسترسی غیرمجاز.');
 
-    if (!isHesabfaConfigured()) {
-      return fail('حسابفا پیکربندی نشده است (HESABFA_API_KEY / HESABFA_LOGIN_TOKEN).');
+    if (!(await isHesabfaConfigured())) {
+      return fail('حسابفا در تنظیمات سیستم پیکربندی نشده است.');
     }
 
     const summary = await fullSyncHesabfa();
@@ -55,12 +56,12 @@ export async function registerHesabfaWebhook(): Promise<ActionResult<{ url: stri
     const admin = await getCurrentAdmin();
     if (!admin) return fail('دسترسی غیرمجاز.');
 
-    const password = process.env.HESABFA_HOOK_PASSWORD;
+    const password = (await getSystemConfig()).hesabfaHookPassword;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
     if (!password || !appUrl) {
-      return fail('تنظیمات وب‌هوک ناقص است (HESABFA_HOOK_PASSWORD / NEXT_PUBLIC_APP_URL).');
+      return fail('تنظیمات وب‌هوک حسابفا یا آدرس عمومی برنامه ناقص است.');
     }
-    if (!isHesabfaConfigured()) {
+    if (!(await isHesabfaConfigured())) {
       return fail('حسابفا پیکربندی نشده است.');
     }
 

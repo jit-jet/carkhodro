@@ -442,7 +442,7 @@ async function buildContactPayload(userId: string): Promise<Record<string, unkno
 
 /** Create or update the Hesabfa contact for a local user. */
 export async function pushContactToHesabfa(userId: string): Promise<void> {
-  if (!isHesabfaConfigured()) return;
+  if (!(await isHesabfaConfigured())) return;
 
   const payload = await buildContactPayload(userId);
   if (!payload) return;

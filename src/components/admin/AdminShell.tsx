@@ -11,9 +11,11 @@ import AdminSidebar from "@/src/components/admin/AdminSidebar";
 
 export default function AdminShell({
   adminName,
+  isSuperAdmin,
   children,
 }: {
   adminName: string;
+  isSuperAdmin: boolean;
   children: React.ReactNode;
 }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -23,7 +25,7 @@ export default function AdminShell({
       {/* Desktop sidebar */}
       <div className="hidden lg:block shrink-0">
         <div className="fixed inset-y-0 right-0 w-72">
-          <AdminSidebar adminName={adminName} />
+          <AdminSidebar adminName={adminName} isSuperAdmin={isSuperAdmin} />
         </div>
       </div>
 
@@ -36,7 +38,7 @@ export default function AdminShell({
             aria-hidden="true"
           />
           <div className="absolute inset-y-0 right-0 w-72 shadow-2xl">
-            <AdminSidebar adminName={adminName} onNavigate={() => setDrawerOpen(false)} />
+            <AdminSidebar adminName={adminName} isSuperAdmin={isSuperAdmin} onNavigate={() => setDrawerOpen(false)} />
           </div>
         </div>
       )}

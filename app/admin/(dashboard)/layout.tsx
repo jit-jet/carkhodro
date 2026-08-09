@@ -26,7 +26,7 @@ async function AdminGuard({ children }: { children: React.ReactNode }) {
   const admin = await getCurrentAdmin();
   if (!admin) redirect("/admin/login");
 
-  return <AdminShell adminName={`${admin.firstName} ${admin.lastName}`.trim()}>{children}</AdminShell>;
+  return <AdminShell adminName={`${admin.firstName} ${admin.lastName}`.trim()} isSuperAdmin={admin.isSuperAdmin}>{children}</AdminShell>;
 }
 
 function AdminShellFallback() {

@@ -375,6 +375,9 @@ async function seedAdminUser() {
 
   const existing = await prisma.user.findUnique({ where: { username } });
   if (existing) {
+    if (existing.role === UserRole.ADMIN && !existing.isSuperAdmin) {
+      await prisma.user.update({ where: { id: existing.id }, data: { isSuperAdmin: true } });
+    }
     console.log(`  Admin login already exists for ${username}. Skipping.`);
     return;
   }
@@ -385,7 +388,7 @@ async function seedAdminUser() {
   if (legacyAdmin) {
     await prisma.user.update({
       where: { id: legacyAdmin.id },
-      data: { username },
+      data: { username, isSuperAdmin: true },
     });
     console.log(`  Admin username set to ${username} for existing admin (/admin/login).`);
     return;
@@ -402,6 +405,7 @@ async function seedAdminUser() {
       role: UserRole.ADMIN,
       isVerified: true,
       passwordHash,
+      isSuperAdmin: true,
     },
   });
   console.log(`  Admin login created for ${username} (/admin/login).`);
