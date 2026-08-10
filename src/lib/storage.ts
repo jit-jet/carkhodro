@@ -93,3 +93,26 @@ export async function deleteFile(urlPath: string | null | undefined): Promise<vo
     if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
   }
 }
+
+/** Returns every managed storage URL referenced by strings such as HTML bodies. */
+export function storageUrlsIn(...values: Array<string | null | undefined>): Set<string> {
+  const urls = new Set<string>();
+  const pattern = /\/storage\/(avatars|products|categories|brands|cars|posts|settings|banners)\/[a-zA-Z0-9._-]+/g;
+  for (const value of values) {
+    if (!value) continue;
+    for (const match of value.matchAll(pattern)) urls.add(match[0]);
+  }
+  return urls;
+}
+
+/** Deletes managed URLs present in `previous` but no longer present in `next`. */
+export async function deleteRemovedFiles(
+  previous: Iterable<string | null | undefined>,
+  next: Iterable<string | null | undefined>,
+): Promise<void> {
+  const retained = new Set([...next].filter((url): url is string => Boolean(url)));
+  const removed = [...new Set(previous)].filter(
+    (url): url is string => Boolean(url) && !retained.has(url as string),
+  );
+  await Promise.all(removed.map((url) => deleteFile(url)));
+}

@@ -14,7 +14,7 @@ import { updateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
-import { deleteFile, saveFile } from '@/src/lib/storage';
+import { deleteFile, deleteRemovedFiles, saveFile } from '@/src/lib/storage';
 import {
   buildAdminProductWhere,
   type AdminProductWhereFilters,
@@ -228,7 +228,10 @@ export async function updateProduct(
 
     const existing = await prisma.product.findUnique({
       where: { id },
-      include: { category: { select: { id: true, name: true } } },
+      include: {
+        category: { select: { id: true, name: true } },
+        images: { select: { url: true } },
+      },
     });
     if (!existing) return fail('محصول یافت نشد.');
 
@@ -340,6 +343,15 @@ export async function updateProduct(
     });
     await syncProductImages(id, input.images);
     await syncProductCompatibilities(id, input.carModelIds);
+    if (input.images !== undefined || input.mainImage !== undefined) {
+      await deleteRemovedFiles(
+        [existing.mainImage, ...existing.images.map((image) => image.url)],
+        [
+          input.mainImage !== undefined ? input.mainImage : existing.mainImage,
+          ...(input.images !== undefined ? input.images : existing.images.map((image) => image.url)),
+        ],
+      );
+    }
     updateTag(tags.products);
     updateTag(tags.product(id));
     return ok(updated);

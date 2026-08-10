@@ -11,6 +11,7 @@ import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { normalizeSlug } from '@/src/lib/slug';
 import { tags } from '@/actions/cache-tags';
+import { deleteRemovedFiles, storageUrlsIn } from '@/src/lib/storage';
 
 export interface PostInput {
   slug: string;
@@ -130,7 +131,7 @@ export async function updatePost(
 
     const existing = await prisma.post.findUnique({
       where: { id },
-      select: { id: true, slug: true },
+      select: { id: true, slug: true, coverImage: true, ogImage: true, body: true },
     });
     if (!existing) return fail('مقاله یافت نشد.');
 
@@ -154,8 +155,12 @@ export async function updatePost(
     const updated = await prisma.post.update({
       where: { id },
       data,
-      select: { id: true, slug: true },
+      select: { id: true, slug: true, coverImage: true, ogImage: true, body: true },
     });
+    await deleteRemovedFiles(
+      storageUrlsIn(existing.coverImage, existing.ogImage, existing.body),
+      storageUrlsIn(data.coverImage, data.ogImage, data.body),
+    );
     updateTag(tags.posts);
     updateTag(tags.post(existing.slug));
     if (updated.slug !== existing.slug) updateTag(tags.post(updated.slug));
@@ -184,10 +189,11 @@ export async function deletePost(id: number): Promise<ActionResult> {
   return runMutation('deletePost', async () => {
     const existing = await prisma.post.findUnique({
       where: { id },
-      select: { slug: true },
+      select: { slug: true, coverImage: true, ogImage: true, body: true },
     });
     if (!existing) return fail('مقاله یافت نشد.');
     await prisma.post.delete({ where: { id } });
+    await deleteRemovedFiles(storageUrlsIn(existing.coverImage, existing.ogImage, existing.body), []);
     updateTag(tags.posts);
     updateTag(tags.post(existing.slug));
     updateTag(tags.postCategories);

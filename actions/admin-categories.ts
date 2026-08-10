@@ -11,6 +11,7 @@ import { updateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
+import { deleteRemovedFiles } from '@/src/lib/storage';
 
 export interface CategoryInput {
   key: string;
@@ -51,6 +52,8 @@ export async function updateCategory(
   input: Partial<CategoryInput>,
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updateCategory', async () => {
+    const existing = await prisma.category.findUnique({ where: { id }, select: { image: true } });
+    if (!existing) return fail('دسته‌بندی یافت نشد.');
     if (input.isActive === false) {
       const activeProductCount = await prisma.product.count({
         where: { categoryId: id, isActive: true },
@@ -75,6 +78,9 @@ export async function updateCategory(
       },
       select: { id: true },
     });
+    if (input.image !== undefined) {
+      await deleteRemovedFiles([existing.image], [input.image ?? '/logo.png']);
+    }
     updateTag(tags.categories);
     return ok(updated);
   });
@@ -86,7 +92,10 @@ export async function deleteCategory(id: number): Promise<ActionResult> {
     if (productCount > 0) {
       return fail('این دسته‌بندی به محصولاتی متصل است. ابتدا آن‌ها را به دسته دیگری منتقل کنید.');
     }
+    const existing = await prisma.category.findUnique({ where: { id }, select: { image: true } });
+    if (!existing) return fail('دسته‌بندی یافت نشد.');
     await prisma.category.delete({ where: { id } });
+    await deleteRemovedFiles([existing.image], []);
     updateTag(tags.categories);
     return ok(undefined);
   });

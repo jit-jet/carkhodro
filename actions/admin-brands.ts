@@ -12,6 +12,7 @@ import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
 import { normalizeSlug } from '@/src/lib/slug';
+import { deleteRemovedFiles } from '@/src/lib/storage';
 
 // ── Car brands ───────────────────────────────────────────────────────────────
 
@@ -49,6 +50,8 @@ export async function updateCarBrand(
   },
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updateCarBrand', async () => {
+    const existing = await prisma.carBrand.findUnique({ where: { id }, select: { logoImage: true } });
+    if (!existing) return fail('برند خودرو یافت نشد.');
     if (input.isActive === false) {
       const activeProductCount = await prisma.product.count({
         where: {
@@ -75,6 +78,7 @@ export async function updateCarBrand(
       },
       select: { id: true },
     });
+    if (input.logoImage !== undefined) await deleteRemovedFiles([existing.logoImage], [input.logoImage]);
     updateTag(tags.carBrands);
     updateTag(tags.carModels);
     return ok(updated);
@@ -99,7 +103,10 @@ export async function deleteCarBrand(id: number): Promise<ActionResult> {
     if (modelCount > 0) {
       return fail('این برند خودرو دارای مدل خودرو است. ابتدا مدل‌ها را حذف کنید.');
     }
+    const existing = await prisma.carBrand.findUnique({ where: { id }, select: { logoImage: true } });
+    if (!existing) return fail('برند خودرو یافت نشد.');
     await prisma.carBrand.delete({ where: { id } });
+    await deleteRemovedFiles([existing.logoImage], []);
     updateTag(tags.carBrands);
     return ok(undefined);
   });
@@ -142,6 +149,8 @@ export async function updateCarModel(
   },
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updateCarModel', async () => {
+    const existing = await prisma.carModel.findUnique({ where: { id }, select: { image: true } });
+    if (!existing) return fail('مدل خودرو یافت نشد.');
     if (input.isActive === false) {
       const activeProductCount = await prisma.product.count({
         where: {
@@ -168,6 +177,7 @@ export async function updateCarModel(
       },
       select: { id: true },
     });
+    if (input.image !== undefined) await deleteRemovedFiles([existing.image], [input.image]);
     updateTag(tags.carModels);
     return ok(updated);
   });
@@ -179,7 +189,10 @@ export async function deleteCarModel(id: number): Promise<ActionResult> {
     if (compatCount > 0) {
       return fail('این مدل خودرو به محصولاتی متصل است. ابتدا اتصال آن‌ها را حذف کنید.');
     }
+    const existing = await prisma.carModel.findUnique({ where: { id }, select: { image: true } });
+    if (!existing) return fail('مدل خودرو یافت نشد.');
     await prisma.carModel.delete({ where: { id } });
+    await deleteRemovedFiles([existing.image], []);
     updateTag(tags.carModels);
     return ok(undefined);
   });
@@ -218,6 +231,8 @@ export async function updatePartsBrand(
   input: { name?: string; slug?: string; logoImage?: string | null; isActive?: boolean; metaTitle?: string | null; metaDescription?: string | null },
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updatePartsBrand', async () => {
+    const existing = await prisma.partsBrand.findUnique({ where: { id }, select: { logoImage: true } });
+    if (!existing) return fail('برند قطعه یافت نشد.');
     if (input.isActive === false) {
       const activeProductCount = await prisma.product.count({
         where: { partsBrandId: id, isActive: true },
@@ -246,6 +261,7 @@ export async function updatePartsBrand(
       },
       select: { id: true },
     });
+    if (input.logoImage !== undefined) await deleteRemovedFiles([existing.logoImage], [input.logoImage]);
     updateTag(tags.partsBrands);
     return ok(updated);
   });
@@ -257,7 +273,10 @@ export async function deletePartsBrand(id: number): Promise<ActionResult> {
     if (productCount > 0) {
       return fail('این برند به محصولاتی متصل است. ابتدا آن‌ها را حذف یا ویرایش کنید.');
     }
+    const existing = await prisma.partsBrand.findUnique({ where: { id }, select: { logoImage: true } });
+    if (!existing) return fail('برند قطعه یافت نشد.');
     await prisma.partsBrand.delete({ where: { id } });
+    await deleteRemovedFiles([existing.logoImage], []);
     updateTag(tags.partsBrands);
     return ok(undefined);
   });

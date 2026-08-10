@@ -14,6 +14,7 @@ import {
   type RulesContentVM as RulesContentData,
 } from '@/src/lib/rules-defaults';
 import { tags } from '@/actions/cache-tags';
+import { deleteRemovedFiles, storageUrlsIn } from '@/src/lib/storage';
 
 export type RulesContentVM = RulesContentData;
 
@@ -43,11 +44,16 @@ export async function updateRulesContent(
       body,
     };
 
+    const previous = await prisma.rulesContent.findUnique({
+      where: { id: 1 },
+      select: { body: true },
+    });
     await prisma.rulesContent.upsert({
       where: { id: 1 },
       create: { id: 1, ...data },
       update: data,
     });
+    await deleteRemovedFiles(storageUrlsIn(previous?.body), storageUrlsIn(body));
     updateTag(tags.rulesContent);
     return ok(undefined);
   });

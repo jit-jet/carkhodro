@@ -4,6 +4,7 @@ import { updateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { fail, ok, runMutation, safeQuery, type ActionResult } from '@/src/lib/result';
 import { isManagedStaticPage, MANAGED_STATIC_PAGES } from '@/src/lib/static-pages';
+import { deleteRemovedFiles } from '@/src/lib/storage';
 
 export type StaticPageSeoVM = {
   path: string;
@@ -38,20 +39,26 @@ export async function updateStaticPageSeo(input: {
 }): Promise<ActionResult> {
   return runMutation('updateStaticPageSeo', async () => {
     if (!isManagedStaticPage(input.path)) return fail('صفحه انتخاب‌شده معتبر نیست.');
+    const previous = await prisma.staticPageSeo.findUnique({
+      where: { path: input.path },
+      select: { ogImageUrl: true },
+    });
+    const ogImageUrl = input.ogImageUrl.trim() || null;
     await prisma.staticPageSeo.upsert({
       where: { path: input.path },
       create: {
         path: input.path,
         metaTitle: input.metaTitle.trim() || null,
         metaDescription: input.metaDescription.trim() || null,
-        ogImageUrl: input.ogImageUrl.trim() || null,
+        ogImageUrl,
       },
       update: {
         metaTitle: input.metaTitle.trim() || null,
         metaDescription: input.metaDescription.trim() || null,
-        ogImageUrl: input.ogImageUrl.trim() || null,
+        ogImageUrl,
       },
     });
+    await deleteRemovedFiles([previous?.ogImageUrl], [ogImageUrl]);
     updateTag(`static-page-seo:${input.path}`);
     return ok(undefined);
   });

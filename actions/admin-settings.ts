@@ -20,7 +20,7 @@ import {
   type PublicSiteSettingsVM,
 } from '@/src/lib/serializers';
 import { tags } from '@/actions/cache-tags';
-import { deleteFile } from '@/src/lib/storage';
+import { deleteFile, deleteRemovedFiles } from '@/src/lib/storage';
 
 export type SiteSettingVM = PublicSiteSettingsVM;
 
@@ -165,6 +165,10 @@ export async function updateSiteSettings(
         faviconUrl: true,
         appleTouchIconUrl: true,
         ogImageUrl: true,
+        footerTrust1Icon: true,
+        footerTrust2Icon: true,
+        footerTrust3Icon: true,
+        footerTrust4Icon: true,
       },
     });
 
@@ -173,6 +177,23 @@ export async function updateSiteSettings(
       create: { id: 1, ...data },
       update: data,
     });
+
+    if (input.footerTrustBadges !== undefined) {
+      await deleteRemovedFiles(
+        [
+          previous?.footerTrust1Icon,
+          previous?.footerTrust2Icon,
+          previous?.footerTrust3Icon,
+          previous?.footerTrust4Icon,
+        ],
+        [
+          data.footerTrust1Icon as string | null,
+          data.footerTrust2Icon as string | null,
+          data.footerTrust3Icon as string | null,
+          data.footerTrust4Icon as string | null,
+        ],
+      );
+    }
 
     for (const key of ASSET_KEYS) {
       if (input[key] === undefined || !previous?.[key]) continue;
