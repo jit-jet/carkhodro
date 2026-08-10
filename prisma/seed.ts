@@ -4,6 +4,10 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { normalizePersianText } from '../src/lib/persian';
 import { hashPassword } from '../src/lib/password';
 import { DEFAULT_RULES_CONTENT } from '../src/lib/rules-defaults';
+import {
+  encryptSystemConfig,
+  type SystemConfig,
+} from '../src/lib/system-settings-crypto';
 import provincesCitiesData from '../src/assets/provinces_cities.json';
 
 const prisma = new PrismaClient({
@@ -325,6 +329,7 @@ async function main() {
 
   await seedShippingOptions();
   await seedAdminUser();
+  await seedSystemSettings();
 }
 
 /**
@@ -409,6 +414,54 @@ async function seedAdminUser() {
     },
   });
   console.log(`  Admin login created for ${username} (/admin/login).`);
+}
+
+/**
+ * Bootstrap encrypted System Settings from `.env`. This is create-only:
+ * subsequent seed runs never overwrite values managed from the admin panel.
+ */
+async function seedSystemSettings() {
+  const existing = await prisma.systemSetting.findUnique({
+    where: { id: 1 },
+    select: { id: true },
+  });
+  if (existing) {
+    console.log('  System settings already exist. Skipping environment defaults.');
+    return;
+  }
+
+  if (!process.env.SYSTEM_SETTINGS_ENCRYPTION_KEY?.trim()) {
+    console.warn('  Skipping system settings seed — SYSTEM_SETTINGS_ENCRYPTION_KEY is not set.');
+    return;
+  }
+
+  const config: SystemConfig = {
+    smsApiBaseUrl: process.env.SMS_API_BASE_URL?.trim() || 'https://api.iranpayamak.com',
+    smsApiKey: process.env.SMS_API_KEY?.trim() || '',
+    smsLineNumber: process.env.SMS_LINE_NUMBER?.trim() || '',
+    smsOtpPatternCode: process.env.SMS_OTP_PATTERN_CODE?.trim() || '',
+    smsOtpPatternAttr: process.env.SMS_OTP_PATTERN_ATTR?.trim() || 'code',
+    hesabfaApiUrl: process.env.HESABFA_API_URL?.trim() || 'https://api.hesabfa.com/v1',
+    hesabfaApiKey: process.env.HESABFA_API_KEY?.trim() || '',
+    hesabfaLoginToken: process.env.HESABFA_LOGIN_TOKEN?.trim() || '',
+    hesabfaHookPassword: process.env.HESABFA_HOOK_PASSWORD?.trim() || '',
+    hesabfaBankCode: process.env.HESABFA_BANK_CODE?.trim() || '',
+    hesabfaPurchaseContactCode: process.env.HESABFA_PURCHASE_CONTACT_CODE?.trim() || '',
+    zibalMerchant: process.env.ZIBAL_MERCHANT?.trim() || 'zibal',
+  };
+  const superAdmin = await prisma.user.findFirst({
+    where: { role: UserRole.ADMIN, isSuperAdmin: true },
+    select: { id: true },
+  });
+
+  await prisma.systemSetting.create({
+    data: {
+      id: 1,
+      encryptedConfig: encryptSystemConfig(config),
+      updatedById: superAdmin?.id ?? null,
+    },
+  });
+  console.log('  System settings seeded from environment defaults (encrypted).');
 }
 
 main()
