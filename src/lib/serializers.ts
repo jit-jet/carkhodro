@@ -406,6 +406,12 @@ export interface CheckoutProfileVM extends CheckoutContact {
 
 const FALLBACK_IMAGE = '/logo.png';
 
+/** `/logo.png` is the legacy placeholder and should follow the configured logo too. */
+function catalogImage(image: string | null | undefined, fallbackImage: string): string {
+  const value = image?.trim();
+  return !value || value === FALLBACK_IMAGE ? fallbackImage : value;
+}
+
 function persianDate(d: Date): string {
   return d.toLocaleDateString('fa-IR');
 }
@@ -468,7 +474,11 @@ export function applyRoleToProducts(vms: ProductVM[], role: PricingRole): Produc
   return vms.map((vm) => applyRoleToProduct(vm, role));
 }
 
-export function toProductVM(p: ProductWithRelations, role: PricingRole = null): ProductVM {
+export function toProductVM(
+  p: ProductWithRelations,
+  role: PricingRole = null,
+  fallbackImage = FALLBACK_IMAGE,
+): ProductVM {
   const fields = pricingFieldsFromProduct(p);
   const resolved = resolveProductPrice(fields, role);
   const callForPriceRetail = p.callForPriceRetail;
@@ -520,8 +530,10 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
     callForPriceRetail,
     callForPriceWholesale,
     callForPrice,
-    mainImage: p.mainImage ?? FALLBACK_IMAGE,
-    images: uniqueGallery.length > 0 ? uniqueGallery : [p.mainImage ?? FALLBACK_IMAGE],
+    mainImage: catalogImage(p.mainImage, fallbackImage),
+    images: uniqueGallery.length > 0
+      ? uniqueGallery.map((url) => catalogImage(url, fallbackImage))
+      : [catalogImage(p.mainImage, fallbackImage)],
     isOffer: p.isOffer,
     sku: p.sku,
     origin: p.origin ?? '',
@@ -546,9 +558,13 @@ export function toProductVM(p: ProductWithRelations, role: PricingRole = null): 
   };
 }
 
-export function toPDPProductVM(p: ProductWithRelations, role: PricingRole = null): PDPProductVM {
+export function toPDPProductVM(
+  p: ProductWithRelations,
+  role: PricingRole = null,
+  fallbackImage = FALLBACK_IMAGE,
+): PDPProductVM {
   return {
-    ...toProductVM(p, role),
+    ...toProductVM(p, role, fallbackImage),
     unit: p.unit?.trim() || 'عدد',
     isOriginal: p.isOriginal,
     description: p.description ?? '',
@@ -587,12 +603,12 @@ export function toCategoryVM(c: {
   name: string;
   image: string;
   productCount: number;
-}): CategoryVM {
+}, fallbackImage = FALLBACK_IMAGE): CategoryVM {
   return {
     id: c.id,
     key: c.key,
     name: c.name,
-    image: c.image || '/logo.png',
+    image: catalogImage(c.image, fallbackImage),
     count: c.productCount,
   };
 }
@@ -602,11 +618,11 @@ export function toCarBrandVM(b: {
   name: string;
   logoImage: string | null;
   productCount: number;
-}): CarBrandVM {
+}, fallbackImage = FALLBACK_IMAGE): CarBrandVM {
   return {
     id: b.id,
     name: b.name,
-    image: b.logoImage ?? FALLBACK_IMAGE,
+    image: catalogImage(b.logoImage, fallbackImage),
     count: b.productCount,
   };
 }
@@ -617,13 +633,13 @@ export function toCarModelVM(m: {
   name: string;
   image: string | null;
   carBrand: { name: string };
-}): CarModelVM {
+}, fallbackImage = FALLBACK_IMAGE): CarModelVM {
   return {
     id: m.id,
     brandId: m.carBrandId,
     brandName: m.carBrand.name,
     name: m.name,
-    image: m.image ?? FALLBACK_IMAGE,
+    image: catalogImage(m.image, fallbackImage),
   };
 }
 
@@ -987,8 +1003,9 @@ export function toCartItemVM(
     product: ProductWithRelations;
   },
   role: PricingRole = null,
+  fallbackImage = FALLBACK_IMAGE,
 ): CartItemVM {
-  const p = toProductVM(item.product, role);
+  const p = toProductVM(item.product, role, fallbackImage);
   return {
     id: item.id,
     productId: item.productId,

@@ -12,6 +12,7 @@ import { getCurrentUser } from '@/src/lib/session';
 import { pricingRoleFromUser } from '@/src/lib/user-role';
 import { readGuestCart, buildGuestCartVM } from '@/src/lib/guest-cart';
 import type { Prisma } from '@/generated/prisma_client';
+import { getDefaultImageUrl } from '@/src/lib/default-image';
 
 const cartArgs = {
   include: {
@@ -24,8 +25,12 @@ const cartArgs = {
 
 type CartRow = Prisma.CartGetPayload<typeof cartArgs>;
 
-export function buildCartVM(cart: CartRow, role = pricingRoleFromUser(null)): CartVM {
-  const items = cart.items.map((item) => toCartItemVM(item, role));
+export function buildCartVM(
+  cart: CartRow,
+  role = pricingRoleFromUser(null),
+  fallbackImage = '/logo.png',
+): CartVM {
+  const items = cart.items.map((item) => toCartItemVM(item, role, fallbackImage));
   return {
     id: cart.id,
     items,
@@ -36,8 +41,11 @@ export function buildCartVM(cart: CartRow, role = pricingRoleFromUser(null)): Ca
 
 /** Load a user's cart as a view-model, or an empty cart if none exists yet. */
 export async function loadCartByUserId(userId: string, role = pricingRoleFromUser(null)): Promise<CartVM> {
-  const cart = await prisma.cart.findUnique({ where: { userId }, ...cartArgs });
-  return cart ? buildCartVM(cart, role) : { id: '', items: [], subtotal: 0, totalItems: 0 };
+  const [cart, fallbackImage] = await Promise.all([
+    prisma.cart.findUnique({ where: { userId }, ...cartArgs }),
+    getDefaultImageUrl(),
+  ]);
+  return cart ? buildCartVM(cart, role, fallbackImage) : { id: '', items: [], subtotal: 0, totalItems: 0 };
 }
 
 /**

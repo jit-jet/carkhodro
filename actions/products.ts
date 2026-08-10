@@ -28,6 +28,7 @@ import { pricingRoleFromUser } from '@/src/lib/user-role';
 import { getCurrentUser } from '@/src/lib/session';
 import { safeQuery } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
+import { getDefaultImageUrl } from '@/src/lib/default-image';
 import { buildAdminProductWhere } from '@/src/lib/admin-product-where';
 import {
   computeRetailPrice,
@@ -53,15 +54,15 @@ export async function withViewerProduct(
 export async function getProducts(): Promise<ProductVM[]> {
   'use cache';
   cacheLife('hours');
-  cacheTag(tags.products);
+  cacheTag(tags.products, tags.siteSettings);
 
   return safeQuery('getProducts', async () => {
-    const rows = await prisma.product.findMany({
+    const [rows, fallbackImage] = await Promise.all([prisma.product.findMany({
       where: { isActive: true },
       include: productInclude,
       orderBy: { createdAt: 'desc' },
-    });
-    return rows.map((p) => toProductVM(p));
+    }), getDefaultImageUrl()]);
+    return rows.map((p) => toProductVM(p, null, fallbackImage));
   }, []);
 }
 
@@ -69,16 +70,16 @@ export async function getProducts(): Promise<ProductVM[]> {
 export async function getNewArrivals(limit = 10): Promise<ProductVM[]> {
   'use cache';
   cacheLife('hours');
-  cacheTag(tags.products);
+  cacheTag(tags.products, tags.siteSettings);
 
   return safeQuery('getNewArrivals', async () => {
-    const rows = await prisma.product.findMany({
+    const [rows, fallbackImage] = await Promise.all([prisma.product.findMany({
       where: { isActive: true },
       include: productInclude,
       orderBy: { createdAt: 'desc' },
       take: limit,
-    });
-    return rows.map((p) => toProductVM(p));
+    }), getDefaultImageUrl()]);
+    return rows.map((p) => toProductVM(p, null, fallbackImage));
   }, []);
 }
 
@@ -86,16 +87,16 @@ export async function getNewArrivals(limit = 10): Promise<ProductVM[]> {
 export async function getSpecialOffers(limit = 12): Promise<ProductVM[]> {
   'use cache';
   cacheLife('hours');
-  cacheTag(tags.products);
+  cacheTag(tags.products, tags.siteSettings);
 
   return safeQuery('getSpecialOffers', async () => {
-    const rows = await prisma.product.findMany({
+    const [rows, fallbackImage] = await Promise.all([prisma.product.findMany({
       where: { isActive: true, isOffer: true },
       include: productInclude,
       orderBy: { saleCount: 'desc' },
       take: limit,
-    });
-    return rows.map((p) => toProductVM(p));
+    }), getDefaultImageUrl()]);
+    return rows.map((p) => toProductVM(p, null, fallbackImage));
   }, []);
 }
 
@@ -103,14 +104,14 @@ export async function getSpecialOffers(limit = 12): Promise<ProductVM[]> {
 export async function getProductById(id: string): Promise<PDPProductVM | null> {
   'use cache';
   cacheLife('hours');
-  cacheTag(tags.product(id));
+  cacheTag(tags.product(id), tags.siteSettings);
 
   return safeQuery(`getProductById:${id}`, async () => {
-    const row = await prisma.product.findFirst({
+    const [row, fallbackImage] = await Promise.all([prisma.product.findFirst({
       where: { id, isActive: true },
       include: productInclude,
-    });
-    return row ? toPDPProductVM(row) : null;
+    }), getDefaultImageUrl()]);
+    return row ? toPDPProductVM(row, null, fallbackImage) : null;
   }, null);
 }
 
@@ -125,16 +126,16 @@ export async function getRelatedProducts(
 ): Promise<ProductVM[]> {
   'use cache';
   cacheLife('hours');
-  cacheTag(tags.products);
+  cacheTag(tags.products, tags.siteSettings);
 
   return safeQuery(`getRelatedProducts:${productId}`, async () => {
-    const rows = await prisma.product.findMany({
+    const [rows, fallbackImage] = await Promise.all([prisma.product.findMany({
       where: { isActive: true, categoryId, id: { not: productId } },
       include: productInclude,
       orderBy: { saleCount: 'desc' },
       take: limit,
-    });
-    return rows.map((p) => toProductVM(p));
+    }), getDefaultImageUrl()]);
+    return rows.map((p) => toProductVM(p, null, fallbackImage));
   }, []);
 }
 

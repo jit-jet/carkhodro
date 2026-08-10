@@ -18,16 +18,17 @@ import {
 } from '@/src/lib/serializers';
 import { safeQuery } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
+import { getDefaultImageUrl } from '@/src/lib/default-image';
 
 // ── Car brands / برند خودرو ───────────────────────────────────────────────────
 
 export async function getCarBrands(): Promise<CarBrandVM[]> {
   'use cache';
   cacheLife('days');
-  cacheTag(tags.carBrands, tags.carModels, tags.products);
+  cacheTag(tags.carBrands, tags.carModels, tags.products, tags.siteSettings);
 
   return safeQuery('getCarBrands', async () => {
-    const rows = await prisma.carBrand.findMany({
+    const [rows, fallbackImage] = await Promise.all([prisma.carBrand.findMany({
       where: {
         isActive: true,
         carModels: {
@@ -38,8 +39,8 @@ export async function getCarBrands(): Promise<CarBrandVM[]> {
         },
       },
       orderBy: { productCount: 'desc' },
-    });
-    return rows.map(toCarBrandVM);
+    }), getDefaultImageUrl()]);
+    return rows.map((row) => toCarBrandVM(row, fallbackImage));
   }, []);
 }
 
@@ -48,10 +49,10 @@ export async function getCarBrands(): Promise<CarBrandVM[]> {
 export async function getCarModels(): Promise<CarModelVM[]> {
   'use cache';
   cacheLife('days');
-  cacheTag(tags.carModels, tags.carBrands, tags.products);
+  cacheTag(tags.carModels, tags.carBrands, tags.products, tags.siteSettings);
 
   return safeQuery('getCarModels', async () => {
-    const rows = await prisma.carModel.findMany({
+    const [rows, fallbackImage] = await Promise.all([prisma.carModel.findMany({
       where: {
         isActive: true,
         carBrand: { isActive: true },
@@ -59,8 +60,8 @@ export async function getCarModels(): Promise<CarModelVM[]> {
       },
       include: { carBrand: true },
       orderBy: { id: 'asc' },
-    });
-    return rows.map(toCarModelVM);
+    }), getDefaultImageUrl()]);
+    return rows.map((row) => toCarModelVM(row, fallbackImage));
   }, []);
 }
 
@@ -86,19 +87,19 @@ export async function getPartsBrandsHome(): Promise<
 > {
   'use cache';
   cacheLife('days');
-  cacheTag(tags.partsBrands, tags.products);
+  cacheTag(tags.partsBrands, tags.products, tags.siteSettings);
 
   return safeQuery('getPartsBrandsHome', async () => {
-    const rows = await prisma.partsBrand.findMany({
+    const [rows, fallbackImage] = await Promise.all([prisma.partsBrand.findMany({
       where: { isActive: true, products: { some: { isActive: true } } },
       orderBy: { name: 'asc' },
       include: { _count: { select: { products: { where: { isActive: true } } } } },
-    });
+    }), getDefaultImageUrl()]);
     return rows.map((b) => ({
       id: b.id,
       name: b.name,
       slug: b.slug,
-      image: b.logoImage ?? '/logo.png',
+      image: b.logoImage?.trim() && b.logoImage !== '/logo.png' ? b.logoImage : fallbackImage,
       count: b._count.products,
     }));
   }, []);

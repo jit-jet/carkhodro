@@ -22,6 +22,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
+import { getDefaultImageUrl } from '@/src/lib/default-image';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
 import { productInclude, toProductVM, type ProductVM } from '@/src/lib/serializers';
@@ -167,7 +168,8 @@ export async function getWishlist(): Promise<ProductVM[]> {
         orderBy: { createdAt: 'desc' },
         include: { product: { include: productInclude } },
       });
-      return rows.map((r) => toProductVM(r.product, pricingRoleFromUser(user.role)));
+      const fallbackImage = await getDefaultImageUrl();
+      return rows.map((r) => toProductVM(r.product, pricingRoleFromUser(user.role), fallbackImage));
     },
     [],
   );
@@ -185,7 +187,8 @@ export async function getCompareList(): Promise<ProductVM[]> {
         orderBy: { createdAt: 'desc' },
         include: { product: { include: productInclude } },
       });
-      return rows.map((r) => toProductVM(r.product, pricingRoleFromUser(user.role)));
+      const fallbackImage = await getDefaultImageUrl();
+      return rows.map((r) => toProductVM(r.product, pricingRoleFromUser(user.role), fallbackImage));
     },
     [],
   );

@@ -18,6 +18,7 @@
 
 import { cookies } from 'next/headers';
 import { prisma } from '@/src/lib/prisma';
+import { getDefaultImageUrl } from '@/src/lib/default-image';
 import { productInclude, toCartItemVM, type CartVM } from '@/src/lib/serializers';
 import { mergeCartQuantity, pricingRoleFromUser } from '@/src/lib/user-role';
 
@@ -84,10 +85,10 @@ export async function clearGuestCart(): Promise<void> {
 export async function buildGuestCartVM(lines: GuestCartLine[]): Promise<CartVM> {
   if (lines.length === 0) return emptyCart();
 
-  const products = await prisma.product.findMany({
+  const [products, fallbackImage] = await Promise.all([prisma.product.findMany({
     where: { id: { in: lines.map((l) => l.productId) }, isActive: true },
     include: productInclude,
-  });
+  }), getDefaultImageUrl()]);
   const byId = new Map(products.map((p) => [p.id, p]));
 
   const items = lines
@@ -96,7 +97,7 @@ export async function buildGuestCartVM(lines: GuestCartLine[]): Promise<CartVM> 
       if (!product || product.stock < 1) return null;
       const quantity = Math.min(product.stock, line.quantity);
       // Reuse the shared serializer; item id === productId for guests.
-      return toCartItemVM({ id: product.id, productId: product.id, quantity, product }, null);
+      return toCartItemVM({ id: product.id, productId: product.id, quantity, product }, null, fallbackImage);
     })
     .filter((i): i is NonNullable<typeof i> => i !== null);
 

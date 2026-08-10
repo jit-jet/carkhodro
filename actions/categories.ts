@@ -13,18 +13,19 @@ import { prisma } from '@/src/lib/prisma';
 import { toCategoryVM, type CategoryVM } from '@/src/lib/serializers';
 import { safeQuery } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
+import { getDefaultImageUrl } from '@/src/lib/default-image';
 
 export async function getCategories(): Promise<CategoryVM[]> {
   'use cache';
   cacheLife('days');
-  cacheTag(tags.categories, tags.products);
+  cacheTag(tags.categories, tags.products, tags.siteSettings);
 
   return safeQuery('getCategories', async () => {
-    const rows = await prisma.category.findMany({
+    const [rows, fallbackImage] = await Promise.all([prisma.category.findMany({
       where: { isActive: true, products: { some: { isActive: true } } },
       orderBy: { sortOrder: 'asc' },
       include: { _count: { select: { products: { where: { isActive: true } } } } },
-    });
+    }), getDefaultImageUrl()]);
     return rows.map((c) =>
       toCategoryVM({
         id: c.id,
@@ -32,7 +33,7 @@ export async function getCategories(): Promise<CategoryVM[]> {
         name: c.name,
         image: c.image,
         productCount: c._count.products,
-      }),
+      }, fallbackImage),
     );
   }, []);
 }
@@ -40,13 +41,13 @@ export async function getCategories(): Promise<CategoryVM[]> {
 export async function getCategoryByKey(key: string): Promise<CategoryVM | null> {
   'use cache';
   cacheLife('days');
-  cacheTag(tags.categories);
+  cacheTag(tags.categories, tags.siteSettings);
 
   return safeQuery(`getCategoryByKey:${key}`, async () => {
-    const row = await prisma.category.findFirst({
+    const [row, fallbackImage] = await Promise.all([prisma.category.findFirst({
       where: { key, isActive: true },
-    });
-    return row ? toCategoryVM(row) : null;
+    }), getDefaultImageUrl()]);
+    return row ? toCategoryVM(row, fallbackImage) : null;
   }, null);
 }
 
@@ -59,10 +60,10 @@ export interface AdminCategoryVM extends CategoryVM {
 
 export async function getCategoriesAdmin(): Promise<AdminCategoryVM[]> {
   return safeQuery('getCategoriesAdmin', async () => {
-    const rows = await prisma.category.findMany({
+    const [rows, fallbackImage] = await Promise.all([prisma.category.findMany({
       orderBy: { sortOrder: 'asc' },
       include: { _count: { select: { products: true } } },
-    });
+    }), getDefaultImageUrl()]);
     return rows.map((c) => ({
       ...toCategoryVM({
         id: c.id,
@@ -70,7 +71,7 @@ export async function getCategoriesAdmin(): Promise<AdminCategoryVM[]> {
         name: c.name,
         image: c.image,
         productCount: c._count.products,
-      }),
+      }, fallbackImage),
       isActive: c.isActive,
       metaTitle: c.metaTitle,
       metaDescription: c.metaDescription,

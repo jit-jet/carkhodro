@@ -15,6 +15,7 @@ import { safeQuery } from '@/src/lib/result';
 import { normalizePersianText } from '@/src/lib/persian';
 import { getCurrentUser } from '@/src/lib/session';
 import { pricingRoleFromUser } from '@/src/lib/user-role';
+import { getDefaultImageUrl } from '@/src/lib/default-image';
 
 /**
  * Trigram word-similarity threshold used by the `%>` operator (default 0.6).
@@ -85,11 +86,11 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
       include: productInclude,
     });
     const byId = new Map(rows.map((r) => [r.id, r]));
-    const user = await getCurrentUser();
+    const [user, fallbackImage] = await Promise.all([getCurrentUser(), getDefaultImageUrl()]);
     const role = pricingRoleFromUser(user?.role);
     return ids
       .map((id) => byId.get(id))
       .filter((r): r is NonNullable<typeof r> => r != null)
-      .map((r) => toProductVM(r, role));
+      .map((r) => toProductVM(r, role, fallbackImage));
   }, []);
 }
