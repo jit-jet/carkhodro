@@ -16,7 +16,21 @@ export type StorageFolder =
   | 'settings'
   | 'banners';
 
-const STORAGE_ROOT = path.join(process.cwd(), 'public', 'storage');
+const STORAGE_ROOT = path.resolve(
+  /* turbopackIgnore: true */
+  process.env.STORAGE_ROOT ?? path.join(process.cwd(), 'public', 'storage'),
+);
+
+const STORAGE_FOLDERS: readonly StorageFolder[] = [
+  'avatars',
+  'products',
+  'categories',
+  'brands',
+  'cars',
+  'posts',
+  'settings',
+  'banners',
+];
 
 function isSafeFilename(name: string): boolean {
   return /^[a-zA-Z0-9._-]+$/.test(name) && !name.includes('..');
@@ -25,6 +39,16 @@ function isSafeFilename(name: string): boolean {
 /** Absolute disk path for a storage subfolder. */
 function folderPath(folder: StorageFolder): string {
   return path.join(STORAGE_ROOT, folder);
+}
+
+/** Resolves a managed public URL to its absolute file path. */
+export function storedFilePath(
+  folder: string,
+  filename: string,
+): string | null {
+  if (!STORAGE_FOLDERS.includes(folder as StorageFolder)) return null;
+  if (!isSafeFilename(filename)) return null;
+  return path.join(folderPath(folder as StorageFolder), filename);
 }
 
 /**
@@ -60,17 +84,7 @@ export async function deleteFile(urlPath: string | null | undefined): Promise<vo
   const [folder, filename] = segments;
   if (!isSafeFilename(filename)) return;
 
-  const allowed: StorageFolder[] = [
-    'avatars',
-    'products',
-    'categories',
-    'brands',
-    'cars',
-    'posts',
-    'settings',
-    'banners',
-  ];
-  if (!allowed.includes(folder as StorageFolder)) return;
+  if (!STORAGE_FOLDERS.includes(folder as StorageFolder)) return;
 
   try {
     await unlink(path.join(folderPath(folder as StorageFolder), filename));
