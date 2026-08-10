@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { ProductImage } from '@/src/components/product/ProductImageWatermark';
 import type { CartItemVM } from '@/src/lib/serializers';
 import Link from 'next/link';
 
@@ -20,7 +20,7 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: Props)
       {/* Product image */}
       <Link href={`/products/${item.id}`} className="inline-block">
         <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-gray-50 border border-gray-100 shrink-0">
-          <Image
+          <ProductImage
             src={item.image}
             alt={item.name}
             fill

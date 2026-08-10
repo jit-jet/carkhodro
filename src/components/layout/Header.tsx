@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
+import { ProductImage } from '@/src/components/product/ProductImageWatermark';
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import type { NavLinkVM, ProductVM, PublicSiteSettingsVM } from "@/src/lib/serializers";
@@ -163,7 +164,7 @@ function SearchDropdown({
                   ].join(" ")}
                 >
                   <span className="relative w-11 h-11 shrink-0 rounded-xl overflow-hidden bg-silver-light">
-                    <Image src={p.mainImage} alt={p.name} fill sizes="44px" className="object-contain" />
+                    <ProductImage src={p.mainImage} alt={p.name} fill sizes="44px" className="object-contain" />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-sm font-medium text-charcoal truncate">{p.name}</span>

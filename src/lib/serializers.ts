@@ -190,6 +190,8 @@ export interface PublicSiteSettingsVM {
   footerTrustBadges: FooterTrustBadgeVM[];
   siteName: string;
   logoUrl: string;
+  productWatermarkUrl: string;
+  productWatermarkPosition: ProductWatermarkPosition;
   faviconUrl: string;
   appleTouchIconUrl: string;
   metaTitle: string;
@@ -411,6 +413,8 @@ function catalogImage(image: string | null | undefined, fallbackImage: string): 
   const value = image?.trim();
   return !value || value === FALLBACK_IMAGE ? fallbackImage : value;
 }
+
+export type ProductWatermarkPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 
 function persianDate(d: Date): string {
   return d.toLocaleDateString('fa-IR');
@@ -780,6 +784,8 @@ export function toPublicSiteSettingsVM(row: {
   aboutText: string | null;
   siteName?: string | null;
   logoUrl?: string | null;
+  productWatermarkUrl?: string | null;
+  productWatermarkPosition?: string | null;
   faviconUrl?: string | null;
   appleTouchIconUrl?: string | null;
   metaTitle?: string | null;
@@ -811,6 +817,10 @@ export function toPublicSiteSettingsVM(row: {
     footerTrustBadges: toFooterTrustBadgesVM(row),
     siteName: row?.siteName ?? '',
     logoUrl: row?.logoUrl ?? '',
+    productWatermarkUrl: row?.productWatermarkUrl ?? '',
+    productWatermarkPosition: isProductWatermarkPosition(row?.productWatermarkPosition)
+      ? row.productWatermarkPosition
+      : 'bottom-right',
     faviconUrl: row?.faviconUrl ?? '',
     appleTouchIconUrl: row?.appleTouchIconUrl ?? '',
     metaTitle: row?.metaTitle ?? '',
@@ -824,6 +834,10 @@ export function toPublicSiteSettingsVM(row: {
     robotsIndex: row?.robotsIndex ?? true,
     robotsFollow: row?.robotsFollow ?? true,
   };
+}
+
+function isProductWatermarkPosition(value: unknown): value is ProductWatermarkPosition {
+  return value === 'top-right' || value === 'top-left' || value === 'bottom-right' || value === 'bottom-left';
 }
 
 export function toSocialLinkVM(s: {

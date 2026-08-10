@@ -733,6 +733,8 @@ model SiteSetting {
   /// Branding, default SEO, and analytics (admin-managed).
   siteName          String? @map("site_name")
   logoUrl           String? @map("logo_url")
+  productWatermarkUrl String? @map("product_watermark_url")
+  productWatermarkPosition String @default("bottom-right") @map("product_watermark_position")
   faviconUrl        String? @map("favicon_url")
   appleTouchIconUrl String? @map("apple_touch_icon_url")
   metaTitle         String? @map("meta_title")

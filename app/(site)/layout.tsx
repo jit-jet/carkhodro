@@ -12,13 +12,17 @@ import SiteHeader from "@/src/components/layout/SiteHeader";
 import HeaderFallback from "@/src/components/layout/HeaderFallback";
 import SiteFooter from "@/src/components/layout/SiteFooter";
 import FooterFallback from "@/src/components/layout/FooterFallback";
+import { getPublicSiteSettings } from '@/actions/site-settings';
+import { ProductWatermarkProvider } from '@/src/components/product/ProductImageWatermark';
 
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getPublicSiteSettings();
   return (
+    <ProductWatermarkProvider settings={{ url: settings.productWatermarkUrl, position: settings.productWatermarkPosition }}>
     <div className="min-h-screen flex flex-col flex-1">
       <Suspense fallback={<HeaderFallback />}>
         <SiteHeader />
@@ -28,5 +32,6 @@ export default function SiteLayout({
         <SiteFooter />
       </Suspense>
     </div>
+    </ProductWatermarkProvider>
   );
 }

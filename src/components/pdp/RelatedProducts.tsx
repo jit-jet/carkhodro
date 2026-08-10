@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { ProductImage } from '@/src/components/product/ProductImageWatermark';
 import type { ProductVM as Product } from '@/src/lib/serializers';
 import Link from 'next/link';
 import { CALL_FOR_PRICE_LABEL } from '@/src/lib/call-for-price';
@@ -26,9 +26,10 @@ export default function RelatedProducts({ products }: Props) {
           >
             {/* Image */}
             <div className="relative h-36 bg-white overflow-hidden">
-              <Image
+              <ProductImage
                 src={p.mainImage}
                 alt={p.name}
+                occupiedCorners={!p.callForPrice && p.discount ? ['top-right', 'top-left'] : []}
                 fill
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"

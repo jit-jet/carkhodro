@@ -32402,6 +32402,8 @@ export namespace Prisma {
     heroButton2Href: string | null
     siteName: string | null
     logoUrl: string | null
+    productWatermarkUrl: string | null
+    productWatermarkPosition: string | null
     faviconUrl: string | null
     appleTouchIconUrl: string | null
     metaTitle: string | null
@@ -32453,6 +32455,8 @@ export namespace Prisma {
     heroButton2Href: string | null
     siteName: string | null
     logoUrl: string | null
+    productWatermarkUrl: string | null
+    productWatermarkPosition: string | null
     faviconUrl: string | null
     appleTouchIconUrl: string | null
     metaTitle: string | null
@@ -32504,6 +32508,8 @@ export namespace Prisma {
     heroButton2Href: number
     siteName: number
     logoUrl: number
+    productWatermarkUrl: number
+    productWatermarkPosition: number
     faviconUrl: number
     appleTouchIconUrl: number
     metaTitle: number
@@ -32565,6 +32571,8 @@ export namespace Prisma {
     heroButton2Href?: true
     siteName?: true
     logoUrl?: true
+    productWatermarkUrl?: true
+    productWatermarkPosition?: true
     faviconUrl?: true
     appleTouchIconUrl?: true
     metaTitle?: true
@@ -32616,6 +32624,8 @@ export namespace Prisma {
     heroButton2Href?: true
     siteName?: true
     logoUrl?: true
+    productWatermarkUrl?: true
+    productWatermarkPosition?: true
     faviconUrl?: true
     appleTouchIconUrl?: true
     metaTitle?: true
@@ -32667,6 +32677,8 @@ export namespace Prisma {
     heroButton2Href?: true
     siteName?: true
     logoUrl?: true
+    productWatermarkUrl?: true
+    productWatermarkPosition?: true
     faviconUrl?: true
     appleTouchIconUrl?: true
     metaTitle?: true
@@ -32805,6 +32817,8 @@ export namespace Prisma {
     heroButton2Href: string | null
     siteName: string | null
     logoUrl: string | null
+    productWatermarkUrl: string | null
+    productWatermarkPosition: string
     faviconUrl: string | null
     appleTouchIconUrl: string | null
     metaTitle: string | null
@@ -32875,6 +32889,8 @@ export namespace Prisma {
     heroButton2Href?: boolean
     siteName?: boolean
     logoUrl?: boolean
+    productWatermarkUrl?: boolean
+    productWatermarkPosition?: boolean
     faviconUrl?: boolean
     appleTouchIconUrl?: boolean
     metaTitle?: boolean
@@ -32926,6 +32942,8 @@ export namespace Prisma {
     heroButton2Href?: boolean
     siteName?: boolean
     logoUrl?: boolean
+    productWatermarkUrl?: boolean
+    productWatermarkPosition?: boolean
     faviconUrl?: boolean
     appleTouchIconUrl?: boolean
     metaTitle?: boolean
@@ -32977,6 +32995,8 @@ export namespace Prisma {
     heroButton2Href?: boolean
     siteName?: boolean
     logoUrl?: boolean
+    productWatermarkUrl?: boolean
+    productWatermarkPosition?: boolean
     faviconUrl?: boolean
     appleTouchIconUrl?: boolean
     metaTitle?: boolean
@@ -33028,6 +33048,8 @@ export namespace Prisma {
     heroButton2Href?: boolean
     siteName?: boolean
     logoUrl?: boolean
+    productWatermarkUrl?: boolean
+    productWatermarkPosition?: boolean
     faviconUrl?: boolean
     appleTouchIconUrl?: boolean
     metaTitle?: boolean
@@ -33043,7 +33065,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "heroTitle" | "heroDescription" | "heroButton1Text" | "heroButton1Href" | "heroButton2Text" | "heroButton2Href" | "siteName" | "logoUrl" | "faviconUrl" | "appleTouchIconUrl" | "metaTitle" | "metaDescription" | "ogImageUrl" | "copyrightText" | "analyticsId" | "googleAnalyticsId" | "googleTagManagerId" | "searchConsoleVerification" | "robotsIndex" | "robotsFollow" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "heroTitle" | "heroDescription" | "heroButton1Text" | "heroButton1Href" | "heroButton2Text" | "heroButton2Href" | "siteName" | "logoUrl" | "productWatermarkUrl" | "productWatermarkPosition" | "faviconUrl" | "appleTouchIconUrl" | "metaTitle" | "metaDescription" | "ogImageUrl" | "copyrightText" | "analyticsId" | "googleAnalyticsId" | "googleTagManagerId" | "searchConsoleVerification" | "robotsIndex" | "robotsFollow" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
@@ -33108,6 +33130,8 @@ export namespace Prisma {
        */
       siteName: string | null
       logoUrl: string | null
+      productWatermarkUrl: string | null
+      productWatermarkPosition: string
       faviconUrl: string | null
       appleTouchIconUrl: string | null
       metaTitle: string | null
@@ -33582,6 +33606,8 @@ export namespace Prisma {
     readonly heroButton2Href: FieldRef<"SiteSetting", 'String'>
     readonly siteName: FieldRef<"SiteSetting", 'String'>
     readonly logoUrl: FieldRef<"SiteSetting", 'String'>
+    readonly productWatermarkUrl: FieldRef<"SiteSetting", 'String'>
+    readonly productWatermarkPosition: FieldRef<"SiteSetting", 'String'>
     readonly faviconUrl: FieldRef<"SiteSetting", 'String'>
     readonly appleTouchIconUrl: FieldRef<"SiteSetting", 'String'>
     readonly metaTitle: FieldRef<"SiteSetting", 'String'>
@@ -52670,6 +52696,8 @@ export namespace Prisma {
     heroButton2Href: 'heroButton2Href',
     siteName: 'siteName',
     logoUrl: 'logoUrl',
+    productWatermarkUrl: 'productWatermarkUrl',
+    productWatermarkPosition: 'productWatermarkPosition',
     faviconUrl: 'faviconUrl',
     appleTouchIconUrl: 'appleTouchIconUrl',
     metaTitle: 'metaTitle',
@@ -55152,6 +55180,8 @@ export namespace Prisma {
     heroButton2Href?: StringNullableFilter<"SiteSetting"> | string | null
     siteName?: StringNullableFilter<"SiteSetting"> | string | null
     logoUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    productWatermarkUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    productWatermarkPosition?: StringFilter<"SiteSetting"> | string
     faviconUrl?: StringNullableFilter<"SiteSetting"> | string | null
     appleTouchIconUrl?: StringNullableFilter<"SiteSetting"> | string | null
     metaTitle?: StringNullableFilter<"SiteSetting"> | string | null
@@ -55203,6 +55233,8 @@ export namespace Prisma {
     heroButton2Href?: SortOrderInput | SortOrder
     siteName?: SortOrderInput | SortOrder
     logoUrl?: SortOrderInput | SortOrder
+    productWatermarkUrl?: SortOrderInput | SortOrder
+    productWatermarkPosition?: SortOrder
     faviconUrl?: SortOrderInput | SortOrder
     appleTouchIconUrl?: SortOrderInput | SortOrder
     metaTitle?: SortOrderInput | SortOrder
@@ -55257,6 +55289,8 @@ export namespace Prisma {
     heroButton2Href?: StringNullableFilter<"SiteSetting"> | string | null
     siteName?: StringNullableFilter<"SiteSetting"> | string | null
     logoUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    productWatermarkUrl?: StringNullableFilter<"SiteSetting"> | string | null
+    productWatermarkPosition?: StringFilter<"SiteSetting"> | string
     faviconUrl?: StringNullableFilter<"SiteSetting"> | string | null
     appleTouchIconUrl?: StringNullableFilter<"SiteSetting"> | string | null
     metaTitle?: StringNullableFilter<"SiteSetting"> | string | null
@@ -55308,6 +55342,8 @@ export namespace Prisma {
     heroButton2Href?: SortOrderInput | SortOrder
     siteName?: SortOrderInput | SortOrder
     logoUrl?: SortOrderInput | SortOrder
+    productWatermarkUrl?: SortOrderInput | SortOrder
+    productWatermarkPosition?: SortOrder
     faviconUrl?: SortOrderInput | SortOrder
     appleTouchIconUrl?: SortOrderInput | SortOrder
     metaTitle?: SortOrderInput | SortOrder
@@ -55367,6 +55403,8 @@ export namespace Prisma {
     heroButton2Href?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     siteName?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     logoUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    productWatermarkUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    productWatermarkPosition?: StringWithAggregatesFilter<"SiteSetting"> | string
     faviconUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     appleTouchIconUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     metaTitle?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
@@ -58689,6 +58727,8 @@ export namespace Prisma {
     heroButton2Href?: string | null
     siteName?: string | null
     logoUrl?: string | null
+    productWatermarkUrl?: string | null
+    productWatermarkPosition?: string
     faviconUrl?: string | null
     appleTouchIconUrl?: string | null
     metaTitle?: string | null
@@ -58740,6 +58780,8 @@ export namespace Prisma {
     heroButton2Href?: string | null
     siteName?: string | null
     logoUrl?: string | null
+    productWatermarkUrl?: string | null
+    productWatermarkPosition?: string
     faviconUrl?: string | null
     appleTouchIconUrl?: string | null
     metaTitle?: string | null
@@ -58791,6 +58833,8 @@ export namespace Prisma {
     heroButton2Href?: NullableStringFieldUpdateOperationsInput | string | null
     siteName?: NullableStringFieldUpdateOperationsInput | string | null
     logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    productWatermarkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    productWatermarkPosition?: StringFieldUpdateOperationsInput | string
     faviconUrl?: NullableStringFieldUpdateOperationsInput | string | null
     appleTouchIconUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58842,6 +58886,8 @@ export namespace Prisma {
     heroButton2Href?: NullableStringFieldUpdateOperationsInput | string | null
     siteName?: NullableStringFieldUpdateOperationsInput | string | null
     logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    productWatermarkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    productWatermarkPosition?: StringFieldUpdateOperationsInput | string
     faviconUrl?: NullableStringFieldUpdateOperationsInput | string | null
     appleTouchIconUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58893,6 +58939,8 @@ export namespace Prisma {
     heroButton2Href?: string | null
     siteName?: string | null
     logoUrl?: string | null
+    productWatermarkUrl?: string | null
+    productWatermarkPosition?: string
     faviconUrl?: string | null
     appleTouchIconUrl?: string | null
     metaTitle?: string | null
@@ -58944,6 +58992,8 @@ export namespace Prisma {
     heroButton2Href?: NullableStringFieldUpdateOperationsInput | string | null
     siteName?: NullableStringFieldUpdateOperationsInput | string | null
     logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    productWatermarkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    productWatermarkPosition?: StringFieldUpdateOperationsInput | string
     faviconUrl?: NullableStringFieldUpdateOperationsInput | string | null
     appleTouchIconUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58995,6 +59045,8 @@ export namespace Prisma {
     heroButton2Href?: NullableStringFieldUpdateOperationsInput | string | null
     siteName?: NullableStringFieldUpdateOperationsInput | string | null
     logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    productWatermarkUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    productWatermarkPosition?: StringFieldUpdateOperationsInput | string
     faviconUrl?: NullableStringFieldUpdateOperationsInput | string | null
     appleTouchIconUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62065,6 +62117,8 @@ export namespace Prisma {
     heroButton2Href?: SortOrder
     siteName?: SortOrder
     logoUrl?: SortOrder
+    productWatermarkUrl?: SortOrder
+    productWatermarkPosition?: SortOrder
     faviconUrl?: SortOrder
     appleTouchIconUrl?: SortOrder
     metaTitle?: SortOrder
@@ -62120,6 +62174,8 @@ export namespace Prisma {
     heroButton2Href?: SortOrder
     siteName?: SortOrder
     logoUrl?: SortOrder
+    productWatermarkUrl?: SortOrder
+    productWatermarkPosition?: SortOrder
     faviconUrl?: SortOrder
     appleTouchIconUrl?: SortOrder
     metaTitle?: SortOrder
@@ -62171,6 +62227,8 @@ export namespace Prisma {
     heroButton2Href?: SortOrder
     siteName?: SortOrder
     logoUrl?: SortOrder
+    productWatermarkUrl?: SortOrder
+    productWatermarkPosition?: SortOrder
     faviconUrl?: SortOrder
     appleTouchIconUrl?: SortOrder
     metaTitle?: SortOrder

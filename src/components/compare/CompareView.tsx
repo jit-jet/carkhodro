@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
+import { ProductImage } from '@/src/components/product/ProductImageWatermark';
 import Link from 'next/link';
 import { removeFromCompare, getCompareList } from '@/actions/lists';
 import { addToCart } from '@/actions/cart';
@@ -322,7 +322,7 @@ export default function CompareView({ initial, loggedIn }: Props) {
                     </button>
                     {/* Product image */}
                     <Link href={`/products/${p.id}`} className="relative block w-24 h-24 shrink-0">
-                      <Image
+                      <ProductImage
                         src={p.mainImage}
                         alt={p.name}
                         fill

@@ -15,7 +15,7 @@
  */
 
 import { useState, useTransition } from 'react';
-import Image from 'next/image';
+import { ProductImage } from '@/src/components/product/ProductImageWatermark';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ShippingSelector from '@/src/components/cart/ShippingSelector';
@@ -209,7 +209,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
             {cart.items.map((item) => (
               <li key={item.id} className="flex items-center gap-3 p-4">
                 <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-gray-50 border border-gray-100 shrink-0">
-                  <Image src={item.image} alt={item.name} fill sizes="56px" className="object-contain p-1.5" />
+                  <ProductImage src={item.image} alt={item.name} fill sizes="56px" className="object-contain p-1.5" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-charcoal line-clamp-1">{item.name}</p>

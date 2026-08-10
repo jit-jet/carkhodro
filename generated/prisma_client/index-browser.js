@@ -434,6 +434,8 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   heroButton2Href: 'heroButton2Href',
   siteName: 'siteName',
   logoUrl: 'logoUrl',
+  productWatermarkUrl: 'productWatermarkUrl',
+  productWatermarkPosition: 'productWatermarkPosition',
   faviconUrl: 'faviconUrl',
   appleTouchIconUrl: 'appleTouchIconUrl',
   metaTitle: 'metaTitle',

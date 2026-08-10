@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import Image from 'next/image';
+import { ProductImage } from '@/src/components/product/ProductImageWatermark';
 
 interface Props {
   images: string[];
@@ -51,9 +51,10 @@ export default function ImageGallery({ images, name }: Props) {
         onMouseEnter={canZoom ? () => setIsZoomed(true) : undefined}
         onMouseLeave={canZoom ? () => { setIsZoomed(false); setOrigin('50% 50%'); } : undefined}
       >
-        <Image
+        <ProductImage
           src={thumbs[activeIdx] ?? ''}
           alt={name}
+          occupiedCorners={['bottom-right']}
           fill
           priority
           sizes="(max-width: 1024px) 100vw, 50vw"
@@ -98,7 +99,7 @@ export default function ImageGallery({ images, name }: Props) {
               aria-label={`تصویر ${idx + 1}`}
             >
               <div className="relative w-full h-full">
-                <Image src={img} alt={`${name} - تصویر ${idx + 1}`} fill className="object-contain p-1" />
+                <ProductImage src={img} alt={`${name} - تصویر ${idx + 1}`} fill sizes="64px" className="object-contain p-1" />
               </div>
             </button>
           ))}

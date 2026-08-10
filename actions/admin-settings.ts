@@ -30,6 +30,7 @@ const ASSET_KEYS = [
   'headerPromo1Icon',
   'headerPromo2Icon',
   'logoUrl',
+  'productWatermarkUrl',
   'faviconUrl',
   'appleTouchIconUrl',
   'ogImageUrl',
@@ -131,6 +132,7 @@ export async function updateSiteSettings(
     const branding = {
       siteName: trimOrNull(input.siteName),
       logoUrl: trimOrNull(input.logoUrl),
+      productWatermarkUrl: trimOrNull(input.productWatermarkUrl),
       faviconUrl: trimOrNull(input.faviconUrl),
       appleTouchIconUrl: trimOrNull(input.appleTouchIconUrl),
       metaTitle: trimOrNull(input.metaTitle),
@@ -142,6 +144,11 @@ export async function updateSiteSettings(
       googleTagManagerId: trimOrNull(input.googleTagManagerId),
       searchConsoleVerification: trimOrNull(input.searchConsoleVerification),
     };
+    if (input.productWatermarkPosition !== undefined) {
+      const allowed = ['top-right', 'top-left', 'bottom-right', 'bottom-left'];
+      if (!allowed.includes(input.productWatermarkPosition)) return fail('محل نمایش لوگو معتبر نیست.');
+      data.productWatermarkPosition = input.productWatermarkPosition;
+    }
     for (const [key, value] of Object.entries(branding)) {
       if (value !== undefined) data[key] = value;
     }
@@ -154,6 +161,7 @@ export async function updateSiteSettings(
         headerPromo1Icon: true,
         headerPromo2Icon: true,
         logoUrl: true,
+        productWatermarkUrl: true,
         faviconUrl: true,
         appleTouchIconUrl: true,
         ogImageUrl: true,

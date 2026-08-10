@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import Image from 'next/image';
+import { ProductImage } from '@/src/components/product/ProductImageWatermark';
 import Link from 'next/link';
 import type { ProductVM as Product } from '@/src/lib/serializers';
 import { resolveOrderQtyUI } from '@/src/lib/order-quantity';
@@ -103,9 +103,10 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
       {/* ── Product image ──────────────────────────────────── */}
       <div className={`relative ${isGrid ? 'h-48' : 'h-40'}`}>
         <Link href={`/products/${product.id}`} className="block w-full h-full bg-white overflow-hidden">
-          <Image
+          <ProductImage
             src={product.mainImage}
             alt={product.name}
+            occupiedCorners={(!product.callForPrice && product.discount) || isNew ? ['top-right', 'top-left'] : []}
             fill
             sizes={isGrid
               ? '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
