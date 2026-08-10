@@ -55,8 +55,8 @@ export default function SettingsForm({ initial }: { initial: SiteSettingVM }) {
 
         <Card className="overflow-hidden">
           <CardHeader
-            title="برند، سئو و آنالیتیکس"
-            description="نام سایت، لوگو، آیکون‌ها، متا پیش‌فرض و شناسه Google Analytics / Tag Manager."
+            title="هویت و برند سایت"
+            description="نام سایت، لوگو، آیکون‌ها و متن کپی‌رایت. تنظیمات سئو در منوی سئو مدیریت می‌شوند."
           />
           <div className="p-5 sm:p-6 space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
@@ -97,42 +97,6 @@ export default function SettingsForm({ initial }: { initial: SiteSettingVM }) {
                 value={form.appleTouchIconUrl}
                 onChange={(url) => set("appleTouchIconUrl", url)}
               />
-              <ImageUploadField
-                folder="settings"
-                label="تصویر Open Graph"
-                value={form.ogImageUrl}
-                onChange={(url) => set("ogImageUrl", url)}
-              />
-            </div>
-
-            <div>
-              <Label>عنوان متا (Meta Title)</Label>
-              <Input
-                value={form.metaTitle}
-                onChange={(e) => set("metaTitle", e.target.value)}
-                placeholder="کارخودرو | فروشگاه قطعات یدکی خودرو"
-              />
-            </div>
-            <div>
-              <Label>توضیحات متا (Meta Description)</Label>
-              <Textarea
-                rows={3}
-                value={form.metaDescription}
-                onChange={(e) => set("metaDescription", e.target.value)}
-                placeholder="خرید آنلاین قطعات یدکی…"
-              />
-            </div>
-            <div>
-              <Label>شناسه Google Analytics / Tag Manager</Label>
-              <Input
-                dir="ltr"
-                value={form.analyticsId}
-                onChange={(e) => set("analyticsId", e.target.value)}
-                placeholder="G-XXXXXXXX  یا  GTM-XXXXXXX"
-              />
-              <p className="mt-1.5 text-xs text-gray-500">
-                مقدار خالی یعنی بدون اسکریپت آنالیتیکس. شناسه باید با GTM-، G-، UA-، AW- یا GT- شروع شود.
-              </p>
             </div>
           </div>
         </Card>

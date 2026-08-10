@@ -13,6 +13,7 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { prisma } from '@/src/lib/prisma';
 
 // Inlined (not imported from `src/lib/session`) so the proxy bundle stays free
 // of Prisma/`pg` — per the Proxy guidance to avoid shared modules. Keep in sync
@@ -31,8 +32,20 @@ const ADMIN_LOGIN_PATH = '/admin/login';
 /** Auth pages that signed-in customers should not see. */
 const AUTH_PAGES = ['/login', '/signup'];
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (!pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
+    const source = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
+    try {
+      const redirect = await prisma.seoRedirect.findUnique({ where: { source }, select: { destination: true, statusCode: true } });
+      if (redirect && redirect.destination !== source) {
+        return NextResponse.redirect(new URL(redirect.destination, request.url), redirect.statusCode === 302 ? 302 : 301);
+      }
+    } catch (error) {
+      console.error('[seo-redirect]', error);
+    }
+  }
 
   if (pathname === ADMIN_LOGIN_PATH) {
     // Do NOT bounce to /admin based on cookie presence alone. A revoked or
@@ -83,5 +96,6 @@ export const config = {
     '/admin/:path*',
     '/login',
     '/signup',
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|storage/|icons/|fonts/).*)',
   ],
 };

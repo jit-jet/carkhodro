@@ -225,6 +225,8 @@ exports.Prisma.CarModelScalarFieldEnum = {
   carBrandId: 'carBrandId',
   name: 'name',
   image: 'image',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -235,6 +237,8 @@ exports.Prisma.PartsBrandScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   logoImage: 'logoImage',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -245,6 +249,8 @@ exports.Prisma.CategoryScalarFieldEnum = {
   key: 'key',
   name: 'name',
   image: 'image',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
   sortOrder: 'sortOrder',
   productCount: 'productCount',
   isActive: 'isActive',
@@ -277,6 +283,9 @@ exports.Prisma.ProductScalarFieldEnum = {
   isOriginal: 'isOriginal',
   mainImage: 'mainImage',
   description: 'description',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  imageAlt: 'imageAlt',
   searchText: 'searchText',
   viewCount: 'viewCount',
   saleCount: 'saleCount',
@@ -432,6 +441,28 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   ogImageUrl: 'ogImageUrl',
   copyrightText: 'copyrightText',
   analyticsId: 'analyticsId',
+  googleAnalyticsId: 'googleAnalyticsId',
+  googleTagManagerId: 'googleTagManagerId',
+  searchConsoleVerification: 'searchConsoleVerification',
+  robotsIndex: 'robotsIndex',
+  robotsFollow: 'robotsFollow',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SeoRedirectScalarFieldEnum = {
+  id: 'id',
+  source: 'source',
+  destination: 'destination',
+  statusCode: 'statusCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StaticPageSeoScalarFieldEnum = {
+  path: 'path',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  ogImageUrl: 'ogImageUrl',
   updatedAt: 'updatedAt'
 };
 
@@ -748,6 +779,8 @@ exports.Prisma.ModelName = {
   Post: 'Post',
   Faq: 'Faq',
   SiteSetting: 'SiteSetting',
+  SeoRedirect: 'SeoRedirect',
+  StaticPageSeo: 'StaticPageSeo',
   AdminActivityLog: 'AdminActivityLog',
   SystemSetting: 'SystemSetting',
   RulesContent: 'RulesContent',

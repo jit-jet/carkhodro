@@ -5,18 +5,22 @@
  * Stores HTML string (same shape as seeded posts / storefront `.blog-body`).
  */
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
+import { uploadAdminImage } from "@/actions/admin-uploads";
+import RichTextImage from "@/src/components/admin/RichTextImage";
+import { useCartUI } from "@/src/store/cart-ui";
 
 type RichTextEditorProps = {
   value: string;
   onChange: (html: string) => void;
   placeholder?: string;
   className?: string;
+  onUploadingChange?: (uploading: boolean) => void;
 };
 
 function ToolbarButton({
@@ -63,7 +67,50 @@ export default function RichTextEditor({
   onChange,
   placeholder = "متن مقاله را بنویسید…",
   className = "",
+  onUploadingChange,
 }: RichTextEditorProps) {
+  const notify = useCartUI((state) => state.notify);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const insertionPositionRef = useRef<number | null>(null);
+  const [uploading, startUpload] = useTransition();
+  const [draggingFile, setDraggingFile] = useState(false);
+
+  useEffect(() => {
+    onUploadingChange?.(uploading);
+  }, [onUploadingChange, uploading]);
+
+  function uploadAndInsert(file: File | undefined, position?: number) {
+    if (!file || file.size === 0) return;
+    if (!file.type.startsWith("image/")) {
+      notify({ variant: "error", title: "فایل نامعتبر", description: "فقط تصویر jpg، png یا webp قابل درج است." });
+      return;
+    }
+
+    startUpload(async () => {
+      const form = new FormData();
+      form.set("image", file);
+      const result = await uploadAdminImage("posts", form);
+      if (!result.ok) {
+        notify({ variant: "error", title: "خطا در آپلود", description: result.error });
+        return;
+      }
+
+      const insertAt = Math.min(
+        position ?? insertionPositionRef.current ?? editor?.state.selection.from ?? 0,
+        editor?.state.doc.content.size ?? 0,
+      );
+      editor
+        ?.chain()
+        .focus()
+        .insertContentAt(insertAt, {
+          type: "richTextImage",
+          attrs: { src: result.data.url, alt: file.name.replace(/\.[^.]+$/, "") },
+        })
+        .run();
+      notify({ variant: "success", title: "تصویر درج شد", description: "برای جابه‌جایی، تصویر را بکشید؛ برای اندازه و حذف، روی آن کلیک کنید." });
+    });
+  }
+
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -76,6 +123,7 @@ export default function RichTextEditor({
         HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
       }),
       Placeholder.configure({ placeholder }),
+      RichTextImage,
     ],
     content: value || "",
     editorProps: {
@@ -83,6 +131,22 @@ export default function RichTextEditor({
         dir: "rtl",
         lang: "fa",
         class: "rich-text-editor blog-body focus:outline-none min-h-[280px] px-4 py-3",
+      },
+      handleDrop: (view, event, _slice, moved) => {
+        if (moved) return false;
+        const file = event.dataTransfer?.files?.[0];
+        if (!file) return false;
+        event.preventDefault();
+        const position = view.posAtCoords({ left: event.clientX, top: event.clientY })?.pos;
+        uploadAndInsert(file, position);
+        return true;
+      },
+      handlePaste: (_view, event) => {
+        const file = Array.from(event.clipboardData?.files ?? []).find((item) => item.type.startsWith("image/"));
+        if (!file) return false;
+        event.preventDefault();
+        uploadAndInsert(file);
+        return true;
       },
     },
     onUpdate: ({ editor: ed }) => {
@@ -128,6 +192,17 @@ export default function RichTextEditor({
       dir="rtl"
     >
       <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-b border-gray-100 bg-silver-light/60">
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className="hidden"
+          disabled={uploading}
+          onChange={(event) => {
+            uploadAndInsert(event.target.files?.[0]);
+            event.target.value = "";
+          }}
+        />
         <ToolbarButton
           label="عنوان"
           active={editor.isActive("heading", { level: 2 })}
@@ -141,6 +216,17 @@ export default function RichTextEditor({
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         >
           H3
+        </ToolbarButton>
+        <ToolbarDivider />
+        <ToolbarButton
+          label="درج تصویر"
+          disabled={uploading}
+          onClick={() => {
+            insertionPositionRef.current = editor.state.selection.from;
+            fileRef.current?.click();
+          }}
+        >
+          {uploading ? "در حال درج…" : "＋ تصویر"}
         </ToolbarButton>
         <ToolbarDivider />
         <ToolbarButton
@@ -218,7 +304,22 @@ export default function RichTextEditor({
         </ToolbarButton>
       </div>
 
-      <EditorContent editor={editor} />
+      <div
+        className={draggingFile ? "rich-text-editor-dropzone is-dragging" : "rich-text-editor-dropzone"}
+        onDragEnter={(event) => {
+          if (event.dataTransfer.types.includes("Files")) setDraggingFile(true);
+        }}
+        onDragLeave={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as globalThis.Node | null)) setDraggingFile(false);
+        }}
+        onDrop={() => setDraggingFile(false)}
+      >
+        <EditorContent editor={editor} />
+        {draggingFile && <div className="rich-text-editor-drop-hint">تصویر را همین‌جا رها کنید</div>}
+      </div>
+      <p className="px-4 py-2 border-t border-gray-100 bg-gray-50 text-[11px] text-gray-500">
+        تصویر را در محل دلخواه درج، رها یا جای‌گذاری کنید. برای جابه‌جایی و تغییر اندازه روی تصویر کلیک کنید.
+      </p>
     </div>
   );
 }

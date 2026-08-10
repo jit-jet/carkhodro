@@ -53,6 +53,8 @@ export async function getCategoryByKey(key: string): Promise<CategoryVM | null> 
 /** Admin CRUD — includes inactive categories. */
 export interface AdminCategoryVM extends CategoryVM {
   isActive: boolean;
+  metaTitle: string | null;
+  metaDescription: string | null;
 }
 
 export async function getCategoriesAdmin(): Promise<AdminCategoryVM[]> {
@@ -70,6 +72,8 @@ export async function getCategoriesAdmin(): Promise<AdminCategoryVM[]> {
         productCount: c._count.products,
       }),
       isActive: c.isActive,
+      metaTitle: c.metaTitle,
+      metaDescription: c.metaDescription,
     }));
   }, []);
 }

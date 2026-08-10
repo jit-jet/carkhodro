@@ -58,6 +58,9 @@ export interface ProductInput {
   /** Gallery image URLs (including main). Order is preserved as sortOrder. */
   images?: string[];
   description?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  imageAlt?: string | null;
 }
 
 function normalizeBuyPrice(value: number | null | undefined): bigint | null {
@@ -194,6 +197,9 @@ export async function createProduct(
         unit: input.unit?.trim() || 'عدد',
         mainImage: input.mainImage ?? null,
         description: input.description ?? null,
+        ...(input.metaTitle !== undefined ? { metaTitle: input.metaTitle?.trim() || null } : {}),
+        ...(input.metaDescription !== undefined ? { metaDescription: input.metaDescription?.trim() || null } : {}),
+        ...(input.imageAlt !== undefined ? { imageAlt: input.imageAlt?.trim() || null } : {}),
         hesabfaCode: code,
         hesabfaId: typeof saved.Id === 'number' ? saved.Id : null,
         lastSyncedAt: new Date(),
@@ -275,6 +281,9 @@ export async function updateProduct(
         wholesaleDiscountPct,
         buyPrice,
         description,
+        ...(input.metaTitle !== undefined ? { metaTitle: input.metaTitle?.trim() || null } : {}),
+        ...(input.metaDescription !== undefined ? { metaDescription: input.metaDescription?.trim() || null } : {}),
+        ...(input.imageAlt !== undefined ? { imageAlt: input.imageAlt?.trim() || null } : {}),
         active: isActive,
       });
     } catch (err) {

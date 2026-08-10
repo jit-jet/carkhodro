@@ -1,4 +1,10 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
+import { buildStaticPageMetadata } from '@/src/lib/static-page-metadata';
+
+export function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata('/return', { title: 'شرایط مرجوعی | کارخودرو', description: 'شرایط و ضوابط مرجوع کردن کالا در کارخودرو' });
+}
 
 export default function ReturnPage() {
   return (

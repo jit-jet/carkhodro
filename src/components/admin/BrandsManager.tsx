@@ -342,6 +342,7 @@ function CarModelsTab({
     name: "",
     image: "",
     isActive: true,
+    metaTitle: "", metaDescription: "",
   });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
@@ -355,6 +356,7 @@ function CarModelsTab({
       name: "",
       image: "",
       isActive: true,
+      metaTitle: "", metaDescription: "",
     });
     setError("");
   }
@@ -367,6 +369,7 @@ function CarModelsTab({
       name: form.name,
       image: form.image || null,
       isActive: form.isActive,
+      metaTitle: form.metaTitle || null, metaDescription: form.metaDescription || null,
     };
     startTransition(async () => {
       if (editingId) {
@@ -466,6 +469,7 @@ function CarModelsTab({
               value={form.image}
               onChange={(url) => setForm({ ...form, image: url })}
             />
+            <div className="grid sm:grid-cols-2 gap-3"><Input placeholder="عنوان سئو" value={form.metaTitle} onChange={(e) => setForm({ ...form, metaTitle: e.target.value })} /><Input placeholder="توضیحات متا" value={form.metaDescription} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} /></div>
             <ActiveCheckbox
               checked={form.isActive}
               onChange={(isActive) => setForm({ ...form, isActive })}
@@ -528,6 +532,7 @@ function CarModelsTab({
                           name: m.name,
                           image: m.image ?? "",
                           isActive: m.isActive,
+                          metaTitle: m.metaTitle ?? "", metaDescription: m.metaDescription ?? "",
                         });
                       }}
                     >
@@ -574,6 +579,7 @@ function PartsBrandsTab({ initial }: { initial: AdminPartsBrandVM[] }) {
     slug: "",
     logoImage: "",
     isActive: true,
+    metaTitle: "", metaDescription: "",
   });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState("");
@@ -582,7 +588,7 @@ function PartsBrandsTab({ initial }: { initial: AdminPartsBrandVM[] }) {
 
   function reset() {
     setEditingId(null);
-    setForm({ name: "", slug: "", logoImage: "", isActive: true });
+    setForm({ name: "", slug: "", logoImage: "", isActive: true, metaTitle: "", metaDescription: "" });
     setError("");
   }
 
@@ -595,6 +601,7 @@ function PartsBrandsTab({ initial }: { initial: AdminPartsBrandVM[] }) {
         slug: form.slug,
         logoImage: form.logoImage || null,
         isActive: form.isActive,
+        metaTitle: form.metaTitle || null, metaDescription: form.metaDescription || null,
       };
       if (editingId) {
         const result = await updatePartsBrand(editingId, payload);
@@ -682,6 +689,7 @@ function PartsBrandsTab({ initial }: { initial: AdminPartsBrandVM[] }) {
               value={form.logoImage}
               onChange={(url) => setForm({ ...form, logoImage: url })}
             />
+            <div className="grid sm:grid-cols-2 gap-3"><Input placeholder="عنوان سئو" value={form.metaTitle} onChange={(e) => setForm({ ...form, metaTitle: e.target.value })} /><Input placeholder="توضیحات متا" value={form.metaDescription} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} /></div>
             <ActiveCheckbox
               checked={form.isActive}
               onChange={(isActive) => setForm({ ...form, isActive })}
@@ -744,6 +752,7 @@ function PartsBrandsTab({ initial }: { initial: AdminPartsBrandVM[] }) {
                           slug: b.slug,
                           logoImage: b.logoImage ?? "",
                           isActive: b.isActive,
+                          metaTitle: b.metaTitle ?? "", metaDescription: b.metaDescription ?? "",
                         });
                       }}
                     >

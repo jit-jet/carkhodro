@@ -2,11 +2,11 @@ import type { Metadata } from 'next/types';
 import Link from 'next/link';
 import { getFaqs } from '@/actions/faq';
 import FaqAccordion from '@/src/components/faq/FaqAccordion';
+import { buildStaticPageMetadata } from '@/src/lib/static-page-metadata';
 
-export const metadata: Metadata = {
-  title: 'سوالات متداول | کارخودرو',
-  description: 'پاسخ سوالات رایج درباره خرید قطعه خودرو، ارسال و مرجوعی.',
-};
+export function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata('/faq', { title: 'سوالات متداول | کارخودرو', description: 'پاسخ سوالات رایج درباره خرید قطعه خودرو، ارسال و مرجوعی.' });
+}
 
 export default async function FaqPage() {
   const faqs = await getFaqs();

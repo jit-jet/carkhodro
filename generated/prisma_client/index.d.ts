@@ -138,6 +138,16 @@ export type Faq = $Result.DefaultSelection<Prisma.$FaqPayload>
  */
 export type SiteSetting = $Result.DefaultSelection<Prisma.$SiteSettingPayload>
 /**
+ * Model SeoRedirect
+ * 
+ */
+export type SeoRedirect = $Result.DefaultSelection<Prisma.$SeoRedirectPayload>
+/**
+ * Model StaticPageSeo
+ * 
+ */
+export type StaticPageSeo = $Result.DefaultSelection<Prisma.$StaticPageSeoPayload>
+/**
  * Model AdminActivityLog
  * Append-only security/activity audit trail for admin authentication and
  * important back-office mutations. Inputs and secrets are never stored.
@@ -755,6 +765,26 @@ export class PrismaClient<
   get siteSetting(): Prisma.SiteSettingDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.seoRedirect`: Exposes CRUD operations for the **SeoRedirect** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SeoRedirects
+    * const seoRedirects = await prisma.seoRedirect.findMany()
+    * ```
+    */
+  get seoRedirect(): Prisma.SeoRedirectDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.staticPageSeo`: Exposes CRUD operations for the **StaticPageSeo** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StaticPageSeos
+    * const staticPageSeos = await prisma.staticPageSeo.findMany()
+    * ```
+    */
+  get staticPageSeo(): Prisma.StaticPageSeoDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.adminActivityLog`: Exposes CRUD operations for the **AdminActivityLog** model.
     * Example usage:
     * ```ts
@@ -1351,6 +1381,8 @@ export namespace Prisma {
     Post: 'Post',
     Faq: 'Faq',
     SiteSetting: 'SiteSetting',
+    SeoRedirect: 'SeoRedirect',
+    StaticPageSeo: 'StaticPageSeo',
     AdminActivityLog: 'AdminActivityLog',
     SystemSetting: 'SystemSetting',
     RulesContent: 'RulesContent',
@@ -1380,7 +1412,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "adminActivityLog" | "systemSetting" | "rulesContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
+      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "seoRedirect" | "staticPageSeo" | "adminActivityLog" | "systemSetting" | "rulesContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3160,6 +3192,154 @@ export namespace Prisma {
           }
         }
       }
+      SeoRedirect: {
+        payload: Prisma.$SeoRedirectPayload<ExtArgs>
+        fields: Prisma.SeoRedirectFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SeoRedirectFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SeoRedirectFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload>
+          }
+          findFirst: {
+            args: Prisma.SeoRedirectFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SeoRedirectFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload>
+          }
+          findMany: {
+            args: Prisma.SeoRedirectFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload>[]
+          }
+          create: {
+            args: Prisma.SeoRedirectCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload>
+          }
+          createMany: {
+            args: Prisma.SeoRedirectCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SeoRedirectCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload>[]
+          }
+          delete: {
+            args: Prisma.SeoRedirectDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload>
+          }
+          update: {
+            args: Prisma.SeoRedirectUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload>
+          }
+          deleteMany: {
+            args: Prisma.SeoRedirectDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SeoRedirectUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SeoRedirectUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload>[]
+          }
+          upsert: {
+            args: Prisma.SeoRedirectUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SeoRedirectPayload>
+          }
+          aggregate: {
+            args: Prisma.SeoRedirectAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeoRedirect>
+          }
+          groupBy: {
+            args: Prisma.SeoRedirectGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SeoRedirectGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SeoRedirectCountArgs<ExtArgs>
+            result: $Utils.Optional<SeoRedirectCountAggregateOutputType> | number
+          }
+        }
+      }
+      StaticPageSeo: {
+        payload: Prisma.$StaticPageSeoPayload<ExtArgs>
+        fields: Prisma.StaticPageSeoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StaticPageSeoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StaticPageSeoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload>
+          }
+          findFirst: {
+            args: Prisma.StaticPageSeoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StaticPageSeoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload>
+          }
+          findMany: {
+            args: Prisma.StaticPageSeoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload>[]
+          }
+          create: {
+            args: Prisma.StaticPageSeoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload>
+          }
+          createMany: {
+            args: Prisma.StaticPageSeoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StaticPageSeoCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload>[]
+          }
+          delete: {
+            args: Prisma.StaticPageSeoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload>
+          }
+          update: {
+            args: Prisma.StaticPageSeoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload>
+          }
+          deleteMany: {
+            args: Prisma.StaticPageSeoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StaticPageSeoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StaticPageSeoUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload>[]
+          }
+          upsert: {
+            args: Prisma.StaticPageSeoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StaticPageSeoPayload>
+          }
+          aggregate: {
+            args: Prisma.StaticPageSeoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStaticPageSeo>
+          }
+          groupBy: {
+            args: Prisma.StaticPageSeoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StaticPageSeoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StaticPageSeoCountArgs<ExtArgs>
+            result: $Utils.Optional<StaticPageSeoCountAggregateOutputType> | number
+          }
+        }
+      }
       AdminActivityLog: {
         payload: Prisma.$AdminActivityLogPayload<ExtArgs>
         fields: Prisma.AdminActivityLogFieldRefs
@@ -4328,6 +4508,8 @@ export namespace Prisma {
     post?: PostOmit
     faq?: FaqOmit
     siteSetting?: SiteSettingOmit
+    seoRedirect?: SeoRedirectOmit
+    staticPageSeo?: StaticPageSeoOmit
     adminActivityLog?: AdminActivityLogOmit
     systemSetting?: SystemSettingOmit
     rulesContent?: RulesContentOmit
@@ -15576,6 +15758,8 @@ export namespace Prisma {
     carBrandId: number | null
     name: string | null
     image: string | null
+    metaTitle: string | null
+    metaDescription: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -15586,6 +15770,8 @@ export namespace Prisma {
     carBrandId: number | null
     name: string | null
     image: string | null
+    metaTitle: string | null
+    metaDescription: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -15596,6 +15782,8 @@ export namespace Prisma {
     carBrandId: number
     name: number
     image: number
+    metaTitle: number
+    metaDescription: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -15618,6 +15806,8 @@ export namespace Prisma {
     carBrandId?: true
     name?: true
     image?: true
+    metaTitle?: true
+    metaDescription?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -15628,6 +15818,8 @@ export namespace Prisma {
     carBrandId?: true
     name?: true
     image?: true
+    metaTitle?: true
+    metaDescription?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -15638,6 +15830,8 @@ export namespace Prisma {
     carBrandId?: true
     name?: true
     image?: true
+    metaTitle?: true
+    metaDescription?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -15735,6 +15929,8 @@ export namespace Prisma {
     carBrandId: number
     name: string
     image: string | null
+    metaTitle: string | null
+    metaDescription: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -15764,6 +15960,8 @@ export namespace Prisma {
     carBrandId?: boolean
     name?: boolean
     image?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -15777,6 +15975,8 @@ export namespace Prisma {
     carBrandId?: boolean
     name?: boolean
     image?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -15788,6 +15988,8 @@ export namespace Prisma {
     carBrandId?: boolean
     name?: boolean
     image?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -15799,12 +16001,14 @@ export namespace Prisma {
     carBrandId?: boolean
     name?: boolean
     image?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CarModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "carBrandId" | "name" | "image" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["carModel"]>
+  export type CarModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "carBrandId" | "name" | "image" | "metaTitle" | "metaDescription" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["carModel"]>
   export type CarModelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     carBrand?: boolean | CarBrandDefaultArgs<ExtArgs>
     compatibilities?: boolean | CarModel$compatibilitiesArgs<ExtArgs>
@@ -15828,6 +16032,8 @@ export namespace Prisma {
       carBrandId: number
       name: string
       image: string | null
+      metaTitle: string | null
+      metaDescription: string | null
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -16260,6 +16466,8 @@ export namespace Prisma {
     readonly carBrandId: FieldRef<"CarModel", 'Int'>
     readonly name: FieldRef<"CarModel", 'String'>
     readonly image: FieldRef<"CarModel", 'String'>
+    readonly metaTitle: FieldRef<"CarModel", 'String'>
+    readonly metaDescription: FieldRef<"CarModel", 'String'>
     readonly isActive: FieldRef<"CarModel", 'Boolean'>
     readonly createdAt: FieldRef<"CarModel", 'DateTime'>
     readonly updatedAt: FieldRef<"CarModel", 'DateTime'>
@@ -16731,6 +16939,8 @@ export namespace Prisma {
     name: string | null
     slug: string | null
     logoImage: string | null
+    metaTitle: string | null
+    metaDescription: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -16741,6 +16951,8 @@ export namespace Prisma {
     name: string | null
     slug: string | null
     logoImage: string | null
+    metaTitle: string | null
+    metaDescription: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -16751,6 +16963,8 @@ export namespace Prisma {
     name: number
     slug: number
     logoImage: number
+    metaTitle: number
+    metaDescription: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -16771,6 +16985,8 @@ export namespace Prisma {
     name?: true
     slug?: true
     logoImage?: true
+    metaTitle?: true
+    metaDescription?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -16781,6 +16997,8 @@ export namespace Prisma {
     name?: true
     slug?: true
     logoImage?: true
+    metaTitle?: true
+    metaDescription?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -16791,6 +17009,8 @@ export namespace Prisma {
     name?: true
     slug?: true
     logoImage?: true
+    metaTitle?: true
+    metaDescription?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -16888,6 +17108,8 @@ export namespace Prisma {
     name: string
     slug: string
     logoImage: string | null
+    metaTitle: string | null
+    metaDescription: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -16917,6 +17139,8 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     logoImage?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -16929,6 +17153,8 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     logoImage?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -16939,6 +17165,8 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     logoImage?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -16949,12 +17177,14 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     logoImage?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PartsBrandOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "logoImage" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["partsBrand"]>
+  export type PartsBrandOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "logoImage" | "metaTitle" | "metaDescription" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["partsBrand"]>
   export type PartsBrandInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | PartsBrand$productsArgs<ExtArgs>
     _count?: boolean | PartsBrandCountOutputTypeDefaultArgs<ExtArgs>
@@ -16975,6 +17205,8 @@ export namespace Prisma {
        */
       slug: string
       logoImage: string | null
+      metaTitle: string | null
+      metaDescription: string | null
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -17406,6 +17638,8 @@ export namespace Prisma {
     readonly name: FieldRef<"PartsBrand", 'String'>
     readonly slug: FieldRef<"PartsBrand", 'String'>
     readonly logoImage: FieldRef<"PartsBrand", 'String'>
+    readonly metaTitle: FieldRef<"PartsBrand", 'String'>
+    readonly metaDescription: FieldRef<"PartsBrand", 'String'>
     readonly isActive: FieldRef<"PartsBrand", 'Boolean'>
     readonly createdAt: FieldRef<"PartsBrand", 'DateTime'>
     readonly updatedAt: FieldRef<"PartsBrand", 'DateTime'>
@@ -17873,6 +18107,8 @@ export namespace Prisma {
     key: string | null
     name: string | null
     image: string | null
+    metaTitle: string | null
+    metaDescription: string | null
     sortOrder: number | null
     productCount: number | null
     isActive: boolean | null
@@ -17885,6 +18121,8 @@ export namespace Prisma {
     key: string | null
     name: string | null
     image: string | null
+    metaTitle: string | null
+    metaDescription: string | null
     sortOrder: number | null
     productCount: number | null
     isActive: boolean | null
@@ -17897,6 +18135,8 @@ export namespace Prisma {
     key: number
     name: number
     image: number
+    metaTitle: number
+    metaDescription: number
     sortOrder: number
     productCount: number
     isActive: number
@@ -17923,6 +18163,8 @@ export namespace Prisma {
     key?: true
     name?: true
     image?: true
+    metaTitle?: true
+    metaDescription?: true
     sortOrder?: true
     productCount?: true
     isActive?: true
@@ -17935,6 +18177,8 @@ export namespace Prisma {
     key?: true
     name?: true
     image?: true
+    metaTitle?: true
+    metaDescription?: true
     sortOrder?: true
     productCount?: true
     isActive?: true
@@ -17947,6 +18191,8 @@ export namespace Prisma {
     key?: true
     name?: true
     image?: true
+    metaTitle?: true
+    metaDescription?: true
     sortOrder?: true
     productCount?: true
     isActive?: true
@@ -18046,6 +18292,8 @@ export namespace Prisma {
     key: string
     name: string
     image: string
+    metaTitle: string | null
+    metaDescription: string | null
     sortOrder: number
     productCount: number
     isActive: boolean
@@ -18077,6 +18325,8 @@ export namespace Prisma {
     key?: boolean
     name?: boolean
     image?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     sortOrder?: boolean
     productCount?: boolean
     isActive?: boolean
@@ -18091,6 +18341,8 @@ export namespace Prisma {
     key?: boolean
     name?: boolean
     image?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     sortOrder?: boolean
     productCount?: boolean
     isActive?: boolean
@@ -18103,6 +18355,8 @@ export namespace Prisma {
     key?: boolean
     name?: boolean
     image?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     sortOrder?: boolean
     productCount?: boolean
     isActive?: boolean
@@ -18115,6 +18369,8 @@ export namespace Prisma {
     key?: boolean
     name?: boolean
     image?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
     sortOrder?: boolean
     productCount?: boolean
     isActive?: boolean
@@ -18122,7 +18378,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "name" | "image" | "sortOrder" | "productCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "name" | "image" | "metaTitle" | "metaDescription" | "sortOrder" | "productCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | Category$productsArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -18143,6 +18399,8 @@ export namespace Prisma {
       key: string
       name: string
       image: string
+      metaTitle: string | null
+      metaDescription: string | null
       sortOrder: number
       /**
        * Denormalized counter — refreshed by a background job or DB trigger
@@ -18579,6 +18837,8 @@ export namespace Prisma {
     readonly key: FieldRef<"Category", 'String'>
     readonly name: FieldRef<"Category", 'String'>
     readonly image: FieldRef<"Category", 'String'>
+    readonly metaTitle: FieldRef<"Category", 'String'>
+    readonly metaDescription: FieldRef<"Category", 'String'>
     readonly sortOrder: FieldRef<"Category", 'Int'>
     readonly productCount: FieldRef<"Category", 'Int'>
     readonly isActive: FieldRef<"Category", 'Boolean'>
@@ -19092,6 +19352,9 @@ export namespace Prisma {
     isOriginal: boolean | null
     mainImage: string | null
     description: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    imageAlt: string | null
     searchText: string | null
     viewCount: number | null
     saleCount: number | null
@@ -19127,6 +19390,9 @@ export namespace Prisma {
     isOriginal: boolean | null
     mainImage: string | null
     description: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    imageAlt: string | null
     searchText: string | null
     viewCount: number | null
     saleCount: number | null
@@ -19162,6 +19428,9 @@ export namespace Prisma {
     isOriginal: number
     mainImage: number
     description: number
+    metaTitle: number
+    metaDescription: number
+    imageAlt: number
     searchText: number
     viewCount: number
     saleCount: number
@@ -19235,6 +19504,9 @@ export namespace Prisma {
     isOriginal?: true
     mainImage?: true
     description?: true
+    metaTitle?: true
+    metaDescription?: true
+    imageAlt?: true
     searchText?: true
     viewCount?: true
     saleCount?: true
@@ -19270,6 +19542,9 @@ export namespace Prisma {
     isOriginal?: true
     mainImage?: true
     description?: true
+    metaTitle?: true
+    metaDescription?: true
+    imageAlt?: true
     searchText?: true
     viewCount?: true
     saleCount?: true
@@ -19305,6 +19580,9 @@ export namespace Prisma {
     isOriginal?: true
     mainImage?: true
     description?: true
+    metaTitle?: true
+    metaDescription?: true
+    imageAlt?: true
     searchText?: true
     viewCount?: true
     saleCount?: true
@@ -19427,6 +19705,9 @@ export namespace Prisma {
     isOriginal: boolean
     mainImage: string | null
     description: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    imageAlt: string | null
     searchText: string | null
     viewCount: number
     saleCount: number
@@ -19481,6 +19762,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    imageAlt?: boolean
     searchText?: boolean
     viewCount?: boolean
     saleCount?: boolean
@@ -19526,6 +19810,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    imageAlt?: boolean
     searchText?: boolean
     viewCount?: boolean
     saleCount?: boolean
@@ -19563,6 +19850,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    imageAlt?: boolean
     searchText?: boolean
     viewCount?: boolean
     saleCount?: boolean
@@ -19600,6 +19890,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: boolean
     description?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    imageAlt?: boolean
     searchText?: boolean
     viewCount?: boolean
     saleCount?: boolean
@@ -19610,7 +19903,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "unit" | "isOriginal" | "mainImage" | "description" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "unit" | "isOriginal" | "mainImage" | "description" | "metaTitle" | "metaDescription" | "imageAlt" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -19721,6 +20014,9 @@ export namespace Prisma {
       isOriginal: boolean
       mainImage: string | null
       description: string | null
+      metaTitle: string | null
+      metaDescription: string | null
+      imageAlt: string | null
       /**
        * Denormalized, normalized search document (name + sku + origin + parts-brand
        * + category + compatible car models). DB-maintained via triggers — never
@@ -20193,6 +20489,9 @@ export namespace Prisma {
     readonly isOriginal: FieldRef<"Product", 'Boolean'>
     readonly mainImage: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
+    readonly metaTitle: FieldRef<"Product", 'String'>
+    readonly metaDescription: FieldRef<"Product", 'String'>
+    readonly imageAlt: FieldRef<"Product", 'String'>
     readonly searchText: FieldRef<"Product", 'String'>
     readonly viewCount: FieldRef<"Product", 'Int'>
     readonly saleCount: FieldRef<"Product", 'Int'>
@@ -32110,6 +32409,11 @@ export namespace Prisma {
     ogImageUrl: string | null
     copyrightText: string | null
     analyticsId: string | null
+    googleAnalyticsId: string | null
+    googleTagManagerId: string | null
+    searchConsoleVerification: string | null
+    robotsIndex: boolean | null
+    robotsFollow: boolean | null
     updatedAt: Date | null
   }
 
@@ -32156,6 +32460,11 @@ export namespace Prisma {
     ogImageUrl: string | null
     copyrightText: string | null
     analyticsId: string | null
+    googleAnalyticsId: string | null
+    googleTagManagerId: string | null
+    searchConsoleVerification: string | null
+    robotsIndex: boolean | null
+    robotsFollow: boolean | null
     updatedAt: Date | null
   }
 
@@ -32202,6 +32511,11 @@ export namespace Prisma {
     ogImageUrl: number
     copyrightText: number
     analyticsId: number
+    googleAnalyticsId: number
+    googleTagManagerId: number
+    searchConsoleVerification: number
+    robotsIndex: number
+    robotsFollow: number
     updatedAt: number
     _all: number
   }
@@ -32258,6 +32572,11 @@ export namespace Prisma {
     ogImageUrl?: true
     copyrightText?: true
     analyticsId?: true
+    googleAnalyticsId?: true
+    googleTagManagerId?: true
+    searchConsoleVerification?: true
+    robotsIndex?: true
+    robotsFollow?: true
     updatedAt?: true
   }
 
@@ -32304,6 +32623,11 @@ export namespace Prisma {
     ogImageUrl?: true
     copyrightText?: true
     analyticsId?: true
+    googleAnalyticsId?: true
+    googleTagManagerId?: true
+    searchConsoleVerification?: true
+    robotsIndex?: true
+    robotsFollow?: true
     updatedAt?: true
   }
 
@@ -32350,6 +32674,11 @@ export namespace Prisma {
     ogImageUrl?: true
     copyrightText?: true
     analyticsId?: true
+    googleAnalyticsId?: true
+    googleTagManagerId?: true
+    searchConsoleVerification?: true
+    robotsIndex?: true
+    robotsFollow?: true
     updatedAt?: true
     _all?: true
   }
@@ -32483,6 +32812,11 @@ export namespace Prisma {
     ogImageUrl: string | null
     copyrightText: string | null
     analyticsId: string | null
+    googleAnalyticsId: string | null
+    googleTagManagerId: string | null
+    searchConsoleVerification: string | null
+    robotsIndex: boolean
+    robotsFollow: boolean
     updatedAt: Date
     _count: SiteSettingCountAggregateOutputType | null
     _avg: SiteSettingAvgAggregateOutputType | null
@@ -32548,6 +32882,11 @@ export namespace Prisma {
     ogImageUrl?: boolean
     copyrightText?: boolean
     analyticsId?: boolean
+    googleAnalyticsId?: boolean
+    googleTagManagerId?: boolean
+    searchConsoleVerification?: boolean
+    robotsIndex?: boolean
+    robotsFollow?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
@@ -32594,6 +32933,11 @@ export namespace Prisma {
     ogImageUrl?: boolean
     copyrightText?: boolean
     analyticsId?: boolean
+    googleAnalyticsId?: boolean
+    googleTagManagerId?: boolean
+    searchConsoleVerification?: boolean
+    robotsIndex?: boolean
+    robotsFollow?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
@@ -32640,6 +32984,11 @@ export namespace Prisma {
     ogImageUrl?: boolean
     copyrightText?: boolean
     analyticsId?: boolean
+    googleAnalyticsId?: boolean
+    googleTagManagerId?: boolean
+    searchConsoleVerification?: boolean
+    robotsIndex?: boolean
+    robotsFollow?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSetting"]>
 
@@ -32686,10 +33035,15 @@ export namespace Prisma {
     ogImageUrl?: boolean
     copyrightText?: boolean
     analyticsId?: boolean
+    googleAnalyticsId?: boolean
+    googleTagManagerId?: boolean
+    searchConsoleVerification?: boolean
+    robotsIndex?: boolean
+    robotsFollow?: boolean
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "heroTitle" | "heroDescription" | "heroButton1Text" | "heroButton1Href" | "heroButton2Text" | "heroButton2Href" | "siteName" | "logoUrl" | "faviconUrl" | "appleTouchIconUrl" | "metaTitle" | "metaDescription" | "ogImageUrl" | "copyrightText" | "analyticsId" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "heroTitle" | "heroDescription" | "heroButton1Text" | "heroButton1Href" | "heroButton2Text" | "heroButton2Href" | "siteName" | "logoUrl" | "faviconUrl" | "appleTouchIconUrl" | "metaTitle" | "metaDescription" | "ogImageUrl" | "copyrightText" | "analyticsId" | "googleAnalyticsId" | "googleTagManagerId" | "searchConsoleVerification" | "robotsIndex" | "robotsFollow" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
@@ -32764,6 +33118,11 @@ export namespace Prisma {
        * Google Analytics (`G-…` / `UA-…`) or Google Tag Manager (`GTM-…`) container ID.
        */
       analyticsId: string | null
+      googleAnalyticsId: string | null
+      googleTagManagerId: string | null
+      searchConsoleVerification: string | null
+      robotsIndex: boolean
+      robotsFollow: boolean
       updatedAt: Date
     }, ExtArgs["result"]["siteSetting"]>
     composites: {}
@@ -33230,6 +33589,11 @@ export namespace Prisma {
     readonly ogImageUrl: FieldRef<"SiteSetting", 'String'>
     readonly copyrightText: FieldRef<"SiteSetting", 'String'>
     readonly analyticsId: FieldRef<"SiteSetting", 'String'>
+    readonly googleAnalyticsId: FieldRef<"SiteSetting", 'String'>
+    readonly googleTagManagerId: FieldRef<"SiteSetting", 'String'>
+    readonly searchConsoleVerification: FieldRef<"SiteSetting", 'String'>
+    readonly robotsIndex: FieldRef<"SiteSetting", 'Boolean'>
+    readonly robotsFollow: FieldRef<"SiteSetting", 'Boolean'>
     readonly updatedAt: FieldRef<"SiteSetting", 'DateTime'>
   }
     
@@ -33599,6 +33963,2057 @@ export namespace Prisma {
      * Omit specific fields from the SiteSetting
      */
     omit?: SiteSettingOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SeoRedirect
+   */
+
+  export type AggregateSeoRedirect = {
+    _count: SeoRedirectCountAggregateOutputType | null
+    _avg: SeoRedirectAvgAggregateOutputType | null
+    _sum: SeoRedirectSumAggregateOutputType | null
+    _min: SeoRedirectMinAggregateOutputType | null
+    _max: SeoRedirectMaxAggregateOutputType | null
+  }
+
+  export type SeoRedirectAvgAggregateOutputType = {
+    id: number | null
+    statusCode: number | null
+  }
+
+  export type SeoRedirectSumAggregateOutputType = {
+    id: number | null
+    statusCode: number | null
+  }
+
+  export type SeoRedirectMinAggregateOutputType = {
+    id: number | null
+    source: string | null
+    destination: string | null
+    statusCode: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SeoRedirectMaxAggregateOutputType = {
+    id: number | null
+    source: string | null
+    destination: string | null
+    statusCode: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SeoRedirectCountAggregateOutputType = {
+    id: number
+    source: number
+    destination: number
+    statusCode: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SeoRedirectAvgAggregateInputType = {
+    id?: true
+    statusCode?: true
+  }
+
+  export type SeoRedirectSumAggregateInputType = {
+    id?: true
+    statusCode?: true
+  }
+
+  export type SeoRedirectMinAggregateInputType = {
+    id?: true
+    source?: true
+    destination?: true
+    statusCode?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SeoRedirectMaxAggregateInputType = {
+    id?: true
+    source?: true
+    destination?: true
+    statusCode?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SeoRedirectCountAggregateInputType = {
+    id?: true
+    source?: true
+    destination?: true
+    statusCode?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SeoRedirectAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SeoRedirect to aggregate.
+     */
+    where?: SeoRedirectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeoRedirects to fetch.
+     */
+    orderBy?: SeoRedirectOrderByWithRelationInput | SeoRedirectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SeoRedirectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeoRedirects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeoRedirects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SeoRedirects
+    **/
+    _count?: true | SeoRedirectCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SeoRedirectAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SeoRedirectSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SeoRedirectMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SeoRedirectMaxAggregateInputType
+  }
+
+  export type GetSeoRedirectAggregateType<T extends SeoRedirectAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeoRedirect]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeoRedirect[P]>
+      : GetScalarType<T[P], AggregateSeoRedirect[P]>
+  }
+
+
+
+
+  export type SeoRedirectGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SeoRedirectWhereInput
+    orderBy?: SeoRedirectOrderByWithAggregationInput | SeoRedirectOrderByWithAggregationInput[]
+    by: SeoRedirectScalarFieldEnum[] | SeoRedirectScalarFieldEnum
+    having?: SeoRedirectScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SeoRedirectCountAggregateInputType | true
+    _avg?: SeoRedirectAvgAggregateInputType
+    _sum?: SeoRedirectSumAggregateInputType
+    _min?: SeoRedirectMinAggregateInputType
+    _max?: SeoRedirectMaxAggregateInputType
+  }
+
+  export type SeoRedirectGroupByOutputType = {
+    id: number
+    source: string
+    destination: string
+    statusCode: number
+    createdAt: Date
+    updatedAt: Date
+    _count: SeoRedirectCountAggregateOutputType | null
+    _avg: SeoRedirectAvgAggregateOutputType | null
+    _sum: SeoRedirectSumAggregateOutputType | null
+    _min: SeoRedirectMinAggregateOutputType | null
+    _max: SeoRedirectMaxAggregateOutputType | null
+  }
+
+  type GetSeoRedirectGroupByPayload<T extends SeoRedirectGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SeoRedirectGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SeoRedirectGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SeoRedirectGroupByOutputType[P]>
+            : GetScalarType<T[P], SeoRedirectGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SeoRedirectSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    source?: boolean
+    destination?: boolean
+    statusCode?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["seoRedirect"]>
+
+  export type SeoRedirectSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    source?: boolean
+    destination?: boolean
+    statusCode?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["seoRedirect"]>
+
+  export type SeoRedirectSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    source?: boolean
+    destination?: boolean
+    statusCode?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["seoRedirect"]>
+
+  export type SeoRedirectSelectScalar = {
+    id?: boolean
+    source?: boolean
+    destination?: boolean
+    statusCode?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SeoRedirectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "source" | "destination" | "statusCode" | "createdAt" | "updatedAt", ExtArgs["result"]["seoRedirect"]>
+
+  export type $SeoRedirectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SeoRedirect"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      source: string
+      destination: string
+      statusCode: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["seoRedirect"]>
+    composites: {}
+  }
+
+  type SeoRedirectGetPayload<S extends boolean | null | undefined | SeoRedirectDefaultArgs> = $Result.GetResult<Prisma.$SeoRedirectPayload, S>
+
+  type SeoRedirectCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SeoRedirectFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SeoRedirectCountAggregateInputType | true
+    }
+
+  export interface SeoRedirectDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SeoRedirect'], meta: { name: 'SeoRedirect' } }
+    /**
+     * Find zero or one SeoRedirect that matches the filter.
+     * @param {SeoRedirectFindUniqueArgs} args - Arguments to find a SeoRedirect
+     * @example
+     * // Get one SeoRedirect
+     * const seoRedirect = await prisma.seoRedirect.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SeoRedirectFindUniqueArgs>(args: SelectSubset<T, SeoRedirectFindUniqueArgs<ExtArgs>>): Prisma__SeoRedirectClient<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SeoRedirect that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SeoRedirectFindUniqueOrThrowArgs} args - Arguments to find a SeoRedirect
+     * @example
+     * // Get one SeoRedirect
+     * const seoRedirect = await prisma.seoRedirect.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SeoRedirectFindUniqueOrThrowArgs>(args: SelectSubset<T, SeoRedirectFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SeoRedirectClient<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SeoRedirect that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeoRedirectFindFirstArgs} args - Arguments to find a SeoRedirect
+     * @example
+     * // Get one SeoRedirect
+     * const seoRedirect = await prisma.seoRedirect.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SeoRedirectFindFirstArgs>(args?: SelectSubset<T, SeoRedirectFindFirstArgs<ExtArgs>>): Prisma__SeoRedirectClient<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SeoRedirect that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeoRedirectFindFirstOrThrowArgs} args - Arguments to find a SeoRedirect
+     * @example
+     * // Get one SeoRedirect
+     * const seoRedirect = await prisma.seoRedirect.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SeoRedirectFindFirstOrThrowArgs>(args?: SelectSubset<T, SeoRedirectFindFirstOrThrowArgs<ExtArgs>>): Prisma__SeoRedirectClient<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SeoRedirects that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeoRedirectFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SeoRedirects
+     * const seoRedirects = await prisma.seoRedirect.findMany()
+     * 
+     * // Get first 10 SeoRedirects
+     * const seoRedirects = await prisma.seoRedirect.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const seoRedirectWithIdOnly = await prisma.seoRedirect.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SeoRedirectFindManyArgs>(args?: SelectSubset<T, SeoRedirectFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SeoRedirect.
+     * @param {SeoRedirectCreateArgs} args - Arguments to create a SeoRedirect.
+     * @example
+     * // Create one SeoRedirect
+     * const SeoRedirect = await prisma.seoRedirect.create({
+     *   data: {
+     *     // ... data to create a SeoRedirect
+     *   }
+     * })
+     * 
+     */
+    create<T extends SeoRedirectCreateArgs>(args: SelectSubset<T, SeoRedirectCreateArgs<ExtArgs>>): Prisma__SeoRedirectClient<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SeoRedirects.
+     * @param {SeoRedirectCreateManyArgs} args - Arguments to create many SeoRedirects.
+     * @example
+     * // Create many SeoRedirects
+     * const seoRedirect = await prisma.seoRedirect.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SeoRedirectCreateManyArgs>(args?: SelectSubset<T, SeoRedirectCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SeoRedirects and returns the data saved in the database.
+     * @param {SeoRedirectCreateManyAndReturnArgs} args - Arguments to create many SeoRedirects.
+     * @example
+     * // Create many SeoRedirects
+     * const seoRedirect = await prisma.seoRedirect.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SeoRedirects and only return the `id`
+     * const seoRedirectWithIdOnly = await prisma.seoRedirect.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SeoRedirectCreateManyAndReturnArgs>(args?: SelectSubset<T, SeoRedirectCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SeoRedirect.
+     * @param {SeoRedirectDeleteArgs} args - Arguments to delete one SeoRedirect.
+     * @example
+     * // Delete one SeoRedirect
+     * const SeoRedirect = await prisma.seoRedirect.delete({
+     *   where: {
+     *     // ... filter to delete one SeoRedirect
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SeoRedirectDeleteArgs>(args: SelectSubset<T, SeoRedirectDeleteArgs<ExtArgs>>): Prisma__SeoRedirectClient<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SeoRedirect.
+     * @param {SeoRedirectUpdateArgs} args - Arguments to update one SeoRedirect.
+     * @example
+     * // Update one SeoRedirect
+     * const seoRedirect = await prisma.seoRedirect.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SeoRedirectUpdateArgs>(args: SelectSubset<T, SeoRedirectUpdateArgs<ExtArgs>>): Prisma__SeoRedirectClient<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SeoRedirects.
+     * @param {SeoRedirectDeleteManyArgs} args - Arguments to filter SeoRedirects to delete.
+     * @example
+     * // Delete a few SeoRedirects
+     * const { count } = await prisma.seoRedirect.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SeoRedirectDeleteManyArgs>(args?: SelectSubset<T, SeoRedirectDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SeoRedirects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeoRedirectUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SeoRedirects
+     * const seoRedirect = await prisma.seoRedirect.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SeoRedirectUpdateManyArgs>(args: SelectSubset<T, SeoRedirectUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SeoRedirects and returns the data updated in the database.
+     * @param {SeoRedirectUpdateManyAndReturnArgs} args - Arguments to update many SeoRedirects.
+     * @example
+     * // Update many SeoRedirects
+     * const seoRedirect = await prisma.seoRedirect.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SeoRedirects and only return the `id`
+     * const seoRedirectWithIdOnly = await prisma.seoRedirect.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SeoRedirectUpdateManyAndReturnArgs>(args: SelectSubset<T, SeoRedirectUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SeoRedirect.
+     * @param {SeoRedirectUpsertArgs} args - Arguments to update or create a SeoRedirect.
+     * @example
+     * // Update or create a SeoRedirect
+     * const seoRedirect = await prisma.seoRedirect.upsert({
+     *   create: {
+     *     // ... data to create a SeoRedirect
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SeoRedirect we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SeoRedirectUpsertArgs>(args: SelectSubset<T, SeoRedirectUpsertArgs<ExtArgs>>): Prisma__SeoRedirectClient<$Result.GetResult<Prisma.$SeoRedirectPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SeoRedirects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeoRedirectCountArgs} args - Arguments to filter SeoRedirects to count.
+     * @example
+     * // Count the number of SeoRedirects
+     * const count = await prisma.seoRedirect.count({
+     *   where: {
+     *     // ... the filter for the SeoRedirects we want to count
+     *   }
+     * })
+    **/
+    count<T extends SeoRedirectCountArgs>(
+      args?: Subset<T, SeoRedirectCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SeoRedirectCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SeoRedirect.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeoRedirectAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SeoRedirectAggregateArgs>(args: Subset<T, SeoRedirectAggregateArgs>): Prisma.PrismaPromise<GetSeoRedirectAggregateType<T>>
+
+    /**
+     * Group by SeoRedirect.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeoRedirectGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SeoRedirectGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SeoRedirectGroupByArgs['orderBy'] }
+        : { orderBy?: SeoRedirectGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SeoRedirectGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeoRedirectGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SeoRedirect model
+   */
+  readonly fields: SeoRedirectFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SeoRedirect.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SeoRedirectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SeoRedirect model
+   */
+  interface SeoRedirectFieldRefs {
+    readonly id: FieldRef<"SeoRedirect", 'Int'>
+    readonly source: FieldRef<"SeoRedirect", 'String'>
+    readonly destination: FieldRef<"SeoRedirect", 'String'>
+    readonly statusCode: FieldRef<"SeoRedirect", 'Int'>
+    readonly createdAt: FieldRef<"SeoRedirect", 'DateTime'>
+    readonly updatedAt: FieldRef<"SeoRedirect", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SeoRedirect findUnique
+   */
+  export type SeoRedirectFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * Filter, which SeoRedirect to fetch.
+     */
+    where: SeoRedirectWhereUniqueInput
+  }
+
+  /**
+   * SeoRedirect findUniqueOrThrow
+   */
+  export type SeoRedirectFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * Filter, which SeoRedirect to fetch.
+     */
+    where: SeoRedirectWhereUniqueInput
+  }
+
+  /**
+   * SeoRedirect findFirst
+   */
+  export type SeoRedirectFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * Filter, which SeoRedirect to fetch.
+     */
+    where?: SeoRedirectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeoRedirects to fetch.
+     */
+    orderBy?: SeoRedirectOrderByWithRelationInput | SeoRedirectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SeoRedirects.
+     */
+    cursor?: SeoRedirectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeoRedirects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeoRedirects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SeoRedirects.
+     */
+    distinct?: SeoRedirectScalarFieldEnum | SeoRedirectScalarFieldEnum[]
+  }
+
+  /**
+   * SeoRedirect findFirstOrThrow
+   */
+  export type SeoRedirectFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * Filter, which SeoRedirect to fetch.
+     */
+    where?: SeoRedirectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeoRedirects to fetch.
+     */
+    orderBy?: SeoRedirectOrderByWithRelationInput | SeoRedirectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SeoRedirects.
+     */
+    cursor?: SeoRedirectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeoRedirects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeoRedirects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SeoRedirects.
+     */
+    distinct?: SeoRedirectScalarFieldEnum | SeoRedirectScalarFieldEnum[]
+  }
+
+  /**
+   * SeoRedirect findMany
+   */
+  export type SeoRedirectFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * Filter, which SeoRedirects to fetch.
+     */
+    where?: SeoRedirectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SeoRedirects to fetch.
+     */
+    orderBy?: SeoRedirectOrderByWithRelationInput | SeoRedirectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SeoRedirects.
+     */
+    cursor?: SeoRedirectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SeoRedirects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SeoRedirects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SeoRedirects.
+     */
+    distinct?: SeoRedirectScalarFieldEnum | SeoRedirectScalarFieldEnum[]
+  }
+
+  /**
+   * SeoRedirect create
+   */
+  export type SeoRedirectCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SeoRedirect.
+     */
+    data: XOR<SeoRedirectCreateInput, SeoRedirectUncheckedCreateInput>
+  }
+
+  /**
+   * SeoRedirect createMany
+   */
+  export type SeoRedirectCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SeoRedirects.
+     */
+    data: SeoRedirectCreateManyInput | SeoRedirectCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SeoRedirect createManyAndReturn
+   */
+  export type SeoRedirectCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * The data used to create many SeoRedirects.
+     */
+    data: SeoRedirectCreateManyInput | SeoRedirectCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SeoRedirect update
+   */
+  export type SeoRedirectUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SeoRedirect.
+     */
+    data: XOR<SeoRedirectUpdateInput, SeoRedirectUncheckedUpdateInput>
+    /**
+     * Choose, which SeoRedirect to update.
+     */
+    where: SeoRedirectWhereUniqueInput
+  }
+
+  /**
+   * SeoRedirect updateMany
+   */
+  export type SeoRedirectUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SeoRedirects.
+     */
+    data: XOR<SeoRedirectUpdateManyMutationInput, SeoRedirectUncheckedUpdateManyInput>
+    /**
+     * Filter which SeoRedirects to update
+     */
+    where?: SeoRedirectWhereInput
+    /**
+     * Limit how many SeoRedirects to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SeoRedirect updateManyAndReturn
+   */
+  export type SeoRedirectUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * The data used to update SeoRedirects.
+     */
+    data: XOR<SeoRedirectUpdateManyMutationInput, SeoRedirectUncheckedUpdateManyInput>
+    /**
+     * Filter which SeoRedirects to update
+     */
+    where?: SeoRedirectWhereInput
+    /**
+     * Limit how many SeoRedirects to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SeoRedirect upsert
+   */
+  export type SeoRedirectUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SeoRedirect to update in case it exists.
+     */
+    where: SeoRedirectWhereUniqueInput
+    /**
+     * In case the SeoRedirect found by the `where` argument doesn't exist, create a new SeoRedirect with this data.
+     */
+    create: XOR<SeoRedirectCreateInput, SeoRedirectUncheckedCreateInput>
+    /**
+     * In case the SeoRedirect was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SeoRedirectUpdateInput, SeoRedirectUncheckedUpdateInput>
+  }
+
+  /**
+   * SeoRedirect delete
+   */
+  export type SeoRedirectDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+    /**
+     * Filter which SeoRedirect to delete.
+     */
+    where: SeoRedirectWhereUniqueInput
+  }
+
+  /**
+   * SeoRedirect deleteMany
+   */
+  export type SeoRedirectDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SeoRedirects to delete
+     */
+    where?: SeoRedirectWhereInput
+    /**
+     * Limit how many SeoRedirects to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SeoRedirect without action
+   */
+  export type SeoRedirectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeoRedirect
+     */
+    select?: SeoRedirectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SeoRedirect
+     */
+    omit?: SeoRedirectOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StaticPageSeo
+   */
+
+  export type AggregateStaticPageSeo = {
+    _count: StaticPageSeoCountAggregateOutputType | null
+    _min: StaticPageSeoMinAggregateOutputType | null
+    _max: StaticPageSeoMaxAggregateOutputType | null
+  }
+
+  export type StaticPageSeoMinAggregateOutputType = {
+    path: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    ogImageUrl: string | null
+    updatedAt: Date | null
+  }
+
+  export type StaticPageSeoMaxAggregateOutputType = {
+    path: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    ogImageUrl: string | null
+    updatedAt: Date | null
+  }
+
+  export type StaticPageSeoCountAggregateOutputType = {
+    path: number
+    metaTitle: number
+    metaDescription: number
+    ogImageUrl: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StaticPageSeoMinAggregateInputType = {
+    path?: true
+    metaTitle?: true
+    metaDescription?: true
+    ogImageUrl?: true
+    updatedAt?: true
+  }
+
+  export type StaticPageSeoMaxAggregateInputType = {
+    path?: true
+    metaTitle?: true
+    metaDescription?: true
+    ogImageUrl?: true
+    updatedAt?: true
+  }
+
+  export type StaticPageSeoCountAggregateInputType = {
+    path?: true
+    metaTitle?: true
+    metaDescription?: true
+    ogImageUrl?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StaticPageSeoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StaticPageSeo to aggregate.
+     */
+    where?: StaticPageSeoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaticPageSeos to fetch.
+     */
+    orderBy?: StaticPageSeoOrderByWithRelationInput | StaticPageSeoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StaticPageSeoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaticPageSeos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaticPageSeos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StaticPageSeos
+    **/
+    _count?: true | StaticPageSeoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StaticPageSeoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StaticPageSeoMaxAggregateInputType
+  }
+
+  export type GetStaticPageSeoAggregateType<T extends StaticPageSeoAggregateArgs> = {
+        [P in keyof T & keyof AggregateStaticPageSeo]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStaticPageSeo[P]>
+      : GetScalarType<T[P], AggregateStaticPageSeo[P]>
+  }
+
+
+
+
+  export type StaticPageSeoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StaticPageSeoWhereInput
+    orderBy?: StaticPageSeoOrderByWithAggregationInput | StaticPageSeoOrderByWithAggregationInput[]
+    by: StaticPageSeoScalarFieldEnum[] | StaticPageSeoScalarFieldEnum
+    having?: StaticPageSeoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StaticPageSeoCountAggregateInputType | true
+    _min?: StaticPageSeoMinAggregateInputType
+    _max?: StaticPageSeoMaxAggregateInputType
+  }
+
+  export type StaticPageSeoGroupByOutputType = {
+    path: string
+    metaTitle: string | null
+    metaDescription: string | null
+    ogImageUrl: string | null
+    updatedAt: Date
+    _count: StaticPageSeoCountAggregateOutputType | null
+    _min: StaticPageSeoMinAggregateOutputType | null
+    _max: StaticPageSeoMaxAggregateOutputType | null
+  }
+
+  type GetStaticPageSeoGroupByPayload<T extends StaticPageSeoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StaticPageSeoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StaticPageSeoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StaticPageSeoGroupByOutputType[P]>
+            : GetScalarType<T[P], StaticPageSeoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StaticPageSeoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    path?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    ogImageUrl?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["staticPageSeo"]>
+
+  export type StaticPageSeoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    path?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    ogImageUrl?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["staticPageSeo"]>
+
+  export type StaticPageSeoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    path?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    ogImageUrl?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["staticPageSeo"]>
+
+  export type StaticPageSeoSelectScalar = {
+    path?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    ogImageUrl?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StaticPageSeoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"path" | "metaTitle" | "metaDescription" | "ogImageUrl" | "updatedAt", ExtArgs["result"]["staticPageSeo"]>
+
+  export type $StaticPageSeoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StaticPageSeo"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      path: string
+      metaTitle: string | null
+      metaDescription: string | null
+      ogImageUrl: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["staticPageSeo"]>
+    composites: {}
+  }
+
+  type StaticPageSeoGetPayload<S extends boolean | null | undefined | StaticPageSeoDefaultArgs> = $Result.GetResult<Prisma.$StaticPageSeoPayload, S>
+
+  type StaticPageSeoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StaticPageSeoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StaticPageSeoCountAggregateInputType | true
+    }
+
+  export interface StaticPageSeoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StaticPageSeo'], meta: { name: 'StaticPageSeo' } }
+    /**
+     * Find zero or one StaticPageSeo that matches the filter.
+     * @param {StaticPageSeoFindUniqueArgs} args - Arguments to find a StaticPageSeo
+     * @example
+     * // Get one StaticPageSeo
+     * const staticPageSeo = await prisma.staticPageSeo.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StaticPageSeoFindUniqueArgs>(args: SelectSubset<T, StaticPageSeoFindUniqueArgs<ExtArgs>>): Prisma__StaticPageSeoClient<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StaticPageSeo that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StaticPageSeoFindUniqueOrThrowArgs} args - Arguments to find a StaticPageSeo
+     * @example
+     * // Get one StaticPageSeo
+     * const staticPageSeo = await prisma.staticPageSeo.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StaticPageSeoFindUniqueOrThrowArgs>(args: SelectSubset<T, StaticPageSeoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StaticPageSeoClient<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StaticPageSeo that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticPageSeoFindFirstArgs} args - Arguments to find a StaticPageSeo
+     * @example
+     * // Get one StaticPageSeo
+     * const staticPageSeo = await prisma.staticPageSeo.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StaticPageSeoFindFirstArgs>(args?: SelectSubset<T, StaticPageSeoFindFirstArgs<ExtArgs>>): Prisma__StaticPageSeoClient<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StaticPageSeo that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticPageSeoFindFirstOrThrowArgs} args - Arguments to find a StaticPageSeo
+     * @example
+     * // Get one StaticPageSeo
+     * const staticPageSeo = await prisma.staticPageSeo.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StaticPageSeoFindFirstOrThrowArgs>(args?: SelectSubset<T, StaticPageSeoFindFirstOrThrowArgs<ExtArgs>>): Prisma__StaticPageSeoClient<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StaticPageSeos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticPageSeoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StaticPageSeos
+     * const staticPageSeos = await prisma.staticPageSeo.findMany()
+     * 
+     * // Get first 10 StaticPageSeos
+     * const staticPageSeos = await prisma.staticPageSeo.findMany({ take: 10 })
+     * 
+     * // Only select the `path`
+     * const staticPageSeoWithPathOnly = await prisma.staticPageSeo.findMany({ select: { path: true } })
+     * 
+     */
+    findMany<T extends StaticPageSeoFindManyArgs>(args?: SelectSubset<T, StaticPageSeoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StaticPageSeo.
+     * @param {StaticPageSeoCreateArgs} args - Arguments to create a StaticPageSeo.
+     * @example
+     * // Create one StaticPageSeo
+     * const StaticPageSeo = await prisma.staticPageSeo.create({
+     *   data: {
+     *     // ... data to create a StaticPageSeo
+     *   }
+     * })
+     * 
+     */
+    create<T extends StaticPageSeoCreateArgs>(args: SelectSubset<T, StaticPageSeoCreateArgs<ExtArgs>>): Prisma__StaticPageSeoClient<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StaticPageSeos.
+     * @param {StaticPageSeoCreateManyArgs} args - Arguments to create many StaticPageSeos.
+     * @example
+     * // Create many StaticPageSeos
+     * const staticPageSeo = await prisma.staticPageSeo.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StaticPageSeoCreateManyArgs>(args?: SelectSubset<T, StaticPageSeoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StaticPageSeos and returns the data saved in the database.
+     * @param {StaticPageSeoCreateManyAndReturnArgs} args - Arguments to create many StaticPageSeos.
+     * @example
+     * // Create many StaticPageSeos
+     * const staticPageSeo = await prisma.staticPageSeo.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StaticPageSeos and only return the `path`
+     * const staticPageSeoWithPathOnly = await prisma.staticPageSeo.createManyAndReturn({
+     *   select: { path: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StaticPageSeoCreateManyAndReturnArgs>(args?: SelectSubset<T, StaticPageSeoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StaticPageSeo.
+     * @param {StaticPageSeoDeleteArgs} args - Arguments to delete one StaticPageSeo.
+     * @example
+     * // Delete one StaticPageSeo
+     * const StaticPageSeo = await prisma.staticPageSeo.delete({
+     *   where: {
+     *     // ... filter to delete one StaticPageSeo
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StaticPageSeoDeleteArgs>(args: SelectSubset<T, StaticPageSeoDeleteArgs<ExtArgs>>): Prisma__StaticPageSeoClient<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StaticPageSeo.
+     * @param {StaticPageSeoUpdateArgs} args - Arguments to update one StaticPageSeo.
+     * @example
+     * // Update one StaticPageSeo
+     * const staticPageSeo = await prisma.staticPageSeo.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StaticPageSeoUpdateArgs>(args: SelectSubset<T, StaticPageSeoUpdateArgs<ExtArgs>>): Prisma__StaticPageSeoClient<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StaticPageSeos.
+     * @param {StaticPageSeoDeleteManyArgs} args - Arguments to filter StaticPageSeos to delete.
+     * @example
+     * // Delete a few StaticPageSeos
+     * const { count } = await prisma.staticPageSeo.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StaticPageSeoDeleteManyArgs>(args?: SelectSubset<T, StaticPageSeoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StaticPageSeos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticPageSeoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StaticPageSeos
+     * const staticPageSeo = await prisma.staticPageSeo.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StaticPageSeoUpdateManyArgs>(args: SelectSubset<T, StaticPageSeoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StaticPageSeos and returns the data updated in the database.
+     * @param {StaticPageSeoUpdateManyAndReturnArgs} args - Arguments to update many StaticPageSeos.
+     * @example
+     * // Update many StaticPageSeos
+     * const staticPageSeo = await prisma.staticPageSeo.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StaticPageSeos and only return the `path`
+     * const staticPageSeoWithPathOnly = await prisma.staticPageSeo.updateManyAndReturn({
+     *   select: { path: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StaticPageSeoUpdateManyAndReturnArgs>(args: SelectSubset<T, StaticPageSeoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StaticPageSeo.
+     * @param {StaticPageSeoUpsertArgs} args - Arguments to update or create a StaticPageSeo.
+     * @example
+     * // Update or create a StaticPageSeo
+     * const staticPageSeo = await prisma.staticPageSeo.upsert({
+     *   create: {
+     *     // ... data to create a StaticPageSeo
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StaticPageSeo we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StaticPageSeoUpsertArgs>(args: SelectSubset<T, StaticPageSeoUpsertArgs<ExtArgs>>): Prisma__StaticPageSeoClient<$Result.GetResult<Prisma.$StaticPageSeoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StaticPageSeos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticPageSeoCountArgs} args - Arguments to filter StaticPageSeos to count.
+     * @example
+     * // Count the number of StaticPageSeos
+     * const count = await prisma.staticPageSeo.count({
+     *   where: {
+     *     // ... the filter for the StaticPageSeos we want to count
+     *   }
+     * })
+    **/
+    count<T extends StaticPageSeoCountArgs>(
+      args?: Subset<T, StaticPageSeoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StaticPageSeoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StaticPageSeo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticPageSeoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StaticPageSeoAggregateArgs>(args: Subset<T, StaticPageSeoAggregateArgs>): Prisma.PrismaPromise<GetStaticPageSeoAggregateType<T>>
+
+    /**
+     * Group by StaticPageSeo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StaticPageSeoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StaticPageSeoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StaticPageSeoGroupByArgs['orderBy'] }
+        : { orderBy?: StaticPageSeoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StaticPageSeoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStaticPageSeoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StaticPageSeo model
+   */
+  readonly fields: StaticPageSeoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StaticPageSeo.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StaticPageSeoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StaticPageSeo model
+   */
+  interface StaticPageSeoFieldRefs {
+    readonly path: FieldRef<"StaticPageSeo", 'String'>
+    readonly metaTitle: FieldRef<"StaticPageSeo", 'String'>
+    readonly metaDescription: FieldRef<"StaticPageSeo", 'String'>
+    readonly ogImageUrl: FieldRef<"StaticPageSeo", 'String'>
+    readonly updatedAt: FieldRef<"StaticPageSeo", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StaticPageSeo findUnique
+   */
+  export type StaticPageSeoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticPageSeo to fetch.
+     */
+    where: StaticPageSeoWhereUniqueInput
+  }
+
+  /**
+   * StaticPageSeo findUniqueOrThrow
+   */
+  export type StaticPageSeoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticPageSeo to fetch.
+     */
+    where: StaticPageSeoWhereUniqueInput
+  }
+
+  /**
+   * StaticPageSeo findFirst
+   */
+  export type StaticPageSeoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticPageSeo to fetch.
+     */
+    where?: StaticPageSeoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaticPageSeos to fetch.
+     */
+    orderBy?: StaticPageSeoOrderByWithRelationInput | StaticPageSeoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StaticPageSeos.
+     */
+    cursor?: StaticPageSeoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaticPageSeos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaticPageSeos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StaticPageSeos.
+     */
+    distinct?: StaticPageSeoScalarFieldEnum | StaticPageSeoScalarFieldEnum[]
+  }
+
+  /**
+   * StaticPageSeo findFirstOrThrow
+   */
+  export type StaticPageSeoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticPageSeo to fetch.
+     */
+    where?: StaticPageSeoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaticPageSeos to fetch.
+     */
+    orderBy?: StaticPageSeoOrderByWithRelationInput | StaticPageSeoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StaticPageSeos.
+     */
+    cursor?: StaticPageSeoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaticPageSeos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaticPageSeos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StaticPageSeos.
+     */
+    distinct?: StaticPageSeoScalarFieldEnum | StaticPageSeoScalarFieldEnum[]
+  }
+
+  /**
+   * StaticPageSeo findMany
+   */
+  export type StaticPageSeoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * Filter, which StaticPageSeos to fetch.
+     */
+    where?: StaticPageSeoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StaticPageSeos to fetch.
+     */
+    orderBy?: StaticPageSeoOrderByWithRelationInput | StaticPageSeoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StaticPageSeos.
+     */
+    cursor?: StaticPageSeoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StaticPageSeos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StaticPageSeos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StaticPageSeos.
+     */
+    distinct?: StaticPageSeoScalarFieldEnum | StaticPageSeoScalarFieldEnum[]
+  }
+
+  /**
+   * StaticPageSeo create
+   */
+  export type StaticPageSeoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * The data needed to create a StaticPageSeo.
+     */
+    data: XOR<StaticPageSeoCreateInput, StaticPageSeoUncheckedCreateInput>
+  }
+
+  /**
+   * StaticPageSeo createMany
+   */
+  export type StaticPageSeoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StaticPageSeos.
+     */
+    data: StaticPageSeoCreateManyInput | StaticPageSeoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StaticPageSeo createManyAndReturn
+   */
+  export type StaticPageSeoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * The data used to create many StaticPageSeos.
+     */
+    data: StaticPageSeoCreateManyInput | StaticPageSeoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StaticPageSeo update
+   */
+  export type StaticPageSeoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * The data needed to update a StaticPageSeo.
+     */
+    data: XOR<StaticPageSeoUpdateInput, StaticPageSeoUncheckedUpdateInput>
+    /**
+     * Choose, which StaticPageSeo to update.
+     */
+    where: StaticPageSeoWhereUniqueInput
+  }
+
+  /**
+   * StaticPageSeo updateMany
+   */
+  export type StaticPageSeoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StaticPageSeos.
+     */
+    data: XOR<StaticPageSeoUpdateManyMutationInput, StaticPageSeoUncheckedUpdateManyInput>
+    /**
+     * Filter which StaticPageSeos to update
+     */
+    where?: StaticPageSeoWhereInput
+    /**
+     * Limit how many StaticPageSeos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StaticPageSeo updateManyAndReturn
+   */
+  export type StaticPageSeoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * The data used to update StaticPageSeos.
+     */
+    data: XOR<StaticPageSeoUpdateManyMutationInput, StaticPageSeoUncheckedUpdateManyInput>
+    /**
+     * Filter which StaticPageSeos to update
+     */
+    where?: StaticPageSeoWhereInput
+    /**
+     * Limit how many StaticPageSeos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StaticPageSeo upsert
+   */
+  export type StaticPageSeoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * The filter to search for the StaticPageSeo to update in case it exists.
+     */
+    where: StaticPageSeoWhereUniqueInput
+    /**
+     * In case the StaticPageSeo found by the `where` argument doesn't exist, create a new StaticPageSeo with this data.
+     */
+    create: XOR<StaticPageSeoCreateInput, StaticPageSeoUncheckedCreateInput>
+    /**
+     * In case the StaticPageSeo was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StaticPageSeoUpdateInput, StaticPageSeoUncheckedUpdateInput>
+  }
+
+  /**
+   * StaticPageSeo delete
+   */
+  export type StaticPageSeoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
+    /**
+     * Filter which StaticPageSeo to delete.
+     */
+    where: StaticPageSeoWhereUniqueInput
+  }
+
+  /**
+   * StaticPageSeo deleteMany
+   */
+  export type StaticPageSeoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StaticPageSeos to delete
+     */
+    where?: StaticPageSeoWhereInput
+    /**
+     * Limit how many StaticPageSeos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StaticPageSeo without action
+   */
+  export type StaticPageSeoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StaticPageSeo
+     */
+    select?: StaticPageSeoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StaticPageSeo
+     */
+    omit?: StaticPageSeoOmit<ExtArgs> | null
   }
 
 
@@ -50004,6 +52419,8 @@ export namespace Prisma {
     carBrandId: 'carBrandId',
     name: 'name',
     image: 'image',
+    metaTitle: 'metaTitle',
+    metaDescription: 'metaDescription',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -50017,6 +52434,8 @@ export namespace Prisma {
     name: 'name',
     slug: 'slug',
     logoImage: 'logoImage',
+    metaTitle: 'metaTitle',
+    metaDescription: 'metaDescription',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -50030,6 +52449,8 @@ export namespace Prisma {
     key: 'key',
     name: 'name',
     image: 'image',
+    metaTitle: 'metaTitle',
+    metaDescription: 'metaDescription',
     sortOrder: 'sortOrder',
     productCount: 'productCount',
     isActive: 'isActive',
@@ -50065,6 +52486,9 @@ export namespace Prisma {
     isOriginal: 'isOriginal',
     mainImage: 'mainImage',
     description: 'description',
+    metaTitle: 'metaTitle',
+    metaDescription: 'metaDescription',
+    imageAlt: 'imageAlt',
     searchText: 'searchText',
     viewCount: 'viewCount',
     saleCount: 'saleCount',
@@ -50253,10 +52677,38 @@ export namespace Prisma {
     ogImageUrl: 'ogImageUrl',
     copyrightText: 'copyrightText',
     analyticsId: 'analyticsId',
+    googleAnalyticsId: 'googleAnalyticsId',
+    googleTagManagerId: 'googleTagManagerId',
+    searchConsoleVerification: 'searchConsoleVerification',
+    robotsIndex: 'robotsIndex',
+    robotsFollow: 'robotsFollow',
     updatedAt: 'updatedAt'
   };
 
   export type SiteSettingScalarFieldEnum = (typeof SiteSettingScalarFieldEnum)[keyof typeof SiteSettingScalarFieldEnum]
+
+
+  export const SeoRedirectScalarFieldEnum: {
+    id: 'id',
+    source: 'source',
+    destination: 'destination',
+    statusCode: 'statusCode',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SeoRedirectScalarFieldEnum = (typeof SeoRedirectScalarFieldEnum)[keyof typeof SeoRedirectScalarFieldEnum]
+
+
+  export const StaticPageSeoScalarFieldEnum: {
+    path: 'path',
+    metaTitle: 'metaTitle',
+    metaDescription: 'metaDescription',
+    ogImageUrl: 'ogImageUrl',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StaticPageSeoScalarFieldEnum = (typeof StaticPageSeoScalarFieldEnum)[keyof typeof StaticPageSeoScalarFieldEnum]
 
 
   export const AdminActivityLogScalarFieldEnum: {
@@ -51501,6 +53953,8 @@ export namespace Prisma {
     carBrandId?: IntFilter<"CarModel"> | number
     name?: StringFilter<"CarModel"> | string
     image?: StringNullableFilter<"CarModel"> | string | null
+    metaTitle?: StringNullableFilter<"CarModel"> | string | null
+    metaDescription?: StringNullableFilter<"CarModel"> | string | null
     isActive?: BoolFilter<"CarModel"> | boolean
     createdAt?: DateTimeFilter<"CarModel"> | Date | string
     updatedAt?: DateTimeFilter<"CarModel"> | Date | string
@@ -51513,6 +53967,8 @@ export namespace Prisma {
     carBrandId?: SortOrder
     name?: SortOrder
     image?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -51528,6 +53984,8 @@ export namespace Prisma {
     carBrandId?: IntFilter<"CarModel"> | number
     name?: StringFilter<"CarModel"> | string
     image?: StringNullableFilter<"CarModel"> | string | null
+    metaTitle?: StringNullableFilter<"CarModel"> | string | null
+    metaDescription?: StringNullableFilter<"CarModel"> | string | null
     isActive?: BoolFilter<"CarModel"> | boolean
     createdAt?: DateTimeFilter<"CarModel"> | Date | string
     updatedAt?: DateTimeFilter<"CarModel"> | Date | string
@@ -51540,6 +53998,8 @@ export namespace Prisma {
     carBrandId?: SortOrder
     name?: SortOrder
     image?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -51558,6 +54018,8 @@ export namespace Prisma {
     carBrandId?: IntWithAggregatesFilter<"CarModel"> | number
     name?: StringWithAggregatesFilter<"CarModel"> | string
     image?: StringNullableWithAggregatesFilter<"CarModel"> | string | null
+    metaTitle?: StringNullableWithAggregatesFilter<"CarModel"> | string | null
+    metaDescription?: StringNullableWithAggregatesFilter<"CarModel"> | string | null
     isActive?: BoolWithAggregatesFilter<"CarModel"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"CarModel"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CarModel"> | Date | string
@@ -51571,6 +54033,8 @@ export namespace Prisma {
     name?: StringFilter<"PartsBrand"> | string
     slug?: StringFilter<"PartsBrand"> | string
     logoImage?: StringNullableFilter<"PartsBrand"> | string | null
+    metaTitle?: StringNullableFilter<"PartsBrand"> | string | null
+    metaDescription?: StringNullableFilter<"PartsBrand"> | string | null
     isActive?: BoolFilter<"PartsBrand"> | boolean
     createdAt?: DateTimeFilter<"PartsBrand"> | Date | string
     updatedAt?: DateTimeFilter<"PartsBrand"> | Date | string
@@ -51582,6 +54046,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     logoImage?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -51596,6 +54062,8 @@ export namespace Prisma {
     OR?: PartsBrandWhereInput[]
     NOT?: PartsBrandWhereInput | PartsBrandWhereInput[]
     logoImage?: StringNullableFilter<"PartsBrand"> | string | null
+    metaTitle?: StringNullableFilter<"PartsBrand"> | string | null
+    metaDescription?: StringNullableFilter<"PartsBrand"> | string | null
     isActive?: BoolFilter<"PartsBrand"> | boolean
     createdAt?: DateTimeFilter<"PartsBrand"> | Date | string
     updatedAt?: DateTimeFilter<"PartsBrand"> | Date | string
@@ -51607,6 +54075,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     logoImage?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -51625,6 +54095,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"PartsBrand"> | string
     slug?: StringWithAggregatesFilter<"PartsBrand"> | string
     logoImage?: StringNullableWithAggregatesFilter<"PartsBrand"> | string | null
+    metaTitle?: StringNullableWithAggregatesFilter<"PartsBrand"> | string | null
+    metaDescription?: StringNullableWithAggregatesFilter<"PartsBrand"> | string | null
     isActive?: BoolWithAggregatesFilter<"PartsBrand"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"PartsBrand"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PartsBrand"> | Date | string
@@ -51638,6 +54110,8 @@ export namespace Prisma {
     key?: StringFilter<"Category"> | string
     name?: StringFilter<"Category"> | string
     image?: StringFilter<"Category"> | string
+    metaTitle?: StringNullableFilter<"Category"> | string | null
+    metaDescription?: StringNullableFilter<"Category"> | string | null
     sortOrder?: IntFilter<"Category"> | number
     productCount?: IntFilter<"Category"> | number
     isActive?: BoolFilter<"Category"> | boolean
@@ -51651,6 +54125,8 @@ export namespace Prisma {
     key?: SortOrder
     name?: SortOrder
     image?: SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     isActive?: SortOrder
@@ -51667,6 +54143,8 @@ export namespace Prisma {
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     name?: StringFilter<"Category"> | string
     image?: StringFilter<"Category"> | string
+    metaTitle?: StringNullableFilter<"Category"> | string | null
+    metaDescription?: StringNullableFilter<"Category"> | string | null
     sortOrder?: IntFilter<"Category"> | number
     productCount?: IntFilter<"Category"> | number
     isActive?: BoolFilter<"Category"> | boolean
@@ -51680,6 +54158,8 @@ export namespace Prisma {
     key?: SortOrder
     name?: SortOrder
     image?: SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     isActive?: SortOrder
@@ -51700,6 +54180,8 @@ export namespace Prisma {
     key?: StringWithAggregatesFilter<"Category"> | string
     name?: StringWithAggregatesFilter<"Category"> | string
     image?: StringWithAggregatesFilter<"Category"> | string
+    metaTitle?: StringNullableWithAggregatesFilter<"Category"> | string | null
+    metaDescription?: StringNullableWithAggregatesFilter<"Category"> | string | null
     sortOrder?: IntWithAggregatesFilter<"Category"> | number
     productCount?: IntWithAggregatesFilter<"Category"> | number
     isActive?: BoolWithAggregatesFilter<"Category"> | boolean
@@ -51735,6 +54217,9 @@ export namespace Prisma {
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
+    metaTitle?: StringNullableFilter<"Product"> | string | null
+    metaDescription?: StringNullableFilter<"Product"> | string | null
+    imageAlt?: StringNullableFilter<"Product"> | string | null
     searchText?: StringNullableFilter<"Product"> | string | null
     viewCount?: IntFilter<"Product"> | number
     saleCount?: IntFilter<"Product"> | number
@@ -51779,6 +54264,9 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    imageAlt?: SortOrderInput | SortOrder
     searchText?: SortOrderInput | SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
@@ -51826,6 +54314,9 @@ export namespace Prisma {
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
+    metaTitle?: StringNullableFilter<"Product"> | string | null
+    metaDescription?: StringNullableFilter<"Product"> | string | null
+    imageAlt?: StringNullableFilter<"Product"> | string | null
     searchText?: StringNullableFilter<"Product"> | string | null
     viewCount?: IntFilter<"Product"> | number
     saleCount?: IntFilter<"Product"> | number
@@ -51870,6 +54361,9 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    imageAlt?: SortOrderInput | SortOrder
     searchText?: SortOrderInput | SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
@@ -51913,6 +54407,9 @@ export namespace Prisma {
     isOriginal?: BoolWithAggregatesFilter<"Product"> | boolean
     mainImage?: StringNullableWithAggregatesFilter<"Product"> | string | null
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    metaTitle?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    metaDescription?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    imageAlt?: StringNullableWithAggregatesFilter<"Product"> | string | null
     searchText?: StringNullableWithAggregatesFilter<"Product"> | string | null
     viewCount?: IntWithAggregatesFilter<"Product"> | number
     saleCount?: IntWithAggregatesFilter<"Product"> | number
@@ -52662,6 +55159,11 @@ export namespace Prisma {
     ogImageUrl?: StringNullableFilter<"SiteSetting"> | string | null
     copyrightText?: StringNullableFilter<"SiteSetting"> | string | null
     analyticsId?: StringNullableFilter<"SiteSetting"> | string | null
+    googleAnalyticsId?: StringNullableFilter<"SiteSetting"> | string | null
+    googleTagManagerId?: StringNullableFilter<"SiteSetting"> | string | null
+    searchConsoleVerification?: StringNullableFilter<"SiteSetting"> | string | null
+    robotsIndex?: BoolFilter<"SiteSetting"> | boolean
+    robotsFollow?: BoolFilter<"SiteSetting"> | boolean
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }
 
@@ -52708,6 +55210,11 @@ export namespace Prisma {
     ogImageUrl?: SortOrderInput | SortOrder
     copyrightText?: SortOrderInput | SortOrder
     analyticsId?: SortOrderInput | SortOrder
+    googleAnalyticsId?: SortOrderInput | SortOrder
+    googleTagManagerId?: SortOrderInput | SortOrder
+    searchConsoleVerification?: SortOrderInput | SortOrder
+    robotsIndex?: SortOrder
+    robotsFollow?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -52757,6 +55264,11 @@ export namespace Prisma {
     ogImageUrl?: StringNullableFilter<"SiteSetting"> | string | null
     copyrightText?: StringNullableFilter<"SiteSetting"> | string | null
     analyticsId?: StringNullableFilter<"SiteSetting"> | string | null
+    googleAnalyticsId?: StringNullableFilter<"SiteSetting"> | string | null
+    googleTagManagerId?: StringNullableFilter<"SiteSetting"> | string | null
+    searchConsoleVerification?: StringNullableFilter<"SiteSetting"> | string | null
+    robotsIndex?: BoolFilter<"SiteSetting"> | boolean
+    robotsFollow?: BoolFilter<"SiteSetting"> | boolean
     updatedAt?: DateTimeFilter<"SiteSetting"> | Date | string
   }, "id">
 
@@ -52803,6 +55315,11 @@ export namespace Prisma {
     ogImageUrl?: SortOrderInput | SortOrder
     copyrightText?: SortOrderInput | SortOrder
     analyticsId?: SortOrderInput | SortOrder
+    googleAnalyticsId?: SortOrderInput | SortOrder
+    googleTagManagerId?: SortOrderInput | SortOrder
+    searchConsoleVerification?: SortOrderInput | SortOrder
+    robotsIndex?: SortOrder
+    robotsFollow?: SortOrder
     updatedAt?: SortOrder
     _count?: SiteSettingCountOrderByAggregateInput
     _avg?: SiteSettingAvgOrderByAggregateInput
@@ -52857,7 +55374,123 @@ export namespace Prisma {
     ogImageUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     copyrightText?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     analyticsId?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    googleAnalyticsId?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    googleTagManagerId?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    searchConsoleVerification?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    robotsIndex?: BoolWithAggregatesFilter<"SiteSetting"> | boolean
+    robotsFollow?: BoolWithAggregatesFilter<"SiteSetting"> | boolean
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSetting"> | Date | string
+  }
+
+  export type SeoRedirectWhereInput = {
+    AND?: SeoRedirectWhereInput | SeoRedirectWhereInput[]
+    OR?: SeoRedirectWhereInput[]
+    NOT?: SeoRedirectWhereInput | SeoRedirectWhereInput[]
+    id?: IntFilter<"SeoRedirect"> | number
+    source?: StringFilter<"SeoRedirect"> | string
+    destination?: StringFilter<"SeoRedirect"> | string
+    statusCode?: IntFilter<"SeoRedirect"> | number
+    createdAt?: DateTimeFilter<"SeoRedirect"> | Date | string
+    updatedAt?: DateTimeFilter<"SeoRedirect"> | Date | string
+  }
+
+  export type SeoRedirectOrderByWithRelationInput = {
+    id?: SortOrder
+    source?: SortOrder
+    destination?: SortOrder
+    statusCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SeoRedirectWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    source?: string
+    AND?: SeoRedirectWhereInput | SeoRedirectWhereInput[]
+    OR?: SeoRedirectWhereInput[]
+    NOT?: SeoRedirectWhereInput | SeoRedirectWhereInput[]
+    destination?: StringFilter<"SeoRedirect"> | string
+    statusCode?: IntFilter<"SeoRedirect"> | number
+    createdAt?: DateTimeFilter<"SeoRedirect"> | Date | string
+    updatedAt?: DateTimeFilter<"SeoRedirect"> | Date | string
+  }, "id" | "source">
+
+  export type SeoRedirectOrderByWithAggregationInput = {
+    id?: SortOrder
+    source?: SortOrder
+    destination?: SortOrder
+    statusCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SeoRedirectCountOrderByAggregateInput
+    _avg?: SeoRedirectAvgOrderByAggregateInput
+    _max?: SeoRedirectMaxOrderByAggregateInput
+    _min?: SeoRedirectMinOrderByAggregateInput
+    _sum?: SeoRedirectSumOrderByAggregateInput
+  }
+
+  export type SeoRedirectScalarWhereWithAggregatesInput = {
+    AND?: SeoRedirectScalarWhereWithAggregatesInput | SeoRedirectScalarWhereWithAggregatesInput[]
+    OR?: SeoRedirectScalarWhereWithAggregatesInput[]
+    NOT?: SeoRedirectScalarWhereWithAggregatesInput | SeoRedirectScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"SeoRedirect"> | number
+    source?: StringWithAggregatesFilter<"SeoRedirect"> | string
+    destination?: StringWithAggregatesFilter<"SeoRedirect"> | string
+    statusCode?: IntWithAggregatesFilter<"SeoRedirect"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"SeoRedirect"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SeoRedirect"> | Date | string
+  }
+
+  export type StaticPageSeoWhereInput = {
+    AND?: StaticPageSeoWhereInput | StaticPageSeoWhereInput[]
+    OR?: StaticPageSeoWhereInput[]
+    NOT?: StaticPageSeoWhereInput | StaticPageSeoWhereInput[]
+    path?: StringFilter<"StaticPageSeo"> | string
+    metaTitle?: StringNullableFilter<"StaticPageSeo"> | string | null
+    metaDescription?: StringNullableFilter<"StaticPageSeo"> | string | null
+    ogImageUrl?: StringNullableFilter<"StaticPageSeo"> | string | null
+    updatedAt?: DateTimeFilter<"StaticPageSeo"> | Date | string
+  }
+
+  export type StaticPageSeoOrderByWithRelationInput = {
+    path?: SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    ogImageUrl?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaticPageSeoWhereUniqueInput = Prisma.AtLeast<{
+    path?: string
+    AND?: StaticPageSeoWhereInput | StaticPageSeoWhereInput[]
+    OR?: StaticPageSeoWhereInput[]
+    NOT?: StaticPageSeoWhereInput | StaticPageSeoWhereInput[]
+    metaTitle?: StringNullableFilter<"StaticPageSeo"> | string | null
+    metaDescription?: StringNullableFilter<"StaticPageSeo"> | string | null
+    ogImageUrl?: StringNullableFilter<"StaticPageSeo"> | string | null
+    updatedAt?: DateTimeFilter<"StaticPageSeo"> | Date | string
+  }, "path">
+
+  export type StaticPageSeoOrderByWithAggregationInput = {
+    path?: SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    ogImageUrl?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: StaticPageSeoCountOrderByAggregateInput
+    _max?: StaticPageSeoMaxOrderByAggregateInput
+    _min?: StaticPageSeoMinOrderByAggregateInput
+  }
+
+  export type StaticPageSeoScalarWhereWithAggregatesInput = {
+    AND?: StaticPageSeoScalarWhereWithAggregatesInput | StaticPageSeoScalarWhereWithAggregatesInput[]
+    OR?: StaticPageSeoScalarWhereWithAggregatesInput[]
+    NOT?: StaticPageSeoScalarWhereWithAggregatesInput | StaticPageSeoScalarWhereWithAggregatesInput[]
+    path?: StringWithAggregatesFilter<"StaticPageSeo"> | string
+    metaTitle?: StringNullableWithAggregatesFilter<"StaticPageSeo"> | string | null
+    metaDescription?: StringNullableWithAggregatesFilter<"StaticPageSeo"> | string | null
+    ogImageUrl?: StringNullableWithAggregatesFilter<"StaticPageSeo"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"StaticPageSeo"> | Date | string
   }
 
   export type AdminActivityLogWhereInput = {
@@ -54763,6 +57396,8 @@ export namespace Prisma {
   export type CarModelCreateInput = {
     name: string
     image?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54775,6 +57410,8 @@ export namespace Prisma {
     carBrandId: number
     name: string
     image?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54784,6 +57421,8 @@ export namespace Prisma {
   export type CarModelUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54796,6 +57435,8 @@ export namespace Prisma {
     carBrandId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54807,6 +57448,8 @@ export namespace Prisma {
     carBrandId: number
     name: string
     image?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54815,6 +57458,8 @@ export namespace Prisma {
   export type CarModelUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54825,6 +57470,8 @@ export namespace Prisma {
     carBrandId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54834,6 +57481,8 @@ export namespace Prisma {
     name: string
     slug: string
     logoImage?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54845,6 +57494,8 @@ export namespace Prisma {
     name: string
     slug: string
     logoImage?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54855,6 +57506,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54866,6 +57519,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54877,6 +57532,8 @@ export namespace Prisma {
     name: string
     slug: string
     logoImage?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54886,6 +57543,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54896,6 +57555,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54905,6 +57566,8 @@ export namespace Prisma {
     key: string
     name: string
     image?: string
+    metaTitle?: string | null
+    metaDescription?: string | null
     sortOrder?: number
     productCount?: number
     isActive?: boolean
@@ -54918,6 +57581,8 @@ export namespace Prisma {
     key: string
     name: string
     image?: string
+    metaTitle?: string | null
+    metaDescription?: string | null
     sortOrder?: number
     productCount?: number
     isActive?: boolean
@@ -54930,6 +57595,8 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -54943,6 +57610,8 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -54956,6 +57625,8 @@ export namespace Prisma {
     key: string
     name: string
     image?: string
+    metaTitle?: string | null
+    metaDescription?: string | null
     sortOrder?: number
     productCount?: number
     isActive?: boolean
@@ -54967,6 +57638,8 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -54979,6 +57652,8 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -55009,6 +57684,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -55053,6 +57731,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -55093,6 +57774,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -55137,6 +57821,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -55179,6 +57866,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -55212,6 +57902,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -55247,6 +57940,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -56000,6 +58696,11 @@ export namespace Prisma {
     ogImageUrl?: string | null
     copyrightText?: string | null
     analyticsId?: string | null
+    googleAnalyticsId?: string | null
+    googleTagManagerId?: string | null
+    searchConsoleVerification?: string | null
+    robotsIndex?: boolean
+    robotsFollow?: boolean
     updatedAt?: Date | string
   }
 
@@ -56046,6 +58747,11 @@ export namespace Prisma {
     ogImageUrl?: string | null
     copyrightText?: string | null
     analyticsId?: string | null
+    googleAnalyticsId?: string | null
+    googleTagManagerId?: string | null
+    searchConsoleVerification?: string | null
+    robotsIndex?: boolean
+    robotsFollow?: boolean
     updatedAt?: Date | string
   }
 
@@ -56092,6 +58798,11 @@ export namespace Prisma {
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     copyrightText?: NullableStringFieldUpdateOperationsInput | string | null
     analyticsId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAnalyticsId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleTagManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    searchConsoleVerification?: NullableStringFieldUpdateOperationsInput | string | null
+    robotsIndex?: BoolFieldUpdateOperationsInput | boolean
+    robotsFollow?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -56138,6 +58849,11 @@ export namespace Prisma {
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     copyrightText?: NullableStringFieldUpdateOperationsInput | string | null
     analyticsId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAnalyticsId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleTagManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    searchConsoleVerification?: NullableStringFieldUpdateOperationsInput | string | null
+    robotsIndex?: BoolFieldUpdateOperationsInput | boolean
+    robotsFollow?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -56184,6 +58900,11 @@ export namespace Prisma {
     ogImageUrl?: string | null
     copyrightText?: string | null
     analyticsId?: string | null
+    googleAnalyticsId?: string | null
+    googleTagManagerId?: string | null
+    searchConsoleVerification?: string | null
+    robotsIndex?: boolean
+    robotsFollow?: boolean
     updatedAt?: Date | string
   }
 
@@ -56230,6 +58951,11 @@ export namespace Prisma {
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     copyrightText?: NullableStringFieldUpdateOperationsInput | string | null
     analyticsId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAnalyticsId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleTagManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    searchConsoleVerification?: NullableStringFieldUpdateOperationsInput | string | null
+    robotsIndex?: BoolFieldUpdateOperationsInput | boolean
+    robotsFollow?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -56276,6 +59002,127 @@ export namespace Prisma {
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     copyrightText?: NullableStringFieldUpdateOperationsInput | string | null
     analyticsId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAnalyticsId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleTagManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    searchConsoleVerification?: NullableStringFieldUpdateOperationsInput | string | null
+    robotsIndex?: BoolFieldUpdateOperationsInput | boolean
+    robotsFollow?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeoRedirectCreateInput = {
+    source: string
+    destination: string
+    statusCode?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SeoRedirectUncheckedCreateInput = {
+    id?: number
+    source: string
+    destination: string
+    statusCode?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SeoRedirectUpdateInput = {
+    source?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeoRedirectUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    source?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeoRedirectCreateManyInput = {
+    id?: number
+    source: string
+    destination: string
+    statusCode?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SeoRedirectUpdateManyMutationInput = {
+    source?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeoRedirectUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    source?: StringFieldUpdateOperationsInput | string
+    destination?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaticPageSeoCreateInput = {
+    path: string
+    metaTitle?: string | null
+    metaDescription?: string | null
+    ogImageUrl?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type StaticPageSeoUncheckedCreateInput = {
+    path: string
+    metaTitle?: string | null
+    metaDescription?: string | null
+    ogImageUrl?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type StaticPageSeoUpdateInput = {
+    path?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaticPageSeoUncheckedUpdateInput = {
+    path?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaticPageSeoCreateManyInput = {
+    path: string
+    metaTitle?: string | null
+    metaDescription?: string | null
+    ogImageUrl?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type StaticPageSeoUpdateManyMutationInput = {
+    path?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StaticPageSeoUncheckedUpdateManyInput = {
+    path?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -58358,6 +61205,8 @@ export namespace Prisma {
     carBrandId?: SortOrder
     name?: SortOrder
     image?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -58373,6 +61222,8 @@ export namespace Prisma {
     carBrandId?: SortOrder
     name?: SortOrder
     image?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -58383,6 +61234,8 @@ export namespace Prisma {
     carBrandId?: SortOrder
     name?: SortOrder
     image?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -58408,6 +61261,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     logoImage?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -58422,6 +61277,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     logoImage?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -58432,6 +61289,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     logoImage?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -58446,6 +61305,8 @@ export namespace Prisma {
     key?: SortOrder
     name?: SortOrder
     image?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     isActive?: SortOrder
@@ -58464,6 +61325,8 @@ export namespace Prisma {
     key?: SortOrder
     name?: SortOrder
     image?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     isActive?: SortOrder
@@ -58476,6 +61339,8 @@ export namespace Prisma {
     key?: SortOrder
     name?: SortOrder
     image?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
     sortOrder?: SortOrder
     productCount?: SortOrder
     isActive?: SortOrder
@@ -58576,6 +61441,9 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    imageAlt?: SortOrder
     searchText?: SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
@@ -58629,6 +61497,9 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    imageAlt?: SortOrder
     searchText?: SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
@@ -58664,6 +61535,9 @@ export namespace Prisma {
     isOriginal?: SortOrder
     mainImage?: SortOrder
     description?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    imageAlt?: SortOrder
     searchText?: SortOrder
     viewCount?: SortOrder
     saleCount?: SortOrder
@@ -59198,6 +62072,11 @@ export namespace Prisma {
     ogImageUrl?: SortOrder
     copyrightText?: SortOrder
     analyticsId?: SortOrder
+    googleAnalyticsId?: SortOrder
+    googleTagManagerId?: SortOrder
+    searchConsoleVerification?: SortOrder
+    robotsIndex?: SortOrder
+    robotsFollow?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -59248,6 +62127,11 @@ export namespace Prisma {
     ogImageUrl?: SortOrder
     copyrightText?: SortOrder
     analyticsId?: SortOrder
+    googleAnalyticsId?: SortOrder
+    googleTagManagerId?: SortOrder
+    searchConsoleVerification?: SortOrder
+    robotsIndex?: SortOrder
+    robotsFollow?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -59294,11 +62178,77 @@ export namespace Prisma {
     ogImageUrl?: SortOrder
     copyrightText?: SortOrder
     analyticsId?: SortOrder
+    googleAnalyticsId?: SortOrder
+    googleTagManagerId?: SortOrder
+    searchConsoleVerification?: SortOrder
+    robotsIndex?: SortOrder
+    robotsFollow?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SiteSettingSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type SeoRedirectCountOrderByAggregateInput = {
+    id?: SortOrder
+    source?: SortOrder
+    destination?: SortOrder
+    statusCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SeoRedirectAvgOrderByAggregateInput = {
+    id?: SortOrder
+    statusCode?: SortOrder
+  }
+
+  export type SeoRedirectMaxOrderByAggregateInput = {
+    id?: SortOrder
+    source?: SortOrder
+    destination?: SortOrder
+    statusCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SeoRedirectMinOrderByAggregateInput = {
+    id?: SortOrder
+    source?: SortOrder
+    destination?: SortOrder
+    statusCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SeoRedirectSumOrderByAggregateInput = {
+    id?: SortOrder
+    statusCode?: SortOrder
+  }
+
+  export type StaticPageSeoCountOrderByAggregateInput = {
+    path?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    ogImageUrl?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaticPageSeoMaxOrderByAggregateInput = {
+    path?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    ogImageUrl?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StaticPageSeoMinOrderByAggregateInput = {
+    path?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    ogImageUrl?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EnumAdminActivityStatusFilter<$PrismaModel = never> = {
@@ -64238,6 +67188,8 @@ export namespace Prisma {
   export type CarModelCreateWithoutCarBrandInput = {
     name: string
     image?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64248,6 +67200,8 @@ export namespace Prisma {
     id?: number
     name: string
     image?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64288,6 +67242,8 @@ export namespace Prisma {
     carBrandId?: IntFilter<"CarModel"> | number
     name?: StringFilter<"CarModel"> | string
     image?: StringNullableFilter<"CarModel"> | string | null
+    metaTitle?: StringNullableFilter<"CarModel"> | string | null
+    metaDescription?: StringNullableFilter<"CarModel"> | string | null
     isActive?: BoolFilter<"CarModel"> | boolean
     createdAt?: DateTimeFilter<"CarModel"> | Date | string
     updatedAt?: DateTimeFilter<"CarModel"> | Date | string
@@ -64419,6 +67375,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -64461,6 +67420,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -64532,6 +67494,9 @@ export namespace Prisma {
     isOriginal?: BoolFilter<"Product"> | boolean
     mainImage?: StringNullableFilter<"Product"> | string | null
     description?: StringNullableFilter<"Product"> | string | null
+    metaTitle?: StringNullableFilter<"Product"> | string | null
+    metaDescription?: StringNullableFilter<"Product"> | string | null
+    imageAlt?: StringNullableFilter<"Product"> | string | null
     searchText?: StringNullableFilter<"Product"> | string | null
     viewCount?: IntFilter<"Product"> | number
     saleCount?: IntFilter<"Product"> | number
@@ -64565,6 +67530,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -64607,6 +67575,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -64654,6 +67625,8 @@ export namespace Prisma {
     name: string
     slug: string
     logoImage?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64664,6 +67637,8 @@ export namespace Prisma {
     name: string
     slug: string
     logoImage?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64678,6 +67653,8 @@ export namespace Prisma {
     key: string
     name: string
     image?: string
+    metaTitle?: string | null
+    metaDescription?: string | null
     sortOrder?: number
     productCount?: number
     isActive?: boolean
@@ -64690,6 +67667,8 @@ export namespace Prisma {
     key: string
     name: string
     image?: string
+    metaTitle?: string | null
+    metaDescription?: string | null
     sortOrder?: number
     productCount?: number
     isActive?: boolean
@@ -64899,6 +67878,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64909,6 +67890,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     logoImage?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64929,6 +67912,8 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -64941,6 +67926,8 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     image?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     productCount?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -65120,6 +68107,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -65163,6 +68153,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -65218,6 +68211,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -65261,6 +68257,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -65300,6 +68299,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -65343,6 +68345,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -65367,6 +68372,8 @@ export namespace Prisma {
   export type CarModelCreateWithoutCompatibilitiesInput = {
     name: string
     image?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65378,6 +68385,8 @@ export namespace Prisma {
     carBrandId: number
     name: string
     image?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65422,6 +68431,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -65465,6 +68477,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -65495,6 +68510,8 @@ export namespace Prisma {
   export type CarModelUpdateWithoutCompatibilitiesInput = {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65506,6 +68523,8 @@ export namespace Prisma {
     carBrandId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65534,6 +68553,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -65577,6 +68599,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -65715,6 +68740,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -65758,6 +68786,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -66117,6 +69148,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -66160,6 +69194,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -66240,6 +69277,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -66283,6 +69323,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -66405,6 +69448,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -66448,6 +69494,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -66592,6 +69641,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -66635,6 +69687,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -66757,6 +69812,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -66800,6 +69858,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -66944,6 +70005,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -66987,6 +70051,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -68206,6 +71273,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -68249,6 +71319,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -68386,6 +71459,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -68429,6 +71505,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -70153,6 +73232,8 @@ export namespace Prisma {
     id?: number
     name: string
     image?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -70161,6 +73242,8 @@ export namespace Prisma {
   export type CarModelUpdateWithoutCarBrandInput = {
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70171,6 +73254,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70181,6 +73266,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70230,6 +73317,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -70263,6 +73353,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -70305,6 +73398,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -70346,6 +73442,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -70380,6 +73479,9 @@ export namespace Prisma {
     isOriginal?: boolean
     mainImage?: string | null
     description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
     searchText?: string | null
     viewCount?: number
     saleCount?: number
@@ -70413,6 +73515,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -70455,6 +73560,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number
@@ -70496,6 +73604,9 @@ export namespace Prisma {
     isOriginal?: BoolFieldUpdateOperationsInput | boolean
     mainImage?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
     searchText?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     saleCount?: IntFieldUpdateOperationsInput | number

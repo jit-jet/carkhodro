@@ -87,6 +87,9 @@ export default function ProductForm({
     () => initial.mainImage || initialGallery(initial)[0] || "",
   );
   const [description, setDescription] = useState(initial.description ?? "");
+  const [metaTitle, setMetaTitle] = useState(initial.metaTitle ?? "");
+  const [metaDescription, setMetaDescription] = useState(initial.metaDescription ?? "");
+  const [imageAlt, setImageAlt] = useState(initial.imageAlt ?? "");
   const [isOffer, setIsOffer] = useState(initial.isOffer ?? false);
   const [callForPriceRetail, setCallForPriceRetail] = useState(
     initial.callForPriceRetail ?? false,
@@ -241,6 +244,9 @@ export default function ProductForm({
       mainImage: mainImage || orderedImages[0] || null,
       images: orderedImages,
       description: description || null,
+      metaTitle: metaTitle || null,
+      metaDescription: metaDescription || null,
+      imageAlt: imageAlt || null,
       isOffer,
       callForPriceRetail,
       callForPriceWholesale,
@@ -485,6 +491,15 @@ export default function ProductForm({
           <Label>توضیحات (اختیاری)</Label>
           <Textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
+        </div>
+      </Card>
+
+      <Card className="overflow-hidden">
+        <CardHeader title="سئوی محصول" description="Canonical و داده‌های ساختاریافته محصول، برند، قیمت، موجودی، نظرها و breadcrumb خودکار هستند." />
+        <div className="p-5 sm:p-6 space-y-4">
+          <div><Label>عنوان سئو</Label><Input value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} placeholder={name} /></div>
+          <div><Label>توضیحات متا</Label><Textarea rows={3} value={metaDescription} onChange={(e) => setMetaDescription(e.target.value)} /></div>
+          <div><Label>متن جایگزین تصویر</Label><Input value={imageAlt} onChange={(e) => setImageAlt(e.target.value)} placeholder={name} /></div>
         </div>
       </Card>
 

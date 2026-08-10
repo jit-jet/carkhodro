@@ -16,8 +16,14 @@ function isGaId(id: string): boolean {
   return /^(G|UA|AW|GT)-[A-Z0-9-]+$/i.test(id);
 }
 
-export default function SiteAnalytics({ analyticsId }: { analyticsId: string }) {
-  const id = normalizeAnalyticsId(analyticsId);
+export default function SiteAnalytics({
+  analyticsId,
+  tagManagerId = '',
+}: {
+  analyticsId: string;
+  tagManagerId?: string;
+}) {
+  const id = normalizeAnalyticsId(tagManagerId || analyticsId);
   if (!id) return null;
 
   if (isGtmId(id)) {

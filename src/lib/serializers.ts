@@ -197,6 +197,11 @@ export interface PublicSiteSettingsVM {
   ogImageUrl: string;
   copyrightText: string;
   analyticsId: string;
+  googleAnalyticsId: string;
+  googleTagManagerId: string;
+  searchConsoleVerification: string;
+  robotsIndex: boolean;
+  robotsFollow: boolean;
 }
 
 export interface SocialLinkVM {
@@ -766,6 +771,11 @@ export function toPublicSiteSettingsVM(row: {
   ogImageUrl?: string | null;
   copyrightText?: string | null;
   analyticsId?: string | null;
+  googleAnalyticsId?: string | null;
+  googleTagManagerId?: string | null;
+  searchConsoleVerification?: string | null;
+  robotsIndex?: boolean;
+  robotsFollow?: boolean;
 } & Partial<SiteSettingTrustFields> | null): PublicSiteSettingsVM {
   return {
     retailPhone1: row?.retailPhone1 ?? '',
@@ -792,6 +802,11 @@ export function toPublicSiteSettingsVM(row: {
     ogImageUrl: row?.ogImageUrl ?? '',
     copyrightText: row?.copyrightText ?? '',
     analyticsId: row?.analyticsId ?? '',
+    googleAnalyticsId: row?.googleAnalyticsId ?? '',
+    googleTagManagerId: row?.googleTagManagerId ?? '',
+    searchConsoleVerification: row?.searchConsoleVerification ?? '',
+    robotsIndex: row?.robotsIndex ?? true,
+    robotsFollow: row?.robotsFollow ?? true,
   };
 }
 

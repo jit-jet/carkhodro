@@ -448,6 +448,9 @@ export async function getProductAdminById(id: string) {
         mainImage: row.mainImage,
         images,
         description: row.description,
+        metaTitle: row.metaTitle,
+        metaDescription: row.metaDescription,
+        imageAlt: row.imageAlt,
       };
     },
     null,

@@ -1,4 +1,10 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
+import { buildStaticPageMetadata } from '@/src/lib/static-page-metadata';
+
+export function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata('/about', { title: 'درباره کارخودرو', description: 'درباره فروشگاه آنلاین قطعات یدکی کارخودرو' });
+}
 
 export default function AboutPage() {
   return (

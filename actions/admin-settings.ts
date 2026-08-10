@@ -71,8 +71,20 @@ export async function updateSiteSettings(
         );
       }
     }
+    if (input.googleAnalyticsId !== undefined) {
+      const id = input.googleAnalyticsId.trim();
+      if (id && !/^(G|UA|AW|GT)-[A-Z0-9-]+$/i.test(id)) {
+        return fail('شناسه Google Analytics معتبر نیست.');
+      }
+    }
+    if (input.googleTagManagerId !== undefined) {
+      const id = input.googleTagManagerId.trim();
+      if (id && !/^GTM-[A-Z0-9]+$/i.test(id)) {
+        return fail('شناسه Google Tag Manager معتبر نیست.');
+      }
+    }
 
-    const data: Record<string, string | null> = {};
+    const data: Record<string, string | boolean | null> = {};
 
     if (input.retailPhone1 !== undefined) {
       data.retailPhone1 = input.retailPhone1.trim() || null;
@@ -126,10 +138,15 @@ export async function updateSiteSettings(
       ogImageUrl: trimOrNull(input.ogImageUrl),
       copyrightText: trimOrNull(input.copyrightText),
       analyticsId: trimOrNull(input.analyticsId),
+      googleAnalyticsId: trimOrNull(input.googleAnalyticsId),
+      googleTagManagerId: trimOrNull(input.googleTagManagerId),
+      searchConsoleVerification: trimOrNull(input.searchConsoleVerification),
     };
     for (const [key, value] of Object.entries(branding)) {
       if (value !== undefined) data[key] = value;
     }
+    if (input.robotsIndex !== undefined) data.robotsIndex = input.robotsIndex;
+    if (input.robotsFollow !== undefined) data.robotsFollow = input.robotsFollow;
 
     const previous = await prisma.siteSetting.findUnique({
       where: { id: 1 },

@@ -32,6 +32,8 @@ const EMPTY_FORM: CategoryInput = {
   image: "",
   sortOrder: 0,
   isActive: true,
+  metaTitle: "",
+  metaDescription: "",
 };
 
 export default function CategoriesManager({
@@ -58,6 +60,8 @@ export default function CategoriesManager({
       image: c.image,
       sortOrder: 0,
       isActive: c.isActive,
+      metaTitle: c.metaTitle,
+      metaDescription: c.metaDescription,
     });
     setError("");
   }
@@ -118,6 +122,8 @@ export default function CategoriesManager({
             image: payload.image || "/logo.png",
             count: 0,
             isActive: payload.isActive ?? true,
+            metaTitle: payload.metaTitle || null,
+            metaDescription: payload.metaDescription || null,
           },
         ]);
         notify({
@@ -177,6 +183,10 @@ export default function CategoriesManager({
                   </Button>
                 )}
               </div>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <Input placeholder="عنوان سئو" value={form.metaTitle ?? ""} onChange={(e) => setForm({ ...form, metaTitle: e.target.value })} />
+              <Input placeholder="توضیحات متا" value={form.metaDescription ?? ""} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} />
             </div>
             <ImageUploadField
               folder="categories"

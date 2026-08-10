@@ -2,9 +2,34 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import ProductsBrowser from '@/src/components/plp/ProductsBrowser';
 import { getProducts, getProductFilters, withViewerPricing } from '@/actions/products';
+import type { Metadata } from 'next';
+import { prisma } from '@/src/lib/prisma';
+import { siteUrl } from '@/src/lib/seo';
+import JsonLd from '@/src/components/seo/JsonLd';
+import { buildStaticPageMetadata } from '@/src/lib/static-page-metadata';
 
 interface Props {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+async function taxonomySeo(params: Record<string, string | string[] | undefined>) {
+  const category = typeof params.category === 'string' ? await prisma.category.findUnique({ where: { key: params.category } }) : null;
+  const brand = !category && typeof params.brand === 'string' ? await prisma.partsBrand.findUnique({ where: { slug: params.brand } }) : null;
+  const model = !category && !brand && typeof params.car === 'string' ? await prisma.carModel.findFirst({ where: { name: params.car } }) : null;
+  return category || brand || model;
+}
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const params = await searchParams; const entity = await taxonomySeo(params);
+  if (!entity) {
+    return buildStaticPageMetadata('/products', { title: 'محصولات | کارخودرو', description: 'فهرست قطعات یدکی خودرو در فروشگاه کارخودرو' });
+  }
+  const title = entity?.metaTitle || (entity ? `${entity.name} | کارخودرو` : 'محصولات | کارخودرو');
+  const description = entity?.metaDescription || undefined;
+  const query = new URLSearchParams();
+  for (const key of ['category', 'brand', 'car']) { const value = params[key]; if (typeof value === 'string') query.set(key, value); }
+  const canonical = siteUrl(`/products${query.size ? `?${query}` : ''}`);
+  return { title, description, alternates: { canonical }, openGraph: { title, description, url: canonical } };
 }
 
 export default async function ProductsPage({ searchParams }: Props) {
@@ -30,6 +55,7 @@ export default async function ProductsPage({ searchParams }: Props) {
         <FilteredBrowser filters={filters} searchParams={searchParams} />
       </Suspense>
 
+
     </div>
   );
 }
@@ -48,16 +74,14 @@ async function FilteredBrowser({
   filters: Filters;
   searchParams: Props['searchParams'];
 }) {
-  await searchParams;
+  const params = await searchParams;
+  const entity = await taxonomySeo(params);
   const products = await withViewerPricing(await getProducts());
   return (
-    <ProductsBrowser
-      products={products}
-      allBrands={filters.brands}
-      allCarBrands={filters.carBrands}
-      allCarTypes={filters.carTypes}
-      allCategories={filters.categories}
-    />
+    <>
+      {entity && <JsonLd data={{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'خانه', item: siteUrl('/') }, { '@type': 'ListItem', position: 2, name: 'محصولات', item: siteUrl('/products') }, { '@type': 'ListItem', position: 3, name: entity.name }] }} />}
+      <ProductsBrowser products={products} allBrands={filters.brands} allCarBrands={filters.carBrands} allCarTypes={filters.carTypes} allCategories={filters.categories} />
+    </>
   );
 }
 

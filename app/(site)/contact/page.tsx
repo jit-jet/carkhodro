@@ -5,6 +5,12 @@ import { contactPhonesForRole, phoneTelHref, settingLines } from '@/src/lib/site
 import { SocialLinksRow } from '@/src/components/layout/SocialLinksRow';
 import { getCurrentUser } from '@/src/lib/session';
 import { isWholesaleUser, pricingRoleFromUser } from '@/src/lib/user-role';
+import type { Metadata } from 'next';
+import { buildStaticPageMetadata } from '@/src/lib/static-page-metadata';
+
+export function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata('/contact', { title: 'تماس با ما | کارخودرو', description: 'راه‌های ارتباط با فروشگاه کارخودرو' });
+}
 
 export default function ContactPage() {
   return (

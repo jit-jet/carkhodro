@@ -6,11 +6,11 @@ import { getPosts } from '@/actions/posts';
 import { getPostCategories } from '@/actions/post-categories';
 import type { PostVM } from '@/src/lib/serializers';
 import BlogSearch from '@/src/components/blog/BlogSearch';
+import { buildStaticPageMetadata } from '@/src/lib/static-page-metadata';
 
-export const metadata: Metadata = {
-  title: 'وبلاگ کارخودرو',
-  description: 'راهنماها، نکات فنی و اخبار دنیای خودرو',
-};
+export function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata('/blog', { title: 'وبلاگ کارخودرو', description: 'راهنماها، نکات فنی و اخبار دنیای خودرو' });
+}
 
 const TAG_COLORS: Record<string, string> = {
   'ایمنی':         'bg-red-100 text-red-700',

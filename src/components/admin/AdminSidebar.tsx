@@ -8,7 +8,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { adminLogout } from "@/actions/admin-auth";
 import { useCartUI } from "@/src/store/cart-ui";
 
@@ -103,6 +103,17 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/admin/trust-badges", label: "نشان‌های اعتماد فوتر", icon: "trust" },
       { href: "/admin/faq", label: "سوالات متداول", icon: "faq" },
       { href: "/admin/rules", label: "قوانین و مقررات", icon: "rules" },
+    ],
+  },
+  {
+    id: "seo",
+    label: "سئو",
+    icon: "reports",
+    items: [
+      { href: "/admin/seo", label: "سئوی عمومی", icon: "settings" },
+      { href: "/admin/seo/pages", label: "سئوی صفحات ثابت", icon: "content" },
+      { href: "/admin/seo/redirects", label: "مدیریت ریدایرکت", icon: "menu" },
+      { href: "/admin/seo/robots", label: "مدیریت Robots", icon: "reports" },
     ],
   },
   {
@@ -318,6 +329,7 @@ function NavIcon({ icon }: { icon: IconKey }) {
 
 function isItemActive(pathname: string, href: string): boolean {
   if (href === "/admin") return pathname === "/admin";
+  if (href === "/admin/seo") return pathname === href;
   if (href === "/admin/posts") {
     return (
       pathname === href ||
@@ -353,20 +365,6 @@ export default function AdminSidebar({
     }
     return initial;
   });
-
-  useEffect(() => {
-    setOpenSections((prev) => {
-      let changed = false;
-      const next = { ...prev };
-      for (const section of NAV_SECTIONS) {
-        if (sectionHasActive(pathname, section) && !next[section.id]) {
-          next[section.id] = true;
-          changed = true;
-        }
-      }
-      return changed ? next : prev;
-    });
-  }, [pathname]);
 
   function toggleSection(id: string) {
     setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -420,7 +418,7 @@ export default function AdminSidebar({
           </li>
 
           {NAV_SECTIONS.map((section) => {
-            const open = !!openSections[section.id];
+            const open = !!openSections[section.id] || sectionHasActive(pathname, section);
             const sectionActive = sectionHasActive(pathname, section);
 
             return (

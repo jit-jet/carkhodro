@@ -14,6 +14,21 @@ import CompareButton   from '@/src/components/product/CompareButton';
 import { getCurrentUser } from '@/src/lib/session';
 import { primaryContactPhone } from '@/src/lib/site-settings-display';
 import { pricingRoleFromUser } from '@/src/lib/user-role';
+import type { Metadata } from 'next';
+import { prisma } from '@/src/lib/prisma';
+import { plainText, siteUrl } from '@/src/lib/seo';
+import JsonLd from '@/src/components/seo/JsonLd';
+import Link from 'next/link';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const product = await prisma.product.findFirst({ where: { id, isActive: true }, select: { name: true, description: true, metaTitle: true, metaDescription: true, mainImage: true, imageAlt: true } });
+  if (!product) return { title: 'محصول یافت نشد' };
+  const title = product.metaTitle || product.name;
+  const description = product.metaDescription || plainText(product.description);
+  const url = siteUrl(`/products/${id}`);
+  return { title, description, alternates: { canonical: url }, openGraph: { title, description, url, images: product.mainImage ? [{ url: product.mainImage, alt: product.imageAlt || product.name }] : undefined } };
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -100,14 +115,18 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div className="bg-silver-light min-h-screen" dir="rtl">
+      <JsonLd data={[
+        { '@context': 'https://schema.org', '@type': 'Product', name: product.name, sku: product.sku, image: product.images, description: plainText(product.description), brand: { '@type': 'Brand', name: product.brand }, offers: { '@type': 'Offer', url: siteUrl(`/products/${product.id}`), priceCurrency: 'IRR', price: product.price * 10, availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }, aggregateRating: product.reviewCount > 0 ? { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviewCount } : undefined, review: comments.map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.author }, reviewRating: { '@type': 'Rating', ratingValue: review.rating }, reviewBody: review.text })) },
+        { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'خانه', item: siteUrl('/') }, { '@type': 'ListItem', position: 2, name: 'محصولات', item: siteUrl('/products') }, { '@type': 'ListItem', position: 3, name: product.name, item: siteUrl(`/products/${product.id}`) }] },
+      ]} />
 
       {/* ── Breadcrumb ──────────────────────────────────────────── */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <nav className="flex items-center gap-2 text-sm text-gray-500 flex-wrap" aria-label="breadcrumb">
-            <a href="/"         className="hover:text-accent transition-colors">خانه</a>
+            <Link href="/" className="hover:text-accent transition-colors">خانه</Link>
             <span className="text-gray-300">/</span>
-            <a href="/products" className="hover:text-accent transition-colors">محصولات</a>
+            <Link href="/products" className="hover:text-accent transition-colors">محصولات</Link>
             <span className="text-gray-300">/</span>
             <span className="text-charcoal font-medium line-clamp-1">{product.name}</span>
           </nav>

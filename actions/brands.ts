@@ -110,6 +110,8 @@ export interface AdminPartsBrandVM {
   slug: string;
   logoImage: string | null;
   isActive: boolean;
+  metaTitle: string | null;
+  metaDescription: string | null;
 }
 
 export async function getPartsBrandsAdmin(): Promise<AdminPartsBrandVM[]> {
@@ -121,6 +123,8 @@ export async function getPartsBrandsAdmin(): Promise<AdminPartsBrandVM[]> {
       slug: b.slug,
       logoImage: b.logoImage,
       isActive: b.isActive,
+      metaTitle: b.metaTitle,
+      metaDescription: b.metaDescription,
     }));
   }, []);
 }
@@ -159,6 +163,8 @@ export interface AdminCarModelVM {
   name: string;
   image: string | null;
   isActive: boolean;
+  metaTitle: string | null;
+  metaDescription: string | null;
 }
 
 export async function getCarModelsAdmin(): Promise<AdminCarModelVM[]> {
@@ -174,6 +180,8 @@ export async function getCarModelsAdmin(): Promise<AdminCarModelVM[]> {
       name: m.name,
       image: m.image,
       isActive: m.isActive,
+      metaTitle: m.metaTitle,
+      metaDescription: m.metaDescription,
     }));
   }, []);
 }

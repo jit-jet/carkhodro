@@ -18,6 +18,8 @@ export interface CategoryInput {
   image?: string | null;
   sortOrder?: number;
   isActive?: boolean;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
 }
 
 export async function createCategory(
@@ -34,6 +36,8 @@ export async function createCategory(
         image: input.image ?? '/logo.png',
         sortOrder: input.sortOrder ?? 0,
         isActive: input.isActive ?? true,
+        metaTitle: input.metaTitle?.trim() || null,
+        metaDescription: input.metaDescription?.trim() || null,
       },
       select: { id: true },
     });
@@ -66,6 +70,8 @@ export async function updateCategory(
         ...(input.image !== undefined ? { image: input.image ?? '/logo.png' } : {}),
         ...(input.sortOrder !== undefined ? { sortOrder: input.sortOrder } : {}),
         ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
+        ...(input.metaTitle !== undefined ? { metaTitle: input.metaTitle?.trim() || null } : {}),
+        ...(input.metaDescription !== undefined ? { metaDescription: input.metaDescription?.trim() || null } : {}),
       },
       select: { id: true },
     });

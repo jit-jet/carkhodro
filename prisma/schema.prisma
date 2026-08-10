@@ -318,6 +318,8 @@ model CarModel {
   carBrandId Int      @map("car_brand_id")
   name       String
   image      String?
+  metaTitle       String? @map("meta_title")
+  metaDescription String? @db.Text @map("meta_description")
   isActive   Boolean  @default(true) @map("is_active")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
@@ -342,6 +344,8 @@ model PartsBrand {
   /// URL / filter slug, e.g. "bosch", "ngk"
   slug      String   @unique
   logoImage String?  @map("logo_image")
+  metaTitle       String? @map("meta_title")
+  metaDescription String? @db.Text @map("meta_description")
   isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -359,6 +363,8 @@ model Category {
   key          String   @unique
   name         String
   image        String   @default("/logo.png")
+  metaTitle       String? @map("meta_title")
+  metaDescription String? @db.Text @map("meta_description")
   sortOrder    Int      @default(0) @map("sort_order")
   /// Denormalized counter — refreshed by a background job or DB trigger
   productCount Int      @default(0) @map("product_count")
@@ -430,6 +436,9 @@ model Product {
   // ── Content (managed by local admin) ──────────────────────────────────────
   mainImage   String? @map("main_image")
   description String? @db.Text
+  metaTitle       String? @map("meta_title")
+  metaDescription String? @db.Text @map("meta_description")
+  imageAlt        String? @map("image_alt")
 
   // ── Fuzzy full-text search ────────────────────────────────────────────────
   /// Denormalized, normalized search document (name + sku + origin + parts-brand
@@ -732,9 +741,35 @@ model SiteSetting {
   copyrightText     String? @map("copyright_text")
   /// Google Analytics (`G-…` / `UA-…`) or Google Tag Manager (`GTM-…`) container ID.
   analyticsId       String? @map("analytics_id")
+  googleAnalyticsId String? @map("google_analytics_id")
+  googleTagManagerId String? @map("google_tag_manager_id")
+  searchConsoleVerification String? @map("search_console_verification")
+  robotsIndex       Boolean @default(true) @map("robots_index")
+  robotsFollow      Boolean @default(true) @map("robots_follow")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")
+}
+
+model SeoRedirect {
+  id        Int      @id @default(autoincrement())
+  source    String   @unique
+  destination String
+  statusCode Int @default(301) @map("status_code")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("seo_redirects")
+}
+
+model StaticPageSeo {
+  path            String   @id
+  metaTitle       String?  @map("meta_title")
+  metaDescription String?  @db.Text @map("meta_description")
+  ogImageUrl      String?  @map("og_image_url")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("static_page_seo")
 }
 
 /// Append-only security/activity audit trail for admin authentication and

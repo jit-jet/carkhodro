@@ -52,14 +52,13 @@ export default function PostForm({
   const [metaDescription, setMetaDescription] = useState(
     initial.metaDescription ?? "",
   );
-  const [metaKeywords, setMetaKeywords] = useState(initial.metaKeywords ?? "");
-  const [ogTitle, setOgTitle] = useState(initial.ogTitle ?? "");
-  const [ogDescription, setOgDescription] = useState(
-    initial.ogDescription ?? "",
-  );
-  const [ogImage, setOgImage] = useState(initial.ogImage ?? "");
+  const metaKeywords = initial.metaKeywords ?? "";
+  const ogTitle = initial.ogTitle ?? "";
+  const ogDescription = initial.ogDescription ?? "";
+  const ogImage = initial.ogImage ?? "";
 
   const [pending, startTransition] = useTransition();
+  const [uploadingInlineImage, setUploadingInlineImage] = useState(false);
   const [slugTouched, setSlugTouched] = useState(isEditing);
 
   function parseTags(raw: string): string[] {
@@ -180,7 +179,11 @@ export default function PostForm({
 
           <div>
             <Label>متن مقاله</Label>
-            <RichTextEditor value={body} onChange={setBody} />
+            <RichTextEditor
+              value={body}
+              onChange={setBody}
+              onUploadingChange={setUploadingInlineImage}
+            />
             <p className="text-xs text-gray-400 mt-1.5">
               متن فارسی را بنویسید؛ خروجی به‌صورت HTML ذخیره می‌شود.
             </p>
@@ -272,28 +275,17 @@ export default function PostForm({
 
       <Card>
         <CardHeader
-          title="سئو و Open Graph"
-          description="در صورت خالی بودن، از عنوان و خلاصه مقاله استفاده می‌شود"
+          title="سئوی مقاله"
+          description="Open Graph، canonical، Article schema، breadcrumb و تاریخ‌ها به‌صورت خودکار تولید می‌شوند."
         />
         <div className="p-5 sm:p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+          <div>
               <Label>Meta Title</Label>
               <Input
                 id="meta-title"
                 value={metaTitle}
                 onChange={(e) => setMetaTitle(e.target.value)}
               />
-            </div>
-            <div>
-              <Label>Meta Keywords</Label>
-              <Input
-                id="meta-keywords"
-                value={metaKeywords}
-                onChange={(e) => setMetaKeywords(e.target.value)}
-                placeholder="روغن موتور، نگهداری خودرو"
-              />
-            </div>
           </div>
           <div>
             <Label>Meta Description</Label>
@@ -304,35 +296,11 @@ export default function PostForm({
               rows={2}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label>OG Title</Label>
-              <Input
-                id="og-title"
-                value={ogTitle}
-                onChange={(e) => setOgTitle(e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>OG Description</Label>
-              <Input
-                id="og-description"
-                value={ogDescription}
-                onChange={(e) => setOgDescription(e.target.value)}
-              />
-            </div>
-          </div>
-          <ImageUploadField
-            folder="posts"
-            value={ogImage}
-            onChange={setOgImage}
-            label="OG Image (اختیاری — در غیر این صورت تصویر شاخص)"
-          />
         </div>
       </Card>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending || uploadingInlineImage}>
           {pending ? "در حال ذخیره…" : isEditing ? "ذخیره تغییرات" : "ایجاد مقاله"}
         </Button>
         <Button

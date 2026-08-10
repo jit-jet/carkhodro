@@ -314,13 +314,15 @@ model CarBrand {
 
 /// Specific vehicle models (“مدل خودرو”) — FK carBrandId → car_brands.id
 model CarModel {
-  id         Int      @id @default(autoincrement())
-  carBrandId Int      @map("car_brand_id")
-  name       String
-  image      String?
-  isActive   Boolean  @default(true) @map("is_active")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  id              Int      @id @default(autoincrement())
+  carBrandId      Int      @map("car_brand_id")
+  name            String
+  image           String?
+  metaTitle       String?  @map("meta_title")
+  metaDescription String?  @map("meta_description") @db.Text
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   carBrand        CarBrand               @relation(fields: [carBrandId], references: [id])
   compatibilities ProductCompatibility[]
@@ -337,14 +339,16 @@ model CarModel {
 /// Spare-parts suppliers / manufacturers: بوش, NGK, ایساکو, …
 /// Distinct from CarBrand — a Bosch brake pad fits a Toyota, not made by Toyota.
 model PartsBrand {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
+  id              Int      @id @default(autoincrement())
+  name            String   @unique
   /// URL / filter slug, e.g. "bosch", "ngk"
-  slug      String   @unique
-  logoImage String?  @map("logo_image")
-  isActive  Boolean  @default(true) @map("is_active")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  slug            String   @unique
+  logoImage       String?  @map("logo_image")
+  metaTitle       String?  @map("meta_title")
+  metaDescription String?  @map("meta_description") @db.Text
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   products Product[]
 
@@ -354,17 +358,19 @@ model PartsBrand {
 
 /// Product category: موتور و قطعات, ترمز و تعلیق, برق و روشنایی, …
 model Category {
-  id           Int      @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   /// URL / filter slug, e.g. "engine", "brake"
-  key          String   @unique
-  name         String
-  image        String   @default("/logo.png")
-  sortOrder    Int      @default(0) @map("sort_order")
+  key             String   @unique
+  name            String
+  image           String   @default("/logo.png")
+  metaTitle       String?  @map("meta_title")
+  metaDescription String?  @map("meta_description") @db.Text
+  sortOrder       Int      @default(0) @map("sort_order")
   /// Denormalized counter — refreshed by a background job or DB trigger
-  productCount Int      @default(0) @map("product_count")
-  isActive     Boolean  @default(true) @map("is_active")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  productCount    Int      @default(0) @map("product_count")
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   products Product[]
 
@@ -428,8 +434,11 @@ model Product {
   isOriginal     Boolean @default(true) @map("is_original")
 
   // ── Content (managed by local admin) ──────────────────────────────────────
-  mainImage   String? @map("main_image")
-  description String? @db.Text
+  mainImage       String? @map("main_image")
+  description     String? @db.Text
+  metaTitle       String? @map("meta_title")
+  metaDescription String? @map("meta_description") @db.Text
+  imageAlt        String? @map("image_alt")
 
   // ── Fuzzy full-text search ────────────────────────────────────────────────
   /// Denormalized, normalized search document (name + sku + origin + parts-brand
@@ -681,60 +690,86 @@ model Faq {
 /// Dynamic site info shown across the storefront (footer/contact/etc). Always a
 /// single row — the app upserts `id = 1`.
 model SiteSetting {
-  id                Int      @id @default(1)
+  id                        Int      @id @default(1)
   /// Shown to guests and RETAIL customers.
-  retailPhone1      String?  @map("retail_phone_1")
-  retailPhone2      String?  @map("retail_phone_2")
+  retailPhone1              String?  @map("retail_phone_1")
+  retailPhone2              String?  @map("retail_phone_2")
   /// Shown only when a WHOLESALE user is logged in.
-  wholesalePhone1   String?  @map("wholesale_phone_1")
-  wholesalePhone2   String?  @map("wholesale_phone_2")
-  wholesalePhone3   String?  @map("wholesale_phone_3")
-  wholesalePhone4   String?  @map("wholesale_phone_4")
-  email             String?
-  address           String?  @db.Text
-  workingHours      String?  @map("working_hours")
+  wholesalePhone1           String?  @map("wholesale_phone_1")
+  wholesalePhone2           String?  @map("wholesale_phone_2")
+  wholesalePhone3           String?  @map("wholesale_phone_3")
+  wholesalePhone4           String?  @map("wholesale_phone_4")
+  email                     String?
+  address                   String?  @db.Text
+  workingHours              String?  @map("working_hours")
   /// Short promo lines shown in the header top bar (e.g. trust badges).
-  headerPromo1      String?  @map("header_promo_1")
-  headerPromo2      String?  @map("header_promo_2")
+  headerPromo1              String?  @map("header_promo_1")
+  headerPromo2              String?  @map("header_promo_2")
   /// Optional icon for promo line 1 — storage URL or emoji; no built-in default.
-  headerPromo1Icon  String?  @map("header_promo_1_icon")
+  headerPromo1Icon          String?  @map("header_promo_1_icon")
   /// Optional icon for promo line 2 — storage URL or emoji; no built-in default.
-  headerPromo2Icon  String?  @map("header_promo_2_icon")
-  aboutText         String?  @map("about_text") @db.Text
+  headerPromo2Icon          String?  @map("header_promo_2_icon")
+  aboutText                 String?  @map("about_text") @db.Text
   /// Footer trust badges (icon / title / description) — four fixed slots.
-  footerTrust1Icon  String?  @map("footer_trust_1_icon")
-  footerTrust1Title String?  @map("footer_trust_1_title")
-  footerTrust1Desc  String?  @map("footer_trust_1_desc")
-  footerTrust2Icon  String?  @map("footer_trust_2_icon")
-  footerTrust2Title String?  @map("footer_trust_2_title")
-  footerTrust2Desc  String?  @map("footer_trust_2_desc")
-  footerTrust3Icon  String?  @map("footer_trust_3_icon")
-  footerTrust3Title String?  @map("footer_trust_3_title")
-  footerTrust3Desc  String?  @map("footer_trust_3_desc")
-  footerTrust4Icon  String?  @map("footer_trust_4_icon")
-  footerTrust4Title String?  @map("footer_trust_4_title")
-  footerTrust4Desc  String?  @map("footer_trust_4_desc")
+  footerTrust1Icon          String?  @map("footer_trust_1_icon")
+  footerTrust1Title         String?  @map("footer_trust_1_title")
+  footerTrust1Desc          String?  @map("footer_trust_1_desc")
+  footerTrust2Icon          String?  @map("footer_trust_2_icon")
+  footerTrust2Title         String?  @map("footer_trust_2_title")
+  footerTrust2Desc          String?  @map("footer_trust_2_desc")
+  footerTrust3Icon          String?  @map("footer_trust_3_icon")
+  footerTrust3Title         String?  @map("footer_trust_3_title")
+  footerTrust3Desc          String?  @map("footer_trust_3_desc")
+  footerTrust4Icon          String?  @map("footer_trust_4_icon")
+  footerTrust4Title         String?  @map("footer_trust_4_title")
+  footerTrust4Desc          String?  @map("footer_trust_4_desc")
   /// Homepage hero copy (static — images are managed via HeroBanner slides).
-  heroTitle         String?  @map("hero_title")
-  heroDescription   String?  @map("hero_description") @db.Text
-  heroButton1Text   String?  @map("hero_button1_text")
-  heroButton1Href   String?  @map("hero_button1_href")
-  heroButton2Text   String?  @map("hero_button2_text")
-  heroButton2Href   String?  @map("hero_button2_href")
+  heroTitle                 String?  @map("hero_title")
+  heroDescription           String?  @map("hero_description") @db.Text
+  heroButton1Text           String?  @map("hero_button1_text")
+  heroButton1Href           String?  @map("hero_button1_href")
+  heroButton2Text           String?  @map("hero_button2_text")
+  heroButton2Href           String?  @map("hero_button2_href")
   /// Branding, default SEO, and analytics (admin-managed).
-  siteName          String?  @map("site_name")
-  logoUrl           String?  @map("logo_url")
-  faviconUrl        String?  @map("favicon_url")
-  appleTouchIconUrl String?  @map("apple_touch_icon_url")
-  metaTitle         String?  @map("meta_title")
-  metaDescription   String?  @map("meta_description") @db.Text
-  ogImageUrl        String?  @map("og_image_url")
-  copyrightText     String?  @map("copyright_text")
+  siteName                  String?  @map("site_name")
+  logoUrl                   String?  @map("logo_url")
+  faviconUrl                String?  @map("favicon_url")
+  appleTouchIconUrl         String?  @map("apple_touch_icon_url")
+  metaTitle                 String?  @map("meta_title")
+  metaDescription           String?  @map("meta_description") @db.Text
+  ogImageUrl                String?  @map("og_image_url")
+  copyrightText             String?  @map("copyright_text")
   /// Google Analytics (`G-…` / `UA-…`) or Google Tag Manager (`GTM-…`) container ID.
-  analyticsId       String?  @map("analytics_id")
-  updatedAt         DateTime @updatedAt @map("updated_at")
+  analyticsId               String?  @map("analytics_id")
+  googleAnalyticsId         String?  @map("google_analytics_id")
+  googleTagManagerId        String?  @map("google_tag_manager_id")
+  searchConsoleVerification String?  @map("search_console_verification")
+  robotsIndex               Boolean  @default(true) @map("robots_index")
+  robotsFollow              Boolean  @default(true) @map("robots_follow")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")
+}
+
+model SeoRedirect {
+  id          Int      @id @default(autoincrement())
+  source      String   @unique
+  destination String
+  statusCode  Int      @default(301) @map("status_code")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("seo_redirects")
+}
+
+model StaticPageSeo {
+  path            String   @id
+  metaTitle       String?  @map("meta_title")
+  metaDescription String?  @map("meta_description") @db.Text
+  ogImageUrl      String?  @map("og_image_url")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("static_page_seo")
 }
 
 /// Append-only security/activity audit trail for admin authentication and

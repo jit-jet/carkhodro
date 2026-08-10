@@ -5,6 +5,9 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPostBySlug } from '@/actions/posts';
 import type { PostDetailVM } from '@/src/lib/serializers';
+import JsonLd from '@/src/components/seo/JsonLd';
+import { siteUrl } from '@/src/lib/seo';
+import { prisma } from '@/src/lib/prisma';
 
 const TAG_COLORS: Record<string, string> = {
   'ایمنی':        'bg-red-100 text-red-700',
@@ -48,13 +51,14 @@ export async function generateMetadata({
 
   const title = post.metaTitle || post.title;
   const description = post.metaDescription || post.excerpt;
-  const ogTitle = post.ogTitle || title;
-  const ogDescription = post.ogDescription || description;
-  const ogImage = post.ogImage || post.coverImage;
+  const ogTitle = title;
+  const ogDescription = description;
+  const ogImage = post.coverImage;
 
   return {
     title,
     description,
+    alternates: { canonical: siteUrl(`/blog/${slug}`) },
     keywords: post.metaKeywords || undefined,
     openGraph: {
       title: ogTitle,
@@ -77,9 +81,14 @@ async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post: PostDetailVM | null = await getPostBySlug(slug);
   if (!post) notFound();
+  const dates = await prisma.post.findUnique({ where: { slug }, select: { publishedAt: true, updatedAt: true } });
 
   return (
     <div className="bg-silver-light min-h-screen" dir="rtl">
+      <JsonLd data={[
+        { '@context': 'https://schema.org', '@type': 'Article', headline: post.metaTitle || post.title, description: post.metaDescription || post.excerpt, image: post.coverImage, author: { '@type': 'Person', name: post.author }, datePublished: dates?.publishedAt.toISOString(), dateModified: dates?.updatedAt.toISOString(), mainEntityOfPage: siteUrl(`/blog/${post.slug}`) },
+        { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'خانه', item: siteUrl('/') }, { '@type': 'ListItem', position: 2, name: 'وبلاگ', item: siteUrl('/blog') }, { '@type': 'ListItem', position: 3, name: post.title, item: siteUrl(`/blog/${post.slug}`) }] },
+      ]} />
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 py-3">

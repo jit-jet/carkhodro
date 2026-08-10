@@ -112,6 +112,7 @@ export async function createCarModel(input: {
   name: string;
   image?: string | null;
   isActive?: boolean;
+  metaTitle?: string | null; metaDescription?: string | null;
 }): Promise<ActionResult<{ id: number }>> {
   return runMutation('createCarModel', async () => {
     if (!input.name?.trim()) return fail('مدل خودرو الزامی است.');
@@ -121,6 +122,7 @@ export async function createCarModel(input: {
         name: input.name.trim(),
         image: input.image ?? null,
         isActive: input.isActive ?? true,
+        metaTitle: input.metaTitle?.trim() || null, metaDescription: input.metaDescription?.trim() || null,
       },
       select: { id: true },
     });
@@ -136,6 +138,7 @@ export async function updateCarModel(
     name?: string;
     image?: string | null;
     isActive?: boolean;
+    metaTitle?: string | null; metaDescription?: string | null;
   },
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updateCarModel', async () => {
@@ -160,6 +163,8 @@ export async function updateCarModel(
         ...(input.name !== undefined ? { name: input.name.trim() } : {}),
         ...(input.image !== undefined ? { image: input.image } : {}),
         ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
+        ...(input.metaTitle !== undefined ? { metaTitle: input.metaTitle?.trim() || null } : {}),
+        ...(input.metaDescription !== undefined ? { metaDescription: input.metaDescription?.trim() || null } : {}),
       },
       select: { id: true },
     });
@@ -187,6 +192,7 @@ export async function createPartsBrand(input: {
   slug: string;
   logoImage?: string | null;
   isActive?: boolean;
+  metaTitle?: string | null; metaDescription?: string | null;
 }): Promise<ActionResult<{ id: number }>> {
   return runMutation('createPartsBrand', async () => {
     if (!input.name?.trim()) return fail('نام برند الزامی است.');
@@ -198,6 +204,7 @@ export async function createPartsBrand(input: {
         slug,
         logoImage: input.logoImage ?? null,
         isActive: input.isActive ?? true,
+        metaTitle: input.metaTitle?.trim() || null, metaDescription: input.metaDescription?.trim() || null,
       },
       select: { id: true },
     });
@@ -208,7 +215,7 @@ export async function createPartsBrand(input: {
 
 export async function updatePartsBrand(
   id: number,
-  input: { name?: string; slug?: string; logoImage?: string | null; isActive?: boolean },
+  input: { name?: string; slug?: string; logoImage?: string | null; isActive?: boolean; metaTitle?: string | null; metaDescription?: string | null },
 ): Promise<ActionResult<{ id: number }>> {
   return runMutation('updatePartsBrand', async () => {
     if (input.isActive === false) {
@@ -234,6 +241,8 @@ export async function updatePartsBrand(
         ...(slug !== undefined ? { slug } : {}),
         ...(input.logoImage !== undefined ? { logoImage: input.logoImage } : {}),
         ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
+        ...(input.metaTitle !== undefined ? { metaTitle: input.metaTitle?.trim() || null } : {}),
+        ...(input.metaDescription !== undefined ? { metaDescription: input.metaDescription?.trim() || null } : {}),
       },
       select: { id: true },
     });

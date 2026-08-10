@@ -38,6 +38,13 @@ export function buildRootMetadata(settings: PublicSiteSettingsVM): Metadata {
   const metadata: Metadata = {
     title,
     description,
+    robots: {
+      index: settings.robotsIndex,
+      follow: settings.robotsFollow,
+    },
+    verification: settings.searchConsoleVerification
+      ? { google: settings.searchConsoleVerification }
+      : undefined,
     applicationName: siteName,
     openGraph: {
       type: 'website',

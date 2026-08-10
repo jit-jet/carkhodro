@@ -9,11 +9,11 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getPublicRulesContent } from '@/actions/rules';
+import { buildStaticPageMetadata } from '@/src/lib/static-page-metadata';
 
-export const metadata: Metadata = {
-  title: 'قوانین و مقررات | کارخودرو',
-  description: 'قوانین و شرایط استفاده از خدمات فروشگاه آنلاین کارخودرو',
-};
+export function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata('/rules', { title: 'قوانین و مقررات | کارخودرو', description: 'قوانین و شرایط استفاده از خدمات فروشگاه آنلاین کارخودرو' });
+}
 
 export default async function RulesPage() {
   const content = await getPublicRulesContent();

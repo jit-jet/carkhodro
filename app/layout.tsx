@@ -4,6 +4,8 @@ import Toaster from "@/src/components/ui/Toaster";
 import SiteAnalytics from "@/src/components/layout/SiteAnalytics";
 import { getPublicSiteSettings } from "@/actions/site-settings";
 import { buildRootMetadata } from "@/src/lib/site-branding";
+import JsonLd from "@/src/components/seo/JsonLd";
+import { siteUrl } from "@/src/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getPublicSiteSettings();
@@ -26,10 +28,17 @@ export default async function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body className="min-h-screen bg-white text-charcoal font-sans antialiased flex flex-col">
+        <JsonLd data={[
+          { '@context': 'https://schema.org', '@type': 'Organization', name: settings.siteName, url: siteUrl('/'), logo: settings.logoUrl ? siteUrl(settings.logoUrl) : undefined },
+          { '@context': 'https://schema.org', '@type': 'WebSite', name: settings.siteName, url: siteUrl('/'), potentialAction: { '@type': 'SearchAction', target: `${siteUrl('/products')}?q={search_term_string}`, 'query-input': 'required name=search_term_string' } },
+        ]} />
         {children}
         {/* Global toast viewport — driven by the cart UI store. */}
         <Toaster />
-        <SiteAnalytics analyticsId={settings.analyticsId} />
+        <SiteAnalytics
+          analyticsId={settings.googleAnalyticsId || settings.analyticsId}
+          tagManagerId={settings.googleTagManagerId}
+        />
       </body>
     </html>
   );
