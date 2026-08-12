@@ -62,7 +62,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
   const setCount = useCartUI((s) => s.setCount);
   const notify = useCartUI((s) => s.notify);
 
-  const [info, setInfo] = useState<CheckoutContact>({
+  const [info] = useState<CheckoutContact>({
     firstName: profile.firstName,
     lastName: profile.lastName,
     provinceId: profile.provinceId,
@@ -70,10 +70,6 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
     street: profile.street,
     postalCode: profile.postalCode,
   });
-  // Force the form open when the saved profile is incomplete.
-  const [editing, setEditing] = useState(!profile.isComplete);
-  const [errors, setErrors] = useState<FieldErrors>({});
-
   const [shippingId, setShippingId] = useState(shippingOptions[0]?.id ?? '');
 
   const [couponDraft, setCouponDraft] = useState('');
@@ -135,23 +131,11 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
     });
   }
 
-  function patchInfo(patch: Partial<CheckoutContact>) {
-    setInfo((prev) => ({ ...prev, ...patch }));
-    // Clear the error for any field being edited.
-    setErrors((prev) => {
-      const next = { ...prev };
-      for (const key of Object.keys(patch) as (keyof CheckoutContact)[]) delete next[key];
-      return next;
-    });
-  }
-
   function placeOrder() {
     setError('');
     const found = validate(info);
     if (Object.keys(found).length > 0) {
-      setErrors(found);
-      setEditing(true);
-      setError('لطفاً اطلاعات گیرنده و آدرس را تکمیل کنید.');
+      router.push('/dashboard/profile');
       return;
     }
     if (!shippingId) {
@@ -227,11 +211,7 @@ export default function CheckoutView({ cart, shippingOptions, profile, provinces
 
         <CheckoutInfoForm
           value={info}
-          onChange={patchInfo}
           phoneNumber={profile.phoneNumber}
-          editing={editing}
-          onEdit={() => setEditing(true)}
-          errors={errors}
           provinces={provinces}
         />
 
