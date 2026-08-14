@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  setUserActive,
+  updateUserRole,
   type AdminUserListItemVM,
   type AdminUserSortBy,
   type AdminUserSortDir,
@@ -79,19 +79,19 @@ export default function UsersTable({
     pushFilters({ sortBy: column, sortDir: nextDir });
   }
 
-  function handleToggleActive(id: string, next: boolean) {
+  function handleChangeRole(user: AdminUserListItemVM) {
+    const nextRole = user.role === "WHOLESALE" ? "RETAIL" : "WHOLESALE";
+
     startTransition(async () => {
-      const result = await setUserActive(id, next);
+      const result = await updateUserRole(user.id, nextRole);
       if (!result.ok) {
         notify({ variant: "error", title: "خطا", description: result.error });
         return;
       }
       notify({
         variant: "success",
-        title: next ? "کاربر فعال شد" : "کاربر غیرفعال شد",
-        description: next
-          ? "کاربر می‌تواند وارد حساب شود."
-          : "ورود این کاربر مسدود شد.",
+        title: "نقش کاربر تغییر کرد",
+        description: `نقش ${user.fullName || "کاربر"} به ${USER_ROLE_FA[nextRole]} تغییر کرد.`,
       });
       router.refresh();
     });
@@ -267,9 +267,9 @@ export default function UsersTable({
                         variant="ghost"
                         size="sm"
                         disabled={pending}
-                        onClick={() => handleToggleActive(u.id, !u.isActive)}
+                        onClick={() => handleChangeRole(u)}
                       >
-                        {u.isActive ? "غیرفعال" : "فعال"}
+                        تغییر به {USER_ROLE_FA[u.role === "WHOLESALE" ? "RETAIL" : "WHOLESALE"]}
                       </Button>
                       <Link
                         href={`/admin/users/${u.id}`}
