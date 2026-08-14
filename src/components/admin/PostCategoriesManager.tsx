@@ -280,11 +280,11 @@ export default function PostCategoriesManager({
         {categories.length === 0 ? (
           <EmptyState message="هنوز دسته‌بندی‌ای ثبت نشده" />
         ) : (
-          <TableShell>
+          <TableShell minWidth="min-w-[720px] lg:min-w-0">
             <thead className={tableHeadClass}>
               <tr>
                 <th className="text-right px-4 py-3 font-semibold">نام</th>
-                <th className="text-right px-4 py-3 font-semibold hidden sm:table-cell">اسلاگ</th>
+                <th className="text-right px-4 py-3 font-semibold">اسلاگ</th>
                 <th className="text-right px-4 py-3 font-semibold">مقالات</th>
                 <th className="text-right px-4 py-3 font-semibold">وضعیت</th>
                 <th className="text-right px-4 py-3 font-semibold">عملیات</th>
@@ -294,7 +294,7 @@ export default function PostCategoriesManager({
               {pagination.items.map((c) => (
                 <tr key={c.id} className={tableRowClass}>
                   <td className="px-4 py-3 font-bold text-charcoal">{c.name}</td>
-                  <td className="px-4 py-3 hidden sm:table-cell font-mono text-xs text-gray-500" dir="ltr">
+                  <td className="px-4 py-3 font-mono text-xs text-gray-500" dir="ltr">
                     {c.slug}
                   </td>
                   <td className="px-4 py-3">{c.postCount.toLocaleString("fa-IR")}</td>

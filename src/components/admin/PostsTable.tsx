@@ -124,12 +124,12 @@ export default function PostsTable({
           مقاله‌ای یافت نشد.
         </div>
       ) : (
-        <TableShell>
+        <TableShell minWidth="min-w-[800px] lg:min-w-0">
           <thead className={tableHeadClass}>
             <tr>
               <th className="text-right px-4 py-3 font-semibold">مقاله</th>
-              <th className="text-right px-4 py-3 font-semibold hidden md:table-cell">دسته</th>
-              <th className="text-right px-4 py-3 font-semibold hidden lg:table-cell">نویسنده</th>
+              <th className="text-right px-4 py-3 font-semibold">دسته</th>
+              <th className="text-right px-4 py-3 font-semibold">نویسنده</th>
               <th className="text-right px-4 py-3 font-semibold">وضعیت</th>
               <th className="text-right px-4 py-3 font-semibold">عملیات</th>
             </tr>
@@ -148,10 +148,10 @@ export default function PostsTable({
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3 hidden md:table-cell text-gray-600">
+                <td className="px-4 py-3 text-gray-600">
                   {post.categoryName ?? "—"}
                 </td>
-                <td className="px-4 py-3 hidden lg:table-cell text-gray-600">
+                <td className="px-4 py-3 text-gray-600">
                   {post.author}
                 </td>
                 <td className="px-4 py-3">

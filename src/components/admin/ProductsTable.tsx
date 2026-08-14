@@ -515,7 +515,10 @@ export default function ProductsTable({
       {error && <FormError message={error} />}
       {message && <FormSuccess message={message} />}
 
-      <TableShell minWidth="min-w-0" tableClassName="table-fixed w-full">
+      <TableShell
+        minWidth="min-w-[1280px] lg:min-w-0"
+        tableClassName="table-fixed w-full"
+      >
             <thead className={tableHeadClass}>
               <tr>
                 <th className="w-8 px-1.5 py-3 align-bottom">

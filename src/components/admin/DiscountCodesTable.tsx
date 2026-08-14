@@ -144,15 +144,15 @@ export default function DiscountCodesTable({
           کد تخفیفی یافت نشد.
         </div>
       ) : (
-        <TableShell>
+        <TableShell minWidth="min-w-[980px] lg:min-w-0">
           <thead className={tableHeadClass}>
             <tr>
               <th className="text-right px-4 py-3 font-semibold">کد</th>
               <th className="text-right px-4 py-3 font-semibold">نوع</th>
-              <th className="text-right px-4 py-3 font-semibold hidden sm:table-cell">مقدار</th>
-              <th className="text-right px-4 py-3 font-semibold hidden md:table-cell">کاربر هدف</th>
-              <th className="text-right px-4 py-3 font-semibold hidden lg:table-cell">اعتبار</th>
-              <th className="text-right px-4 py-3 font-semibold hidden md:table-cell">استفاده</th>
+              <th className="text-right px-4 py-3 font-semibold">مقدار</th>
+              <th className="text-right px-4 py-3 font-semibold">کاربر هدف</th>
+              <th className="text-right px-4 py-3 font-semibold">اعتبار</th>
+              <th className="text-right px-4 py-3 font-semibold">استفاده</th>
               <th className="text-right px-4 py-3 font-semibold">وضعیت</th>
               <th className="text-right px-4 py-3 font-semibold">عملیات</th>
             </tr>
@@ -169,19 +169,19 @@ export default function DiscountCodesTable({
                   </Link>
                 </td>
                 <td className="px-4 py-3 text-sm">{TYPE_LABELS[row.type]}</td>
-                <td className="px-4 py-3 text-sm hidden sm:table-cell">
+                <td className="px-4 py-3 text-sm">
                   {formatValue(row.type, row.value)}
                 </td>
-                <td className="px-4 py-3 text-sm hidden md:table-cell">
+                <td className="px-4 py-3 text-sm">
                   {TARGET_LABELS[row.targetUserType]}
                 </td>
-                <td className="px-4 py-3 text-xs text-gray-600 hidden lg:table-cell">
+                <td className="px-4 py-3 text-xs text-gray-600">
                   <div>{formatJalaliDateTime(row.startsAt)}</div>
                   {row.endsAt && (
                     <div className="text-gray-400 mt-0.5">تا {formatJalaliDateTime(row.endsAt)}</div>
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm hidden md:table-cell">
+                <td className="px-4 py-3 text-sm">
                   {formatNumberFa(row.usedCount)}
                   {row.totalUsageLimit != null
                     ? ` / ${formatNumberFa(row.totalUsageLimit)}`

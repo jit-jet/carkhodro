@@ -53,7 +53,7 @@ export default async function AdminLogsPage({ searchParams }: Props) {
       </form>
 
       <div className="overflow-x-auto rounded-2xl border border-gray-100 bg-white">
-        <table className="min-w-full text-sm">
+        <table className="w-full min-w-[720px] text-sm lg:min-w-full">
           <thead className="bg-gray-50 text-gray-600">
             <tr>{['زمان', 'مدیر', 'عملیات', 'نتیجه', 'IP', 'مرورگر'].map((title) => <th key={title} className="px-4 py-3 text-right font-semibold">{title}</th>)}</tr>
           </thead>
