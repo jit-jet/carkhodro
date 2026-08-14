@@ -102,7 +102,6 @@ export default function ProfileForm({
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (readOnly) return;
     const trimmed = fullName.trim();
     if (!trimmed) {
       notify({
