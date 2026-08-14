@@ -23,7 +23,7 @@ export const AUDITED_ADMIN_ACTIONS = new Set([
   'createPost', 'updatePost', 'setPostPublished', 'deletePost',
   'createProduct', 'updateProduct', 'deleteProduct', 'permanentlyDeleteProduct',
   'reactivateProduct', 'bulkUpdateProducts', 'uploadProductImage',
-  'updateRulesContent', 'updateSiteSettings',
+  'updateRulesContent', 'updateReturnContent', 'updateSiteSettings',
   'createShippingOption', 'updateShippingOption', 'deleteShippingOption',
   'sendMarketingSms',
   'createSocialLink', 'updateSocialLink', 'deleteSocialLink', 'reorderSocialLinks',

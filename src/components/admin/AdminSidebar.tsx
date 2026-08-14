@@ -103,6 +103,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/admin/trust-badges", label: "نشان‌های اعتماد فوتر", icon: "trust" },
       { href: "/admin/faq", label: "سوالات متداول", icon: "faq" },
       { href: "/admin/rules", label: "قوانین و مقررات", icon: "rules" },
+      { href: "/admin/return", label: "شرایط مرجوعی", icon: "rules" },
     ],
   },
   {

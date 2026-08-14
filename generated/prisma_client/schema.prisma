@@ -822,6 +822,15 @@ model RulesContent {
   @@map("rules_content")
 }
 
+/// Product return policy page content — singleton row (`id = 1`), admin-edited via TipTap.
+model ReturnContent {
+  id        Int      @id @default(1)
+  body      String   @default("") @db.Text
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("return_content")
+}
+
 /// Admin-managed social media links — shown in the footer and contact page.
 model SocialLink {
   id        Int      @id @default(autoincrement())

@@ -9,7 +9,7 @@ export const ADMIN_ACTION_LABELS: Record<string, string> = {
   deleteDiscountCode: 'حذف کد تخفیف', setDiscountCodeActive: 'تغییر وضعیت کد تخفیف',
   sendMarketingSms: 'ارسال پیامک گروهی', updateSiteSettings: 'ویرایش تنظیمات سایت',
   updateSystemSettings: 'ویرایش تنظیمات سیستم', forceSyncHesabfa: 'همگام‌سازی حسابفا',
-  registerHesabfaWebhook: 'ثبت وب‌هوک حسابفا', updateRulesContent: 'ویرایش قوانین',
+  registerHesabfaWebhook: 'ثبت وب‌هوک حسابفا', updateRulesContent: 'ویرایش قوانین', updateReturnContent: 'ویرایش شرایط مرجوعی',
   createPost: 'ایجاد مقاله', updatePost: 'ویرایش مقاله', deletePost: 'حذف مقاله',
   setPostPublished: 'تغییر انتشار مقاله', uploadAdminImage: 'بارگذاری فایل مدیریتی',
 };

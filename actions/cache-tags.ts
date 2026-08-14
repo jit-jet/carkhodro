@@ -24,5 +24,6 @@ export const tags = {
   socialLinks: 'social-links',
   heroBanners: 'hero-banners',
   rulesContent: 'rules-content',
+  returnContent: 'return-content',
   discountCodes: 'discount-codes',
 } as const;
