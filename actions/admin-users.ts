@@ -246,9 +246,6 @@ export async function updateUser(
     if (!ASSIGNABLE_ROLES.includes(input.role)) {
       return fail('این نقش از این بخش قابل تنظیم نیست.');
     }
-    const promotedToPartner =
-      target.role !== 'WHOLESALE' && input.role === 'WHOLESALE';
-
     if (!input.firstName?.trim() || !input.lastName?.trim()) {
       return fail('نام و نام خانوادگی الزامی است.');
     }
@@ -340,10 +337,10 @@ export async function updateUser(
       }
     });
 
-    // Hesabfa contact create/update only when an admin promotes to همکار.
-    // Other admin edits and website profile changes do not push to Hesabfa.
-    if (promotedToPartner) {
-      runHesabfaBackground('pushContact:partnerPromote', () => pushContactToHesabfa(userId));
+    // Every mapped admin edit to a wholesale account is mirrored to Hesabfa.
+    // The contact helper itself rejects RETAIL users as a second line of defence.
+    if (input.role === 'WHOLESALE') {
+      runHesabfaBackground('pushContact:adminUpdate', () => pushContactToHesabfa(userId));
     }
     return ok(undefined);
   });
@@ -372,6 +369,10 @@ export async function setUserActive(
         await tx.session.deleteMany({ where: { userId } });
       }
     });
+
+    if (target.role === 'WHOLESALE') {
+      runHesabfaBackground('pushContact:adminActive', () => pushContactToHesabfa(userId));
+    }
 
     return ok(undefined);
   });
@@ -443,6 +444,9 @@ export async function updateUserRole(
   role: UserRole,
 ): Promise<ActionResult> {
   return runMutation('updateUserRole', async () => {
+    const admin = await getCurrentAdmin();
+    if (!admin) return fail('دسترسی مجاز نیست.');
+
     if (!ASSIGNABLE_ROLES.includes(role)) {
       return fail('این نقش از این بخش قابل تنظیم نیست.');
     }
@@ -453,6 +457,9 @@ export async function updateUserRole(
     }
 
     await prisma.user.update({ where: { id: userId }, data: { role } });
+    if (role === 'WHOLESALE') {
+      runHesabfaBackground('pushContact:adminRole', () => pushContactToHesabfa(userId));
+    }
     return ok(undefined);
   });
 }

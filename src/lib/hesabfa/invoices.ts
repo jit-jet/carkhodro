@@ -14,7 +14,7 @@ import {
   saveInvoice,
   saveInvoicePayment,
 } from './client';
-import { pushContactToHesabfa } from './contacts';
+import { getRetailInvoiceContactCode, pushContactToHesabfa } from './contacts';
 import { tomanToRial } from './currency';
 import {
   HESABFA_INVOICE_NOTE,
@@ -32,7 +32,7 @@ export interface InvoiceSyncStats {
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
     items: true;
-    user: { select: { id: true; hesabfaCode: true; firstName: true; lastName: true } };
+    user: { select: { id: true; role: true; hesabfaCode: true; firstName: true; lastName: true } };
   };
 }>;
 
@@ -50,12 +50,18 @@ async function loadOrder(orderId: string): Promise<OrderWithItems | null> {
     where: { id: orderId },
     include: {
       items: true,
-      user: { select: { id: true, hesabfaCode: true, firstName: true, lastName: true } },
+      user: { select: { id: true, role: true, hesabfaCode: true, firstName: true, lastName: true } },
     },
   });
 }
 
-async function ensureContactCode(userId: string, existing: string | null): Promise<string | null> {
+async function ensureContactCode(
+  userId: string,
+  role: OrderWithItems['user']['role'],
+  existing: string | null,
+): Promise<string | null> {
+  if (role === 'RETAIL') return getRetailInvoiceContactCode();
+  if (role !== 'WHOLESALE') return null;
   if (existing) return existing;
   await pushContactToHesabfa(userId);
   const user = await prisma.user.findUnique({
@@ -208,7 +214,11 @@ export async function pushPaidRetailInvoice(orderId: string): Promise<void> {
     return;
   }
 
-  const contactCode = await ensureContactCode(order.userId, order.user.hesabfaCode);
+  const contactCode = await ensureContactCode(
+    order.userId,
+    order.user.role,
+    order.user.hesabfaCode,
+  );
   if (!contactCode) {
     console.error('[hesabfa:pushPaidRetailInvoice] missing contact code', orderId);
     return;
@@ -234,7 +244,11 @@ export async function pushWholesaleInvoice(orderId: string): Promise<void> {
   const order = await loadOrder(orderId);
   if (!order || order.hesabfaCode) return;
 
-  const contactCode = await ensureContactCode(order.userId, order.user.hesabfaCode);
+  const contactCode = await ensureContactCode(
+    order.userId,
+    order.user.role,
+    order.user.hesabfaCode,
+  );
   if (!contactCode) {
     console.error('[hesabfa:pushWholesaleInvoice] missing contact code', orderId);
     return;

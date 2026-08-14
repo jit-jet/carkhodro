@@ -26,7 +26,7 @@ export default function ProfilePage() {
 async function ProfileContent() {
   const [profile, provinces] = await Promise.all([getProfile(), getProvinces()]);
   if (!profile) redirect('/login?redirect=/dashboard/profile');
-  return <ProfileForm profile={profile} provinces={provinces} />;
+  return <ProfileForm profile={profile} provinces={provinces} readOnly={!profile.canEdit} />;
 }
 
 function ProfileSkeleton() {

@@ -39,6 +39,7 @@ export async function getProfile(): Promise<ProfileVM | null> {
       const birth = user.birthDate ? dateToJalaliParts(user.birthDate) : null;
 
       return {
+        canEdit: user.role !== 'WHOLESALE',
         phoneNumber: user.phoneNumber,
         firstName: user.firstName ?? '',
         lastName: user.lastName ?? '',
@@ -80,6 +81,32 @@ export async function updateProfile(input: ProfileUpdateInput): Promise<ActionRe
   return runMutation('updateProfile', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('ابتدا وارد شوید.');
+
+    // Wholesale users may only maintain website-only profile metadata. Their
+    // Hesabfa-backed identity, shop and address fields remain admin-managed.
+    if (user.role === 'WHOLESALE') {
+      let birthDate: Date | null = null;
+      if (input.birthYear && input.birthMonth && input.birthDay) {
+        birthDate = jalaliPartsToDate(
+          Number(input.birthYear),
+          Number(input.birthMonth),
+          Number(input.birthDay),
+        );
+        if (!birthDate) return fail('تاریخ تولد نامعتبر است.');
+      }
+
+      await prisma.user.update({
+        where: { id: user.id, role: 'WHOLESALE' },
+        data: {
+          referredBy: input.referredBy.trim() || null,
+          activityField: input.activityField.trim() || null,
+          birthDate,
+        },
+      });
+      revalidatePath(PROFILE_PATH);
+      revalidatePath('/dashboard');
+      return ok(undefined);
+    }
 
     const firstName = input.firstName.trim();
     const lastName = input.lastName.trim();

@@ -163,6 +163,7 @@ export interface SupportInboxVM {
 // ── Profile ──────────────────────────────────────────────────────────────────
 
 export interface ProfileVM {
+  canEdit: boolean;
   phoneNumber: string; // read-only (username + mobile)
   firstName: string;
   lastName: string;

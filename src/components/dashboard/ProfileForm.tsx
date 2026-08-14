@@ -10,6 +10,7 @@
  */
 
 import { useState, useRef, useTransition } from "react";
+import Link from "next/link";
 import Avatar from "@/src/components/dashboard/Avatar";
 import {
   updateProfile,
@@ -27,9 +28,11 @@ const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 export default function ProfileForm({
   profile,
   provinces,
+  readOnly = false,
 }: {
   profile: ProfileVM;
   provinces: ProvinceVM[];
+  readOnly?: boolean;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -99,6 +102,7 @@ export default function ProfileForm({
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (readOnly) return;
     const trimmed = fullName.trim();
     if (!trimmed) {
       notify({
@@ -143,7 +147,14 @@ export default function ProfileForm({
     >
       <h1 className="text-lg font-extrabold text-charcoal mb-6">پروفایل من</h1>
 
-      <div className="grid lg:grid-cols-[220px_1fr] gap-8">
+
+      <div className={readOnly ? "space-y-6" : "grid lg:grid-cols-[220px_1fr] gap-8"}>
+        <section className={readOnly ? "rounded-2xl border border-emerald-100  p-5 grid lg:grid-cols-[220px_1fr] gap-8" : "contents"}>
+          {readOnly && (
+            <h2 className="lg:col-span-2 text-base font-extrabold text-charcoal">
+              اطلاعات قابل ویرایش در وب‌سایت
+            </h2>
+          )}
         {/* Avatar column */}
         <div className="flex flex-col items-center gap-3">
           <Avatar src={avatar} size={140} alt={fullName} />
@@ -180,8 +191,59 @@ export default function ProfileForm({
           </p>
         </div>
 
+        {readOnly && (
+          <div className="space-y-4">
+            <Field
+              label="معرف"
+              value={referredBy}
+              onChange={setReferredBy}
+              placeholder="کسی که کارخودرو را معرفی کرده…"
+            />
+            <div>
+              <label className="block text-sm font-semibold text-charcoal mb-1.5">
+                تاریخ تولد
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className={selectCls}>
+                  <option value="">روز</option>
+                  {DAYS.map((d) => <option key={d} value={d}>{d.toLocaleString("fa-IR")}</option>)}
+                </select>
+                <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className={selectCls}>
+                  <option value="">ماه</option>
+                  {JALALI_MONTHS.slice(1).map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                </select>
+                <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className={selectCls}>
+                  <option value="">سال</option>
+                  {YEARS.map((y) => <option key={y} value={y}>{y.toLocaleString("fa-IR", { useGrouping: false })}</option>)}
+                </select>
+              </div>
+            </div>
+            <Field
+              label="زمینه فعالیت"
+              value={activityField}
+              onChange={setActivityField}
+              placeholder="زمینه فعالیت خود را شرح دهید…"
+            />
+          </div>
+        )}
+        </section>
+      {readOnly && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 mb-6">
+          لطفا برای تغییر اطلاعات زیر با{' '}
+          <Link href="/contact" className="font-bold underline underline-offset-2">
+            پشتیبانی
+          </Link>{' '}
+          تماس بگیرید.
+        </div>
+      )}
         {/* Fields column */}
-        <div className="space-y-4">
+        <section className={readOnly ? "space-y-4 rounded-2xl border border-gray-300 bg-gray-200 p-5 sm:p-6" : "space-y-4"}>
+          {readOnly && (
+            <div>
+              <h2 className="text-base font-extrabold text-charcoal">اطلاعات غیرقابل ویرایش</h2>
+              <p className="text-xs text-gray-600 mt-1">این اطلاعات از حسابفا مدیریت می‌شوند.</p>
+            </div>
+          )}
           {/* Read-only account info */}
           <div className="grid sm:grid-cols-2 gap-3">
             <ReadOnly label="نام کاربری" value={profile.phoneNumber} ltr />
@@ -195,22 +257,26 @@ export default function ProfileForm({
             value={fullName}
             onChange={setFullName}
             placeholder="مثال: محسن محمدی"
+            disabled={readOnly}
           />
           <Field
             label="نام فروشگاه"
             value={shopName}
             onChange={setShopName}
             placeholder="نام فروشگاه خود را وارد کنید…"
+            disabled={readOnly}
           />
-          <Field
-            label="معرف"
-            value={referredBy}
-            onChange={setReferredBy}
-            placeholder="کسی که کارخودرو را معرفی کرده…"
-          />
+          {!readOnly && (
+            <>
+              <Field
+                label="معرف"
+                value={referredBy}
+                onChange={setReferredBy}
+                placeholder="کسی که کارخودرو را معرفی کرده…"
+              />
 
-          {/* Birth date */}
-          <div>
+              {/* Birth date */}
+              <div>
             <label className="block text-sm font-semibold text-charcoal mb-1.5">
               تاریخ تولد
             </label>
@@ -218,6 +284,7 @@ export default function ProfileForm({
               <select
                 value={birthDay}
                 onChange={(e) => setBirthDay(e.target.value)}
+                disabled={readOnly}
                 className={selectCls}
               >
                 <option value="">روز</option>
@@ -230,6 +297,7 @@ export default function ProfileForm({
               <select
                 value={birthMonth}
                 onChange={(e) => setBirthMonth(e.target.value)}
+                disabled={readOnly}
                 className={selectCls}
               >
                 <option value="">ماه</option>
@@ -242,6 +310,7 @@ export default function ProfileForm({
               <select
                 value={birthYear}
                 onChange={(e) => setBirthYear(e.target.value)}
+                disabled={readOnly}
                 className={selectCls}
               >
                 <option value="">سال</option>
@@ -254,14 +323,16 @@ export default function ProfileForm({
                 ))}
               </select>
             </div>
-          </div>
+              </div>
 
-          <Field
-            label="زمینه فعالیت"
-            value={activityField}
-            onChange={setActivityField}
-            placeholder="زمینه فعالیت خود را شرح دهید…"
-          />
+              <Field
+                label="زمینه فعالیت"
+                value={activityField}
+                onChange={setActivityField}
+                placeholder="زمینه فعالیت خود را شرح دهید…"
+              />
+            </>
+          )}
 
           {/* Address */}
           <div className="pt-2 border-t border-gray-100">
@@ -277,6 +348,7 @@ export default function ProfileForm({
                     setProvinceId(e.target.value ? Number(e.target.value) : "");
                     setCityId(""); // reset city when province changes
                   }}
+                  disabled={readOnly}
                   className={selectCls}
                 >
                   <option value="">انتخاب استان…</option>
@@ -296,7 +368,7 @@ export default function ProfileForm({
                   onChange={(e) =>
                     setCityId(e.target.value ? Number(e.target.value) : "")
                   }
-                  disabled={!provinceId}
+                  disabled={readOnly || !provinceId}
                   className={selectCls}
                 >
                   <option value="">انتخاب شهر…</option>
@@ -317,6 +389,7 @@ export default function ProfileForm({
               <textarea
                 value={street}
                 onChange={(e) => setStreet(e.target.value)}
+                disabled={readOnly}
                 rows={2}
                 placeholder="خیابان، کوچه، پلاک، واحد…"
                 className={`${selectCls} resize-none`}
@@ -332,18 +405,30 @@ export default function ProfileForm({
                 placeholder="۱۰ رقم"
                 dir="ltr"
                 inputMode="numeric"
+                disabled={readOnly}
               />
             </div>
           </div>
 
+          {!readOnly && (
+            <button
+              type="submit"
+              disabled={pending}
+              className="bg-accent hover:bg-accent-dark text-charcoal font-bold text-sm px-8 py-3 rounded-xl transition-colors disabled:opacity-60"
+            >
+              {pending ? "در حال ذخیره…" : "ذخیره اطلاعات"}
+            </button>
+          )}
+        </section>
+        {readOnly && (
           <button
             type="submit"
             disabled={pending}
             className="bg-accent hover:bg-accent-dark text-charcoal font-bold text-sm px-8 py-3 rounded-xl transition-colors disabled:opacity-60"
           >
-            {pending ? "در حال ذخیره…" : "ذخیره اطلاعات"}
+            {pending ? "در حال ذخیره…" : "ذخیره اطلاعات قابل ویرایش"}
           </button>
-        </div>
+        )}
       </div>
     </form>
   );
@@ -359,6 +444,7 @@ function Field({
   placeholder,
   dir,
   inputMode,
+  disabled = false,
 }: {
   label: string;
   value: string;
@@ -366,6 +452,7 @@ function Field({
   placeholder?: string;
   dir?: string;
   inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  disabled?: boolean;
 }) {
   return (
     <div>
@@ -379,6 +466,7 @@ function Field({
         placeholder={placeholder}
         dir={dir}
         inputMode={inputMode}
+        disabled={disabled}
         className={selectCls}
       />
     </div>
