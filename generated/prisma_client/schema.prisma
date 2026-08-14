@@ -184,17 +184,11 @@ model User {
   isActive                 Boolean   @default(true) @map("is_active")
   /// Wholesale customers must supply a shop/business name
   shopName                 String?   @map("shop_name")
-  birthDate                DateTime? @map("birth_date")
-  profileImage             String?   @map("profile_image")
   /// Partner's running ledger balance with the shop, in the same magnitude as
   /// product prices (Toman). Shown as «مانده حساب» on the dashboard.
   accountBalance           BigInt    @default(0) @map("account_balance")
-  /// Who referred this partner («معرف») — free text captured on the profile.
-  referredBy               String?   @map("referred_by")
   /// The partner's line of business («زمینه فعالیت») — free text.
   activityField            String?   @map("activity_field")
-  /// Short, unique partner/affiliate code («کد اختصاصی») — null for retail users.
-  partnerCode              String?   @unique @map("partner_code")
   /// Admin login username — only set for ADMIN-role users; storefront customers
   /// authenticate with SMS OTP and never get one.
   username                 String?   @unique

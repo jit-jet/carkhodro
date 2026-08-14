@@ -1,13 +1,12 @@
 /**
  * Local file storage under `public/storage/{subfolder}/`.
- * DB columns store only the public URL path (e.g. `/storage/avatars/userId.jpg`).
+ * DB columns store only the public URL path (e.g. `/storage/products/item.jpg`).
  */
 
 import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 export type StorageFolder =
-  | 'avatars'
   | 'products'
   | 'categories'
   | 'brands'
@@ -22,7 +21,6 @@ const STORAGE_ROOT = path.resolve(
 );
 
 const STORAGE_FOLDERS: readonly StorageFolder[] = [
-  'avatars',
   'products',
   'categories',
   'brands',
@@ -97,7 +95,7 @@ export async function deleteFile(urlPath: string | null | undefined): Promise<vo
 /** Returns every managed storage URL referenced by strings such as HTML bodies. */
 export function storageUrlsIn(...values: Array<string | null | undefined>): Set<string> {
   const urls = new Set<string>();
-  const pattern = /\/storage\/(avatars|products|categories|brands|cars|posts|settings|banners)\/[a-zA-Z0-9._-]+/g;
+  const pattern = /\/storage\/(products|categories|brands|cars|posts|settings|banners)\/[a-zA-Z0-9._-]+/g;
   for (const value of values) {
     if (!value) continue;
     for (const match of value.matchAll(pattern)) urls.add(match[0]);

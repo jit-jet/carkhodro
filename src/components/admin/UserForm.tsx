@@ -1,18 +1,14 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   updateUser,
-  uploadUserAvatarAdmin,
-  removeUserAvatarAdmin,
   type AdminUserUpdateInput,
 } from "@/actions/admin-users";
 import { USER_ROLE_FA } from "@/src/lib/user-labels";
 import { ASSIGNABLE_ROLES } from "@/src/lib/admin-options";
-import { JALALI_MONTHS } from "@/src/lib/jalali-convert";
 import { useCartUI } from "@/src/store/cart-ui";
-import Avatar from "@/src/components/dashboard/Avatar";
 import {
   Button,
   Card,
@@ -36,23 +32,14 @@ export interface UserFormInitial {
   isVerified: boolean;
   isActive: boolean;
   shopName: string | null;
-  referredBy: string | null;
   activityField: string | null;
-  partnerCode: string | null;
-  profileImage: string | null;
   accountBalanceToman: number;
-  birthYear: string;
-  birthMonth: string;
-  birthDay: string;
   provinceId: number | null;
   cityId: number | null;
   street: string;
   postalCode: string;
   createdAtLabel: string;
 }
-
-const YEARS = Array.from({ length: 90 }, (_, i) => 1404 - i);
-const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 
 export default function UserForm({
   initial,
@@ -63,84 +50,27 @@ export default function UserForm({
 }) {
   const router = useRouter();
   const notify = useCartUI((s) => s.notify);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const [avatar, setAvatar] = useState<string | null>(initial.profileImage);
   const phoneNumber = initial.phoneNumber;
   const [firstName, setFirstName] = useState(initial.firstName);
   const [lastName, setLastName] = useState(initial.lastName);
   const [role, setRole] = useState<UserRole>(
     ASSIGNABLE_ROLES.includes(initial.role) ? initial.role : "RETAIL",
   );
-  const [isVerified, setIsVerified] = useState(initial.isVerified);
+  const isVerified = initial.isVerified;
   const [isActive, setIsActive] = useState(initial.isActive);
   const [shopName, setShopName] = useState(initial.shopName ?? "");
-  const [referredBy, setReferredBy] = useState(initial.referredBy ?? "");
   const [activityField, setActivityField] = useState(initial.activityField ?? "");
-  const [partnerCode, setPartnerCode] = useState(initial.partnerCode ?? "");
   const [accountBalanceToman, setAccountBalanceToman] = useState(
     String(initial.accountBalanceToman ?? 0),
   );
-  const [birthYear, setBirthYear] = useState(initial.birthYear);
-  const [birthMonth, setBirthMonth] = useState(initial.birthMonth);
-  const [birthDay, setBirthDay] = useState(initial.birthDay);
   const [provinceId, setProvinceId] = useState<number | "">(initial.provinceId ?? "");
   const [cityId, setCityId] = useState<number | "">(initial.cityId ?? "");
   const [street, setStreet] = useState(initial.street);
   const [postalCode, setPostalCode] = useState(initial.postalCode);
 
   const [error, setError] = useState("");
-  const [avatarError, setAvatarError] = useState("");
   const [success, setSuccess] = useState("");
   const [pending, startTransition] = useTransition();
-  const [avatarPending, startAvatar] = useTransition();
-
-  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setAvatarError("");
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.type !== "image/jpeg") {
-      const msg = "تصویر باید با پسوند jpg باشد.";
-      setAvatarError(msg);
-      notify({ variant: "error", title: "خطا", description: msg });
-      return;
-    }
-    const form = new FormData();
-    form.set("avatar", file);
-    startAvatar(async () => {
-      const result = await uploadUserAvatarAdmin(initial.id, form);
-      if (!result.ok) {
-        setAvatarError(result.error);
-        notify({ variant: "error", title: "خطا", description: result.error });
-        return;
-      }
-      setAvatar(result.data.url);
-      notify({
-        variant: "success",
-        title: "آواتار به‌روز شد",
-        description: "تصویر پروفایل ذخیره شد.",
-      });
-    });
-    if (fileRef.current) fileRef.current.value = "";
-  }
-
-  function handleRemoveAvatar() {
-    setAvatarError("");
-    startAvatar(async () => {
-      const result = await removeUserAvatarAdmin(initial.id);
-      if (!result.ok) {
-        setAvatarError(result.error);
-        notify({ variant: "error", title: "خطا", description: result.error });
-        return;
-      }
-      setAvatar(null);
-      notify({
-        variant: "success",
-        title: "آواتار حذف شد",
-        description: "تصویر پروفایل حذف شد.",
-      });
-    });
-  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -155,13 +85,8 @@ export default function UserForm({
       isVerified,
       isActive,
       shopName: shopName || null,
-      referredBy: referredBy || null,
       activityField: activityField || null,
-      partnerCode: partnerCode || null,
       accountBalanceToman: Number(accountBalanceToman) || 0,
-      birthYear,
-      birthMonth,
-      birthDay,
       provinceId: provinceId === "" ? null : Number(provinceId),
       cityId: cityId === "" ? null : Number(cityId),
       street,
@@ -190,47 +115,7 @@ export default function UserForm({
       {success && <FormSuccess message={success} />}
 
       <Card className="overflow-hidden p-5 sm:p-6">
-        <div className="grid lg:grid-cols-[200px_1fr] gap-8">
-          <div className="flex flex-col items-center gap-3">
-            <Avatar
-              src={avatar}
-              size={140}
-              alt={`${firstName} ${lastName}`.trim() || "کاربر"}
-            />
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/jpeg"
-              onChange={handleAvatarChange}
-              className="hidden"
-            />
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => fileRef.current?.click()}
-                disabled={avatarPending}
-              >
-                انتخاب عکس
-              </Button>
-              {avatar && (
-                <Button
-                  type="button"
-                  variant="danger"
-                  size="sm"
-                  onClick={handleRemoveAvatar}
-                  disabled={avatarPending}
-                >
-                  حذف عکس
-                </Button>
-              )}
-            </div>
-            <p className="text-[11px] text-gray-400 text-center">jpg — حداکثر ۱ مگابایت</p>
-            {avatarError && <p className="text-[11px] text-red-500 text-center">{avatarError}</p>}
-          </div>
-
-          <div className="space-y-4">
+        <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-gray-100">
               <h2 className="text-base font-bold text-charcoal">اطلاعات پایه</h2>
               <p className="text-xs text-gray-400">عضویت: {initial.createdAtLabel}</p>
@@ -270,20 +155,6 @@ export default function UserForm({
                 <Input value={shopName} onChange={(e) => setShopName(e.target.value)} />
               </div>
               <div>
-                <Label>کد اختصاصی</Label>
-                <Input
-                  dir="ltr"
-                  value={partnerCode}
-                  onChange={(e) => setPartnerCode(e.target.value)}
-                  disabled={role === "RETAIL"}
-                  placeholder={role === "RETAIL" ? "فقط برای همکار" : ""}
-                />
-              </div>
-              <div>
-                <Label>معرف</Label>
-                <Input value={referredBy} onChange={(e) => setReferredBy(e.target.value)} />
-              </div>
-              <div>
                 <Label>زمینه فعالیت</Label>
                 <Input value={activityField} onChange={(e) => setActivityField(e.target.value)} />
               </div>
@@ -294,36 +165,6 @@ export default function UserForm({
                   value={accountBalanceToman}
                   onChange={(e) => setAccountBalanceToman(e.target.value)}
                 />
-              </div>
-            </div>
-
-            <div>
-              <Label>تاریخ تولد</Label>
-              <div className="grid grid-cols-3 gap-2">
-                <Select value={birthDay} onChange={(e) => setBirthDay(e.target.value)}>
-                  <option value="">روز</option>
-                  {DAYS.map((d) => (
-                    <option key={d} value={d}>
-                      {d.toLocaleString("fa-IR")}
-                    </option>
-                  ))}
-                </Select>
-                <Select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)}>
-                  <option value="">ماه</option>
-                  {JALALI_MONTHS.slice(1).map((m, i) => (
-                    <option key={m} value={i + 1}>
-                      {m}
-                    </option>
-                  ))}
-                </Select>
-                <Select value={birthYear} onChange={(e) => setBirthYear(e.target.value)}>
-                  <option value="">سال</option>
-                  {YEARS.map((y) => (
-                    <option key={y} value={y}>
-                      {y.toLocaleString("fa-IR", { useGrouping: false })}
-                    </option>
-                  ))}
-                </Select>
               </div>
             </div>
 
@@ -353,7 +194,6 @@ export default function UserForm({
                 </label>
               </fieldset>
             </div>
-          </div>
         </div>
       </Card>
 
@@ -417,7 +257,7 @@ export default function UserForm({
       </Card>
 
       <div className="flex items-center gap-3 sticky bottom-4 z-10 bg-white/90 backdrop-blur-sm border border-gray-200/80 rounded-2xl shadow-sm px-4 py-3 w-fit">
-        <Button type="submit" disabled={pending || avatarPending}>
+        <Button type="submit" disabled={pending}>
           {pending ? "در حال ذخیره…" : "ذخیره تغییرات"}
         </Button>
         <Button type="button" variant="ghost" onClick={() => router.push("/admin/users")}>

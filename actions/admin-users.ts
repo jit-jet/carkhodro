@@ -17,9 +17,7 @@ import { formatJalaliDate } from '@/src/lib/format';
 import { USER_ROLE_FA } from '@/src/lib/user-labels';
 import { ASSIGNABLE_ROLES } from '@/src/lib/admin-options';
 import { getCurrentAdmin } from '@/src/lib/admin-session';
-import { dateToJalaliParts, jalaliPartsToDate } from '@/src/lib/jalali-convert';
 import { resolveLocation } from '@/src/lib/resolve-location';
-import { deleteFile, saveFile } from '@/src/lib/storage';
 import type { UserRole } from '@/generated/prisma_client';
 import { pushContactToHesabfa } from '@/src/lib/hesabfa/contacts';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
@@ -31,7 +29,6 @@ export interface AdminUserListItemVM {
   role: UserRole;
   roleLabel: string;
   shopName: string | null;
-  partnerCode: string | null;
   isVerified: boolean;
   isActive: boolean;
   accountBalanceToman: number;
@@ -141,7 +138,6 @@ export async function getUsersAdmin(filters: AdminUserFilters = {}): Promise<Adm
           role: u.role,
           roleLabel: USER_ROLE_FA[u.role],
           shopName: u.shopName,
-          partnerCode: u.partnerCode,
           isVerified: u.isVerified,
           isActive: u.isActive,
           accountBalanceToman: Number(u.accountBalance),
@@ -176,8 +172,6 @@ export async function getUserAdminById(id: string) {
       if (u.role === 'ADMIN') return null;
 
       const address = u.addresses[0] ?? null;
-      const birth = u.birthDate ? dateToJalaliParts(u.birthDate) : null;
-
       return {
         id: u.id,
         phoneNumber: u.phoneNumber,
@@ -187,14 +181,8 @@ export async function getUserAdminById(id: string) {
         isVerified: u.isVerified,
         isActive: u.isActive,
         shopName: u.shopName,
-        referredBy: u.referredBy,
         activityField: u.activityField,
-        partnerCode: u.partnerCode,
-        profileImage: u.profileImage,
         accountBalanceToman: Number(u.accountBalance),
-        birthYear: birth ? String(birth.jy) : '',
-        birthMonth: birth ? String(birth.jm) : '',
-        birthDay: birth ? String(birth.jd) : '',
         provinceId: address?.city.provinceId ?? null,
         cityId: address?.city.id ?? null,
         street: address?.street ?? '',
@@ -214,13 +202,8 @@ export interface AdminUserUpdateInput {
   isVerified: boolean;
   isActive: boolean;
   shopName?: string | null;
-  referredBy?: string | null;
   activityField?: string | null;
-  partnerCode?: string | null;
   accountBalanceToman?: number;
-  birthYear?: string;
-  birthMonth?: string;
-  birthDay?: string;
   provinceId?: number | null;
   cityId?: number | null;
   street?: string;
@@ -248,26 +231,6 @@ export async function updateUser(
     }
     if (!input.firstName?.trim() || !input.lastName?.trim()) {
       return fail('نام و نام خانوادگی الزامی است.');
-    }
-
-    let partnerCode = input.partnerCode?.trim() || null;
-    if (input.role === 'RETAIL') partnerCode = null;
-    if (partnerCode) {
-      const codeTaken = await prisma.user.findFirst({
-        where: { partnerCode, id: { not: userId } },
-        select: { id: true },
-      });
-      if (codeTaken) return fail('این کد اختصاصی قبلاً استفاده شده است.');
-    }
-
-    let birthDate: Date | null = null;
-    if (input.birthYear && input.birthMonth && input.birthDay) {
-      birthDate = jalaliPartsToDate(
-        Number(input.birthYear),
-        Number(input.birthMonth),
-        Number(input.birthDay),
-      );
-      if (!birthDate) return fail('تاریخ تولد نامعتبر است.');
     }
 
     const street = (input.street ?? '').trim();
@@ -301,10 +264,7 @@ export async function updateUser(
           isVerified: input.isVerified,
           isActive: input.isActive,
           shopName: input.shopName?.trim() || null,
-          referredBy: input.referredBy?.trim() || null,
           activityField: input.activityField?.trim() || null,
-          partnerCode,
-          birthDate,
           ...(input.accountBalanceToman !== undefined
             ? { accountBalance: BigInt(Math.round(input.accountBalanceToman)) }
             : {}),
@@ -374,67 +334,6 @@ export async function setUserActive(
       runHesabfaBackground('pushContact:adminActive', () => pushContactToHesabfa(userId));
     }
 
-    return ok(undefined);
-  });
-}
-
-const MAX_AVATAR_BYTES = 1_000_000;
-
-export async function uploadUserAvatarAdmin(
-  userId: string,
-  formData: FormData,
-): Promise<ActionResult<{ url: string }>> {
-  return runMutation('uploadUserAvatarAdmin', async () => {
-    const admin = await getCurrentAdmin();
-    if (!admin) return fail('دسترسی مجاز نیست.');
-
-    const target = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, role: true, profileImage: true },
-    });
-    if (!target) return fail('کاربر پیدا نشد.');
-    if (target.role === 'ADMIN' || target.role === 'SUPPORT') {
-      return fail('تصویر مدیران از این بخش قابل تغییر نیست.');
-    }
-
-    const file = formData.get('avatar');
-    if (!(file instanceof File) || file.size === 0) return fail('فایلی انتخاب نشد.');
-    if (file.type !== 'image/jpeg') return fail('تصویر باید با پسوند jpg باشد.');
-    if (file.size > MAX_AVATAR_BYTES) return fail('حجم تصویر باید کمتر از ۱ مگابایت باشد.');
-
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const previous = target.profileImage;
-    const profileImage = await saveFile('avatars', `${userId}.jpg`, buffer);
-
-    await prisma.user.update({
-      where: { id: userId },
-      data: { profileImage },
-    });
-
-    if (previous && previous !== profileImage) {
-      await deleteFile(previous);
-    }
-
-    return ok({ url: profileImage });
-  });
-}
-
-export async function removeUserAvatarAdmin(userId: string): Promise<ActionResult> {
-  return runMutation('removeUserAvatarAdmin', async () => {
-    const admin = await getCurrentAdmin();
-    if (!admin) return fail('دسترسی مجاز نیست.');
-
-    const target = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, role: true, profileImage: true },
-    });
-    if (!target) return fail('کاربر پیدا نشد.');
-    if (target.role === 'ADMIN' || target.role === 'SUPPORT') {
-      return fail('تصویر مدیران از این بخش قابل تغییر نیست.');
-    }
-
-    await prisma.user.update({ where: { id: userId }, data: { profileImage: null } });
-    await deleteFile(target.profileImage);
     return ok(undefined);
   });
 }

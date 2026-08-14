@@ -3,7 +3,7 @@
  * ────────────────────────────
  * Live stat cards pulled from the signed-in partner's data: ledger balance,
  * completed / in-progress orders, cart size, favorites, recent
- * orders, last invoice, profile (avatar state) and a back-to-site card. Each
+ * orders, last invoice, profile and a back-to-site card. Each
  * card links to the matching page. The cards read the session cookie, so they
  * stream inside <Suspense> while the static shell ships.
  */
@@ -14,7 +14,6 @@ import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getDashboardStats } from '@/actions/dashboard';
 import { formatRial, formatNumberFa, noFormatNumberFa } from '@/src/lib/format';
-import Avatar from '@/src/components/dashboard/Avatar';
 import type { DashboardStatsVM } from '@/src/lib/dashboard-types';
 
 export const metadata: Metadata = {
@@ -122,13 +121,15 @@ function ProfileCard({ stats }: { stats: DashboardStatsVM }) {
       href="/dashboard/profile"
       className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4 hover:border-accent hover:shadow-md transition-all"
     >
-      <Avatar src={stats.profileImage} size={56} alt={stats.fullName} />
+      <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-silver-light text-gray-400">
+        <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7" aria-hidden="true">
+          <path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4.42 0-8 2.69-8 6v2h16v-2c0-3.31-3.58-6-8-6z" />
+        </svg>
+      </span>
       <div className="min-w-0">
         <p className="text-xs text-gray-400 mb-0.5">پروفایل من</p>
-        <p className="text-base font-extrabold text-charcoal truncate">
-          {stats.hasAvatar ? 'دارای عکس پروفایل' : 'فاقد عکس'}
-        </p>
-        <p className="text-xs text-gray-400 mt-0.5">ویرایش مشخصات کاربری</p>
+        <p className="text-base font-extrabold text-charcoal truncate">{stats.fullName}</p>
+        <p className="text-xs text-gray-400 mt-0.5">مشاهده و ویرایش مشخصات کاربری</p>
       </div>
     </Link>
   );

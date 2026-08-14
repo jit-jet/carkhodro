@@ -9684,12 +9684,8 @@ export namespace Prisma {
     isVerified: boolean | null
     isActive: boolean | null
     shopName: string | null
-    birthDate: Date | null
-    profileImage: string | null
     accountBalance: bigint | null
-    referredBy: string | null
     activityField: string | null
-    partnerCode: string | null
     username: string | null
     passwordHash: string | null
     isSuperAdmin: boolean | null
@@ -9711,12 +9707,8 @@ export namespace Prisma {
     isVerified: boolean | null
     isActive: boolean | null
     shopName: string | null
-    birthDate: Date | null
-    profileImage: string | null
     accountBalance: bigint | null
-    referredBy: string | null
     activityField: string | null
-    partnerCode: string | null
     username: string | null
     passwordHash: string | null
     isSuperAdmin: boolean | null
@@ -9738,12 +9730,8 @@ export namespace Prisma {
     isVerified: number
     isActive: number
     shopName: number
-    birthDate: number
-    profileImage: number
     accountBalance: number
-    referredBy: number
     activityField: number
-    partnerCode: number
     username: number
     passwordHash: number
     isSuperAdmin: number
@@ -9779,12 +9767,8 @@ export namespace Prisma {
     isVerified?: true
     isActive?: true
     shopName?: true
-    birthDate?: true
-    profileImage?: true
     accountBalance?: true
-    referredBy?: true
     activityField?: true
-    partnerCode?: true
     username?: true
     passwordHash?: true
     isSuperAdmin?: true
@@ -9806,12 +9790,8 @@ export namespace Prisma {
     isVerified?: true
     isActive?: true
     shopName?: true
-    birthDate?: true
-    profileImage?: true
     accountBalance?: true
-    referredBy?: true
     activityField?: true
-    partnerCode?: true
     username?: true
     passwordHash?: true
     isSuperAdmin?: true
@@ -9833,12 +9813,8 @@ export namespace Prisma {
     isVerified?: true
     isActive?: true
     shopName?: true
-    birthDate?: true
-    profileImage?: true
     accountBalance?: true
-    referredBy?: true
     activityField?: true
-    partnerCode?: true
     username?: true
     passwordHash?: true
     isSuperAdmin?: true
@@ -9947,12 +9923,8 @@ export namespace Prisma {
     isVerified: boolean
     isActive: boolean
     shopName: string | null
-    birthDate: Date | null
-    profileImage: string | null
     accountBalance: bigint
-    referredBy: string | null
     activityField: string | null
-    partnerCode: string | null
     username: string | null
     passwordHash: string | null
     isSuperAdmin: boolean
@@ -9993,12 +9965,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: boolean
-    birthDate?: boolean
-    profileImage?: boolean
     accountBalance?: boolean
-    referredBy?: boolean
     activityField?: boolean
-    partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
     isSuperAdmin?: boolean
@@ -10034,12 +10002,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: boolean
-    birthDate?: boolean
-    profileImage?: boolean
     accountBalance?: boolean
-    referredBy?: boolean
     activityField?: boolean
-    partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
     isSuperAdmin?: boolean
@@ -10061,12 +10025,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: boolean
-    birthDate?: boolean
-    profileImage?: boolean
     accountBalance?: boolean
-    referredBy?: boolean
     activityField?: boolean
-    partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
     isSuperAdmin?: boolean
@@ -10088,12 +10048,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: boolean
-    birthDate?: boolean
-    profileImage?: boolean
     accountBalance?: boolean
-    referredBy?: boolean
     activityField?: boolean
-    partnerCode?: boolean
     username?: boolean
     passwordHash?: boolean
     isSuperAdmin?: boolean
@@ -10106,7 +10062,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "isActive" | "shopName" | "birthDate" | "profileImage" | "accountBalance" | "referredBy" | "activityField" | "partnerCode" | "username" | "passwordHash" | "isSuperAdmin" | "failedAdminLoginAttempts" | "adminLockedUntil" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phoneNumber" | "firstName" | "lastName" | "role" | "isVerified" | "isActive" | "shopName" | "accountBalance" | "activityField" | "username" | "passwordHash" | "isSuperAdmin" | "failedAdminLoginAttempts" | "adminLockedUntil" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addresses?: boolean | User$addressesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -10164,25 +10120,15 @@ export namespace Prisma {
        * Wholesale customers must supply a shop/business name
        */
       shopName: string | null
-      birthDate: Date | null
-      profileImage: string | null
       /**
        * Partner's running ledger balance with the shop, in the same magnitude as
        * product prices (Toman). Shown as «مانده حساب» on the dashboard.
        */
       accountBalance: bigint
       /**
-       * Who referred this partner («معرف») — free text captured on the profile.
-       */
-      referredBy: string | null
-      /**
        * The partner's line of business («زمینه فعالیت») — free text.
        */
       activityField: string | null
-      /**
-       * Short, unique partner/affiliate code («کد اختصاصی») — null for retail users.
-       */
-      partnerCode: string | null
       /**
        * Admin login username — only set for ADMIN-role users; storefront customers
        * authenticate with SMS OTP and never get one.
@@ -10665,12 +10611,8 @@ export namespace Prisma {
     readonly isVerified: FieldRef<"User", 'Boolean'>
     readonly isActive: FieldRef<"User", 'Boolean'>
     readonly shopName: FieldRef<"User", 'String'>
-    readonly birthDate: FieldRef<"User", 'DateTime'>
-    readonly profileImage: FieldRef<"User", 'String'>
     readonly accountBalance: FieldRef<"User", 'BigInt'>
-    readonly referredBy: FieldRef<"User", 'String'>
     readonly activityField: FieldRef<"User", 'String'>
-    readonly partnerCode: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly isSuperAdmin: FieldRef<"User", 'Boolean'>
@@ -53495,12 +53437,8 @@ export namespace Prisma {
     isVerified: 'isVerified',
     isActive: 'isActive',
     shopName: 'shopName',
-    birthDate: 'birthDate',
-    profileImage: 'profileImage',
     accountBalance: 'accountBalance',
-    referredBy: 'referredBy',
     activityField: 'activityField',
-    partnerCode: 'partnerCode',
     username: 'username',
     passwordHash: 'passwordHash',
     isSuperAdmin: 'isSuperAdmin',
@@ -54669,12 +54607,8 @@ export namespace Prisma {
     isVerified?: BoolFilter<"User"> | boolean
     isActive?: BoolFilter<"User"> | boolean
     shopName?: StringNullableFilter<"User"> | string | null
-    birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
-    profileImage?: StringNullableFilter<"User"> | string | null
     accountBalance?: BigIntFilter<"User"> | bigint | number
-    referredBy?: StringNullableFilter<"User"> | string | null
     activityField?: StringNullableFilter<"User"> | string | null
-    partnerCode?: StringNullableFilter<"User"> | string | null
     username?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
     isSuperAdmin?: BoolFilter<"User"> | boolean
@@ -54709,12 +54643,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     isActive?: SortOrder
     shopName?: SortOrderInput | SortOrder
-    birthDate?: SortOrderInput | SortOrder
-    profileImage?: SortOrderInput | SortOrder
     accountBalance?: SortOrder
-    referredBy?: SortOrderInput | SortOrder
     activityField?: SortOrderInput | SortOrder
-    partnerCode?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     isSuperAdmin?: SortOrder
@@ -54743,7 +54673,6 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     phoneNumber?: string
-    partnerCode?: string
     username?: string
     hesabfaCode?: string
     hesabfaId?: number
@@ -54756,10 +54685,7 @@ export namespace Prisma {
     isVerified?: BoolFilter<"User"> | boolean
     isActive?: BoolFilter<"User"> | boolean
     shopName?: StringNullableFilter<"User"> | string | null
-    birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
-    profileImage?: StringNullableFilter<"User"> | string | null
     accountBalance?: BigIntFilter<"User"> | bigint | number
-    referredBy?: StringNullableFilter<"User"> | string | null
     activityField?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
     isSuperAdmin?: BoolFilter<"User"> | boolean
@@ -54781,7 +54707,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionListRelationFilter
     smsCampaigns?: SmsCampaignListRelationFilter
     adminActivityLogs?: AdminActivityLogListRelationFilter
-  }, "id" | "phoneNumber" | "partnerCode" | "username" | "hesabfaCode" | "hesabfaId">
+  }, "id" | "phoneNumber" | "username" | "hesabfaCode" | "hesabfaId">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -54792,12 +54718,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     isActive?: SortOrder
     shopName?: SortOrderInput | SortOrder
-    birthDate?: SortOrderInput | SortOrder
-    profileImage?: SortOrderInput | SortOrder
     accountBalance?: SortOrder
-    referredBy?: SortOrderInput | SortOrder
     activityField?: SortOrderInput | SortOrder
-    partnerCode?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     isSuperAdmin?: SortOrder
@@ -54827,12 +54749,8 @@ export namespace Prisma {
     isVerified?: BoolWithAggregatesFilter<"User"> | boolean
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
     shopName?: StringNullableWithAggregatesFilter<"User"> | string | null
-    birthDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-    profileImage?: StringNullableWithAggregatesFilter<"User"> | string | null
     accountBalance?: BigIntWithAggregatesFilter<"User"> | bigint | number
-    referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
     activityField?: StringNullableWithAggregatesFilter<"User"> | string | null
-    partnerCode?: StringNullableWithAggregatesFilter<"User"> | string | null
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     isSuperAdmin?: BoolWithAggregatesFilter<"User"> | boolean
@@ -58104,12 +58022,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -58144,12 +58058,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -58184,12 +58094,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -58224,12 +58130,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -58264,12 +58166,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -58291,12 +58189,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -58318,12 +58212,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -61976,17 +61866,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -61996,6 +61875,17 @@ export namespace Prisma {
     gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -62138,12 +62028,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     isActive?: SortOrder
     shopName?: SortOrder
-    birthDate?: SortOrder
-    profileImage?: SortOrder
     accountBalance?: SortOrder
-    referredBy?: SortOrder
     activityField?: SortOrder
-    partnerCode?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
     isSuperAdmin?: SortOrder
@@ -62171,12 +62057,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     isActive?: SortOrder
     shopName?: SortOrder
-    birthDate?: SortOrder
-    profileImage?: SortOrder
     accountBalance?: SortOrder
-    referredBy?: SortOrder
     activityField?: SortOrder
-    partnerCode?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
     isSuperAdmin?: SortOrder
@@ -62198,12 +62080,8 @@ export namespace Prisma {
     isVerified?: SortOrder
     isActive?: SortOrder
     shopName?: SortOrder
-    birthDate?: SortOrder
-    profileImage?: SortOrder
     accountBalance?: SortOrder
-    referredBy?: SortOrder
     activityField?: SortOrder
-    partnerCode?: SortOrder
     username?: SortOrder
     passwordHash?: SortOrder
     isSuperAdmin?: SortOrder
@@ -62250,20 +62128,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -62278,6 +62142,20 @@ export namespace Prisma {
     _sum?: NestedBigIntFilter<$PrismaModel>
     _min?: NestedBigIntFilter<$PrismaModel>
     _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -64808,16 +64686,16 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type BigIntFieldUpdateOperationsInput = {
     set?: bigint | number
     increment?: bigint | number
     decrement?: bigint | number
     multiply?: bigint | number
     divide?: bigint | number
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -66660,17 +66538,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedBigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -66680,6 +66547,17 @@ export namespace Prisma {
     gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedIntNullableFilter<$PrismaModel = never> = {
@@ -66720,20 +66598,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -66748,6 +66612,20 @@ export namespace Prisma {
     _sum?: NestedBigIntFilter<$PrismaModel>
     _min?: NestedBigIntFilter<$PrismaModel>
     _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -68016,12 +67894,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -68055,12 +67929,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -68110,12 +67980,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -68149,12 +68015,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -68188,12 +68050,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -68227,12 +68085,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -68382,12 +68236,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -68421,12 +68271,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -69938,12 +69784,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -69977,12 +69819,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -70131,12 +69969,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -70170,12 +70004,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -70209,12 +70039,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -70248,12 +70074,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -70327,12 +70149,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -70366,12 +70184,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -70657,12 +70471,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -70696,12 +70506,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -70844,12 +70650,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -70883,12 +70685,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -71021,12 +70819,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -71060,12 +70854,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -71208,12 +70998,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -71247,12 +71033,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -71546,12 +71328,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -71585,12 +71363,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -71640,12 +71414,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -71679,12 +71449,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -71718,12 +71484,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -71757,12 +71519,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -71812,12 +71570,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -71851,12 +71605,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -71988,12 +71738,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -72027,12 +71773,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -72242,12 +71984,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -72281,12 +72019,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -72839,12 +72573,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -72878,12 +72608,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -72933,12 +72659,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -72972,12 +72694,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -73088,12 +72806,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -73127,12 +72841,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -73264,12 +72974,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -73303,12 +73009,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -73342,12 +73044,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -73381,12 +73079,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -73436,12 +73130,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -73475,12 +73165,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -73514,12 +73200,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -73553,12 +73235,8 @@ export namespace Prisma {
     isVerified?: boolean
     isActive?: boolean
     shopName?: string | null
-    birthDate?: Date | string | null
-    profileImage?: string | null
     accountBalance?: bigint | number
-    referredBy?: string | null
     activityField?: string | null
-    partnerCode?: string | null
     username?: string | null
     passwordHash?: string | null
     isSuperAdmin?: boolean
@@ -73608,12 +73286,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -73647,12 +73321,8 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     shopName?: NullableStringFieldUpdateOperationsInput | string | null
-    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     activityField?: NullableStringFieldUpdateOperationsInput | string | null
-    partnerCode?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean

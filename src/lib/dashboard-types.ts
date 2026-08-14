@@ -20,9 +20,6 @@ export interface DashboardStatsVM {
   shopName: string;
   userType: string; // Persian role label
   isRetail: boolean;
-  partnerCode: string | null;
-  profileImage: string | null;
-  hasAvatar: boolean;
   accountBalanceToman: number;
   completedOrders: number;
   inProgressOrders: number;
@@ -168,17 +165,11 @@ export interface ProfileVM {
   firstName: string;
   lastName: string;
   shopName: string;
-  referredBy: string;
   activityField: string;
-  birthYear: string;
-  birthMonth: string;
-  birthDay: string;
   provinceId: number | null;
   cityId: number | null;
   street: string;
   postalCode: string;
-  profileImage: string | null;
-  partnerCode: string | null;
   userType: string; // role label
 }
 

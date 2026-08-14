@@ -28,7 +28,7 @@ export const AUDITED_ADMIN_ACTIONS = new Set([
   'sendMarketingSms',
   'createSocialLink', 'updateSocialLink', 'deleteSocialLink', 'reorderSocialLinks',
   'updateSystemSettings', 'uploadAdminImage',
-  'updateUser', 'setUserActive', 'uploadUserAvatarAdmin', 'removeUserAvatarAdmin', 'updateUserRole',
+  'updateUser', 'setUserActive', 'updateUserRole',
   'forceSyncHesabfa', 'registerHesabfaWebhook',
 ]);
 

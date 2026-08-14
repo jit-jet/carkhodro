@@ -1,7 +1,7 @@
 /**
  * My profile — «پروفایل من».
- * Editable account + address fields and avatar; read-only username/mobile/code/
- * user-type. Per-user data streams inside <Suspense>.
+ * Editable account and address fields; read-only username/mobile/user type.
+ * Per-user data streams inside <Suspense>.
  */
 
 import { Suspense } from 'react';

@@ -3,27 +3,16 @@
 /**
  * Partner profile form.
  * ─────────────────────
- * Editable: avatar (jpg → public/storage/avatars) upload/remove, full name, store name, referrer,
- * Jalali birth date, activity field and delivery address. Read-only: username,
- * mobile, special code and user type. Avatar upload/remove call their own
- * actions for instant feedback; the rest saves through `updateProfile`.
+ * Editable: full name, store name, activity field and delivery address.
+ * Read-only: username, mobile and user type.
  */
 
-import { useState, useRef, useTransition } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
-import Avatar from "@/src/components/dashboard/Avatar";
-import {
-  updateProfile,
-  updateAvatar,
-  removeAvatar,
-} from "@/actions/dashboard-profile";
-import { JALALI_MONTHS } from "@/src/lib/jalali-convert";
+import { updateProfile } from "@/actions/dashboard-profile";
 import { useCartUI } from "@/src/store/cart-ui";
 import type { ProfileVM } from "@/src/lib/dashboard-types";
 import type { ProvinceVM } from "@/src/lib/serializers";
-
-const YEARS = Array.from({ length: 90 }, (_, i) => 1404 - i); // 1404 … 1315
-const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 
 export default function ProfileForm({
   profile,
@@ -34,18 +23,11 @@ export default function ProfileForm({
   provinces: ProvinceVM[];
   readOnly?: boolean;
 }) {
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const [avatar, setAvatar] = useState<string | null>(profile.profileImage);
   const [fullName, setFullName] = useState(
     `${profile.firstName} ${profile.lastName}`.trim(),
   );
   const [shopName, setShopName] = useState(profile.shopName);
-  const [referredBy, setReferredBy] = useState(profile.referredBy);
   const [activityField, setActivityField] = useState(profile.activityField);
-  const [birthYear, setBirthYear] = useState(profile.birthYear);
-  const [birthMonth, setBirthMonth] = useState(profile.birthMonth);
-  const [birthDay, setBirthDay] = useState(profile.birthDay);
   const [provinceId, setProvinceId] = useState<number | "">(
     profile.provinceId ?? "",
   );
@@ -55,53 +37,10 @@ export default function ProfileForm({
 
   const notify = useCartUI((s) => s.notify);
   const [pending, startTransition] = useTransition();
-  const [avatarPending, startAvatar] = useTransition();
-
-  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.type !== "image/jpeg") {
-      notify({
-        variant: "error",
-        title: "خطا",
-        description: "تصویر باید با پسوند jpg باشد.",
-      });
-      return;
-    }
-    const form = new FormData();
-    form.set("avatar", file);
-    startAvatar(async () => {
-      const result = await updateAvatar(form);
-      if (!result.ok) {
-        notify({ variant: "error", title: "خطا", description: result.error });
-        return;
-      }
-      // Show the new image immediately from the local file.
-      const reader = new FileReader();
-      reader.onload = () => setAvatar(reader.result as string);
-      reader.readAsDataURL(file);
-      notify({
-        variant: "success",
-        title: "عکس پروفایل به‌روزرسانی شد",
-      });
-    });
-    if (fileRef.current) fileRef.current.value = "";
-  }
-
-  function handleRemoveAvatar() {
-    startAvatar(async () => {
-      const result = await removeAvatar();
-      if (result.ok) {
-        setAvatar(null);
-        notify({ variant: "success", title: "عکس پروفایل حذف شد" });
-      } else {
-        notify({ variant: "error", title: "خطا", description: result.error });
-      }
-    });
-  }
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (readOnly) return;
     const trimmed = fullName.trim();
     if (!trimmed) {
       notify({
@@ -117,11 +56,7 @@ export default function ProfileForm({
         firstName,
         lastName: rest.join(" "),
         shopName,
-        referredBy,
         activityField,
-        birthYear,
-        birthMonth,
-        birthDay,
         provinceId: provinceId || null,
         cityId: cityId || null,
         street,
@@ -142,112 +77,30 @@ export default function ProfileForm({
   return (
     <form
       onSubmit={submit}
-      className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-7"
+      className={[
+        "rounded-2xl border shadow-sm p-5 sm:p-7 transition-colors",
+        readOnly ? "bg-gray-100 border-gray-200" : "bg-white border-gray-100",
+      ].join(" ")}
     >
       <h1 className="text-lg font-extrabold text-charcoal mb-6">پروفایل من</h1>
 
-
-      <div className={readOnly ? "space-y-6" : "grid lg:grid-cols-[220px_1fr] gap-8"}>
-        <section className={readOnly ? "rounded-2xl border border-emerald-100  p-5 grid lg:grid-cols-[220px_1fr] gap-8" : "contents"}>
-          {readOnly && (
-            <h2 className="lg:col-span-2 text-base font-extrabold text-charcoal">
-              اطلاعات قابل ویرایش در وب‌سایت
-            </h2>
-          )}
-        {/* Avatar column */}
-        <div className="flex flex-col items-center gap-3">
-          <Avatar src={avatar} size={140} alt={fullName} />
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/jpeg"
-            onChange={handleAvatarChange}
-            className="hidden"
-            id="avatar-input"
-          />
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              disabled={avatarPending}
-              className="text-xs font-semibold text-charcoal bg-silver-light hover:bg-gray-200 px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
-            >
-              انتخاب عکس
-            </button>
-            {avatar && (
-              <button
-                type="button"
-                onClick={handleRemoveAvatar}
-                disabled={avatarPending}
-                className="text-xs font-semibold text-red-500 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
-              >
-                حذف عکس
-              </button>
-            )}
-          </div>
-          <p className="text-[11px] text-gray-400 text-center">
-            تصویر باید با پسوند jpg باشد
-          </p>
-        </div>
-
-        {readOnly && (
-          <div className="space-y-4">
-            <Field
-              label="معرف"
-              value={referredBy}
-              onChange={setReferredBy}
-              placeholder="کسی که کارخودرو را معرفی کرده…"
-            />
-            <div>
-              <label className="block text-sm font-semibold text-charcoal mb-1.5">
-                تاریخ تولد
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                <select value={birthDay} onChange={(e) => setBirthDay(e.target.value)} className={selectCls}>
-                  <option value="">روز</option>
-                  {DAYS.map((d) => <option key={d} value={d}>{d.toLocaleString("fa-IR")}</option>)}
-                </select>
-                <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)} className={selectCls}>
-                  <option value="">ماه</option>
-                  {JALALI_MONTHS.slice(1).map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-                </select>
-                <select value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className={selectCls}>
-                  <option value="">سال</option>
-                  {YEARS.map((y) => <option key={y} value={y}>{y.toLocaleString("fa-IR", { useGrouping: false })}</option>)}
-                </select>
-              </div>
-            </div>
-            <Field
-              label="زمینه فعالیت"
-              value={activityField}
-              onChange={setActivityField}
-              placeholder="زمینه فعالیت خود را شرح دهید…"
-            />
-          </div>
-        )}
-        </section>
       {readOnly && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 mb-6">
-          لطفا برای تغییر اطلاعات زیر با{' '}
+        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-7 text-amber-950">
+          کاربران همکار امکان ویرایش اطلاعات حساب خود را ندارند. برای اعمال تغییرات لطفاً با{' '}
           <Link href="/contact" className="font-bold underline underline-offset-2">
             پشتیبانی
           </Link>{' '}
           تماس بگیرید.
         </div>
       )}
+
+      <div className="space-y-6">
         {/* Fields column */}
-        <section className={readOnly ? "space-y-4 rounded-2xl border border-gray-300 bg-gray-200 p-5 sm:p-6" : "space-y-4"}>
-          {readOnly && (
-            <div>
-              <h2 className="text-base font-extrabold text-charcoal">اطلاعات غیرقابل ویرایش</h2>
-              <p className="text-xs text-gray-600 mt-1">این اطلاعات از حسابفا مدیریت می‌شوند.</p>
-            </div>
-          )}
+        <section className="space-y-4">
           {/* Read-only account info */}
           <div className="grid sm:grid-cols-2 gap-3">
             <ReadOnly label="نام کاربری" value={profile.phoneNumber} ltr />
             <ReadOnly label="موبایل" value={profile.phoneNumber} ltr />
-            <ReadOnly label="کد اختصاصی" value={profile.partnerCode ?? "—"} />
             <ReadOnly label="نوع کاربر" value={profile.userType} />
           </div>
 
@@ -265,73 +118,13 @@ export default function ProfileForm({
             placeholder="نام فروشگاه خود را وارد کنید…"
             disabled={readOnly}
           />
-          {!readOnly && (
-            <>
-              <Field
-                label="معرف"
-                value={referredBy}
-                onChange={setReferredBy}
-                placeholder="کسی که کارخودرو را معرفی کرده…"
-              />
-
-              {/* Birth date */}
-              <div>
-            <label className="block text-sm font-semibold text-charcoal mb-1.5">
-              تاریخ تولد
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              <select
-                value={birthDay}
-                onChange={(e) => setBirthDay(e.target.value)}
-                disabled={readOnly}
-                className={selectCls}
-              >
-                <option value="">روز</option>
-                {DAYS.map((d) => (
-                  <option key={d} value={d}>
-                    {d.toLocaleString("fa-IR")}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={birthMonth}
-                onChange={(e) => setBirthMonth(e.target.value)}
-                disabled={readOnly}
-                className={selectCls}
-              >
-                <option value="">ماه</option>
-                {JALALI_MONTHS.slice(1).map((m, i) => (
-                  <option key={m} value={i + 1}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={birthYear}
-                onChange={(e) => setBirthYear(e.target.value)}
-                disabled={readOnly}
-                className={selectCls}
-              >
-                <option value="">سال</option>
-                {YEARS.map((y) => (
-                  <option key={y} value={y}>
-                    {y.toLocaleString("fa-IR", {
-                      useGrouping: false,
-                    })}
-                  </option>
-                ))}
-              </select>
-            </div>
-              </div>
-
-              <Field
-                label="زمینه فعالیت"
-                value={activityField}
-                onChange={setActivityField}
-                placeholder="زمینه فعالیت خود را شرح دهید…"
-              />
-            </>
-          )}
+          <Field
+            label="زمینه فعالیت"
+            value={activityField}
+            onChange={setActivityField}
+            placeholder="زمینه فعالیت خود را شرح دهید…"
+            disabled={readOnly}
+          />
 
           {/* Address */}
           <div className="pt-2 border-t border-gray-100">
@@ -409,32 +202,21 @@ export default function ProfileForm({
             </div>
           </div>
 
-          {!readOnly && (
-            <button
-              type="submit"
-              disabled={pending}
-              className="bg-accent hover:bg-accent-dark text-charcoal font-bold text-sm px-8 py-3 rounded-xl transition-colors disabled:opacity-60"
-            >
-              {pending ? "در حال ذخیره…" : "ذخیره اطلاعات"}
-            </button>
-          )}
-        </section>
-        {readOnly && (
           <button
             type="submit"
-            disabled={pending}
-            className="bg-accent hover:bg-accent-dark text-charcoal font-bold text-sm px-8 py-3 rounded-xl transition-colors disabled:opacity-60"
+            disabled={pending || readOnly}
+            className="bg-accent hover:bg-accent-dark text-charcoal font-bold text-sm px-8 py-3 rounded-xl transition-colors disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:opacity-80"
           >
-            {pending ? "در حال ذخیره…" : "ذخیره اطلاعات قابل ویرایش"}
+            {readOnly ? "ویرایش اطلاعات غیرفعال است" : pending ? "در حال ذخیره…" : "ذخیره اطلاعات"}
           </button>
-        )}
+        </section>
       </div>
     </form>
   );
 }
 
 const selectCls =
-  "w-full border-2 border-silver focus:border-accent rounded-xl px-4 py-2.5 text-sm outline-none transition-colors bg-white";
+  "w-full border-2 border-silver focus:border-accent rounded-xl px-4 py-2.5 text-sm outline-none transition-colors bg-white disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-200 disabled:text-gray-500 disabled:opacity-100";
 
 function Field({
   label,
