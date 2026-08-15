@@ -78,9 +78,11 @@ export async function clearGuestCart(): Promise<void> {
 
 /**
  * Build a `CartVM` from guest lines, reading live product data. Inactive or
- * deleted products are dropped; quantities are capped at current stock. The
- * resulting item `id` is the productId (guests have no DB cart-item rows), which
- * keeps the same update/remove call shape the cart UI already uses.
+ * deleted products are dropped; available quantities are capped at current
+ * stock. Products that became out of stock stay visible so the customer can
+ * understand the badge count and remove them from the cart. The resulting item
+ * `id` is the productId (guests have no DB cart-item rows), which keeps the same
+ * update/remove call shape the cart UI already uses.
  */
 export async function buildGuestCartVM(lines: GuestCartLine[]): Promise<CartVM> {
   if (lines.length === 0) return emptyCart();
@@ -94,8 +96,10 @@ export async function buildGuestCartVM(lines: GuestCartLine[]): Promise<CartVM> 
   const items = lines
     .map((line) => {
       const product = byId.get(line.productId);
-      if (!product || product.stock < 1) return null;
-      const quantity = Math.min(product.stock, line.quantity);
+      if (!product) return null;
+      const quantity = product.stock > 0
+        ? Math.min(product.stock, line.quantity)
+        : line.quantity;
       // Reuse the shared serializer; item id === productId for guests.
       return toCartItemVM({ id: product.id, productId: product.id, quantity, product }, null, fallbackImage);
     })

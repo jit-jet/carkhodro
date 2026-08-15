@@ -18,7 +18,7 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: Props)
   return (
     <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5">
       {/* Product image */}
-      <Link href={`/products/${item.id}`} className="inline-block">
+      <Link href={`/products/${item.productId}`} className="inline-block">
         <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-gray-50 border border-gray-100 shrink-0">
           <ProductImage
             src={item.image}
@@ -36,11 +36,15 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: Props)
         <span className="text-[10px] font-mono text-gray-400 tracking-wider">{item.sku}</span>
 
         {/* Name */}
-        <Link href={`/products/${item.id}`} className="inline-block">
+        <Link href={`/products/${item.productId}`} className="inline-block">
           <h3 className="text-sm font-semibold text-charcoal leading-5 line-clamp-2">{item.name}</h3>
         </Link>
 
-        {item.callForPrice ? (
+        {item.stock < 1 ? (
+          <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-2 py-1.5">
+            این محصول در حال حاضر ناموجود است. لطفاً آن را از سبد خرید حذف کنید.
+          </p>
+        ) : item.callForPrice ? (
           <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-2 py-1.5">
             تماس برای قیمت — این محصول قابل خرید آنلاین نیست. لطفاً آن را حذف کنید.
           </p>
@@ -53,7 +57,7 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: Props)
 
         {/* Bottom row: qty stepper + line total + remove */}
         <div className="flex flex-wrap items-center gap-3 mt-1">
-          {!item.callForPrice && (
+          {!item.callForPrice && item.stock > 0 && (
             <div
               dir="ltr"
               className="flex items-center border border-gray-200 rounded-xl overflow-hidden"

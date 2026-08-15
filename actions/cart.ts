@@ -365,7 +365,7 @@ export async function getCartCount(): Promise<number> {
     const user = await getCurrentUser();
     if (!user) {
       const lines = await readGuestCart();
-      return lines.reduce((sum, l) => sum + l.quantity, 0);
+      return (await buildGuestCartVM(lines)).totalItems;
     }
     const items = await prisma.cartItem.findMany({
       where: { cart: { userId: user.id } },

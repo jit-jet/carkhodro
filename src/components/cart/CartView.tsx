@@ -20,7 +20,24 @@ interface Props {
  * checkout route is auth-gated, so guests are routed through the SMS login and
  * returned to /checkout afterwards.
  */
-export default function CartView({ initialCart, isAuthenticated }: Props) {
+export default function CartView(props: Props) {
+  // A Server Action can revalidate /cart while its client subtree remains
+  // mounted. Key the stateful view to the authoritative server snapshot so a
+  // changed cart is remounted instead of retaining useState's older initializer.
+  const cartVersion = props.initialCart.items
+    .map((item) => [
+      item.id,
+      item.quantity,
+      item.stock,
+      item.price,
+      item.callForPrice ? 1 : 0,
+    ].join(':'))
+    .join('|');
+
+  return <StatefulCartView key={cartVersion} {...props} />;
+}
+
+function StatefulCartView({ initialCart, isAuthenticated }: Props) {
   const router = useRouter();
   const [items, setItems] = useState<CartItemVM[]>(initialCart.items);
   const [pending, startTransition] = useTransition();
@@ -33,6 +50,7 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
     .reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const hasCallForPrice = items.some((item) => item.callForPrice);
+  const hasUnavailableItems = items.some((item) => item.stock < 1);
 
   function updateQty(id: string, delta: number) {
     const item = items.find((i) => i.id === id);
@@ -132,11 +150,16 @@ export default function CartView({ initialCart, isAuthenticated }: Props) {
             ctaLabel="ادامه و تسویه حساب"
             onPlaceOrder={proceedToCheckout}
             busy={pending || checkingOut}
-            disabled={hasCallForPrice || items.length === 0}
+            disabled={hasCallForPrice || hasUnavailableItems || items.length === 0}
           />
           {hasCallForPrice && (
             <p className="text-center text-xs text-amber-700 mt-3 leading-5">
               لطفاً محصولات «تماس برای قیمت» را از سبد حذف کنید تا بتوانید ادامه دهید.
+            </p>
+          )}
+          {hasUnavailableItems && (
+            <p className="text-center text-xs text-red-600 mt-3 leading-5">
+              لطفاً محصولات ناموجود را از سبد حذف کنید تا بتوانید ادامه دهید.
             </p>
           )}
           {!isAuthenticated && (
