@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --import tsx --test src/lib/hesabfa/product-identity.test.ts",
+    "test": "node --import tsx --test src/lib/hesabfa/product-identity.test.ts src/lib/hesabfa/invoice-identity.test.ts src/lib/hesabfa/invoice-status.test.ts src/lib/hesabfa/webhook-actions.test.ts",
     "db:seed": "tsx prisma/seed.ts",
     "db:import-system-settings": "node --conditions=react-server --import tsx scripts/import-system-settings.ts",
     "db:deploy": "npx prisma migrate deploy && npx prisma generate"
