@@ -178,8 +178,12 @@ export async function createProduct(
       console.error('[hesabfa:stock:create]', err);
     }
 
-    const created = await prisma.product.create({
-      data: {
+    // Hesabfa owns the SKU. A code can already exist locally after a retried
+    // request or when Hesabfa reuses a code that belongs to a stale/soft-deleted
+    // row, so make the local write idempotent on that returned code.
+    const persisted = await prisma.product.upsert({
+      where: { sku: code },
+      create: {
         sku: code,
         name: input.name.trim(),
         partsBrandId: input.partsBrandId,
@@ -204,12 +208,37 @@ export async function createProduct(
         hesabfaId: typeof saved.Id === 'number' ? saved.Id : null,
         lastSyncedAt: new Date(),
       },
+      update: {
+        name: input.name.trim(),
+        partsBrandId: input.partsBrandId,
+        categoryId: input.categoryId,
+        wholesalePrice,
+        buyPrice,
+        wholesaleDiscountPct,
+        retailPriceDiffPct,
+        retailDiscountPct,
+        isOffer: input.isOffer ?? false,
+        callForPriceRetail: input.callForPriceRetail ?? false,
+        callForPriceWholesale: input.callForPriceWholesale ?? false,
+        isActive: true,
+        stock: targetStock,
+        origin: input.origin ?? null,
+        unit: input.unit?.trim() || 'عدد',
+        mainImage: input.mainImage ?? null,
+        description: input.description ?? null,
+        ...(input.metaTitle !== undefined ? { metaTitle: input.metaTitle?.trim() || null } : {}),
+        ...(input.metaDescription !== undefined ? { metaDescription: input.metaDescription?.trim() || null } : {}),
+        ...(input.imageAlt !== undefined ? { imageAlt: input.imageAlt?.trim() || null } : {}),
+        hesabfaCode: code,
+        hesabfaId: typeof saved.Id === 'number' ? saved.Id : null,
+        lastSyncedAt: new Date(),
+      },
       select: { id: true },
     });
-    await syncProductImages(created.id, input.images);
-    await syncProductCompatibilities(created.id, input.carModelIds ?? []);
+    await syncProductImages(persisted.id, input.images);
+    await syncProductCompatibilities(persisted.id, input.carModelIds ?? []);
     updateTag(tags.products);
-    return ok(created);
+    return ok(persisted);
   });
 }
 
@@ -284,9 +313,6 @@ export async function updateProduct(
         wholesaleDiscountPct,
         buyPrice,
         description,
-        ...(input.metaTitle !== undefined ? { metaTitle: input.metaTitle?.trim() || null } : {}),
-        ...(input.metaDescription !== undefined ? { metaDescription: input.metaDescription?.trim() || null } : {}),
-        ...(input.imageAlt !== undefined ? { imageAlt: input.imageAlt?.trim() || null } : {}),
         active: isActive,
       });
     } catch (err) {
@@ -338,6 +364,15 @@ export async function updateProduct(
         ...(input.unit !== undefined ? { unit: input.unit.trim() || 'عدد' } : {}),
         ...(input.mainImage !== undefined ? { mainImage: input.mainImage } : {}),
         description,
+        ...(input.metaTitle !== undefined
+          ? { metaTitle: input.metaTitle?.trim() || null }
+          : {}),
+        ...(input.metaDescription !== undefined
+          ? { metaDescription: input.metaDescription?.trim() || null }
+          : {}),
+        ...(input.imageAlt !== undefined
+          ? { imageAlt: input.imageAlt?.trim() || null }
+          : {}),
       },
       select: { id: true },
     });

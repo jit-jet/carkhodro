@@ -729,8 +729,8 @@ export default function ProductsTable({
                       />
                     </td>
                     <td className={`${tdClass} min-w-0`}>
-                      <Link href={`/products/${p.id}`} className="inline-block">
-                        <p className="font-semibold text-charcoal truncate" title={p.name}>
+                      <Link href={`/products/${p.id}`} className="block min-w-0">
+                        <p className="font-semibold text-charcoal whitespace-normal break-words" title={p.name}>
                           {p.name}
                         </p>
                       </Link>
