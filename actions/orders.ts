@@ -460,6 +460,7 @@ export async function submitCheckout(
           });
           if (!pending || pending.paymentStatus !== 'PENDING') return;
           for (const item of pending.items) {
+            if (!item.productId) continue;
             await tx.product.update({
               where: { id: item.productId },
               data: {

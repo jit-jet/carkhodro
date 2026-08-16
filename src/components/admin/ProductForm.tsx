@@ -194,7 +194,7 @@ export default function ProductForm({
     if (!initial.id) return;
     if (
       !window.confirm(
-        `محصول «${name}» به‌همراه همه تصاویر برای همیشه حذف شود؟ این عمل قابل بازگشت نیست.`,
+        `محصول «${name}» از حسابفا و فروشگاه، به‌همراه همه تصاویر، برای همیشه حذف شود؟ این عمل قابل بازگشت نیست.`,
       )
     ) {
       return;
@@ -211,7 +211,7 @@ export default function ProductForm({
       notify({
         variant: "success",
         title: "حذف شد",
-        description: "محصول و تصاویر مرتبط برای همیشه حذف شدند.",
+        description: "محصول از حسابفا و فروشگاه حذف شد و تصاویر مرتبط نیز پاک شدند.",
       });
       router.push("/admin/products");
       router.refresh();

@@ -79,9 +79,13 @@ export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
 export async function handleHesabfaWebhook(
   payload: HesabfaWebhookPayload,
 ): Promise<Record<string, unknown>> {
-  const ids = (payload.ObjectIdList ?? [])
-    .map(Number)
-    .filter((n) => Number.isFinite(n));
+  const ids = [
+    ...new Set(
+      (payload.ObjectIdList ?? [])
+        .map(Number)
+        .filter((n) => Number.isFinite(n)),
+    ),
+  ];
 
   const objectType = payload.ObjectType;
   const action = Number(payload.Action);
@@ -90,9 +94,17 @@ export async function handleHesabfaWebhook(
   if (objectType === 'Product') {
     if (action === HESABFA_ACTION.PRODUCT_DELETE) {
       const deleted = await deleteProductsByHesabfaIds(ids);
-      // Refetch remaining ids in case some were updates, not hard deletes.
-      const stats = await syncProductsByIds(ids);
-      return { objectType, ...stats, deleted: deleted + stats.deleted };
+      if (deleted === ids.length) return { objectType, deleted };
+
+      // Legacy rows may not have a Hesabfa numeric ID. Reconcile against the
+      // complete live code list only when an incoming deleted ID was unmatched.
+      const stats = await fullSyncProducts();
+      return {
+        objectType,
+        ...stats,
+        deleted: deleted + stats.deleted,
+        reconciled: true,
+      };
     }
     // Product sync also pulls categories (Hesabfa has no Category ObjectType).
     const stats = await syncProductsByIds(ids);

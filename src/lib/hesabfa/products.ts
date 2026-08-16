@@ -5,7 +5,9 @@
 import { revalidateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { tags } from '@/actions/cache-tags';
+import { deleteFile } from '@/src/lib/storage';
 import {
+  deleteItem,
   getAllItems,
   getItemByCode,
   getItemsById,
@@ -301,41 +303,68 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
   return stats;
 }
 
-/** Soft-delete local products that vanished from Hesabfa (full sync). */
-export async function reconcileDeletedProducts(liveCodes: Set<string>): Promise<string[]> {
-  const synced = await prisma.product.findMany({
-    where: { hesabfaCode: { not: null }, isActive: true },
-    select: { id: true, hesabfaCode: true },
-  });
-  const orphanIds = synced
-    .filter((p) => p.hesabfaCode && !liveCodes.has(p.hesabfaCode))
-    .map((p) => p.id);
+async function hardDeleteLocalProducts(
+  products: Array<{
+    id: string;
+    mainImage: string | null;
+    images: Array<{ url: string }>;
+  }>,
+): Promise<string[]> {
+  if (products.length === 0) return [];
 
-  if (orphanIds.length === 0) return [];
+  const productIds = products.map((product) => product.id);
+  const imageUrls = [
+    ...new Set(
+      products.flatMap((product) => [
+        product.mainImage,
+        ...product.images.map((image) => image.url),
+      ]).filter((url): url is string => Boolean(url)),
+    ),
+  ];
 
-  await prisma.product.updateMany({
-    where: { id: { in: orphanIds } },
-    data: { isActive: false, lastSyncedAt: new Date() },
-  });
-  invalidate(orphanIds);
-  return orphanIds;
+  await prisma.product.deleteMany({ where: { id: { in: productIds } } });
+
+  const fileResults = await Promise.allSettled(imageUrls.map((url) => deleteFile(url)));
+  for (const result of fileResults) {
+    if (result.status === 'rejected') {
+      console.error('[hesabfa:product:file-delete]', result.reason);
+    }
+  }
+
+  invalidate(productIds);
+  return productIds;
 }
 
-/** Soft-delete local products by Hesabfa numeric Ids (webhook delete). */
+/** Hard-delete local products that no longer exist in Hesabfa (full sync). */
+export async function reconcileDeletedProducts(liveCodes: Set<string>): Promise<string[]> {
+  const localProducts = await prisma.product.findMany({
+    select: {
+      id: true,
+      sku: true,
+      hesabfaCode: true,
+      mainImage: true,
+      images: { select: { url: true } },
+    },
+  });
+  const removed = localProducts.filter((product) => {
+    const code = product.hesabfaCode?.trim() || product.sku.trim();
+    return !code || !liveCodes.has(code);
+  });
+  return hardDeleteLocalProducts(removed);
+}
+
+/** Hard-delete local products by Hesabfa numeric Ids (webhook delete). */
 export async function deleteProductsByHesabfaIds(ids: number[]): Promise<number> {
   if (ids.length === 0) return 0;
   const products = await prisma.product.findMany({
     where: { hesabfaId: { in: ids } },
-    select: { id: true },
+    select: {
+      id: true,
+      mainImage: true,
+      images: { select: { url: true } },
+    },
   });
-  if (products.length === 0) return 0;
-  const productIds = products.map((p) => p.id);
-  await prisma.product.updateMany({
-    where: { id: { in: productIds } },
-    data: { isActive: false, lastSyncedAt: new Date() },
-  });
-  invalidate(productIds);
-  return productIds.length;
+  return (await hardDeleteLocalProducts(products)).length;
 }
 
 export async function syncProductsByIds(ids: number[]): Promise<ProductSyncStats> {
@@ -422,6 +451,21 @@ export function formatHesabfaSaveError(err: unknown): string {
         ? err.message
         : 'Unknown error';
   return `Saving product to Hesabfa failed. Please try again. ${reason}`;
+}
+
+export function formatHesabfaDeleteError(err: unknown): string {
+  const reason = err instanceof Error ? err.message : 'Unknown error';
+  return `Deleting product from Hesabfa failed. Please try again. ${reason}`;
+}
+
+/** Delete a product item from Hesabfa by its accounting code. */
+export async function deleteProductFromHesabfa(code: string): Promise<void> {
+  if (!(await isHesabfaConfigured())) {
+    throw new HesabfaError('Hesabfa is not configured in System Settings.');
+  }
+  const normalizedCode = code.trim();
+  if (!normalizedCode) throw new HesabfaError('Product has no Hesabfa item code.');
+  await deleteItem(normalizedCode);
 }
 
 /**

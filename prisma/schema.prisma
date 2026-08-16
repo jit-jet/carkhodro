@@ -976,7 +976,7 @@ model Order {
 model OrderItem {
   id        String @id @default(cuid())
   orderId   String @map("order_id")
-  productId String @map("product_id")
+  productId String? @map("product_id")
 
   // ── Immutable purchase snapshot ───────────────────────────────────────────
   productName     String  @map("product_name")
@@ -992,7 +992,7 @@ model OrderItem {
   quantity        Int
 
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 
   @@index([orderId])
   @@index([productId])

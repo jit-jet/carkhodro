@@ -333,7 +333,9 @@ export async function getPreviousPurchaseProducts(): Promise<InvoiceSearchResult
         select: { productId: true },
         distinct: ['productId'],
       });
-      const ids = purchased.map((p) => p.productId);
+      const ids = purchased
+        .map((p) => p.productId)
+        .filter((id): id is string => id != null);
       if (ids.length === 0) return [];
 
       const rows = await prisma.product.findMany({

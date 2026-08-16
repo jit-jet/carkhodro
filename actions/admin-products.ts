@@ -21,6 +21,8 @@ import {
 } from '@/src/lib/admin-product-where';
 import { isHesabfaConfigured } from '@/src/lib/hesabfa/client';
 import {
+  deleteProductFromHesabfa,
+  formatHesabfaDeleteError,
   formatHesabfaSaveError,
   pushProductToHesabfa,
   saveProductItemToHesabfa,
@@ -405,8 +407,8 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
 }
 
 /**
- * Permanently remove a product and its gallery files from disk.
- * Blocked when the product appears on any order (FK / history).
+ * Permanently remove a product from Hesabfa, the local catalogue, and disk.
+ * Historical order lines keep their immutable product snapshots.
  */
 export async function permanentlyDeleteProduct(id: string): Promise<ActionResult> {
   return runMutation('permanentlyDeleteProduct', async () => {
@@ -414,15 +416,9 @@ export async function permanentlyDeleteProduct(id: string): Promise<ActionResult
       where: { id },
       include: {
         images: { select: { url: true } },
-        _count: { select: { orderItems: true } },
       },
     });
     if (!product) return fail('محصول یافت نشد.');
-    if (product._count.orderItems > 0) {
-      return fail(
-        'این محصول در سفارش‌ها ثبت شده و قابل حذف دائمی نیست. می‌توانید آن را غیرفعال کنید.',
-      );
-    }
 
     const imageUrls = [
       ...(product.mainImage ? [product.mainImage] : []),
@@ -430,14 +426,10 @@ export async function permanentlyDeleteProduct(id: string): Promise<ActionResult
     ];
     const uniqueUrls = [...new Set(imageUrls.filter(Boolean))];
 
-    // Mark inactive and sync to Hesabfa while the row still exists.
-    if (product.isActive) {
-      await prisma.product.update({ where: { id }, data: { isActive: false } });
-    }
     try {
-      await pushProductToHesabfa(id);
-    } catch {
-      // Local delete still proceeds if Hesabfa is unreachable.
+      await deleteProductFromHesabfa(product.hesabfaCode?.trim() || product.sku);
+    } catch (err) {
+      return fail(formatHesabfaDeleteError(err));
     }
 
     await prisma.product.delete({ where: { id } });

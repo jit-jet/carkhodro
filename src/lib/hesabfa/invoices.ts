@@ -74,7 +74,9 @@ async function ensureContactCode(
 async function resolveItemCodes(
   items: OrderWithItems['items'],
 ): Promise<Array<{ item: OrderWithItems['items'][number]; itemCode: string }>> {
-  const productIds = items.map((i) => i.productId);
+  const productIds = items
+    .map((item) => item.productId)
+    .filter((id): id is string => id != null);
   const products = await prisma.product.findMany({
     where: { id: { in: productIds } },
     select: { id: true, hesabfaCode: true, sku: true },
@@ -82,7 +84,7 @@ async function resolveItemCodes(
   const byId = new Map(products.map((p) => [p.id, p]));
 
   return items.map((item) => {
-    const product = byId.get(item.productId);
+    const product = item.productId ? byId.get(item.productId) : undefined;
     const itemCode = product?.hesabfaCode?.trim() || product?.sku || item.productSku;
     return { item, itemCode };
   });

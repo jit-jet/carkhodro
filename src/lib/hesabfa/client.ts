@@ -204,6 +204,10 @@ export async function saveItem(
   return post<HesabfaItem>('item/save', { item }, { unique: true });
 }
 
+export async function deleteItem(code: string): Promise<void> {
+  await post<unknown>('item/delete', { code }, { unique: true });
+}
+
 /**
  * Top-level product categories from Hesabfa (`setting/getProductCategories`).
  * Skips «کالا» / «کالاها» and returns only their direct children

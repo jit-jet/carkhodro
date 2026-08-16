@@ -42,6 +42,7 @@ async function failUnpaidOrder(orderId: string): Promise<void> {
     if (!order || order.paymentStatus !== 'PENDING') return;
 
     for (const item of order.items) {
+      if (!item.productId) continue;
       await tx.product.update({
         where: { id: item.productId },
         data: {
