@@ -99,7 +99,8 @@ export default function HesabfaPanel({ configured, hookUrl, appWebhookUrl }: Pro
       <Card>
         <CardHeader
           title="همگام‌سازی دستی"
-          description="دریافت دسته‌بندی‌ها، کالاها و اشخاص از حسابفا. موجودی از فیلد Stock در item/get خوانده می‌شود. فاکتورها از طریق وب‌هوک فقط روی سفارش‌های موجود به‌روز می‌شوند."
+          description="دریافت دسته‌بندی‌ها، کالاها و اشخاص از حسابفا. فاکتورها از طریق وب‌هوک فقط روی سفارش‌های موجود به‌روز می‌شوند.
+ "
         />
         <div className="px-5 sm:px-6 py-5 space-y-4">
           <div className="flex flex-wrap gap-3">

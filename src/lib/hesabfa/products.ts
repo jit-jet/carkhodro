@@ -23,6 +23,7 @@ import {
 import { topCategoryNameFromNodeFamily } from './category-path';
 import { rialToToman, tomanToRial } from './currency';
 import { stockFromHesabfaItem } from './stock';
+import { planProductIdentitySync } from './product-identity';
 import { computeRetailPrice, computeWholesaleFinal } from '@/src/lib/pricing';
 import {
   HESABFA_ITEM_TYPE_PRODUCT,
@@ -202,45 +203,29 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
     select: { id: true, hesabfaCode: true, hesabfaId: true, sku: true },
   });
 
-  const byCode = new Map<string, string>();
-  const byHesabfaId = new Map<number, string>();
-  const bySku = new Map<string, string>();
-  for (const row of existingRows) {
-    if (row.hesabfaCode) byCode.set(row.hesabfaCode, row.id);
-    if (row.hesabfaId != null) byHesabfaId.set(row.hesabfaId, row.id);
-    bySku.set(row.sku, row.id);
-  }
-
-  function resolveExistingId(p: PreparedItem): string | undefined {
-    return (
-      byCode.get(p.code) ??
-      (p.hesabfaId != null ? byHesabfaId.get(p.hesabfaId) : undefined) ??
-      bySku.get(p.code)
-    );
-  }
-
-  const toUpdate: Array<{ id: string; item: PreparedItem }> = [];
-  const toCreate: PreparedItem[] = [];
-  const claimedIds = new Set<string>();
-
-  for (const item of prepared.values()) {
-    const id = resolveExistingId(item);
-    if (id && !claimedIds.has(id)) {
-      claimedIds.add(id);
-      toUpdate.push({ id, item });
-    } else if (!id) {
-      toCreate.push(item);
-    } else {
-      // Same local row matched by two Hesabfa codes — treat as update of first claim only.
-      stats.skipped++;
-    }
-  }
+  const identityPlan = planProductIdentitySync([...prepared.values()], existingRows);
+  const { toUpdate, toCreate, hesabfaIdsToRelease } = identityPlan;
+  stats.skipped += identityPlan.skipped;
 
   const now = new Date();
   const [fallbackCategoryId, categoryMap] = await Promise.all([
     getFallbackCategoryId(),
     buildCategoryMap(),
   ]);
+
+  // Hesabfa can recycle a deleted item's numeric Id. Release stale owners
+  // before assigning those Ids to the current code owners, otherwise the
+  // unique `hesabfa_id` constraint aborts the entire sync with P2002.
+  if (hesabfaIdsToRelease.length > 0) {
+    await prisma.$transaction(
+      hesabfaIdsToRelease.map(({ productId, hesabfaId }) =>
+        prisma.product.updateMany({
+          where: { id: productId, hesabfaId },
+          data: { hesabfaId: null },
+        }),
+      ),
+    );
+  }
 
   // 3) Concurrent updates (bounded) — including category from NodeFamily.
   await mapPool(toUpdate, UPDATE_CONCURRENCY, async ({ id, item }) => {
