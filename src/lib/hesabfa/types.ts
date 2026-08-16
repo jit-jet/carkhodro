@@ -85,6 +85,8 @@ export interface HesabfaInvoiceItem {
   RowNumber?: number;
   Description?: string;
   ItemCode?: string | null;
+  /** Some invoice responses put the code only on the nested Item object. */
+  Item?: Pick<HesabfaItem, 'Code'> | null;
   Unit?: string | null;
   Quantity?: number;
   UnitPrice?: number;
@@ -136,7 +138,7 @@ export interface HesabfaWebhookPayload {
   Action: number;
   ObjectType: 'Product' | 'Invoice' | 'Contact' | 'WarehouseReceipt' | 'Receipt' | string;
   ObjectIdList: number[];
-  /** Often contains item/contact codes for the changed entity. */
+  /** Non-standard compatibility field; not part of Hesabfa's documented hook body. */
   Extra?: string | null;
 }
 

@@ -2,8 +2,16 @@
  * Hesabfa stock helpers — read `Stock` from item/get, push via purchase invoice.
  */
 
+import { revalidateTag } from 'next/cache';
+import { tags } from '@/actions/cache-tags';
 import { prisma } from '@/src/lib/prisma';
-import { getItemByCode, getItemsById, isHesabfaConfigured, saveInvoice } from './client';
+import {
+  getAllItems,
+  getItemByCode,
+  getItemsById,
+  isHesabfaConfigured,
+  saveInvoice,
+} from './client';
 import { tomanToRial } from './currency';
 import {
   HESABFA_INVOICE_NOTE,
@@ -63,26 +71,80 @@ export async function fetchHesabfaStockByCodes(
   return map;
 }
 
+function invalidateStock(productIds: string[]): void {
+  if (productIds.length === 0) return;
+  revalidateTag(tags.products, 'max');
+  if (productIds.length <= 50) {
+    for (const id of productIds) revalidateTag(tags.product(id), 'max');
+  }
+}
+
+async function persistStockItems(items: HesabfaItem[]): Promise<number> {
+  const stockByCode = new Map<string, number>();
+  for (const item of items) {
+    const code = item.Code != null ? String(item.Code).trim() : '';
+    if (code) stockByCode.set(code, stockFromHesabfaItem(item));
+  }
+  if (stockByCode.size === 0) return 0;
+
+  const codes = [...stockByCode.keys()];
+  const products = await prisma.product.findMany({
+    where: {
+      OR: [{ hesabfaCode: { in: codes } }, { sku: { in: codes } }],
+    },
+    select: { id: true, hesabfaCode: true, sku: true },
+  });
+  if (products.length === 0) return 0;
+
+  const now = new Date();
+  const productIdsByStock = new Map<number, string[]>();
+  for (const product of products) {
+    const hesabfaCode = product.hesabfaCode?.trim() || '';
+    const sku = product.sku.trim();
+    const code = stockByCode.has(hesabfaCode) ? hesabfaCode : sku;
+    const stock = stockByCode.get(code);
+    if (stock === undefined) continue;
+    const productIds = productIdsByStock.get(stock) ?? [];
+    productIds.push(product.id);
+    productIdsByStock.set(stock, productIds);
+  }
+
+  await prisma.$transaction(
+    [...productIdsByStock].map(([stock, productIds]) =>
+      prisma.product.updateMany({
+        where: { id: { in: productIds } },
+        data: { stock, lastSyncedAt: now },
+      }),
+    ),
+  );
+
+  const productIds = [...productIdsByStock.values()].flat();
+  invalidateStock(productIds);
+  return productIds.length;
+}
+
+/** Refresh local stock by item codes extracted from changed invoices. */
+export async function refreshLocalStockFromHesabfaCodes(codes: string[]): Promise<number> {
+  if (!(await isHesabfaConfigured())) return 0;
+  const stockByCode = await fetchHesabfaStockByCodes(codes);
+  const items: HesabfaItem[] = [...stockByCode].map(([Code, Stock]) => ({
+    Code,
+    Stock,
+    Name: '',
+  }));
+  return persistStockItems(items);
+}
+
+/** Deleted invoices have no retrievable lines, so refresh all item stocks. */
+export async function refreshAllLocalStockFromHesabfa(): Promise<number> {
+  if (!(await isHesabfaConfigured())) return 0;
+  return persistStockItems(await getAllItems());
+}
+
 /** Refresh local Product.stock from Hesabfa item/get `Stock` (by numeric ids). */
 export async function refreshLocalStockFromHesabfaIds(ids: number[]): Promise<number> {
   if (!(await isHesabfaConfigured()) || ids.length === 0) return 0;
-
-  const items = await getItemsById(ids);
-  const now = new Date();
-  let updated = 0;
-
-  for (const item of items) {
-    const code = item.Code != null ? String(item.Code).trim() : '';
-    if (!code) continue;
-    const stock = stockFromHesabfaItem(item);
-    const result = await prisma.product.updateMany({
-      where: { OR: [{ hesabfaCode: code }, { sku: code }] },
-      data: { stock, lastSyncedAt: now },
-    });
-    updated += result.count;
-  }
-
-  return updated;
+  return persistStockItems(await getItemsById(ids));
 }
 
 /** Refresh local stock for cart/checkout lines and return live quantities. */

@@ -12,17 +12,24 @@ import {
   syncContactsFromWebhook,
   type ContactSyncStats,
 } from './contacts';
-import { isHesabfaConfigured } from './client';
-import { prisma } from '@/src/lib/prisma';
-import { syncInvoicesByIds, type InvoiceSyncStats } from './invoices';
+import { getInvoicesById, isHesabfaConfigured } from './client';
+import { syncInvoicesFromHesabfa, type InvoiceSyncStats } from './invoices';
 import {
   deleteProductsByHesabfaIds,
   fullSyncProducts,
   syncProductsByIds,
   type ProductSyncStats,
 } from './products';
-import { refreshLocalStockFromHesabfaIds } from './stock';
-import { HESABFA_ACTION, type HesabfaWebhookPayload } from './types';
+import {
+  refreshAllLocalStockFromHesabfa,
+  refreshLocalStockFromHesabfaCodes,
+  refreshLocalStockFromHesabfaIds,
+} from './stock';
+import {
+  HESABFA_ACTION,
+  type HesabfaInvoice,
+  type HesabfaWebhookPayload,
+} from './types';
 
 export interface FullSyncSummary {
   categories: CategorySyncStats;
@@ -38,6 +45,18 @@ function codesFromExtra(extra: string | null | undefined): string[] {
     .map((s) => s.trim())
     .filter(Boolean);
 }
+
+function itemCodesFromInvoices(invoices: HesabfaInvoice[]): string[] {
+  const codes = invoices.flatMap((invoice) =>
+    (invoice.InvoiceItems ?? []).map((line) => {
+      const code = line.ItemCode ?? line.Item?.Code;
+      return code != null ? String(code).trim() : '';
+    }),
+  );
+  return [...new Set(codes.filter(Boolean))];
+}
+
+const INVOICE_DELETE_ACTIONS = new Set([123, 133, 143, 153, 163]);
 
 /** Run a full sync (pull categories/products/contacts). */
 export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
@@ -91,20 +110,30 @@ export async function handleHesabfaWebhook(
   }
 
   if (objectType === 'Invoice') {
-    const stats: InvoiceSyncStats = await syncInvoicesByIds(ids);
-    // Sales/purchase invoices change stock — re-read item Stock from Hesabfa.
-    if (extraCodes.length > 0) {
-      const products = await prisma.product.findMany({
-        where: { OR: [{ hesabfaCode: { in: extraCodes } }, { sku: { in: extraCodes } }] },
-        select: { hesabfaId: true },
-      });
-      const hesabfaIds = products
-        .map((p) => p.hesabfaId)
-        .filter((id): id is number => id != null);
-      const stockUpdated = await refreshLocalStockFromHesabfaIds(hesabfaIds);
-      return { objectType, ...stats, stockUpdated };
+    if (INVOICE_DELETE_ACTIONS.has(action)) {
+      // Deleted invoices cannot be fetched to discover their former lines.
+      // Pull all current item stocks so manual invoice deletions are reflected.
+      const stockUpdated = await refreshAllLocalStockFromHesabfa();
+      return {
+        objectType,
+        updated: 0,
+        skipped: ids.length,
+        stockUpdated,
+        stockItemCodes: 0,
+      };
     }
-    return { objectType, ...stats };
+
+    const invoices = await getInvoicesById(ids);
+    const stats: InvoiceSyncStats = await syncInvoicesFromHesabfa(invoices);
+
+    // Hook IDs are invoice IDs. Read the invoices, extract their item codes,
+    // then pull each item's authoritative Stock value from Hesabfa.
+    const itemCodes = [
+      ...new Set([...itemCodesFromInvoices(invoices), ...extraCodes]),
+    ];
+    const stockUpdated = await refreshLocalStockFromHesabfaCodes(itemCodes);
+
+    return { objectType, ...stats, stockUpdated, stockItemCodes: itemCodes.length };
   }
 
   // Warehouse receipts affect inventory — refresh linked products when possible.
