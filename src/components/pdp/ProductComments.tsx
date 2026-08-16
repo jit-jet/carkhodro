@@ -122,7 +122,7 @@ export default function ProductComments({ description, comments: initial, produc
       : 0;
 
   return (
-    <div>
+    <div className="min-w-0">
       {/* ── Tabs ───────────────────────────────────────────────── */}
       <div className="flex border-b border-gray-100">
         {(
@@ -150,7 +150,7 @@ export default function ProductComments({ description, comments: initial, produc
       {activeTab === 'description' && (
         <div className="p-6 lg:p-8">
           <h2 className="text-base font-bold text-charcoal mb-4">توضیحات کامل محصول</h2>
-          <p className="text-sm text-gray-600 leading-8 whitespace-pre-line">{description}</p>
+          <p className="text-sm text-gray-600 leading-8 whitespace-pre-line [overflow-wrap:anywhere]">{description}</p>
         </div>
       )}
 
@@ -159,13 +159,13 @@ export default function ProductComments({ description, comments: initial, produc
         <div className="p-6 lg:p-8 space-y-6">
           {/* Summary row */}
           {comments.length > 0 && (
-            <div className="flex items-center gap-4 bg-silver-light rounded-xl px-5 py-4">
+            <div className="flex min-w-0 items-center gap-4 bg-silver-light rounded-xl px-4 py-4 sm:px-5">
               <div className="text-center">
                 <p className="text-3xl font-bold text-charcoal leading-none">{avgRating.toFixed(1)}</p>
                 <StarRow rating={Math.round(avgRating)} size="sm" />
                 <p className="text-xs text-gray-400 mt-0.5">{comments.length.toLocaleString('fa-IR')} نظر</p>
               </div>
-              <div className="flex-1 space-y-1">
+              <div className="min-w-0 flex-1 space-y-1">
                 {[5, 4, 3, 2, 1].map(star => {
                   const count = comments.filter(c => c.rating === star).length;
                   const pct   = comments.length > 0 ? (count / comments.length) * 100 : 0;
@@ -287,15 +287,15 @@ export default function ProductComments({ description, comments: initial, produc
             <div className="space-y-4">
               {comments.map(comment => (
                 <div key={comment.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="flex items-center gap-3">
+                  <div className="flex min-w-0 flex-wrap items-start justify-between gap-3 mb-3">
+                    <div className="flex min-w-0 items-center gap-3">
                       {/* Avatar initial */}
                       <div className="w-9 h-9 rounded-full bg-accent/20 text-accent-dark font-bold text-sm flex items-center justify-center shrink-0">
                         {comment.author.charAt(0)}
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-sm text-charcoal">{comment.author}</span>
+                      <div className="min-w-0">
+                        <div className="flex min-w-0 flex-wrap items-center gap-2">
+                          <span className="font-semibold text-sm text-charcoal [overflow-wrap:anywhere]">{comment.author}</span>
                           {comment.verified && (
                             <span className="flex items-center gap-1 bg-blue-50 text-blue-600 text-[10px] font-medium px-2 py-0.5 rounded-full">
                               <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -310,7 +310,7 @@ export default function ProductComments({ description, comments: initial, produc
                     </div>
                     <StarRow rating={comment.rating} size="sm" />
                   </div>
-                  <p className="text-sm text-gray-700 leading-7">{comment.text}</p>
+                  <p className="text-sm text-gray-700 leading-7 [overflow-wrap:anywhere]">{comment.text}</p>
                   {comment.adminReply && (
                     <div className="mt-4 pt-4 border-t border-gray-100">
                       <div className="rounded-xl bg-amber-50/80 border border-amber-100 px-4 py-3">
@@ -320,7 +320,7 @@ export default function ProductComments({ description, comments: initial, produc
                             <span className="text-[11px] text-gray-400">{comment.adminReplyDate}</span>
                           )}
                         </div>
-                        <p className="text-sm text-charcoal leading-7">{comment.adminReply}</p>
+                        <p className="text-sm text-charcoal leading-7 [overflow-wrap:anywhere]">{comment.adminReply}</p>
                       </div>
                     </div>
                   )}

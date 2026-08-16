@@ -39,7 +39,7 @@ export default function ImageGallery({ images, name }: Props) {
   }, [canZoom]);
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-3">
+    <div className="min-w-0 max-w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-3">
       {/* ── Main image with hover zoom (desktop only) ──────────── */}
       <div
         className={[
@@ -85,7 +85,7 @@ export default function ImageGallery({ images, name }: Props) {
 
       {/* ── Thumbnail strip (only when more than one image) ─────── */}
       {hasMultiple && (
-        <div className="flex gap-2 overflow-x-auto pb-0.5" dir="ltr">
+        <div className="flex max-w-full gap-2 overflow-x-auto pb-0.5" dir="ltr">
           {thumbs.map((img, idx) => (
             <button
               key={idx}

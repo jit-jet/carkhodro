@@ -105,6 +105,36 @@ export async function getPartsBrandsHome(): Promise<
   }, []);
 }
 
+/** All active parts brands for the public brands directory. */
+export async function getPartsBrandsCatalog(): Promise<
+  { id: number; name: string; slug: string; image: string }[]
+> {
+  'use cache';
+  cacheLife('days');
+  cacheTag(tags.partsBrands, tags.siteSettings);
+
+  return safeQuery('getPartsBrandsCatalog', async () => {
+    const [rows, fallbackImage] = await Promise.all([
+      prisma.partsBrand.findMany({
+        where: { isActive: true },
+        orderBy: { name: 'asc' },
+        select: { id: true, name: true, slug: true, logoImage: true },
+      }),
+      getDefaultImageUrl(),
+    ]);
+
+    return rows.map((brand) => ({
+      id: brand.id,
+      name: brand.name,
+      slug: brand.slug,
+      image:
+        brand.logoImage?.trim() && brand.logoImage !== '/logo.png'
+          ? brand.logoImage
+          : fallbackImage,
+    }));
+  }, []);
+}
+
 export interface AdminPartsBrandVM {
   id: number;
   name: string;

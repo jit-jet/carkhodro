@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     prisma.category.findMany({ where: { isActive: true }, select: { key: true, updatedAt: true } }),
     prisma.post.findMany({ where: { isPublished: true }, select: { slug: true, updatedAt: true } }),
   ]);
-  const staticPages = ['/', '/products', '/blog', '/about', '/contact', '/faq', '/rules'].map((path) => ({ url: siteUrl(path), lastModified: new Date(), changeFrequency: 'weekly' as const }));
+  const staticPages = ['/', '/products', '/brands', '/blog', '/about', '/contact', '/faq', '/rules'].map((path) => ({ url: siteUrl(path), lastModified: new Date(), changeFrequency: 'weekly' as const }));
   return [
     ...staticPages,
     ...products.map((p) => ({ url: siteUrl(`/products/${p.id}`), lastModified: p.updatedAt, changeFrequency: 'daily' as const })),

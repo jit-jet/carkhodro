@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import SliderWrapper from "@/src/components/ui/SliderWrapper";
 import SectionTitle from "@/src/components/ui/SectionTitle";
+import BrandLogo from "@/src/components/ui/BrandLogo";
 
 export type PartsBrandSlide = {
   id: number;
@@ -19,6 +19,8 @@ export default function BrandsSlider({ brands }: { brands: PartsBrandSlide[] }) 
         <SectionTitle
           title="جستجو بر اساس برند قطعه"
           subtitle="برند قطعه مورد نظر خود را انتخاب کنید"
+          linkHref="/brands"
+          linkLabel="مشاهده همه"
         />
 
         <SliderWrapper>
@@ -29,10 +31,10 @@ export default function BrandsSlider({ brands }: { brands: PartsBrandSlide[] }) 
               className="flex-shrink-0 w-36 sm:w-40 bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg border border-gray-100 hover:border-accent transition-all duration-200 group flex flex-col items-center text-center"
             >
               <div className="relative w-16 h-16 rounded-2xl overflow-hidden mb-3 shadow-sm group-hover:scale-110 transition-transform duration-200 bg-gray-100">
-                <Image
+                <BrandLogo
                   src={brand.image}
                   alt={brand.name}
-                  fill
+                  sizes="64px"
                   className="object-cover"
                 />
               </div>

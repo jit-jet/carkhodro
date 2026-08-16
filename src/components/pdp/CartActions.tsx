@@ -113,7 +113,7 @@ export default function CartActions({ product }: Props) {
         ) : (
           <div className="space-y-2">
             <p className="text-sm text-gray-500">شماره موبایل خود را وارد کنید تا موجود شد خبرتان دهیم:</p>
-            <div className="flex gap-2">
+            <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
               <input
                 type="tel"
                 dir="ltr"
@@ -121,7 +121,7 @@ export default function CartActions({ product }: Props) {
                 placeholder="09xxxxxxxxx"
                 onChange={e => { setPhone(e.target.value); setNotifyState('idle'); }}
                 className={[
-                  'flex-1 border rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:outline-none transition-colors',
+                  'min-w-0 flex-1 border rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:outline-none transition-colors',
                   notifyState === 'error'
                     ? 'border-red-400 bg-red-50 placeholder-red-300'
                     : 'border-gray-200 focus:border-accent',
@@ -148,9 +148,9 @@ export default function CartActions({ product }: Props) {
     <div className="space-y-3">
 
       {/* Qty + Add to cart row */}
-      <div className="flex gap-3">
+      <div className="flex min-w-0 flex-col gap-3 sm:flex-row">
         {/* Quantity stepper */}
-        <div dir="ltr" className="flex items-center border border-gray-200 rounded-xl overflow-hidden shrink-0">
+        <div dir="ltr" className="flex items-center justify-between border border-gray-200 rounded-xl overflow-hidden sm:justify-start sm:shrink-0">
           <button
             onClick={() => changeQty(-1)}
             disabled={qty <= 1}
@@ -186,7 +186,7 @@ export default function CartActions({ product }: Props) {
           onClick={handleAddToCart}
           disabled={pending}
           className={[
-            'flex-1 flex items-center justify-center gap-2 font-bold text-base py-3 rounded-xl transition-all duration-200 disabled:opacity-60',
+            'min-w-0 flex-1 flex items-center justify-center gap-2 px-3 font-bold text-base py-3 rounded-xl transition-all duration-200 disabled:opacity-60',
             added
               ? 'bg-green-500 text-white scale-95'
               : 'bg-accent hover:bg-accent-dark active:scale-95 text-charcoal',

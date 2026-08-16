@@ -15,14 +15,14 @@ export default function RelatedProducts({ products }: Props) {
   if (products.length === 0) return null;
 
   return (
-    <section>
+    <section className="min-w-0">
       <h2 className="text-lg font-bold text-charcoal mb-4">محصولات مرتبط</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {products.map(p => (
           <Link
             key={p.id}
             href={`/products/${p.id}`}
-            className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 overflow-hidden group flex flex-col"
+            className="min-w-0 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 overflow-hidden group flex flex-col"
           >
             {/* Image */}
             <div className="relative h-36 bg-white overflow-hidden">
@@ -59,7 +59,7 @@ export default function RelatedProducts({ products }: Props) {
                         {formatPrice(p.oldPrice)}
                       </p>
                     )}
-                    <p className={`text-sm font-bold leading-none ${p.stock > 0 ? 'text-accent-dark' : 'text-gray-400'}`}>
+                    <p className={`text-xs font-bold leading-tight [overflow-wrap:anywhere] sm:text-sm ${p.stock > 0 ? 'text-accent-dark' : 'text-gray-400'}`}>
                       {p.stock > 0 ? formatPrice(p.price) : 'ناموجود'}
                     </p>
                   </>

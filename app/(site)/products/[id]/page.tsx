@@ -114,7 +114,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   ];
 
   return (
-    <div className="bg-silver-light min-h-screen" dir="rtl">
+    <div className="bg-silver-light min-h-screen overflow-x-clip" dir="rtl">
       <JsonLd data={[
         { '@context': 'https://schema.org', '@type': 'Product', name: product.name, sku: product.sku, image: product.images, description: plainText(product.description), brand: { '@type': 'Brand', name: product.brand }, offers: { '@type': 'Offer', url: siteUrl(`/products/${product.id}`), priceCurrency: 'IRR', price: product.price * 10, availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }, aggregateRating: product.reviewCount > 0 ? { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviewCount } : undefined, review: comments.map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.author }, reviewRating: { '@type': 'Rating', ratingValue: review.rating }, reviewBody: review.text })) },
         { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'خانه', item: siteUrl('/') }, { '@type': 'ListItem', position: 2, name: 'محصولات', item: siteUrl('/products') }, { '@type': 'ListItem', position: 3, name: product.name, item: siteUrl(`/products/${product.id}`) }] },
@@ -123,12 +123,12 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
       {/* ── Breadcrumb ──────────────────────────────────────────── */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 py-3">
-          <nav className="flex items-center gap-2 text-sm text-gray-500 flex-wrap" aria-label="breadcrumb">
+          <nav className="flex min-w-0 items-center gap-2 text-sm text-gray-500 flex-wrap" aria-label="breadcrumb">
             <Link href="/" className="hover:text-accent transition-colors">خانه</Link>
             <span className="text-gray-300">/</span>
             <Link href="/products" className="hover:text-accent transition-colors">محصولات</Link>
             <span className="text-gray-300">/</span>
-            <span className="text-charcoal font-medium line-clamp-1">{product.name}</span>
+            <span className="min-w-0 text-charcoal font-medium line-clamp-1">{product.name}</span>
           </nav>
         </div>
       </div>
@@ -136,7 +136,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
         {/* ── Top: gallery + info ─────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <div className="grid min-w-0 grid-cols-1 lg:grid-cols-2 gap-6 items-start">
 
           {/* Image gallery */}
           <ImageGallery
@@ -145,7 +145,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
           />
 
           {/* Product info card */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+          <div className="min-w-0 bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 space-y-5">
 
             {/* Category tag */}
             <span className="inline-block bg-silver-light text-gray-500 text-xs font-medium px-3 py-1 rounded-full">
@@ -153,12 +153,12 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
             </span>
 
             {/* Title */}
-            <h1 className="text-xl lg:text-2xl font-bold text-charcoal leading-8">
+            <h1 className="text-xl lg:text-2xl font-bold text-charcoal leading-8 [overflow-wrap:anywhere]">
               {product.name}
             </h1>
 
             {/* Rating + review count */}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
               <StarDisplay rating={Math.round(product.rating)} />
               <span className="text-sm font-semibold text-charcoal">{product.rating.toFixed(1)}</span>
               <span className="text-sm text-gray-400">
@@ -188,7 +188,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
                       )}
                     </div>
                   )}
-                  <p className="text-2xl font-bold text-accent-dark">
+                  <p className="text-xl sm:text-2xl font-bold text-accent-dark [overflow-wrap:anywhere]">
                     {formatPrice(product.price)}
                   </p>
                 </>
@@ -197,14 +197,14 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
 
             {/* Attributes table */}
             <div className="border border-gray-100 rounded-xl overflow-hidden">
-              <table className="w-full text-sm">
+              <table className="w-full table-fixed text-sm">
                 <tbody>
                   {attrs.map(([label, value], i) => (
                     <tr key={label} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50/60'}>
-                      <td className="px-4 py-2.5 text-gray-500 font-medium border-b border-gray-100 w-36 whitespace-nowrap">
+                      <td className="w-28 border-b border-gray-100 px-3 py-2.5 text-gray-500 font-medium sm:w-36 sm:px-4">
                         {label}
                       </td>
-                      <td className="px-4 py-2.5 text-charcoal border-b border-gray-100">
+                      <td className="border-b border-gray-100 px-3 py-2.5 text-charcoal [overflow-wrap:anywhere] sm:px-4">
                         {value}
                       </td>
                     </tr>
@@ -226,7 +226,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
         </div>
 
         {/* ── Description + Comments tabs ─────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="min-w-0 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <ProductComments
             description={product.description}
             comments={comments}
