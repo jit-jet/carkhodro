@@ -142,10 +142,31 @@ export interface HesabfaWebhookPayload {
   Extra?: string | null;
 }
 
-/** Common Hesabfa action codes observed in docs / change feed. */
+/** Hesabfa change-hook action codes from the official TypesTable documentation. */
 export const HESABFA_ACTION = {
-  CONTACT_DELETE: 32,
+  CONTACT_SAVE: 31,
+  CONTACT_EDIT: 32,
+  CONTACT_DELETE: 33,
+  PRODUCT_SAVE: 51,
+  PRODUCT_EDIT: 52,
   PRODUCT_DELETE: 53,
+  PRODUCT_IMPORT: 101,
+  CONTACT_IMPORT: 102,
+  SALES_INVOICE_SAVE: 121,
+  SALES_INVOICE_EDIT: 122,
+  SALES_INVOICE_DELETE: 123,
+  PURCHASE_INVOICE_SAVE: 131,
+  PURCHASE_INVOICE_EDIT: 132,
+  PURCHASE_INVOICE_DELETE: 133,
+  SALES_RETURN_SAVE: 141,
+  SALES_RETURN_EDIT: 142,
+  SALES_RETURN_DELETE: 143,
+  PURCHASE_RETURN_SAVE: 151,
+  PURCHASE_RETURN_EDIT: 152,
+  PURCHASE_RETURN_DELETE: 153,
+  WASTE_INVOICE_SAVE: 161,
+  WASTE_INVOICE_EDIT: 162,
+  WASTE_INVOICE_DELETE: 163,
 } as const;
 
 export const HESABFA_INVOICE_TYPE_SALE = 0;

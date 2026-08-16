@@ -3,7 +3,7 @@
  * Hesabfa → site only updates orders that already have a `hesabfaCode`.
  */
 
-import type { OrderStatus, PaymentStatus, Prisma } from '@/generated/prisma_client';
+import type { Prisma } from '@/generated/prisma_client';
 import { prisma } from '@/src/lib/prisma';
 import { netLineTotal } from '@/src/lib/pricing';
 import {
@@ -23,6 +23,8 @@ import {
   type HesabfaInvoice,
 } from './types';
 import { getSystemConfig } from '@/src/lib/system-settings';
+import { planInvoiceIdentitySync } from './invoice-identity';
+import { mapHesabfaToLocalStatus } from './invoice-status';
 
 export interface InvoiceSyncStats {
   updated: number;
@@ -311,33 +313,6 @@ export async function syncOrderStatusToHesabfa(orderId: string): Promise<void> {
   });
 }
 
-function mapHesabfaToLocalStatus(inv: HesabfaInvoice): {
-  status?: OrderStatus;
-  paymentStatus?: PaymentStatus;
-  paidAt?: Date | null;
-  shippedAt?: Date | null;
-} {
-  const paid = Boolean(inv.Paid && inv.Paid > 0) || (inv.Rest != null && inv.Rest <= 0);
-  const sent = inv.Sent === true;
-  const patch: {
-    status?: OrderStatus;
-    paymentStatus?: PaymentStatus;
-    paidAt?: Date | null;
-    shippedAt?: Date | null;
-  } = {};
-
-  if (paid) {
-    patch.paymentStatus = 'PAID';
-    patch.paidAt = new Date();
-    if (!sent) patch.status = 'PAID';
-  }
-  if (sent) {
-    patch.status = 'SHIPPED';
-    patch.shippedAt = new Date();
-  }
-  return patch;
-}
-
 /**
  * Apply Hesabfa invoice changes to existing local orders only.
  * Unknown invoices (no local hesabfaCode / hesabfaId match) are skipped.
@@ -346,38 +321,47 @@ export async function syncInvoicesFromHesabfa(
   invoices: HesabfaInvoice[],
 ): Promise<InvoiceSyncStats> {
   const stats: InvoiceSyncStats = { updated: 0, skipped: 0 };
+  if (invoices.length === 0) return stats;
 
-  for (const inv of invoices) {
-    const number = invoiceNumber(inv);
-    const hesabfaId = typeof inv.Id === 'number' ? inv.Id : undefined;
+  const prepared = invoices.map((invoice) => ({
+    invoice,
+    number: invoiceNumber(invoice),
+    hesabfaId: typeof invoice.Id === 'number' ? invoice.Id : undefined,
+    invoiceType: typeof invoice.InvoiceType === 'number' ? invoice.InvoiceType : undefined,
+  }));
+  const numbers = prepared.map((row) => row.number).filter(Boolean);
+  const hesabfaIds = prepared
+    .map((row) => row.hesabfaId)
+    .filter((id): id is number => id != null);
+  const orders = await prisma.order.findMany({
+    where: {
+      OR: [
+        ...(numbers.length > 0 ? [{ hesabfaCode: { in: numbers } }] : []),
+        ...(hesabfaIds.length > 0 ? [{ hesabfaId: { in: hesabfaIds } }] : []),
+      ],
+    },
+    select: { id: true, hesabfaCode: true, hesabfaId: true },
+  });
+  const identityPlan = planInvoiceIdentitySync(prepared, orders);
+  stats.skipped = identityPlan.skipped;
 
-    const order =
-      (number
-        ? await prisma.order.findUnique({
-            where: { hesabfaCode: number },
-            select: { id: true, status: true, paymentStatus: true },
-          })
-        : null) ??
-      (hesabfaId != null
-        ? await prisma.order.findUnique({
-            where: { hesabfaId },
-            select: { id: true, status: true, paymentStatus: true },
-          })
-        : null);
+  if (identityPlan.hesabfaIdsToRelease.length > 0) {
+    await prisma.$transaction(
+      identityPlan.hesabfaIdsToRelease.map(({ orderId, hesabfaId }) =>
+        prisma.order.updateMany({
+          where: { id: orderId, hesabfaId },
+          data: { hesabfaId: null },
+        }),
+      ),
+    );
+  }
 
-    if (!order) {
-      stats.skipped++;
-      continue;
-    }
-
+  for (const { orderId, invoice: preparedInvoice } of identityPlan.matches) {
+    const { invoice: inv, number, hesabfaId } = preparedInvoice;
     const patch = mapHesabfaToLocalStatus(inv);
-    if (!patch.status && !patch.paymentStatus) {
-      stats.skipped++;
-      continue;
-    }
 
     await prisma.order.update({
-      where: { id: order.id },
+      where: { id: orderId },
       data: {
         ...patch,
         hesabfaCode: number || undefined,

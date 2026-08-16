@@ -354,7 +354,12 @@ export async function deleteProductsByHesabfaIds(ids: number[]): Promise<number>
 
 export async function syncProductsByIds(ids: number[]): Promise<ProductSyncStats> {
   const items = await getItemsById(ids);
-  return syncProductsFromHesabfa(items);
+  const stats = await syncProductsFromHesabfa(items);
+  const returnedIds = new Set(
+    items.map((item) => item.Id).filter((id): id is number => typeof id === 'number'),
+  );
+  stats.skipped += ids.filter((id) => !returnedIds.has(id)).length;
+  return stats;
 }
 
 export async function fullSyncProducts(): Promise<ProductSyncStats> {

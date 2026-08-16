@@ -26,10 +26,10 @@ import {
   refreshLocalStockFromHesabfaIds,
 } from './stock';
 import {
-  HESABFA_ACTION,
   type HesabfaInvoice,
   type HesabfaWebhookPayload,
 } from './types';
+import { classifyHesabfaWebhookAction } from './webhook-actions';
 
 export interface FullSyncSummary {
   categories: CategorySyncStats;
@@ -55,8 +55,6 @@ function itemCodesFromInvoices(invoices: HesabfaInvoice[]): string[] {
   );
   return [...new Set(codes.filter(Boolean))];
 }
-
-const INVOICE_DELETE_ACTIONS = new Set([123, 133, 143, 153, 163]);
 
 /** Run a full sync (pull categories/products/contacts). */
 export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
@@ -89,10 +87,11 @@ export async function handleHesabfaWebhook(
 
   const objectType = payload.ObjectType;
   const action = Number(payload.Action);
+  const actionKind = classifyHesabfaWebhookAction(objectType, action);
   const extraCodes = codesFromExtra(payload.Extra);
 
   if (objectType === 'Product') {
-    if (action === HESABFA_ACTION.PRODUCT_DELETE) {
+    if (actionKind === 'delete') {
       const deleted = await deleteProductsByHesabfaIds(ids);
       if (deleted === ids.length) return { objectType, deleted };
 
@@ -106,23 +105,25 @@ export async function handleHesabfaWebhook(
         reconciled: true,
       };
     }
+    if (actionKind !== 'upsert') return { objectType, action, ignored: true };
     // Product sync also pulls categories (Hesabfa has no Category ObjectType).
     const stats = await syncProductsByIds(ids);
     return { objectType, ...stats };
   }
 
   if (objectType === 'Contact') {
-    if (action === HESABFA_ACTION.CONTACT_DELETE) {
+    if (actionKind === 'delete') {
       const deactivated = await deactivateUsersByHesabfaIds(ids);
       return { objectType, deactivated };
     }
+    if (actionKind !== 'upsert') return { objectType, action, ignored: true };
     // Pull contact from Hesabfa and apply name/phone/shop/address/active to the site user.
     const stats = await syncContactsFromWebhook(ids, extraCodes);
     return { objectType, ...stats };
   }
 
   if (objectType === 'Invoice') {
-    if (INVOICE_DELETE_ACTIONS.has(action)) {
+    if (actionKind === 'delete') {
       // Deleted invoices cannot be fetched to discover their former lines.
       // Pull all current item stocks so manual invoice deletions are reflected.
       const stockUpdated = await refreshAllLocalStockFromHesabfa();
@@ -134,9 +135,16 @@ export async function handleHesabfaWebhook(
         stockItemCodes: 0,
       };
     }
+    if (actionKind !== 'upsert') return { objectType, action, ignored: true };
 
     const invoices = await getInvoicesById(ids);
     const stats: InvoiceSyncStats = await syncInvoicesFromHesabfa(invoices);
+    const returnedIds = new Set(
+      invoices
+        .map((invoice) => invoice.Id)
+        .filter((id): id is number => typeof id === 'number'),
+    );
+    stats.skipped += ids.filter((id) => !returnedIds.has(id)).length;
 
     // Hook IDs are invoice IDs. Read the invoices, extract their item codes,
     // then pull each item's authoritative Stock value from Hesabfa.

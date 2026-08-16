@@ -324,7 +324,14 @@ export async function syncContactsFromWebhook(
     contacts = byCode;
   }
 
-  return syncContactsFromHesabfa(contacts);
+  const stats = await syncContactsFromHesabfa(contacts);
+  const returnedIds = new Set(
+    contacts
+      .map((contact) => contact.Id)
+      .filter((id): id is number => typeof id === 'number'),
+  );
+  stats.skipped += ids.filter((id) => !returnedIds.has(id)).length;
+  return stats;
 }
 
 export async function fullSyncContacts(): Promise<ContactSyncStats> {
