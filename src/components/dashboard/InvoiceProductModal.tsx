@@ -47,7 +47,6 @@ export default function InvoiceProductModal({
   // the timeout callback (never synchronously in the effect body) so a new query
   // doesn't trigger a cascading render.
   useEffect(() => {
-    setHighlightedIndex(-1);
     if (mode !== 'search') return;
     const q = query.trim();
     let active = true;
@@ -127,7 +126,10 @@ export default function InvoiceProductModal({
         <div className="p-4">
           <input
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setHighlightedIndex(-1);
+            }}
             onKeyDown={handleKeyDown}
             autoFocus
             placeholder={mode === 'search' ? 'نام قطعه، کد یا برند…' : 'جستجو در خریدهای قبلی…'}
@@ -169,7 +171,6 @@ function ProductRow({
   highlighted: boolean;
 }) {
   const [qty, setQty] = useState(1);
-  const outOfStock = product.stock < 1;
 
   return (
     <li className={["flex items-center gap-3 py-3", highlighted ? "border-2 border-accent rounded-xl px-2" : ""].join(" ")}>
@@ -194,8 +195,6 @@ function ProductRow({
         </p>
         {product.callForPrice ? (
           <p className="text-[11px] text-amber-700 mt-1">فقط با تماس</p>
-        ) : outOfStock ? (
-          <p className="text-[11px] text-red-500 mt-1">ناموجود</p>
         ) : (
           <div className="flex items-center gap-1.5 mt-1.5 justify-end">
             <input

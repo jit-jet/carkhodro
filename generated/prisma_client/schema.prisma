@@ -424,8 +424,6 @@ model Product {
   cartonQuantity Int     @default(1) @map("carton_quantity")
   /// Display unit label on the storefront (e.g. "عدد", "بسته", "متر")
   unit           String  @default("عدد")
-  /// true = OEM / genuine part; false = aftermarket
-  isOriginal     Boolean @default(true) @map("is_original")
 
   // ── Content (managed by local admin) ──────────────────────────────────────
   mainImage       String? @map("main_image")
@@ -906,9 +904,10 @@ model Order {
   /// partner's orders list and printable invoice — distinct from the cuid `id`.
   orderNumber      Int           @unique @default(autoincrement()) @map("order_number")
   userId           String        @map("user_id")
-  /// FK kept for history; address data also snapshotted below.
-  addressId        String        @map("address_id")
-  shippingOptionId String        @map("shipping_option_id")
+  /// Optional for wholesale invoices, which may be registered before delivery
+  /// details are known. Retail checkout always supplies both relations.
+  addressId        String?       @map("address_id")
+  shippingOptionId String?       @map("shipping_option_id")
   status           OrderStatus   @default(NEW)
   paymentMethod    PaymentMethod @map("payment_method")
   paymentStatus    PaymentStatus @default(PENDING) @map("payment_status")
@@ -957,10 +956,10 @@ model Order {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
-  user           User           @relation(fields: [userId], references: [id])
-  address        Address        @relation(fields: [addressId], references: [id])
-  shippingOption ShippingOption @relation(fields: [shippingOptionId], references: [id])
-  coupon         DiscountCode?  @relation(fields: [discountCodeId], references: [id], onDelete: SetNull)
+  user           User            @relation(fields: [userId], references: [id])
+  address        Address?        @relation(fields: [addressId], references: [id])
+  shippingOption ShippingOption? @relation(fields: [shippingOptionId], references: [id])
+  coupon         DiscountCode?   @relation(fields: [discountCodeId], references: [id], onDelete: SetNull)
   items          OrderItem[]
   survey         OrderSurvey?
 

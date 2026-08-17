@@ -104,7 +104,6 @@ export interface ReviewVM {
 
 export interface PDPProductVM extends ProductVM {
   unit: string;
-  isOriginal: boolean;
   description: string;
 }
 
@@ -570,7 +569,6 @@ export function toPDPProductVM(
   return {
     ...toProductVM(p, role, fallbackImage),
     unit: p.unit?.trim() || 'عدد',
-    isOriginal: p.isOriginal,
     description: p.description ?? '',
   };
 }

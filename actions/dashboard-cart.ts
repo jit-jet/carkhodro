@@ -34,7 +34,6 @@ import {
   mergeCartQuantity,
   clampOrderQuantity,
   canUseDashboardCart,
-  isProductInStock,
 } from '@/src/lib/user-role';
 import {
   isCallForPriceForRole,
@@ -146,7 +145,6 @@ export async function addToInvoice(
       },
     });
     if (!product) return fail('محصول یافت نشد.');
-    if (!isProductInStock(product.stock)) return fail('این محصول موجود نیست.');
 
     const role = pricingRoleFromUser(user.role);
     if (
@@ -200,9 +198,6 @@ export async function setInvoiceLineQty(
       include: { product: { select: { stock: true } } },
     });
     if (!item) return fail('ردیف فاکتور یافت نشد.');
-    if (!isProductInStock(item.product.stock)) {
-      return fail('این محصول ناموجود است.');
-    }
 
     const role = pricingRoleFromUser(user.role);
     const qty = clampOrderQuantity(Math.round(quantity), item.product.stock, role);
@@ -404,10 +399,6 @@ export async function submitInvoice(input: {
     ]);
 
     if (!cart || cart.items.length === 0) return fail('سبد خرید شما خالی است.');
-    if (!address) {
-      return fail('برای ثبت فاکتور ابتدا آدرس خود را در «پروفایل من» تکمیل کنید.');
-    }
-    if (!shipping) return fail('روش ارسالی برای ثبت فاکتور پیدا نشد.');
 
     for (const item of cart.items) {
       if (
@@ -420,9 +411,6 @@ export async function submitInvoice(input: {
         )
       ) {
         return fail(`«${item.product.name}» ${CALL_FOR_PRICE_BLOCKED_MSG}`);
-      }
-      if (!isProductInStock(item.product.stock)) {
-        return fail(`«${item.product.name}» ناموجود است.`);
       }
     }
 
@@ -491,15 +479,15 @@ export async function submitInvoice(input: {
       const created = await tx.order.create({
         data: {
           userId: user.id,
-          addressId: address.id,
-          shippingOptionId: shipping.id,
+          addressId: address?.id ?? null,
+          shippingOptionId: shipping?.id ?? null,
           paymentMethod: 'COD',
           paymentTerms,
           status: 'NEW',
-          snapshotProvince: address.city.province.name,
-          snapshotCity: address.city.name,
-          snapshotStreet: address.street,
-          snapshotPostalCode: address.postalCode,
+          snapshotProvince: address?.city.province.name ?? '',
+          snapshotCity: address?.city.name ?? '',
+          snapshotStreet: address?.street ?? '',
+          snapshotPostalCode: address?.postalCode ?? '',
           subtotal,
           shippingCost: BigInt(0),
           taxAmount: BigInt(0),

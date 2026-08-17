@@ -59,8 +59,8 @@ export default function RelatedProducts({ products }: Props) {
                         {formatPrice(p.oldPrice)}
                       </p>
                     )}
-                    <p className={`text-xs font-bold leading-tight [overflow-wrap:anywhere] sm:text-sm ${p.stock > 0 ? 'text-accent-dark' : 'text-gray-400'}`}>
-                      {p.stock > 0 ? formatPrice(p.price) : 'ناموجود'}
+                    <p className={`text-xs font-bold leading-tight [overflow-wrap:anywhere] sm:text-sm ${p.orderQuantityCap !== 0 ? 'text-accent-dark' : 'text-gray-400'}`}>
+                      {p.orderQuantityCap !== 0 ? formatPrice(p.price) : 'ناموجود'}
                     </p>
                   </>
                 )}

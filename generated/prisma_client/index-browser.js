@@ -276,7 +276,6 @@ exports.Prisma.ProductScalarFieldEnum = {
   packQuantity: 'packQuantity',
   cartonQuantity: 'cartonQuantity',
   unit: 'unit',
-  isOriginal: 'isOriginal',
   mainImage: 'mainImage',
   description: 'description',
   metaTitle: 'metaTitle',

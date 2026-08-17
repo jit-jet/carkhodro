@@ -7,19 +7,21 @@ import { isWholesaleUser } from '@/src/lib/user-role';
 
 /** Per-line UI cap for add-to-cart quantity inputs. `null` = no cap (wholesale). */
 export function orderQuantityCapForRole(stock: number, role: PricingRole): number | null {
-  if (stock < 1) return 0;
-  return isWholesaleUser(role) ? null : stock;
+  if (isWholesaleUser(role)) return null;
+  return stock < 1 ? 0 : stock;
 }
 
 export function resolveOrderQtyUI(product: {
   stock: number;
   orderQuantityCap?: number | null;
 }) {
-  const inStock = product.stock > 0;
   const cap =
     product.orderQuantityCap !== undefined
       ? product.orderQuantityCap
       : orderQuantityCapForRole(product.stock, null);
+  // Wholesale products use a null cap and remain orderable even when current
+  // inventory is zero or negative (the invoice acts as a backorder).
+  const inStock = cap === null || product.stock > 0;
   const stockCapped = inStock && cap !== null;
   return {
     inStock,

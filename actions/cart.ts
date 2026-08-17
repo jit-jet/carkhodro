@@ -67,10 +67,12 @@ export async function addToCart(
       },
     });
     if (!product) return fail('محصول یافت نشد.');
-    if (product.stock < 1) return fail('این محصول موجود نیست.');
 
     const user = await getCurrentUser();
     const role = pricingRoleFromUser(user?.role);
+    if (product.stock < 1 && role !== 'WHOLESALE') {
+      return fail('این محصول موجود نیست.');
+    }
 
     if (
       isCallForPriceForRole(

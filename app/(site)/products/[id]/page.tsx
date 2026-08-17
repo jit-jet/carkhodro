@@ -109,7 +109,6 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
     ['دسته‌های کالا',  product.categoryLabel],
     ['نام برند',       product.brand],
     ['مدل خودرو',      compatibleLabel],
-    ['اصلی',           product.isOriginal ? 'بله' : 'خیر'],
     ['کشور سازنده',    `${flag} ${product.origin}`],
   ];
 
