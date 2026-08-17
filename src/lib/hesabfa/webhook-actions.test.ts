@@ -28,7 +28,26 @@ test('handles documented invoice save, edit, and delete action families', () => 
   }
 });
 
-test('ignores undocumented object/action combinations', () => {
+test('includes every remaining documented hook action code', () => {
+  assert.deepEqual(
+    [
+      HESABFA_ACTION.RECEIVE_RECEIPT_SAVE,
+      HESABFA_ACTION.RECEIVE_RECEIPT_EDIT,
+      HESABFA_ACTION.RECEIVE_RECEIPT_DELETE,
+      HESABFA_ACTION.PAYMENT_RECEIPT_SAVE,
+      HESABFA_ACTION.PAYMENT_RECEIPT_EDIT,
+      HESABFA_ACTION.PAYMENT_RECEIPT_DELETE,
+      HESABFA_ACTION.WAREHOUSE_RECEIPT_SAVE,
+      HESABFA_ACTION.WAREHOUSE_RECEIPT_EDIT,
+      HESABFA_ACTION.WAREHOUSE_RECEIPT_DELETE,
+      HESABFA_ACTION.ONLINE_INVOICE_PAYMENT_SAVE,
+      HESABFA_ACTION.ONLINE_CONTACT_DEPOSIT_SAVE,
+    ],
+    [181, 182, 183, 191, 192, 193, 261, 262, 263, 500, 501],
+  );
+});
+
+test('ignores unsupported object/action combinations', () => {
   assert.equal(classifyHesabfaWebhookAction('Product', 32), 'ignore');
   assert.equal(classifyHesabfaWebhookAction('Contact', 52), 'ignore');
   assert.equal(classifyHesabfaWebhookAction('Invoice', 500), 'ignore');

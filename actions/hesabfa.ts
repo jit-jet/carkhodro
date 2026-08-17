@@ -16,7 +16,7 @@ export async function getHesabfaIntegrationStatus(): Promise<{
   appWebhookUrl: string | null;
 }> {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? null;
-  const appWebhookUrl = appUrl ? `${appUrl}/api/hesabfa/webhook` : null;
+  const appWebhookUrl = appUrl ? `${appUrl}/admin/hook` : null;
 
   if (!(await isHesabfaConfigured())) {
     return { configured: false, hookUrl: null, appWebhookUrl };
@@ -65,7 +65,7 @@ export async function registerHesabfaWebhook(): Promise<ActionResult<{ url: stri
       return fail('حسابفا پیکربندی نشده است.');
     }
 
-    const url = `${appUrl.replace(/\/$/, '')}/api/hesabfa/webhook`;
+    const url = `${appUrl.replace(/\/$/, '')}/admin/hook`;
     await setChangeHook(url, password);
     return ok({ url });
   });

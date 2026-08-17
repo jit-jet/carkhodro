@@ -35,6 +35,10 @@ const AUTH_PAGES = ['/login', '/signup'];
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Deliberately public Hesabfa test receiver/page. It must accept server-to-
+  // server POSTs without an admin session; see app/admin/hook/route.ts.
+  if (pathname === '/admin/hook') return NextResponse.next();
+
   if (!pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
     const source = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
     try {
