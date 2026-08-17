@@ -72,7 +72,7 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
         SELECT p.id
         FROM products p
         WHERE p.is_active = true AND (${conditions})
-        ORDER BY (${score}) DESC, p.sale_count DESC
+        ORDER BY (${score}) DESC, p.sale_count DESC, p.id ASC
         LIMIT ${take}
       `);
     });

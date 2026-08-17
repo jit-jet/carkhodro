@@ -12,9 +12,10 @@ const PAGE_SIZE = 12;
 /** Upper bound on fuzzy-search results pulled for the results page. */
 const SEARCH_RESULT_CAP = 200;
 
-type SortOption = 'newest' | 'oldest' | 'best_selling' | 'most_viewed' | 'alpha_asc' | 'alpha_desc';
+type SortOption = 'relevance' | 'newest' | 'oldest' | 'best_selling' | 'most_viewed' | 'alpha_asc' | 'alpha_desc';
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: 'relevance',    label: 'مرتبط‌ترین' },
   { value: 'newest',       label: 'جدیدترین' },
   { value: 'oldest',       label: 'قدیمی‌ترین' },
   { value: 'best_selling', label: 'پرفروش‌ترین' },
@@ -30,6 +31,7 @@ function stockFirst(a: Product, b: Product): number {
 function applySorting(products: Product[], sort: SortOption): Product[] {
   const arr = [...products];
   switch (sort) {
+    case 'relevance':    return arr;
     case 'newest':       return arr.sort((a, b) => stockFirst(a, b) || b.createdDate.localeCompare(a.createdDate));
     case 'oldest':       return arr.sort((a, b) => stockFirst(a, b) || a.createdDate.localeCompare(b.createdDate));
     case 'best_selling': return arr.sort((a, b) => stockFirst(a, b) || b.salesCount - a.salesCount);
@@ -37,6 +39,12 @@ function applySorting(products: Product[], sort: SortOption): Product[] {
     case 'alpha_asc':    return arr.sort((a, b) => stockFirst(a, b) || a.name.localeCompare(b.name, 'fa'));
     case 'alpha_desc':   return arr.sort((a, b) => stockFirst(a, b) || b.name.localeCompare(a.name, 'fa'));
   }
+}
+
+function resolveSortOption(value: string | null, isSearching: boolean): SortOption {
+  if (value === 'relevance') return isSearching ? 'relevance' : 'newest';
+  if (SORT_OPTIONS.some((option) => option.value === value)) return value as SortOption;
+  return isSearching ? 'relevance' : 'newest';
 }
 
 function formatCarTypeForPdf(carType: string | null | undefined): string {
@@ -211,7 +219,8 @@ export default function ProductsBrowser({
   const selectedCarTypes   = searchParams.getAll('car');
   const selectedCategories = searchParams.getAll('category');
   const offerOnly          = searchParams.get('offer') === '1';
-  const sortBy             = (searchParams.get('sort') ?? 'newest') as SortOption;
+  const isSearching        = searchQuery.trim().length > 0;
+  const sortBy             = resolveSortOption(searchParams.get('sort'), isSearching);
 
   function buildUrl(updates: Record<string, string | string[] | null>): string {
     const params = new URLSearchParams(searchParams.toString());
@@ -436,7 +445,7 @@ export default function ProductsBrowser({
                 onChange={e => handleSortChange(e.target.value as SortOption)}
                 className="border border-gray-200 rounded-xl px-3 py-1.5 text-sm text-charcoal bg-white focus:outline-none focus:border-accent transition-colors cursor-pointer"
               >
-                {SORT_OPTIONS.map(opt => (
+                {SORT_OPTIONS.filter(opt => isSearching || opt.value !== 'relevance').map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
