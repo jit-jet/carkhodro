@@ -1,5 +1,7 @@
 /**
- * Public, deliberately unauthenticated Hesabfa hook test bench.
+ * Legacy Hesabfa hook test bench. POST uses the same hook-password validation
+ * as the production receiver so an old registration remains safe while it is
+ * migrated to /api/hesabfa/webhook.
  *
  * GET  /admin/hook renders the recent in-memory event log.
  * POST /admin/hook receives a Hesabfa hook and runs the normal sync handler.
@@ -16,8 +18,8 @@ import {
 } from '@/src/lib/hesabfa/test-hook-store';
 import {
   HESABFA_ACTION,
-  type HesabfaWebhookPayload,
 } from '@/src/lib/hesabfa/types';
+import { readHesabfaWebhookRequest } from '@/src/lib/hesabfa/webhook-request';
 
 const ACTION_LABELS: Record<number, string> = {
   [HESABFA_ACTION.CONTACT_SAVE]: 'Contact save',
@@ -55,16 +57,6 @@ const ACTION_LABELS: Record<number, string> = {
   [HESABFA_ACTION.ONLINE_INVOICE_PAYMENT_SAVE]: 'Online invoice payment save',
   [HESABFA_ACTION.ONLINE_CONTACT_DEPOSIT_SAVE]: 'Online contact deposit save',
 };
-
-function isWebhookPayload(value: unknown): value is HesabfaWebhookPayload {
-  if (!value || typeof value !== 'object') return false;
-  const payload = value as Partial<HesabfaWebhookPayload>;
-  return (
-    typeof payload.ObjectType === 'string' &&
-    Number.isFinite(Number(payload.Action)) &&
-    Array.isArray(payload.ObjectIdList)
-  );
-}
 
 function escapeHtml(value: unknown): string {
   return String(value)
@@ -106,7 +98,7 @@ function renderPage(origin: string): string {
 <body>
   <h1>Hesabfa Hook Test</h1>
   <p>Public POST endpoint: <code>${escapeHtml(`${origin}/admin/hook`)}</code></p>
-  <p>No authentication or hook-password validation. Password values are redacted from this page. The newest 200 events are stored in memory and disappear on restart. Page refreshes every 5 seconds.</p>
+  <p>POST requests require the configured Hesabfa hook password. Password values are redacted from this page. The newest 200 authenticated events are stored in memory and disappear on restart. Page refreshes every 5 seconds.</p>
   <h2>Received hooks</h2>
   <table>
     <thead><tr><th>ID</th><th>Received</th><th>Status</th><th>Payload</th><th>Result / error</th></tr></thead>
@@ -136,32 +128,13 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  let value: unknown;
-  try {
-    value = await request.json();
-  } catch {
-    return Response.json({ ok: false, error: 'invalid_json' }, { status: 400 });
+  const parsed = await readHesabfaWebhookRequest(request);
+  if (!parsed.ok) {
+    return Response.json({ ok: false, error: parsed.error }, { status: parsed.status });
   }
 
-  const event = recordHesabfaTestHook(
-    value && typeof value === 'object' ? (value as Partial<HesabfaWebhookPayload>) : {},
-  );
-
-  if (!isWebhookPayload(value)) {
-    finishHesabfaTestHook(event.id, { status: 'failed', error: 'invalid_payload' });
-    return Response.json(
-      { ok: false, eventId: event.id, error: 'invalid_payload' },
-      { status: 400 },
-    );
-  }
-
-  const payload: HesabfaWebhookPayload = {
-    ...value,
-    Action: Number(value.Action),
-    ObjectIdList: value.ObjectIdList
-      .map(Number)
-      .filter((id) => Number.isFinite(id)),
-  };
+  const { payload } = parsed;
+  const event = recordHesabfaTestHook(payload);
 
   try {
     const result = await handleHesabfaWebhook(payload);

@@ -14,6 +14,7 @@ import {
   HesabfaError,
   isHesabfaConfigured,
   saveItem,
+  saveItems,
 } from './client';
 import {
   FALLBACK_CATEGORY_KEY,
@@ -33,6 +34,7 @@ import {
 
 const FALLBACK_BRAND_NAME = 'نامشخص';
 const FALLBACK_BRAND_SLUG = 'unknown';
+const BATCH_SAVE_CHUNK = 100;
 
 export interface ProductSyncStats {
   created: number;
@@ -520,4 +522,71 @@ export async function pushProductToHesabfa(productId: string): Promise<void> {
       lastSyncedAt: new Date(),
     },
   });
+}
+
+/** Push a local product set using Hesabfa's documented batch endpoint. */
+export async function pushProductsToHesabfa(productIds: string[]): Promise<void> {
+  if (!(await isHesabfaConfigured())) return;
+
+  const ids = [...new Set(productIds)];
+  if (ids.length === 0) return;
+  if (ids.length === 1) {
+    await pushProductToHesabfa(ids[0]!);
+    return;
+  }
+
+  const products = await prisma.product.findMany({
+    where: { id: { in: ids } },
+    include: { category: { select: { name: true } } },
+  });
+
+  // Unlinked legacy rows need the single-item identity lookup/generation path.
+  const linked = products.filter((product) => product.hesabfaCode?.trim());
+  const unlinked = products.filter((product) => !product.hesabfaCode?.trim());
+  for (const product of unlinked) {
+    await pushProductToHesabfa(product.id);
+  }
+
+  for (let index = 0; index < linked.length; index += BATCH_SAVE_CHUNK) {
+    const chunk = linked.slice(index, index + BATCH_SAVE_CHUNK);
+    const saved = await saveItems(
+      chunk.map((product) =>
+        toHesabfaItemPayload({
+          code: product.hesabfaCode!.trim(),
+          name: product.name,
+          categoryName: product.category.name,
+          wholesalePrice: product.wholesalePrice,
+          retailPriceDiffPct: Number(product.retailPriceDiffPct),
+          retailDiscountPct: Number(product.retailDiscountPct),
+          wholesaleDiscountPct: Number(product.wholesaleDiscountPct),
+          buyPrice: product.buyPrice,
+          description: product.description,
+          active: product.isActive,
+        }),
+      ),
+    );
+    const productByCode = new Map(
+      chunk.map((product) => [product.hesabfaCode!.trim(), product]),
+    );
+    const now = new Date();
+    const updates = saved.flatMap((item) => {
+      const code = codeOf(item);
+      const product = productByCode.get(code);
+      return product
+        ? [
+            prisma.product.update({
+              where: { id: product.id },
+              data: {
+                ...(typeof item.Id === 'number' ? { hesabfaId: item.Id } : {}),
+                lastSyncedAt: now,
+              },
+            }),
+          ]
+        : [];
+    });
+
+    if (updates.length > 0) {
+      await prisma.$transaction(updates);
+    }
+  }
 }

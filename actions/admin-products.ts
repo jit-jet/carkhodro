@@ -11,6 +11,7 @@
  */
 
 import { updateTag } from 'next/cache';
+import type { Prisma } from '@/generated/prisma_client';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
@@ -25,6 +26,7 @@ import {
   formatHesabfaDeleteError,
   formatHesabfaSaveError,
   pushProductToHesabfa,
+  pushProductsToHesabfa,
   saveProductItemToHesabfa,
 } from '@/src/lib/hesabfa/products';
 import { syncHesabfaStockToTarget } from '@/src/lib/hesabfa/stock';
@@ -508,15 +510,27 @@ export async function bulkUpdateProducts(
     const tagScope =
       target.mode === 'ids' ? [...new Set(target.productIds)] : ('all-matching' as const);
 
+    async function updateHesabfaProductFields(data: Prisma.ProductUncheckedUpdateManyInput) {
+      // Capture ids before the update because `where` can filter on a field
+      // being changed (for example active status or category).
+      const rows = await prisma.product.findMany({ where, select: { id: true } });
+      const ids = rows.map((row) => row.id);
+      if (ids.length === 0) return null;
+
+      const result = await prisma.product.updateMany({
+        where: { id: { in: ids } },
+        data,
+      });
+      runHesabfaBackground('pushProducts:bulk', () => pushProductsToHesabfa(ids));
+      return result;
+    }
+
     switch (action.op) {
       case 'category': {
         const category = await prisma.category.findUnique({ where: { id: action.categoryId } });
         if (!category) return fail('دسته‌بندی انتخاب‌شده معتبر نیست.');
-        const result = await prisma.product.updateMany({
-          where,
-          data: { categoryId: action.categoryId },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ categoryId: action.categoryId });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }
@@ -556,42 +570,30 @@ export async function bulkUpdateProducts(
       case 'wholesaleDiscount': {
         const value = clampPct(action.value, 0, 100);
         if (value === null) return fail('درصد تخفیف عمده باید بین ۰ تا ۱۰۰ باشد.');
-        const result = await prisma.product.updateMany({
-          where,
-          data: { wholesaleDiscountPct: value },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ wholesaleDiscountPct: value });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'retailDiscount': {
         const value = clampPct(action.value, 0, 100);
         if (value === null) return fail('درصد تخفیف تک‌فروشی باید بین ۰ تا ۱۰۰ باشد.');
-        const result = await prisma.product.updateMany({
-          where,
-          data: { retailDiscountPct: value },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ retailDiscountPct: value });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'retailPriceDiff': {
         const value = clampPct(action.value, 0, 100);
         if (value === null) return fail('درصد اختلاف قیمت باید بین ۰ تا ۱۰۰ باشد.');
-        const result = await prisma.product.updateMany({
-          where,
-          data: { retailPriceDiffPct: value },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ retailPriceDiffPct: value });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'setActive': {
-        const result = await prisma.product.updateMany({
-          where,
-          data: { isActive: action.isActive },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ isActive: action.isActive });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }

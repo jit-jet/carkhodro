@@ -18,7 +18,7 @@ export interface HesabfaQueryInfo {
   filters?: Array<{
     property: string;
     operator: string;
-    value: string | number | boolean;
+    value: string | number | boolean | Array<string | number | boolean>;
   }>;
 }
 
@@ -56,6 +56,12 @@ export interface HesabfaItem {
   ProductCode?: string | null;
   Active?: boolean | null;
   PriceList?: HesabfaPriceListEntry[] | null;
+}
+
+/** Row returned by `item/GetQuantity`. */
+export interface HesabfaItemQuantity {
+  Code: number | string;
+  Quantity?: number | null;
 }
 
 export interface HesabfaContact {
@@ -136,10 +142,8 @@ export type HesabfaProductCategory = HesabfaProductCategoryNode;
 export interface HesabfaWebhookPayload {
   Password: string;
   Action: number;
-  ObjectType: 'Product' | 'Invoice' | 'Contact' | 'WarehouseReceipt' | 'Receipt' | string;
+  ObjectType: 'Product' | 'Invoice' | 'Contact';
   ObjectIdList: number[];
-  /** Non-standard compatibility field; not part of Hesabfa's documented hook body. */
-  Extra?: string | null;
 }
 
 /** Hesabfa change-hook action codes from the official TypesTable documentation. */

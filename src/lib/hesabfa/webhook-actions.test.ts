@@ -28,7 +28,7 @@ test('handles documented invoice save, edit, and delete action families', () => 
   }
 });
 
-test('includes every remaining documented hook action code', () => {
+test('keeps non-hook action codes available without treating them as hook objects', () => {
   assert.deepEqual(
     [
       HESABFA_ACTION.RECEIVE_RECEIPT_SAVE,
