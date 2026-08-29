@@ -1,7 +1,5 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
-
 
 ## run only db with docker :
 docker compose -f docker-compose.db.yml up -d
@@ -21,7 +19,7 @@ npm run  build
 
 
 # start project on server
-pm2 start npm --name my-app -- start -- -p 80
+pm2 start npm --name my-app -- start -- -p 3000
 
 # pm2 commands
 # List processes
