@@ -445,7 +445,6 @@ async function seedSystemSettings() {
     hesabfaApiKey: process.env.HESABFA_API_KEY?.trim() || '',
     hesabfaLoginToken: process.env.HESABFA_LOGIN_TOKEN?.trim() || '',
     hesabfaBankCode: process.env.HESABFA_BANK_CODE?.trim() || '',
-    hesabfaPurchaseContactCode: process.env.HESABFA_PURCHASE_CONTACT_CODE?.trim() || '',
     zibalMerchant: process.env.ZIBAL_MERCHANT?.trim() || 'zibal',
   };
   const superAdmin = await prisma.user.findFirst({

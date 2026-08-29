@@ -24,7 +24,6 @@ async function main() {
     hesabfaApiKey: process.env.HESABFA_API_KEY ?? '',
     hesabfaLoginToken: process.env.HESABFA_LOGIN_TOKEN ?? '',
     hesabfaBankCode: process.env.HESABFA_BANK_CODE ?? '',
-    hesabfaPurchaseContactCode: process.env.HESABFA_PURCHASE_CONTACT_CODE ?? '',
     zibalMerchant: process.env.ZIBAL_MERCHANT ?? '',
   }, superAdmin.id);
   console.log('System settings imported and encrypted. Remove the legacy integration variables from the deployment environment.');

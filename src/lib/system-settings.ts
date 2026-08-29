@@ -15,7 +15,7 @@ export type SystemConfigPatch = Partial<Record<keyof SystemConfig, string | null
 const SYSTEM_CONFIG_KEYS = [
   'smsApiBaseUrl', 'smsApiKey', 'smsLineNumber', 'smsOtpPatternCode',
   'smsOtpPatternAttr', 'hesabfaApiUrl', 'hesabfaApiKey', 'hesabfaLoginToken',
-  'hesabfaBankCode', 'hesabfaPurchaseContactCode',
+  'hesabfaBankCode',
   'zibalMerchant',
 ] as const satisfies readonly (keyof SystemConfig)[];
 

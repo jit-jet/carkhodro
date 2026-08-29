@@ -185,12 +185,6 @@ export const HESABFA_ACTION = {
 } as const;
 
 export const HESABFA_INVOICE_TYPE_SALE = 0;
-/** Purchase invoice (فاکتور خرید) — used to add inventory. */
-export const HESABFA_INVOICE_TYPE_PURCHASE = 1;
-/** Purchase return (برگشت از خرید) — used to reduce inventory. */
-export const HESABFA_INVOICE_TYPE_PURCHASE_RETURN = 3;
-/** Issue warehouse receipt with the invoice so stock updates. */
-export const HESABFA_WAREHOUSE_RECEIPT_ISSUED = 1;
 export const HESABFA_CONTACT_TYPE_CUSTOMER = 2;
 export const HESABFA_ITEM_TYPE_PRODUCT = 0;
 export const HESABFA_CONTACT_NODE_FAMILY = 'اشخاص : مشتریان فروشگاه آنلاین';

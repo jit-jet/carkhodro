@@ -1,5 +1,5 @@
 /**
- * Hesabfa stock helpers — read `Stock` from item/get, push via purchase invoice.
+ * Hesabfa stock helpers — read `Stock` from item/get and persist it locally.
  */
 
 import { revalidateTag } from 'next/cache';
@@ -9,19 +9,11 @@ import {
   getItemByCode,
   getItemQuantities,
   isHesabfaConfigured,
-  saveInvoice,
 } from './client';
-import { tomanToRial } from './currency';
 import {
-  HESABFA_INVOICE_NOTE,
-  HESABFA_INVOICE_TYPE_PURCHASE,
-  HESABFA_INVOICE_TYPE_PURCHASE_RETURN,
-  HESABFA_TAG,
-  HESABFA_WAREHOUSE_RECEIPT_ISSUED,
   type HesabfaItem,
   type HesabfaItemQuantity,
 } from './types';
-import { getSystemConfig } from '@/src/lib/system-settings';
 
 export interface LiveStockLine {
   productId: string;
@@ -36,18 +28,9 @@ export interface LiveStockValidationIssue {
   requested: number;
 }
 
-function formatHesabfaDate(d: Date): string {
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
-
 /** Parse inventory from item/get* — uses `Stock` only. */
 export function stockFromHesabfaItem(item: Pick<HesabfaItem, 'Stock'> | null | undefined): number {
   return Math.max(0, Math.round(item?.Stock ?? 0));
-}
-
-function itemCodeOf(code: string | null | undefined): string {
-  return code?.trim() ?? '';
 }
 
 /** Use item/get for one code and item/GetQuantity for a code list. */
@@ -198,106 +181,4 @@ export async function validateLinesAgainstHesabfaStock(
     }));
 
   return { issues, stockByProduct: liveByProduct };
-}
-
-async function purchaseContactCode(): Promise<string | null> {
-  const code = (await getSystemConfig()).hesabfaPurchaseContactCode.trim();
-  return code || null;
-}
-
-export interface PushStockViaPurchaseInput {
-  itemCode: string;
-  itemName: string;
-  quantity: number;
-  /** Buy/cost price in Toman for the invoice line. */
-  unitPriceToman: number;
-  reference?: string;
-}
-
-/**
- * Adjust Hesabfa inventory via purchase (invoiceType=1) or purchase return (invoiceType=3).
- * Positive qty → buy invoice; negative qty → return-from-buy invoice; zero → no-op.
- * Docs: https://www.hesabfa.com/help/api/Invoice — invoice/save
- */
-export async function pushStockViaPurchaseInvoice(
-  input: PushStockViaPurchaseInput,
-): Promise<void> {
-  if (!(await isHesabfaConfigured())) return;
-
-  const qty = Math.round(input.quantity);
-  if (qty === 0) return;
-
-  const contactCode = await purchaseContactCode();
-  if (!contactCode) {
-    console.warn(
-      '[hesabfa:purchaseStock] purchase contact is not configured — skipping stock push',
-    );
-    return;
-  }
-
-  const isReturn = qty < 0;
-  const lineQty = Math.abs(qty);
-  const now = formatHesabfaDate(new Date());
-  const unitRial = tomanToRial(Math.max(1, input.unitPriceToman));
-
-  await saveInvoice({
-    reference: input.reference ?? `stock:${input.itemCode}:${Date.now()}`,
-    date: now,
-    dueDate: now,
-    contactCode,
-    note: isReturn
-      ? `${HESABFA_INVOICE_NOTE} — برگشت از خرید (تعدیل موجودی)`
-      : HESABFA_INVOICE_NOTE,
-    sent: false,
-    invoiceType: isReturn
-      ? HESABFA_INVOICE_TYPE_PURCHASE_RETURN
-      : HESABFA_INVOICE_TYPE_PURCHASE,
-    status: 2,
-    tag: `${HESABFA_TAG}:stock${isReturn ? ':return' : ''}`,
-    freight: 0,
-    warehouseReceiptStatus: HESABFA_WAREHOUSE_RECEIPT_ISSUED,
-    currency: 'IRR',
-    invoiceItems: [
-      {
-        rowNumber: 1,
-        description: input.itemName,
-        itemCode: input.itemCode,
-        unit: 'عدد',
-        quantity: lineQty,
-        unitPrice: unitRial,
-        discount: 0,
-        tax: 0,
-      },
-    ],
-  });
-}
-
-/**
- * Align Hesabfa stock with a target quantity by issuing a purchase invoice (delta > 0)
- * or purchase return invoice (delta < 0) vs current Hesabfa Stock.
- */
-export async function syncHesabfaStockToTarget(input: {
-  itemCode: string;
-  itemName: string;
-  targetStock: number;
-  unitPriceToman: number;
-  reference?: string;
-}): Promise<void> {
-  if (!(await isHesabfaConfigured())) return;
-
-  const code = itemCodeOf(input.itemCode);
-  if (!code) return;
-
-  const item = await getItemByCode(code);
-  const current = stockFromHesabfaItem(item);
-  const delta = Math.round(input.targetStock) - current;
-  if (delta === 0) return;
-
-  await pushStockViaPurchaseInvoice({
-    itemCode: code,
-    itemName: input.itemName,
-    quantity: delta,
-    unitPriceToman: input.unitPriceToman,
-    reference: input.reference,
-  });
 }

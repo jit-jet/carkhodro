@@ -10,7 +10,6 @@ export interface SystemConfig {
   hesabfaApiKey: string;
   hesabfaLoginToken: string;
   hesabfaBankCode: string;
-  hesabfaPurchaseContactCode: string;
   zibalMerchant: string;
 }
 
@@ -24,7 +23,6 @@ export const EMPTY_SYSTEM_CONFIG: Readonly<SystemConfig> = Object.freeze({
   hesabfaApiKey: '',
   hesabfaLoginToken: '',
   hesabfaBankCode: '',
-  hesabfaPurchaseContactCode: '',
   zibalMerchant: '',
 });
 
