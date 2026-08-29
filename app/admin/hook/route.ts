@@ -98,7 +98,7 @@ function renderPage(origin: string): string {
 <body>
   <h1>Hesabfa Hook Test</h1>
   <p>Public POST endpoint: <code>${escapeHtml(`${origin}/admin/hook`)}</code></p>
-  <p>POST requests require the configured Hesabfa hook password. Password values are redacted from this page. The newest 200 authenticated events are stored in memory and disappear on restart. Page refreshes every 5 seconds.</p>
+  <p>POST requests require the Hesabfa hook password configured through the HESABFA_HOOK_PASSWORD environment variable. Password values are redacted from this page. The newest 200 authenticated events are stored in memory and disappear on restart. Page refreshes every 5 seconds.</p>
   <h2>Received hooks</h2>
   <table>
     <thead><tr><th>ID</th><th>Received</th><th>Status</th><th>Payload</th><th>Result / error</th></tr></thead>

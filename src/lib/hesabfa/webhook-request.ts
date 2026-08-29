@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { getSystemConfig } from '@/src/lib/system-settings';
+import { getHesabfaHookPassword } from './env';
 import type { HesabfaWebhookPayload } from './types';
 import { parseHesabfaWebhookPayload } from './webhook-payload';
 
@@ -30,7 +30,7 @@ export async function readHesabfaWebhookRequest(
   const payload = parseHesabfaWebhookPayload(value);
   if (!payload) return { ok: false, error: 'invalid_payload', status: 400 };
 
-  const expected = (await getSystemConfig()).hesabfaHookPassword;
+  const expected = getHesabfaHookPassword();
   if (!expected || !secretsEqual(expected, payload.Password)) {
     return { ok: false, error: 'unauthorized', status: 401 };
   }

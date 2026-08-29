@@ -15,7 +15,7 @@ export type SystemConfigPatch = Partial<Record<keyof SystemConfig, string | null
 const SYSTEM_CONFIG_KEYS = [
   'smsApiBaseUrl', 'smsApiKey', 'smsLineNumber', 'smsOtpPatternCode',
   'smsOtpPatternAttr', 'hesabfaApiUrl', 'hesabfaApiKey', 'hesabfaLoginToken',
-  'hesabfaHookPassword', 'hesabfaBankCode', 'hesabfaPurchaseContactCode',
+  'hesabfaBankCode', 'hesabfaPurchaseContactCode',
   'zibalMerchant',
 ] as const satisfies readonly (keyof SystemConfig)[];
 
@@ -52,7 +52,6 @@ export function systemConfigStatus(config: SystemConfig) {
   return {
     sms: Boolean(config.smsApiKey && config.smsLineNumber && config.smsOtpPatternCode),
     hesabfa: Boolean(config.hesabfaApiKey && config.hesabfaLoginToken),
-    hesabfaWebhook: Boolean(config.hesabfaHookPassword),
     zibal: Boolean(config.zibalMerchant),
   };
 }

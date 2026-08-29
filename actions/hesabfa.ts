@@ -6,9 +6,9 @@
 
 import { getCurrentAdmin } from '@/src/lib/admin-session';
 import { getChangeHook, isHesabfaConfigured, setChangeHook } from '@/src/lib/hesabfa/client';
+import { getHesabfaHookPassword } from '@/src/lib/hesabfa/env';
 import { fullSyncHesabfa, type FullSyncSummary } from '@/src/lib/hesabfa/sync';
 import { fail, ok, runMutation, type ActionResult } from '@/src/lib/result';
-import { getSystemConfig } from '@/src/lib/system-settings';
 
 export async function getHesabfaIntegrationStatus(): Promise<{
   configured: boolean;
@@ -56,7 +56,7 @@ export async function registerHesabfaWebhook(): Promise<ActionResult<{ url: stri
     const admin = await getCurrentAdmin();
     if (!admin) return fail('دسترسی غیرمجاز.');
 
-    const password = (await getSystemConfig()).hesabfaHookPassword;
+    const password = getHesabfaHookPassword();
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
     if (!password || !appUrl) {
       return fail('تنظیمات وب‌هوک حسابفا یا آدرس عمومی برنامه ناقص است.');
