@@ -1,53 +1,33 @@
 /**
  * Hesabfa change-hook receiver.
- * Authenticates via shared Password, then syncs Product / Contact / Invoice /
- * WarehouseReceipt (stock) / Receipt.
+ * Authenticates via shared Password, then syncs the documented Product,
+ * Contact, and Invoice object types.
  */
 
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 import { handleHesabfaWebhook } from '@/src/lib/hesabfa/sync';
-import type { HesabfaWebhookPayload } from '@/src/lib/hesabfa/types';
-import { getSystemConfig } from '@/src/lib/system-settings';
-import crypto from 'node:crypto';
+import { readHesabfaWebhookRequest } from '@/src/lib/hesabfa/webhook-request';
 
-export async function POST(request: NextRequest) {
-  let payload: HesabfaWebhookPayload;
-  try {
-    payload = (await request.json()) as HesabfaWebhookPayload;
-  } catch {
-    console.error('[hesabfa:webhook] invalid_json');
-    return NextResponse.json({ ok: false, error: 'invalid_json' }, { status: 400 });
+export async function POST(request: Request) {
+  const parsed = await readHesabfaWebhookRequest(request);
+  if (!parsed.ok) {
+    console.warn(`[hesabfa:webhook] ${parsed.error}`);
+    return Response.json({ ok: false, error: parsed.error }, { status: parsed.status });
   }
+  const { payload } = parsed;
 
   console.log('[hesabfa:webhook] received', {
     ObjectType: payload?.ObjectType,
     Action: payload?.Action,
     ObjectIdList: payload?.ObjectIdList,
-    Extra: payload?.Extra ?? null,
     // Password intentionally omitted
   });
-
-  const expected = (await getSystemConfig()).hesabfaHookPassword;
-  const supplied = payload?.Password ?? '';
-  const matches = expected.length === supplied.length &&
-    crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(supplied));
-  if (!expected || !matches) {
-    console.warn('[hesabfa:webhook] unauthorized');
-    return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 });
-  }
-
-  if (!payload.ObjectType || !Array.isArray(payload.ObjectIdList)) {
-    console.warn('[hesabfa:webhook] invalid_payload');
-    return NextResponse.json({ ok: false, error: 'invalid_payload' }, { status: 400 });
-  }
 
   try {
     const result = await handleHesabfaWebhook(payload);
     console.log('[hesabfa:webhook] result', result);
-    return NextResponse.json({ ok: true, ...result });
+    return Response.json({ ok: true, ...result });
   } catch (err) {
     console.error('[hesabfa:webhook] sync_failed', err);
-    return NextResponse.json({ ok: false, error: 'sync_failed' }, { status: 500 });
+    return Response.json({ ok: false, error: 'sync_failed' }, { status: 500 });
   }
 }

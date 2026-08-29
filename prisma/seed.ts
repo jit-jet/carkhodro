@@ -444,7 +444,6 @@ async function seedSystemSettings() {
     hesabfaApiUrl: process.env.HESABFA_API_URL?.trim() || 'https://api.hesabfa.com/v1',
     hesabfaApiKey: process.env.HESABFA_API_KEY?.trim() || '',
     hesabfaLoginToken: process.env.HESABFA_LOGIN_TOKEN?.trim() || '',
-    hesabfaHookPassword: process.env.HESABFA_HOOK_PASSWORD?.trim() || '',
     hesabfaBankCode: process.env.HESABFA_BANK_CODE?.trim() || '',
     hesabfaPurchaseContactCode: process.env.HESABFA_PURCHASE_CONTACT_CODE?.trim() || '',
     zibalMerchant: process.env.ZIBAL_MERCHANT?.trim() || 'zibal',

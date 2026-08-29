@@ -1,13 +1,13 @@
 /**
  * Two-way contact sync: local WHOLESALE User ↔ Hesabfa Contact.
- * Hesabfa never creates website users; inbound changes only update an already
- * linked/matching wholesale account with a usable Mobile.
+ * Inbound persons with a unique, usable Mobile create or update wholesale
+ * accounts; missing or duplicate mobiles are ignored.
  */
 
 import { prisma } from '@/src/lib/prisma';
 import {
   getAllContacts,
-  getContactByCode,
+  getContactsByMobiles,
   getContactsById,
   isHesabfaConfigured,
   saveContact,
@@ -19,6 +19,8 @@ import {
   HESABFA_TAG,
   type HesabfaContact,
 } from './types';
+import { planContactIdentitySync } from './contact-identity';
+import { displayName } from './contact-name';
 
 export interface ContactSyncStats {
   created: number;
@@ -34,18 +36,6 @@ let retailInvoiceContactPromise: Promise<string | null> | null = null;
 
 function codeOf(contact: HesabfaContact): string {
   return contact.Code != null ? String(contact.Code).trim() : '';
-}
-
-function displayName(contact: HesabfaContact): { firstName: string; lastName: string } {
-  const first = contact.FirstName?.trim();
-  const last = contact.LastName?.trim();
-  if (first || last) {
-    return { firstName: first || 'مشتری', lastName: last || 'حسابفا' };
-  }
-  const name = contact.Name?.trim() || 'مشتری حسابفا';
-  const parts = name.split(/\s+/);
-  if (parts.length === 1) return { firstName: parts[0]!, lastName: '-' };
-  return { firstName: parts[0]!, lastName: parts.slice(1).join(' ') };
 }
 
 /** Run async work with a fixed concurrency limit. */
@@ -197,6 +187,7 @@ async function upsertAddressesForUsers(
 /** Import/update a batch of Hesabfa contacts into local users. */
 export async function syncContactsFromHesabfa(
   contacts: HesabfaContact[],
+  duplicateMobiles: ReadonlySet<string> = new Set(),
 ): Promise<ContactSyncStats> {
   const stats: ContactSyncStats = { created: 0, updated: 0, skipped: 0, pushed: 0 };
   if (contacts.length === 0) return stats;
@@ -209,6 +200,11 @@ export async function syncContactsFromHesabfa(
       stats.skipped++;
       continue;
     }
+    if (duplicateMobiles.has(row.mobile)) {
+      stats.skipped++;
+      continue;
+    }
+    if (prepared.has(row.code)) stats.skipped++;
     prepared.set(row.code, row);
   }
   if (prepared.size === 0) return stats;
@@ -221,7 +217,7 @@ export async function syncContactsFromHesabfa(
     .filter((id): id is number => id != null);
 
   // 2) Prefetch every possible match. Only one unambiguous WHOLESALE match may
-  // be updated; unknown contacts and RETAIL users are deliberately ignored.
+  // be updated; unknown contacts are created and RETAIL users are not overwritten.
   const existingRows = await prisma.user.findMany({
     where: {
       OR: [
@@ -233,46 +229,23 @@ export async function syncContactsFromHesabfa(
     select: { id: true, role: true, hesabfaCode: true, hesabfaId: true, phoneNumber: true },
   });
 
-  const byCode = new Map<string, string>();
-  const byHesabfaId = new Map<number, string>();
-  const byPhone = new Map<string, string>();
-  const byId = new Map(existingRows.map((row) => [row.id, row]));
-  for (const row of existingRows) {
-    if (row.hesabfaCode) byCode.set(row.hesabfaCode, row.id);
-    if (row.hesabfaId != null) byHesabfaId.set(row.hesabfaId, row.id);
-    byPhone.set(row.phoneNumber, row.id);
-  }
-
-  function resolveExistingId(c: PreparedContact): string | null {
-    const matches = new Set<string>();
-    const codeMatch = byCode.get(c.code);
-    const idMatch = c.hesabfaId != null ? byHesabfaId.get(c.hesabfaId) : undefined;
-    const phoneMatch = byPhone.get(c.mobile);
-    if (codeMatch) matches.add(codeMatch);
-    if (idMatch) matches.add(idMatch);
-    if (phoneMatch) matches.add(phoneMatch);
-    if (matches.size !== 1) return null;
-
-    const id = [...matches][0]!;
-    return byId.get(id)?.role === 'WHOLESALE' ? id : null;
-  }
-
-  const toUpdate = new Map<string, PreparedContact>(); // last wins per user
-
-  for (const contact of list) {
-    const existingId = resolveExistingId(contact);
-    if (existingId) {
-      toUpdate.set(existingId, contact);
-      continue;
-    }
-    stats.skipped++;
-  }
+  const identityPlan = planContactIdentitySync(list, existingRows);
+  stats.skipped += identityPlan.skipped;
 
   const now = new Date();
-  const cityLookup = await loadCityLookup();
+  if (identityPlan.hesabfaIdsToRelease.length > 0) {
+    await prisma.$transaction(
+      identityPlan.hesabfaIdsToRelease.map(({ userId, hesabfaId }) =>
+        prisma.user.updateMany({
+          where: { id: userId, hesabfaId },
+          data: { hesabfaId: null },
+        }),
+      ),
+    );
+  }
 
-  // 3) Concurrent updates.
-  const updateRows = [...toUpdate.entries()].map(([id, contact]) => ({ id, contact }));
+  // 3) Concurrent updates of existing wholesale accounts.
+  const updateRows = identityPlan.toUpdate;
   await mapPool(updateRows, UPDATE_CONCURRENCY, async ({ id, contact }) => {
     await prisma.user.update({
       where: { id },
@@ -291,40 +264,71 @@ export async function syncContactsFromHesabfa(
   });
   stats.updated = updateRows.length;
 
-  // 4) Addresses for updated users (same rules as before).
-  await upsertAddressesForUsers(
-    updateRows.map(({ id, contact }) => ({ userId: id, contact })),
-    cityLookup,
+  // 4) Create unambiguous new persons as wholesale accounts. Database-level
+  // unique constraints make concurrent/retried hook delivery idempotent.
+  if (identityPlan.toCreate.length > 0) {
+    const created = await prisma.user.createMany({
+      data: identityPlan.toCreate.map((contact) => ({
+        phoneNumber: contact.mobile,
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        role: 'WHOLESALE' as const,
+        isActive: contact.active !== false,
+        shopName: contact.shopName,
+        hesabfaCode: contact.code,
+        hesabfaId: contact.hesabfaId ?? null,
+        hesabfaSyncedAt: now,
+      })),
+      skipDuplicates: true,
+    });
+    stats.created = created.count;
+    stats.skipped += identityPlan.toCreate.length - created.count;
+  }
+
+  const createdRows =
+    identityPlan.toCreate.length > 0
+      ? await prisma.user.findMany({
+          where: { hesabfaCode: { in: identityPlan.toCreate.map((contact) => contact.code) } },
+          select: { id: true, hesabfaCode: true },
+        })
+      : [];
+  const createdByCode = new Map(
+    createdRows
+      .filter((row): row is typeof row & { hesabfaCode: string } => Boolean(row.hesabfaCode))
+      .map((row) => [row.hesabfaCode, row.id]),
   );
+  const addressRows = [
+    ...updateRows.map(({ id, contact }) => ({ userId: id, contact })),
+    ...identityPlan.toCreate.flatMap((contact) => {
+      const userId = createdByCode.get(contact.code);
+      return userId ? [{ userId, contact }] : [];
+    }),
+  ];
+  if (addressRows.some(({ contact }) => contact.street)) {
+    await upsertAddressesForUsers(addressRows, await loadCityLookup());
+  }
 
   return stats;
 }
 
 export async function syncContactsByIds(ids: number[]): Promise<ContactSyncStats> {
   const contacts = await getContactsById(ids);
-  return syncContactsFromHesabfa(contacts);
-}
-
-/**
- * Webhook helper: fetch contacts by Hesabfa numeric Ids, falling back to
- * codes from the hook `Extra` field when getById returns nothing.
- */
-export async function syncContactsFromWebhook(
-  ids: number[],
-  extraCodes: string[] = [],
-): Promise<ContactSyncStats> {
-  let contacts = ids.length > 0 ? await getContactsById(ids) : [];
-
-  if (contacts.length === 0 && extraCodes.length > 0) {
-    const byCode: HesabfaContact[] = [];
-    for (const code of extraCodes) {
-      const row = await getContactByCode(code);
-      if (row) byCode.push(row);
-    }
-    contacts = byCode;
+  const mobileVariants = contacts.flatMap((contact) => {
+    const normalized = normalizeIranMobile(contact.Mobile);
+    if (!normalized) return [];
+    const local = normalized.slice(1);
+    return [contact.Mobile?.trim() ?? '', normalized, local, `98${local}`, `+98${local}`, `0098${local}`];
+  });
+  const matchingContacts = await getContactsByMobiles(mobileVariants);
+  const mobileCounts = new Map<string, number>();
+  for (const contact of matchingContacts) {
+    const mobile = normalizeIranMobile(contact.Mobile);
+    if (mobile) mobileCounts.set(mobile, (mobileCounts.get(mobile) ?? 0) + 1);
   }
-
-  const stats = await syncContactsFromHesabfa(contacts);
+  const duplicateMobiles = new Set(
+    [...mobileCounts].filter(([, count]) => count > 1).map(([mobile]) => mobile),
+  );
+  const stats = await syncContactsFromHesabfa(contacts, duplicateMobiles);
   const returnedIds = new Set(
     contacts
       .map((contact) => contact.Id)
@@ -394,28 +398,34 @@ async function pushContactToHesabfaUnlocked(userId: string): Promise<void> {
   if (!originalPayload) return;
 
   const payload = { ...originalPayload };
-  if (!payload.code) {
-    const mobile = normalizeIranMobile(String(payload.mobile ?? ''));
-    if (!mobile) return;
+  const mobile = normalizeIranMobile(String(payload.mobile ?? ''));
+  if (!mobile) return;
 
-    const matches = (await getAllContacts()).filter(
-      (contact) => normalizeIranMobile(contact.Mobile) === mobile && codeOf(contact),
-    );
-    const codes = matches.map(codeOf);
-    if (codes.length > 0) {
-      const claimed = await prisma.user.findMany({
-        where: { hesabfaCode: { in: codes }, id: { not: userId } },
-        select: { hesabfaCode: true },
-      });
-      const claimedCodes = new Set(
-        claimed.map((row) => row.hesabfaCode).filter((code): code is string => Boolean(code)),
-      );
-      const reusable = matches.find((contact) => !claimedCodes.has(codeOf(contact)));
-      if (!reusable) {
-        throw new Error(`Hesabfa contact conflict for wholesale user ${userId}`);
-      }
-      payload.code = codeOf(reusable);
+  const matches = (await getAllContacts()).filter(
+    (contact) => normalizeIranMobile(contact.Mobile) === mobile && codeOf(contact),
+  );
+  if (matches.length > 1) {
+    console.warn('[hesabfa:contact] duplicate mobile ignored', { userId, mobile });
+    return;
+  }
+
+  if (payload.code) {
+    const linkedCode = String(payload.code).trim();
+    if (matches.length === 1 && codeOf(matches[0]!) !== linkedCode) {
+      console.warn('[hesabfa:contact] mobile belongs to another contact', { userId, mobile });
+      return;
     }
+  } else if (matches.length === 1) {
+    const codes = matches.map(codeOf);
+    const claimed = await prisma.user.findMany({
+      where: { hesabfaCode: { in: codes }, id: { not: userId } },
+      select: { hesabfaCode: true },
+    });
+    if (claimed.length > 0) {
+      console.warn('[hesabfa:contact] existing contact is already linked', { userId, mobile });
+      return;
+    }
+    payload.code = codeOf(matches[0]!);
   }
 
   const saved = await saveContact(payload);

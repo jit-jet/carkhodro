@@ -6,9 +6,8 @@ import { revalidateTag } from 'next/cache';
 import { tags } from '@/actions/cache-tags';
 import { prisma } from '@/src/lib/prisma';
 import {
-  getAllItems,
   getItemByCode,
-  getItemsById,
+  getItemQuantities,
   isHesabfaConfigured,
   saveInvoice,
 } from './client';
@@ -20,6 +19,7 @@ import {
   HESABFA_TAG,
   HESABFA_WAREHOUSE_RECEIPT_ISSUED,
   type HesabfaItem,
+  type HesabfaItemQuantity,
 } from './types';
 import { getSystemConfig } from '@/src/lib/system-settings';
 
@@ -50,7 +50,7 @@ function itemCodeOf(code: string | null | undefined): string {
   return code?.trim() ?? '';
 }
 
-/** Fetch live `Stock` from Hesabfa for item codes (item/get). */
+/** Use item/get for one code and item/GetQuantity for a code list. */
 export async function fetchHesabfaStockByCodes(
   codes: string[],
 ): Promise<Map<string, number>> {
@@ -58,16 +58,22 @@ export async function fetchHesabfaStockByCodes(
   if (!(await isHesabfaConfigured())) return map;
 
   const unique = [...new Set(codes.map((c) => c.trim()).filter(Boolean))];
-  await Promise.all(
-    unique.map(async (code) => {
-      try {
-        const item = await getItemByCode(code);
-        if (item) map.set(code, stockFromHesabfaItem(item));
-      } catch (err) {
-        console.error('[hesabfa:stock:get]', code, err);
-      }
-    }),
-  );
+  if (unique.length === 0) return map;
+
+  try {
+    if (unique.length === 1) {
+      const item = await getItemByCode(unique[0]!);
+      if (item) map.set(unique[0]!, stockFromHesabfaItem(item));
+      return map;
+    }
+
+    for (const item of await getItemQuantities(unique)) {
+      const code = item.Code != null ? String(item.Code).trim() : '';
+      if (code) map.set(code, Math.max(0, Math.round(item.Quantity ?? 0)));
+    }
+  } catch (err) {
+    console.error('[hesabfa:stock:get]', unique, err);
+  }
   return map;
 }
 
@@ -79,12 +85,7 @@ function invalidateStock(productIds: string[]): void {
   }
 }
 
-async function persistStockItems(items: HesabfaItem[]): Promise<number> {
-  const stockByCode = new Map<string, number>();
-  for (const item of items) {
-    const code = item.Code != null ? String(item.Code).trim() : '';
-    if (code) stockByCode.set(code, stockFromHesabfaItem(item));
-  }
+async function persistStockByCode(stockByCode: Map<string, number>): Promise<number> {
   if (stockByCode.size === 0) return 0;
 
   const codes = [...stockByCode.keys()];
@@ -123,28 +124,25 @@ async function persistStockItems(items: HesabfaItem[]): Promise<number> {
   return productIds.length;
 }
 
+async function persistStockQuantities(items: HesabfaItemQuantity[]): Promise<number> {
+  const stockByCode = new Map<string, number>();
+  for (const item of items) {
+    const code = item.Code != null ? String(item.Code).trim() : '';
+    if (code) stockByCode.set(code, Math.max(0, Math.round(item.Quantity ?? 0)));
+  }
+  return persistStockByCode(stockByCode);
+}
+
 /** Refresh local stock by item codes extracted from changed invoices. */
 export async function refreshLocalStockFromHesabfaCodes(codes: string[]): Promise<number> {
   if (!(await isHesabfaConfigured())) return 0;
-  const stockByCode = await fetchHesabfaStockByCodes(codes);
-  const items: HesabfaItem[] = [...stockByCode].map(([Code, Stock]) => ({
-    Code,
-    Stock,
-    Name: '',
-  }));
-  return persistStockItems(items);
+  return persistStockByCode(await fetchHesabfaStockByCodes(codes));
 }
 
 /** Deleted invoices have no retrievable lines, so refresh all item stocks. */
 export async function refreshAllLocalStockFromHesabfa(): Promise<number> {
   if (!(await isHesabfaConfigured())) return 0;
-  return persistStockItems(await getAllItems());
-}
-
-/** Refresh local Product.stock from Hesabfa item/get `Stock` (by numeric ids). */
-export async function refreshLocalStockFromHesabfaIds(ids: number[]): Promise<number> {
-  if (!(await isHesabfaConfigured()) || ids.length === 0) return 0;
-  return persistStockItems(await getItemsById(ids));
+  return persistStockQuantities(await getItemQuantities());
 }
 
 /** Refresh local stock for cart/checkout lines and return live quantities. */

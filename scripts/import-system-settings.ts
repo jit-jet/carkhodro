@@ -23,7 +23,6 @@ async function main() {
     hesabfaApiUrl: process.env.HESABFA_API_URL ?? 'https://api.hesabfa.com/v1',
     hesabfaApiKey: process.env.HESABFA_API_KEY ?? '',
     hesabfaLoginToken: process.env.HESABFA_LOGIN_TOKEN ?? '',
-    hesabfaHookPassword: process.env.HESABFA_HOOK_PASSWORD ?? '',
     hesabfaBankCode: process.env.HESABFA_BANK_CODE ?? '',
     hesabfaPurchaseContactCode: process.env.HESABFA_PURCHASE_CONTACT_CODE ?? '',
     zibalMerchant: process.env.ZIBAL_MERCHANT ?? '',

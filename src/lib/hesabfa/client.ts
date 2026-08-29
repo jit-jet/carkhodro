@@ -9,6 +9,7 @@ import type {
   HesabfaContact,
   HesabfaInvoice,
   HesabfaItem,
+  HesabfaItemQuantity,
   HesabfaPagedList,
   HesabfaProductCategoryNode,
   HesabfaProductCategoryTree,
@@ -157,6 +158,7 @@ async function getAllPages<T>(
   path: string,
   extra: Record<string, unknown> = {},
   sortBy = 'Code',
+  filters: HesabfaQueryInfo['filters'] = [],
 ): Promise<T[]> {
   const all: T[] = [];
   for (let page = 0; page < MAX_PAGES; page++) {
@@ -165,7 +167,7 @@ async function getAllPages<T>(
       sortDesc: false,
       take: PAGE_SIZE,
       skip: page * PAGE_SIZE,
-      filters: [],
+      filters,
     };
     const result = await post<HesabfaPagedList<T>>(path, { ...extra, queryInfo });
     const list = result.List ?? [];
@@ -173,6 +175,13 @@ async function getAllPages<T>(
     if (list.length === 0 || all.length >= (result.TotalCount ?? 0)) break;
   }
   return all;
+}
+
+function asList<T>(result: T | T[] | HesabfaPagedList<T> | null | undefined): T[] {
+  if (!result) return [];
+  if (Array.isArray(result)) return result;
+  if (typeof result === 'object' && 'List' in result) return result.List ?? [];
+  return [result];
 }
 
 // ── Items ─────────────────────────────────────────────────────────────────────
@@ -188,10 +197,11 @@ export async function getItemByCode(code: string): Promise<HesabfaItem | null> {
 
 export async function getItemsById(ids: number[]): Promise<HesabfaItem[]> {
   if (ids.length === 0) return [];
-  const result = await post<HesabfaItem[] | HesabfaPagedList<HesabfaItem>>('item/getById', {
-    idList: ids,
-  });
-  return Array.isArray(result) ? result : (result.List ?? []);
+  const result = await post<HesabfaItem | HesabfaItem[] | HesabfaPagedList<HesabfaItem>>(
+    'item/getById',
+    { idList: ids },
+  );
+  return asList(result);
 }
 
 export async function getAllItems(): Promise<HesabfaItem[]> {
@@ -202,6 +212,26 @@ export async function saveItem(
   item: Record<string, unknown>,
 ): Promise<HesabfaItem> {
   return post<HesabfaItem>('item/save', { item }, { unique: true });
+}
+
+export async function saveItems(
+  items: Record<string, unknown>[],
+): Promise<HesabfaItem[]> {
+  if (items.length === 0) return [];
+  if (items.length === 1) return [await saveItem(items[0]!)];
+  const result = await post<HesabfaItem | HesabfaItem[]>('item/batchSave', { items }, {
+    unique: true,
+  });
+  return asList(result);
+}
+
+/** Read stock for selected codes, or every item when `codes` is omitted. */
+export async function getItemQuantities(codes?: string[]): Promise<HesabfaItemQuantity[]> {
+  const result = await post<HesabfaItemQuantity | HesabfaItemQuantity[]>(
+    'item/GetQuantity',
+    codes ? { codes } : {},
+  );
+  return asList(result);
 }
 
 export async function deleteItem(code: string): Promise<void> {
@@ -249,15 +279,25 @@ export async function getContactByCode(code: string): Promise<HesabfaContact | n
 
 export async function getContactsById(ids: number[]): Promise<HesabfaContact[]> {
   if (ids.length === 0) return [];
-  const result = await post<HesabfaContact[] | HesabfaPagedList<HesabfaContact>>(
+  const result = await post<
+    HesabfaContact | HesabfaContact[] | HesabfaPagedList<HesabfaContact>
+  >(
     'contact/getById',
     { idList: ids },
   );
-  return Array.isArray(result) ? result : (result.List ?? []);
+  return asList(result);
 }
 
 export async function getAllContacts(): Promise<HesabfaContact[]> {
   return getAllPages<HesabfaContact>('contact/getContacts');
+}
+
+export async function getContactsByMobiles(mobiles: string[]): Promise<HesabfaContact[]> {
+  const values = [...new Set(mobiles.map((mobile) => mobile.trim()).filter(Boolean))];
+  if (values.length === 0) return [];
+  return getAllPages<HesabfaContact>('contact/getContacts', {}, 'Code', [
+    { property: 'Mobile', operator: 'in', value: values },
+  ]);
 }
 
 export async function saveContact(
@@ -283,10 +323,10 @@ export async function getInvoiceByNumber(
 
 export async function getInvoicesById(ids: number[]): Promise<HesabfaInvoice[]> {
   if (ids.length === 0) return [];
-  const result = await post<HesabfaInvoice | HesabfaInvoice[]>('invoice/getById', {
-    idList: ids,
-  });
-  return Array.isArray(result) ? result : result ? [result] : [];
+  const result = await post<
+    HesabfaInvoice | HesabfaInvoice[] | HesabfaPagedList<HesabfaInvoice>
+  >('invoice/getById', { idList: ids });
+  return asList(result);
 }
 
 export async function saveInvoice(

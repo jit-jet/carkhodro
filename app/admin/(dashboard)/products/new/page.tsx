@@ -28,7 +28,6 @@ export default async function NewProductPage() {
           wholesaleDiscountPct: 0,
           retailPriceDiffPct: 25,
           retailDiscountPct: 0,
-          stock: 0,
           origin: "",
           unit: "عدد",
           mainImage: "",

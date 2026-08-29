@@ -9,7 +9,6 @@ export interface SystemConfig {
   hesabfaApiUrl: string;
   hesabfaApiKey: string;
   hesabfaLoginToken: string;
-  hesabfaHookPassword: string;
   hesabfaBankCode: string;
   hesabfaPurchaseContactCode: string;
   zibalMerchant: string;
@@ -24,7 +23,6 @@ export const EMPTY_SYSTEM_CONFIG: Readonly<SystemConfig> = Object.freeze({
   hesabfaApiUrl: 'https://api.hesabfa.com/v1',
   hesabfaApiKey: '',
   hesabfaLoginToken: '',
-  hesabfaHookPassword: '',
   hesabfaBankCode: '',
   hesabfaPurchaseContactCode: '',
   zibalMerchant: '',

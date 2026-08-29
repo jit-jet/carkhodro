@@ -18,7 +18,7 @@ export interface HesabfaQueryInfo {
   filters?: Array<{
     property: string;
     operator: string;
-    value: string | number | boolean;
+    value: string | number | boolean | Array<string | number | boolean>;
   }>;
 }
 
@@ -56,6 +56,12 @@ export interface HesabfaItem {
   ProductCode?: string | null;
   Active?: boolean | null;
   PriceList?: HesabfaPriceListEntry[] | null;
+}
+
+/** Row returned by `item/GetQuantity`. */
+export interface HesabfaItemQuantity {
+  Code: number | string;
+  Quantity?: number | null;
 }
 
 export interface HesabfaContact {
@@ -136,10 +142,8 @@ export type HesabfaProductCategory = HesabfaProductCategoryNode;
 export interface HesabfaWebhookPayload {
   Password: string;
   Action: number;
-  ObjectType: 'Product' | 'Invoice' | 'Contact' | 'WarehouseReceipt' | 'Receipt' | string;
+  ObjectType: 'Product' | 'Invoice' | 'Contact';
   ObjectIdList: number[];
-  /** Non-standard compatibility field; not part of Hesabfa's documented hook body. */
-  Extra?: string | null;
 }
 
 /** Hesabfa change-hook action codes from the official TypesTable documentation. */
@@ -167,6 +171,17 @@ export const HESABFA_ACTION = {
   WASTE_INVOICE_SAVE: 161,
   WASTE_INVOICE_EDIT: 162,
   WASTE_INVOICE_DELETE: 163,
+  RECEIVE_RECEIPT_SAVE: 181,
+  RECEIVE_RECEIPT_EDIT: 182,
+  RECEIVE_RECEIPT_DELETE: 183,
+  PAYMENT_RECEIPT_SAVE: 191,
+  PAYMENT_RECEIPT_EDIT: 192,
+  PAYMENT_RECEIPT_DELETE: 193,
+  WAREHOUSE_RECEIPT_SAVE: 261,
+  WAREHOUSE_RECEIPT_EDIT: 262,
+  WAREHOUSE_RECEIPT_DELETE: 263,
+  ONLINE_INVOICE_PAYMENT_SAVE: 500,
+  ONLINE_CONTACT_DEPOSIT_SAVE: 501,
 } as const;
 
 export const HESABFA_INVOICE_TYPE_SALE = 0;

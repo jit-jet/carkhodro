@@ -2,6 +2,7 @@
  * Orchestrates full manual sync and webhook handling for Hesabfa.
  */
 
+import { after } from 'next/server';
 import {
   fullSyncCategories,
   type CategorySyncStats,
@@ -9,7 +10,7 @@ import {
 import {
   deactivateUsersByHesabfaIds,
   fullSyncContacts,
-  syncContactsFromWebhook,
+  syncContactsByIds,
   type ContactSyncStats,
 } from './contacts';
 import { getInvoicesById, isHesabfaConfigured } from './client';
@@ -23,37 +24,15 @@ import {
 import {
   refreshAllLocalStockFromHesabfa,
   refreshLocalStockFromHesabfaCodes,
-  refreshLocalStockFromHesabfaIds,
 } from './stock';
-import {
-  type HesabfaInvoice,
-  type HesabfaWebhookPayload,
-} from './types';
+import { type HesabfaWebhookPayload } from './types';
 import { classifyHesabfaWebhookAction } from './webhook-actions';
+import { itemCodesFromInvoices } from './invoice-stock';
 
 export interface FullSyncSummary {
   categories: CategorySyncStats;
   products: ProductSyncStats;
   contacts: ContactSyncStats;
-}
-
-/** Parse item/contact codes from Hesabfa webhook Extra (comma / space separated). */
-function codesFromExtra(extra: string | null | undefined): string[] {
-  if (!extra?.trim()) return [];
-  return extra
-    .split(/[,;\s]+/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
-function itemCodesFromInvoices(invoices: HesabfaInvoice[]): string[] {
-  const codes = invoices.flatMap((invoice) =>
-    (invoice.InvoiceItems ?? []).map((line) => {
-      const code = line.ItemCode ?? line.Item?.Code;
-      return code != null ? String(code).trim() : '';
-    }),
-  );
-  return [...new Set(codes.filter(Boolean))];
 }
 
 /** Run a full sync (pull categories/products/contacts). */
@@ -88,7 +67,6 @@ export async function handleHesabfaWebhook(
   const objectType = payload.ObjectType;
   const action = Number(payload.Action);
   const actionKind = classifyHesabfaWebhookAction(objectType, action);
-  const extraCodes = codesFromExtra(payload.Extra);
 
   if (objectType === 'Product') {
     if (actionKind === 'delete') {
@@ -118,7 +96,7 @@ export async function handleHesabfaWebhook(
     }
     if (actionKind !== 'upsert') return { objectType, action, ignored: true };
     // Pull contact from Hesabfa and apply name/phone/shop/address/active to the site user.
-    const stats = await syncContactsFromWebhook(ids, extraCodes);
+    const stats = await syncContactsByIds(ids);
     return { objectType, ...stats };
   }
 
@@ -148,29 +126,23 @@ export async function handleHesabfaWebhook(
 
     // Hook IDs are invoice IDs. Read the invoices, extract their item codes,
     // then pull each item's authoritative Stock value from Hesabfa.
-    const itemCodes = [
-      ...new Set([...itemCodesFromInvoices(invoices), ...extraCodes]),
-    ];
+    const itemCodes = itemCodesFromInvoices(invoices);
     const stockUpdated = await refreshLocalStockFromHesabfaCodes(itemCodes);
 
     return { objectType, ...stats, stockUpdated, stockItemCodes: itemCodes.length };
   }
 
-  // Warehouse receipts affect inventory — refresh linked products when possible.
-  if (objectType === 'WarehouseReceipt' || objectType === 'Receipt') {
-    const stockUpdated = await refreshLocalStockFromHesabfaIds(ids);
-    return { objectType, stockUpdated };
-  }
-
   return { objectType, ignored: true };
 }
 
-/** Fire-and-forget wrapper so Hesabfa never breaks checkout/admin flows. */
+/** Run after the response while keeping the Next.js request alive. */
 export function runHesabfaBackground(label: string, fn: () => Promise<void>): void {
-  void (async () => {
-    if (!(await isHesabfaConfigured())) return;
-    await fn();
-  })().catch((err) => {
-    console.error(`[hesabfa:${label}]`, err);
+  after(async () => {
+    try {
+      if (!(await isHesabfaConfigured())) return;
+      await fn();
+    } catch (err) {
+      console.error(`[hesabfa:${label}]`, err);
+    }
   });
 }

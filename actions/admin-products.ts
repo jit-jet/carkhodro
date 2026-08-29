@@ -11,6 +11,7 @@
  */
 
 import { updateTag } from 'next/cache';
+import type { Prisma } from '@/generated/prisma_client';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { tags } from '@/actions/cache-tags';
@@ -25,9 +26,13 @@ import {
   formatHesabfaDeleteError,
   formatHesabfaSaveError,
   pushProductToHesabfa,
+  pushProductsToHesabfa,
   saveProductItemToHesabfa,
 } from '@/src/lib/hesabfa/products';
-import { syncHesabfaStockToTarget } from '@/src/lib/hesabfa/stock';
+import {
+  fetchHesabfaStockByCodes,
+  stockFromHesabfaItem,
+} from '@/src/lib/hesabfa/stock';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import crypto from 'node:crypto';
 
@@ -52,7 +57,6 @@ export interface ProductInput {
   callForPriceRetail?: boolean;
   callForPriceWholesale?: boolean;
   isActive?: boolean;
-  stock?: number;
   origin?: string | null;
   /** Storefront unit label (e.g. عدد). Defaults to «عدد». */
   unit?: string;
@@ -167,18 +171,12 @@ export async function createProduct(
       );
     }
 
-    const targetStock = Math.max(0, Math.round(input.stock ?? 0));
-    try {
-      await syncHesabfaStockToTarget({
-        itemCode: code,
-        itemName: input.name.trim(),
-        targetStock,
-        unitPriceToman: Number(buyPrice ?? wholesalePrice),
-        reference: `create:${code}`,
-      });
-    } catch (err) {
-      console.error('[hesabfa:stock:create]', err);
-    }
+    // Inventory is owned by Hesabfa. Product create/edit must never issue an
+    // inventory adjustment; only persist the quantity returned by its API.
+    const stockByCode = await fetchHesabfaStockByCodes([code]);
+    const hesabfaStock =
+      stockByCode.get(code) ??
+      (saved.Stock != null ? stockFromHesabfaItem(saved) : undefined);
 
     // Hesabfa owns the SKU. A code can already exist locally after a retried
     // request or when Hesabfa reuses a code that belongs to a stale/soft-deleted
@@ -198,7 +196,7 @@ export async function createProduct(
         isOffer: input.isOffer ?? false,
         callForPriceRetail: input.callForPriceRetail ?? false,
         callForPriceWholesale: input.callForPriceWholesale ?? false,
-        stock: targetStock,
+        ...(hesabfaStock !== undefined ? { stock: hesabfaStock } : {}),
         origin: input.origin ?? null,
         unit: input.unit?.trim() || 'عدد',
         mainImage: input.mainImage ?? null,
@@ -223,7 +221,7 @@ export async function createProduct(
         callForPriceRetail: input.callForPriceRetail ?? false,
         callForPriceWholesale: input.callForPriceWholesale ?? false,
         isActive: true,
-        stock: targetStock,
+        ...(hesabfaStock !== undefined ? { stock: hesabfaStock } : {}),
         origin: input.origin ?? null,
         unit: input.unit?.trim() || 'عدد',
         mainImage: input.mainImage ?? null,
@@ -322,20 +320,10 @@ export async function updateProduct(
     }
 
     const code = hesabfaCodeOf(saved) || hesabfaCode;
-    const targetStock =
-      input.stock !== undefined ? Math.max(0, Math.round(input.stock)) : existing.stock;
-
-    try {
-      await syncHesabfaStockToTarget({
-        itemCode: code,
-        itemName: name,
-        targetStock,
-        unitPriceToman: Number(buyPrice ?? wholesalePrice),
-        reference: `update:${id}`,
-      });
-    } catch (err) {
-      console.error('[hesabfa:stock:update]', err);
-    }
+    const stockByCode = await fetchHesabfaStockByCodes([code]);
+    const hesabfaStock =
+      stockByCode.get(code) ??
+      (saved.Stock != null ? stockFromHesabfaItem(saved) : undefined);
 
     const updated = await prisma.product.update({
       where: { id },
@@ -361,7 +349,7 @@ export async function updateProduct(
           ? { callForPriceWholesale: input.callForPriceWholesale }
           : {}),
         isActive,
-        ...(input.stock !== undefined ? { stock: targetStock } : {}),
+        ...(hesabfaStock !== undefined ? { stock: hesabfaStock } : {}),
         ...(input.origin !== undefined ? { origin: input.origin } : {}),
         ...(input.unit !== undefined ? { unit: input.unit.trim() || 'عدد' } : {}),
         ...(input.mainImage !== undefined ? { mainImage: input.mainImage } : {}),
@@ -508,15 +496,27 @@ export async function bulkUpdateProducts(
     const tagScope =
       target.mode === 'ids' ? [...new Set(target.productIds)] : ('all-matching' as const);
 
+    async function updateHesabfaProductFields(data: Prisma.ProductUncheckedUpdateManyInput) {
+      // Capture ids before the update because `where` can filter on a field
+      // being changed (for example active status or category).
+      const rows = await prisma.product.findMany({ where, select: { id: true } });
+      const ids = rows.map((row) => row.id);
+      if (ids.length === 0) return null;
+
+      const result = await prisma.product.updateMany({
+        where: { id: { in: ids } },
+        data,
+      });
+      runHesabfaBackground('pushProducts:bulk', () => pushProductsToHesabfa(ids));
+      return result;
+    }
+
     switch (action.op) {
       case 'category': {
         const category = await prisma.category.findUnique({ where: { id: action.categoryId } });
         if (!category) return fail('دسته‌بندی انتخاب‌شده معتبر نیست.');
-        const result = await prisma.product.updateMany({
-          where,
-          data: { categoryId: action.categoryId },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ categoryId: action.categoryId });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }
@@ -556,42 +556,30 @@ export async function bulkUpdateProducts(
       case 'wholesaleDiscount': {
         const value = clampPct(action.value, 0, 100);
         if (value === null) return fail('درصد تخفیف عمده باید بین ۰ تا ۱۰۰ باشد.');
-        const result = await prisma.product.updateMany({
-          where,
-          data: { wholesaleDiscountPct: value },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ wholesaleDiscountPct: value });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'retailDiscount': {
         const value = clampPct(action.value, 0, 100);
         if (value === null) return fail('درصد تخفیف تک‌فروشی باید بین ۰ تا ۱۰۰ باشد.');
-        const result = await prisma.product.updateMany({
-          where,
-          data: { retailDiscountPct: value },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ retailDiscountPct: value });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'retailPriceDiff': {
         const value = clampPct(action.value, 0, 100);
         if (value === null) return fail('درصد اختلاف قیمت باید بین ۰ تا ۱۰۰ باشد.');
-        const result = await prisma.product.updateMany({
-          where,
-          data: { retailPriceDiffPct: value },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ retailPriceDiffPct: value });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }
       case 'setActive': {
-        const result = await prisma.product.updateMany({
-          where,
-          data: { isActive: action.isActive },
-        });
-        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        const result = await updateHesabfaProductFields({ isActive: action.isActive });
+        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }
