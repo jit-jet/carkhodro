@@ -29,7 +29,10 @@ import {
   pushProductsToHesabfa,
   saveProductItemToHesabfa,
 } from '@/src/lib/hesabfa/products';
-import { syncHesabfaStockToTarget } from '@/src/lib/hesabfa/stock';
+import {
+  fetchHesabfaStockByCodes,
+  stockFromHesabfaItem,
+} from '@/src/lib/hesabfa/stock';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import crypto from 'node:crypto';
 
@@ -54,7 +57,6 @@ export interface ProductInput {
   callForPriceRetail?: boolean;
   callForPriceWholesale?: boolean;
   isActive?: boolean;
-  stock?: number;
   origin?: string | null;
   /** Storefront unit label (e.g. عدد). Defaults to «عدد». */
   unit?: string;
@@ -169,18 +171,12 @@ export async function createProduct(
       );
     }
 
-    const targetStock = Math.max(0, Math.round(input.stock ?? 0));
-    try {
-      await syncHesabfaStockToTarget({
-        itemCode: code,
-        itemName: input.name.trim(),
-        targetStock,
-        unitPriceToman: Number(buyPrice ?? wholesalePrice),
-        reference: `create:${code}`,
-      });
-    } catch (err) {
-      console.error('[hesabfa:stock:create]', err);
-    }
+    // Inventory is owned by Hesabfa. Product create/edit must never issue an
+    // inventory adjustment; only persist the quantity returned by its API.
+    const stockByCode = await fetchHesabfaStockByCodes([code]);
+    const hesabfaStock =
+      stockByCode.get(code) ??
+      (saved.Stock != null ? stockFromHesabfaItem(saved) : undefined);
 
     // Hesabfa owns the SKU. A code can already exist locally after a retried
     // request or when Hesabfa reuses a code that belongs to a stale/soft-deleted
@@ -200,7 +196,7 @@ export async function createProduct(
         isOffer: input.isOffer ?? false,
         callForPriceRetail: input.callForPriceRetail ?? false,
         callForPriceWholesale: input.callForPriceWholesale ?? false,
-        stock: targetStock,
+        ...(hesabfaStock !== undefined ? { stock: hesabfaStock } : {}),
         origin: input.origin ?? null,
         unit: input.unit?.trim() || 'عدد',
         mainImage: input.mainImage ?? null,
@@ -225,7 +221,7 @@ export async function createProduct(
         callForPriceRetail: input.callForPriceRetail ?? false,
         callForPriceWholesale: input.callForPriceWholesale ?? false,
         isActive: true,
-        stock: targetStock,
+        ...(hesabfaStock !== undefined ? { stock: hesabfaStock } : {}),
         origin: input.origin ?? null,
         unit: input.unit?.trim() || 'عدد',
         mainImage: input.mainImage ?? null,
@@ -324,20 +320,10 @@ export async function updateProduct(
     }
 
     const code = hesabfaCodeOf(saved) || hesabfaCode;
-    const targetStock =
-      input.stock !== undefined ? Math.max(0, Math.round(input.stock)) : existing.stock;
-
-    try {
-      await syncHesabfaStockToTarget({
-        itemCode: code,
-        itemName: name,
-        targetStock,
-        unitPriceToman: Number(buyPrice ?? wholesalePrice),
-        reference: `update:${id}`,
-      });
-    } catch (err) {
-      console.error('[hesabfa:stock:update]', err);
-    }
+    const stockByCode = await fetchHesabfaStockByCodes([code]);
+    const hesabfaStock =
+      stockByCode.get(code) ??
+      (saved.Stock != null ? stockFromHesabfaItem(saved) : undefined);
 
     const updated = await prisma.product.update({
       where: { id },
@@ -363,7 +349,7 @@ export async function updateProduct(
           ? { callForPriceWholesale: input.callForPriceWholesale }
           : {}),
         isActive,
-        ...(input.stock !== undefined ? { stock: targetStock } : {}),
+        ...(hesabfaStock !== undefined ? { stock: hesabfaStock } : {}),
         ...(input.origin !== undefined ? { origin: input.origin } : {}),
         ...(input.unit !== undefined ? { unit: input.unit.trim() || 'عدد' } : {}),
         ...(input.mainImage !== undefined ? { mainImage: input.mainImage } : {}),

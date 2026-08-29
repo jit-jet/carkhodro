@@ -79,7 +79,6 @@ export default function ProductForm({
   const [wholesaleDiscountPct, setWholesaleDiscountPct] = useState(String(initial.wholesaleDiscountPct ?? 0));
   const [retailPriceDiffPct, setRetailPriceDiffPct] = useState(String(initial.retailPriceDiffPct ?? 25));
   const [retailDiscountPct, setRetailDiscountPct] = useState(String(initial.retailDiscountPct ?? 0));
-  const [stock, setStock] = useState(String(initial.stock ?? 0));
   const [origin, setOrigin] = useState(initial.origin ?? "");
   const [unit, setUnit] = useState(initial.unit?.trim() || "عدد");
   const [images, setImages] = useState<string[]>(() => initialGallery(initial));
@@ -238,7 +237,6 @@ export default function ProductForm({
       wholesaleDiscountPct: Number(wholesaleDiscountPct),
       retailPriceDiffPct: Number(retailPriceDiffPct),
       retailDiscountPct: Number(retailDiscountPct),
-      stock: Number(stock),
       origin: origin || null,
       unit: unit.trim() || "عدد",
       mainImage: mainImage || orderedImages[0] || null,
@@ -375,10 +373,6 @@ export default function ProductForm({
               placeholder="عدد"
               required
             />
-          </div>
-          <div>
-            <Label>موجودی انبار</Label>
-            <Input type="number" min={0} value={stock} onChange={(e) => setStock(e.target.value)} required />
           </div>
         </div>
 
