@@ -20,6 +20,7 @@ import {
   type HesabfaContact,
 } from './types';
 import { planContactIdentitySync } from './contact-identity';
+import { displayName } from './contact-name';
 
 export interface ContactSyncStats {
   created: number;
@@ -35,18 +36,6 @@ let retailInvoiceContactPromise: Promise<string | null> | null = null;
 
 function codeOf(contact: HesabfaContact): string {
   return contact.Code != null ? String(contact.Code).trim() : '';
-}
-
-function displayName(contact: HesabfaContact): { firstName: string; lastName: string } {
-  const first = contact.FirstName?.trim();
-  const last = contact.LastName?.trim();
-  if (first || last) {
-    return { firstName: first || 'مشتری', lastName: last || 'حسابفا' };
-  }
-  const name = contact.Name?.trim() || 'مشتری حسابفا';
-  const parts = name.split(/\s+/);
-  if (parts.length === 1) return { firstName: parts[0]!, lastName: '-' };
-  return { firstName: parts[0]!, lastName: parts.slice(1).join(' ') };
 }
 
 /** Run async work with a fixed concurrency limit. */
