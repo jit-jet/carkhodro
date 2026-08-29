@@ -31,8 +31,17 @@ const MAX_RESULTS = 200;
  * (name, sku, parts-brand, category and compatible car models).
  *
  * The query is normalized and split into tokens; a product matches if *any*
- * token is trigram-word-similar to its document, and rows are ranked by the
- * summed word-similarity across all tokens. This handles, in one pass:
+ * token is trigram-word-similar to its document. Matching stays broad, while
+ * ordering gives product-name relevance strict priority over document-level
+ * fuzzy relevance:
+ *   • exact full name
+ *   • exact word/phrase in the name (start before middle/end)
+ *   • exact substring in the name (earlier before later)
+ *   • fuzzy name similarity
+ *   • fuzzy similarity across the full search document
+ *
+ * The discrete exact-match tiers ensure a fuzzy result can never outrank a
+ * strong exact name match. The existing document search still handles:
  *   • misspellings           → trigram similarity is fuzzy by nature
  *   • merged / spaced words  → normalization + trigrams are spacing-agnostic
  *   • multi-word queries     → per-token scoring rewards matching more tokens
@@ -51,15 +60,19 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
   const take = Math.min(Math.max(limit, 1), MAX_RESULTS);
 
   return safeQuery(`searchProducts:${normalized}`, async () => {
-    // Each token contributes an OR-able, index-usable match condition and a
-    // word-similarity term; ranking sums the terms so closer / more-complete
-    // matches float to the top.
+    // Each token contributes an OR-able, index-usable match condition. The
+    // document score preserves broad metadata recall; the name score makes
+    // similarly-spelled product names rank ahead of metadata-only matches.
     const conditions = Prisma.join(
       tokens.map((t) => Prisma.sql`p.search_text %> ${t}`),
       ' OR ',
     );
-    const score = Prisma.join(
-      tokens.map((t) => Prisma.sql`word_similarity(${t}, p.search_text)`),
+    const documentFuzzyScore = Prisma.join(
+      tokens.map((t) => Prisma.sql`word_similarity(${t}, c.search_text)`),
+      ' + ',
+    );
+    const nameFuzzyScore = Prisma.join(
+      tokens.map((t) => Prisma.sql`word_similarity(${t}, c.normalized_name)`),
       ' + ',
     );
 
@@ -69,10 +82,30 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
         `SET LOCAL pg_trgm.word_similarity_threshold = ${WORD_SIMILARITY_THRESHOLD}`,
       );
       return tx.$queryRaw<{ id: string }[]>(Prisma.sql`
-        SELECT p.id
-        FROM products p
-        WHERE p.is_active = true AND (${conditions})
-        ORDER BY (${score}) DESC, p.sale_count DESC, p.id ASC
+        WITH candidates AS (
+          SELECT
+            p.id,
+            p.sale_count,
+            p.search_text,
+            fts_normalize(p.name) AS normalized_name
+          FROM products p
+          WHERE p.is_active = true AND (${conditions})
+        )
+        SELECT c.id
+        FROM candidates c
+        ORDER BY
+          CASE
+            WHEN c.normalized_name = ${normalized} THEN 4
+            WHEN left(c.normalized_name, length(${normalized}) + 1) = ${normalized} || ' ' THEN 3
+            WHEN strpos(' ' || c.normalized_name || ' ', ' ' || ${normalized} || ' ') > 0 THEN 2
+            WHEN strpos(c.normalized_name, ${normalized}) > 0 THEN 1
+            ELSE 0
+          END DESC,
+          nullif(strpos(c.normalized_name, ${normalized}), 0) ASC NULLS LAST,
+          (${nameFuzzyScore}) DESC,
+          (${documentFuzzyScore}) DESC,
+          c.sale_count DESC,
+          c.id ASC
         LIMIT ${take}
       `);
     });
