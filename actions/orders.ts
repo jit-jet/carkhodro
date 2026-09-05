@@ -20,7 +20,11 @@ import { clearUserCart } from '@/src/lib/clear-user-cart';
 import { zibalRequestPayment, zibalStartUrl } from '@/src/lib/zibal/client';
 import { ZIBAL_RESULT_OK } from '@/src/lib/zibal/types';
 import { tags } from '@/actions/cache-tags';
-import { resolveProductPriceBigInt, netLineTotalBigInt } from '@/src/lib/pricing';
+import {
+  resolveProductPriceBigInt,
+  netLineTotalForRole,
+  netLineTotalBigIntForRole,
+} from '@/src/lib/pricing';
 import { pricingRoleFromUser, canUseRetailCheckout } from '@/src/lib/user-role';
 import {
   isCallForPriceForRole,
@@ -133,7 +137,7 @@ export async function getOrderReceipt(id: string): Promise<OrderReceiptVM | null
       items: order.items.map((i) => {
         const unitList = Number(i.priceAtPurchase);
         const discountPct = Number(i.discountPct);
-        const unitNet = Math.round((unitList * (100 - discountPct)) / 100);
+        const unitNet = netLineTotalForRole(unitList, 1, discountPct, user.role);
         return {
           name: i.productName,
           sku: i.productSku,
@@ -328,17 +332,19 @@ export async function submitCheckout(
         carBrandIds,
         carModelIds,
         lineTotal: Number(
-          netLineTotalBigInt(
+          netLineTotalBigIntForRole(
             lineItems[idx].priceAtPurchase,
             lineItems[idx].quantity,
             lineItems[idx].discountPct,
+            role,
           ),
         ),
       };
     });
 
     const subtotal = lineItems.reduce(
-      (sum, l) => sum + netLineTotalBigInt(l.priceAtPurchase, l.quantity, l.discountPct),
+      (sum, l) =>
+        sum + netLineTotalBigIntForRole(l.priceAtPurchase, l.quantity, l.discountPct, role),
       BigInt(0),
     );
     const shippingCost = shipping.cost;

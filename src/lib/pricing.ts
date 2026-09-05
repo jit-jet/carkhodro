@@ -39,11 +39,16 @@ function toNumber(amount: bigint | number): number {
   return typeof amount === 'bigint' ? Number(amount) : amount;
 }
 
-/** retailPrice = wholesalePrice × (1 + retailPriceDiffPct / 100) */
+/**
+ * retailPrice = wholesalePrice × (1 + retailPriceDiffPct / 100)
+ *
+ * Retail prices always round up to the next whole Toman so the storefront,
+ * cart and checkout never undercut the configured percentage.
+ */
 export function computeRetailPrice(fields: ProductPriceFields): number {
   const wholesale = toNumber(fields.wholesalePrice);
   const diff = pct(fields.retailPriceDiffPct);
-  return Math.round((wholesale * (100 + diff)) / 100);
+  return Math.ceil((wholesale * (100 + diff)) / 100);
 }
 
 /** wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100) */
@@ -57,11 +62,16 @@ export function computeWholesaleFinal(fields: ProductPriceFields): number {
 export function computeRetailFinal(fields: ProductPriceFields): number {
   const retail = computeRetailPrice(fields);
   const discount = pct(fields.retailDiscountPct);
-  return applyDiscount(retail, discount);
+  return applyRetailDiscount(retail, discount);
 }
 
 export function applyDiscount(base: number, discountPct: number): number {
   return Math.round((base * (100 - discountPct)) / 100);
+}
+
+/** Retail discount result, rounded upward to a whole Toman. */
+export function applyRetailDiscount(base: number, discountPct: number): number {
+  return Math.ceil((base * (100 - discountPct)) / 100);
 }
 
 /** Pick the list + final price triple shown to the current user. */
@@ -84,7 +94,7 @@ export function resolveProductPrice(
   return {
     basePrice,
     discountPct,
-    finalPrice: applyDiscount(basePrice, discountPct),
+    finalPrice: applyRetailDiscount(basePrice, discountPct),
   };
 }
 
@@ -110,6 +120,19 @@ export function netLineTotal(
   return applyDiscount(unitListToman, discountPct) * quantity;
 }
 
+/** Net line total using the rounding policy of the current pricing tier. */
+export function netLineTotalForRole(
+  unitListToman: number,
+  quantity: number,
+  discountPct: number,
+  role: PricingRole,
+): number {
+  const unitNet = isWholesaleUser(role)
+    ? applyDiscount(unitListToman, discountPct)
+    : applyRetailDiscount(unitListToman, discountPct);
+  return unitNet * quantity;
+}
+
 /** Net line total using BigInt list price (order persistence). */
 export function netLineTotalBigInt(
   unitList: bigint,
@@ -118,4 +141,22 @@ export function netLineTotalBigInt(
 ): bigint {
   const gross = unitList * BigInt(quantity);
   return (gross * BigInt(Math.round((100 - discountPct) * 100))) / BigInt(10000);
+}
+
+/** BigInt-safe line total using the current tier's rounding policy. */
+export function netLineTotalBigIntForRole(
+  unitList: bigint,
+  quantity: number,
+  discountPct: number,
+  role: PricingRole,
+): bigint {
+  if (isWholesaleUser(role)) {
+    return netLineTotalBigInt(unitList, quantity, discountPct);
+  }
+
+  const denominator = BigInt(10000);
+  const discountFactor = BigInt(Math.round((100 - discountPct) * 100));
+  const unitNumerator = unitList * discountFactor;
+  const unitNet = (unitNumerator + denominator - BigInt(1)) / denominator;
+  return unitNet * BigInt(quantity);
 }

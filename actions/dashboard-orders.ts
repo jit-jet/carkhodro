@@ -26,6 +26,7 @@ import type {
   InvoiceVM,
   InvoiceLineVM,
 } from '@/src/lib/dashboard-types';
+import { netLineTotalForRole } from '@/src/lib/pricing';
 
 export interface OrdersQuery {
   status?: OrderStatus;
@@ -111,7 +112,7 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
         const unit = Number(it.priceAtPurchase);
         const discountPct = Number(it.discountPct);
         const gross = unit * it.quantity;
-        const net = Math.round((gross * (100 - discountPct)) / 100);
+        const net = netLineTotalForRole(unit, it.quantity, discountPct, user.role);
         return {
           rowNo: index + 1,
           sku: it.productSku,

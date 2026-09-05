@@ -5,7 +5,7 @@
 
 import type { Prisma } from '@/generated/prisma_client';
 import { prisma } from '@/src/lib/prisma';
-import { netLineTotal } from '@/src/lib/pricing';
+import { netLineTotalForRole } from '@/src/lib/pricing';
 import {
   changeInvoicePaidStatus,
   changeInvoiceSentStatus,
@@ -104,7 +104,7 @@ function buildInvoicePayload(
   const invoiceItems = lines.map(({ item, itemCode }, idx) => {
     const discountPct = Number(item.discountPct);
     const listToman = Number(item.priceAtPurchase);
-    const netUnit = netLineTotal(listToman, 1, discountPct);
+    const netUnit = netLineTotalForRole(listToman, 1, discountPct, order.user.role);
     const lineDiscountToman = Math.max(0, Math.round((listToman - netUnit) * item.quantity));
     return {
       rowNumber: idx + 1,

@@ -9,7 +9,10 @@
 import { prisma } from '@/src/lib/prisma';
 import { getCurrentUser } from '@/src/lib/session';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
-import { resolveProductPriceBigInt, netLineTotalBigInt } from '@/src/lib/pricing';
+import {
+  resolveProductPriceBigInt,
+  netLineTotalBigIntForRole,
+} from '@/src/lib/pricing';
 import type { ProductPriceFields } from '@/src/lib/pricing';
 import {
   pricingRoleFromUser,
@@ -131,7 +134,12 @@ function buildDiscountLines(
       carBrandIds,
       carModelIds,
       lineTotal: Number(
-        netLineTotalBigInt(pricing.basePrice, item.quantity, pricing.discountPct),
+        netLineTotalBigIntForRole(
+          pricing.basePrice,
+          item.quantity,
+          pricing.discountPct,
+          role,
+        ),
       ),
     };
   });
