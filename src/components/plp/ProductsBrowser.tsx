@@ -7,6 +7,7 @@ import ProductCard from '@/src/components/ui/ProductCard';
 import { searchProducts } from '@/actions/search';
 import type { ProductVM as Product } from '@/src/lib/serializers';
 import { formatJalaliDateTime, formatNumberFa, formatRial } from '@/src/lib/format';
+import { printDocument } from '@/src/lib/native/print';
 
 const PAGE_SIZE = 12;
 /** Upper bound on fuzzy-search results pulled for the results page. */
@@ -75,7 +76,7 @@ function buildPdfTitle(meta: {
   return `لیست قیمت ${parts.join(' — ')}`;
 }
 
-function openPDFWindow(products: Product[], documentTitle: string) {
+async function openPDFWindow(products: Product[], documentTitle: string) {
   const now = new Date();
   const issuedAt = formatJalaliDateTime(now);
   const safeTitle = documentTitle.trim() || 'لیست قیمت قطعات کارخودرو';
@@ -162,14 +163,7 @@ function openPDFWindow(products: Product[], documentTitle: string) {
 </body>
 </html>`;
 
-  const w = window.open('', '_blank');
-  if (w) {
-    w.document.write(html);
-    w.document.close();
-    w.document.title = safeTitle;
-    w.focus();
-    setTimeout(() => w.print(), 400);
-  }
+  await printDocument({ html, title: safeTitle });
 }
 
 function escapeHtml(value: string): string {

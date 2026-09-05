@@ -10,6 +10,7 @@
  */
 
 import type { OrderReceiptVM } from '@/src/lib/serializers';
+import { printDocument } from '@/src/lib/native/print';
 import {
   ORDER_STATUS_FA,
   PAYMENT_STATUS_FA,
@@ -120,12 +121,10 @@ function buildReceiptHtml(receipt: OrderReceiptVM): string {
 
 export default function DownloadReceiptButton({ receipt }: { receipt: OrderReceiptVM }) {
   function handleDownload() {
-    const w = window.open('', '_blank');
-    if (!w) return;
-    w.document.write(buildReceiptHtml(receipt));
-    w.document.close();
-    w.focus();
-    setTimeout(() => w.print(), 400);
+    void printDocument({
+      html: buildReceiptHtml(receipt),
+      title: `رسید سفارش ${receipt.id.slice(0, 8).toUpperCase()} - کارخودرو`,
+    });
   }
 
   return (

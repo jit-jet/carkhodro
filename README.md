@@ -16,6 +16,67 @@ npx prisma studio
 ## build app
 npm run  build
 
+## Android / iOS (Capacitor)
+
+The website remains a normal server-rendered Next.js application. It cannot be
+statically exported because authentication, carts, checkout, server actions,
+route handlers, image optimization, and dynamic data require the Next server.
+The native projects therefore load the deployed HTTPS site in a Capacitor
+WebView; `native-shell/` is only the offline/configuration fallback.
+
+1. Set the native origin before every sync. In production it must be the same
+   origin as `NEXT_PUBLIC_APP_URL`, otherwise cookies and the Zibal callback can
+   leave the authenticated app session:
+
+   ```powershell
+   $env:CAPACITOR_SERVER_URL = "https://your-production-domain.example"
+   ```
+
+2. Sync both generated projects:
+
+   ```powershell
+   npm run native:sync
+   ```
+
+   The sync script also normalizes Swift Package paths produced on Windows so
+   the checked-in iOS project opens correctly on macOS.
+
+3. Build Android (Capacitor 8 requires Node 22+, JDK 21, Android SDK 36 and the
+   matching build tools):
+
+   ```powershell
+   npm run android:apk
+   # debug APK: android/app/build/outputs/apk/debug/app-debug.apk
+   ```
+
+4. Build iOS on macOS with current Xcode:
+
+   ```bash
+   npm run native:ios
+   # Select the App target/team, then Product > Build or Archive in Xcode.
+   ```
+
+The bundle/application ID is currently `ir.carkhodro.app`; if it must change,
+update `capacitor.config.ts`, the Android namespace/application ID/package,
+the iOS product bundle identifier, and both custom-scheme registrations
+together before store release. Custom-scheme links such as
+`ir.carkhodro.app:///products/123` are registered on both platforms. For normal
+HTTPS Universal Links/App Links, add the production host in Xcode/Android and
+serve Apple's `apple-app-site-association` plus Android's `assetlinks.json`
+after the Apple Team ID and Android signing certificate are known.
+
+The generated projects request only Android Internet access. External HTTP(S)
+links open in the platform browser, `tel:`/`mailto:`/`sms:` use installed apps,
+the Zibal gateway stays inside the authenticated WebView, and printing uses the
+native Android/iOS print sheet. Cleartext HTTP is rejected by `native:check`;
+for emulator-only development it can be explicitly enabled with
+`CAPACITOR_ALLOW_CLEARTEXT=1` (Android emulator normally uses
+`http://10.0.2.2:3000`).
+
+Before release, replace the generated placeholder launcher/splash art, confirm
+the production URL, configure signing, and test payment return/deep links on
+physical Android and iOS devices.
+
 
 
 # start project on server
