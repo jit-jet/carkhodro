@@ -7,6 +7,7 @@ import { App } from '@capacitor/app';
 import { AppLauncher } from '@capacitor/app-launcher';
 import { Browser } from '@capacitor/browser';
 import { Keyboard } from '@capacitor/keyboard';
+import { resolveNativeBackAction } from '@/src/lib/native-back';
 
 const NATIVE_WEBVIEW_HOSTS = new Set(['gateway.zibal.ir']);
 
@@ -98,7 +99,9 @@ export default function NativeRuntime() {
     void Promise.all([
       App.addListener('appUrlOpen', ({ url }) => routeDeepLink(url)),
       App.addListener('backButton', ({ canGoBack }) => {
-        if (canGoBack) window.history.back();
+        const action = resolveNativeBackAction(window.location.pathname, canGoBack);
+        if (action === 'exit') void App.exitApp();
+        else if (action === 'back') window.history.back();
         else void App.minimizeApp();
       }),
       Keyboard.addListener('keyboardWillShow', ({ keyboardHeight }) => {
