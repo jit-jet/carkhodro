@@ -45,7 +45,9 @@ export default async function AccountMenu() {
     );
   }
 
-  return <AccountMenuClient firstName={user.firstName} />;
+  const fullName = `${user.firstName} ${user.lastName}`.trim();
+
+  return <AccountMenuClient fullName={fullName} />;
 }
 
 /**
@@ -57,7 +59,10 @@ export default async function AccountMenu() {
 export async function MobileAccountSection() {
   const user = await getCurrentUser();
   if (!user) return null;
-  return <MobileLogoutButton firstName={user.firstName} />;
+
+  const fullName = `${user.firstName} ${user.lastName}`.trim();
+
+  return <MobileLogoutButton fullName={fullName} />;
 }
 
 /** Layout-shift-free placeholder while the session resolves (streamed in). */

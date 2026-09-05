@@ -55,7 +55,7 @@ function useLogoutHandler() {
  * Shows the account button (icon + name at sm+) always, and an inline logout
  * button only on sm+ (mobile users find logout in the hamburger menu).
  */
-export default function AccountMenuClient({ firstName }: { firstName: string }) {
+export default function AccountMenuClient({ fullName }: { fullName: string }) {
   const { handleLogout, loggingOut } = useLogoutHandler();
 
   return (
@@ -65,7 +65,7 @@ export default function AccountMenuClient({ firstName }: { firstName: string }) 
         className="flex items-center gap-1.5 border-2 border-silver hover:border-accent hover:bg-amber-50 text-charcoal font-semibold text-sm px-2.5 sm:px-3 py-2.5 rounded-xl transition-all active:scale-95"
       >
         <UserIcon />
-        <span className="hidden sm:inline">{firstName}</span>
+        <span className="hidden sm:inline">{fullName}</span>
       </Link>
 
       {/* Inline logout — desktop only; mobile users use the hamburger logout button */}
@@ -87,7 +87,7 @@ export default function AccountMenuClient({ firstName }: { firstName: string }) 
  * Rendered by <MobileAccountSection> (AccountMenu.tsx) only when a user is
  * signed in, so this component never needs to check auth state.
  */
-export function MobileLogoutButton({ firstName }: { firstName: string }) {
+export function MobileLogoutButton({ fullName }: { fullName: string }) {
   const { handleLogout, loggingOut } = useLogoutHandler();
 
   return (
@@ -97,7 +97,7 @@ export function MobileLogoutButton({ firstName }: { firstName: string }) {
         className="flex items-center gap-3 px-5 py-3.5 text-charcoal font-medium text-sm hover:bg-silver-light hover:text-accent-dark border-b border-gray-50 transition-colors"
       >
         <UserIcon />
-        <span>{firstName}</span>
+        <span>{fullName}</span>
       </Link>
       <button
         onClick={handleLogout}
