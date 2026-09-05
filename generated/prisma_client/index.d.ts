@@ -32561,6 +32561,7 @@ export namespace Prisma {
     metaDescription: number
     ogImageUrl: number
     copyrightText: number
+    invoiceSeller: number
     analyticsId: number
     googleAnalyticsId: number
     googleTagManagerId: number
@@ -32730,6 +32731,7 @@ export namespace Prisma {
     metaDescription?: true
     ogImageUrl?: true
     copyrightText?: true
+    invoiceSeller?: true
     analyticsId?: true
     googleAnalyticsId?: true
     googleTagManagerId?: true
@@ -32870,6 +32872,7 @@ export namespace Prisma {
     metaDescription: string | null
     ogImageUrl: string | null
     copyrightText: string | null
+    invoiceSeller: JsonValue | null
     analyticsId: string | null
     googleAnalyticsId: string | null
     googleTagManagerId: string | null
@@ -32942,6 +32945,7 @@ export namespace Prisma {
     metaDescription?: boolean
     ogImageUrl?: boolean
     copyrightText?: boolean
+    invoiceSeller?: boolean
     analyticsId?: boolean
     googleAnalyticsId?: boolean
     googleTagManagerId?: boolean
@@ -32995,6 +32999,7 @@ export namespace Prisma {
     metaDescription?: boolean
     ogImageUrl?: boolean
     copyrightText?: boolean
+    invoiceSeller?: boolean
     analyticsId?: boolean
     googleAnalyticsId?: boolean
     googleTagManagerId?: boolean
@@ -33048,6 +33053,7 @@ export namespace Prisma {
     metaDescription?: boolean
     ogImageUrl?: boolean
     copyrightText?: boolean
+    invoiceSeller?: boolean
     analyticsId?: boolean
     googleAnalyticsId?: boolean
     googleTagManagerId?: boolean
@@ -33101,6 +33107,7 @@ export namespace Prisma {
     metaDescription?: boolean
     ogImageUrl?: boolean
     copyrightText?: boolean
+    invoiceSeller?: boolean
     analyticsId?: boolean
     googleAnalyticsId?: boolean
     googleTagManagerId?: boolean
@@ -33110,7 +33117,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "heroTitle" | "heroDescription" | "heroButton1Text" | "heroButton1Href" | "heroButton2Text" | "heroButton2Href" | "siteName" | "logoUrl" | "productWatermarkUrl" | "productWatermarkPosition" | "faviconUrl" | "appleTouchIconUrl" | "metaTitle" | "metaDescription" | "ogImageUrl" | "copyrightText" | "analyticsId" | "googleAnalyticsId" | "googleTagManagerId" | "searchConsoleVerification" | "robotsIndex" | "robotsFollow" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "heroTitle" | "heroDescription" | "heroButton1Text" | "heroButton1Href" | "heroButton2Text" | "heroButton2Href" | "siteName" | "logoUrl" | "productWatermarkUrl" | "productWatermarkPosition" | "faviconUrl" | "appleTouchIconUrl" | "metaTitle" | "metaDescription" | "ogImageUrl" | "copyrightText" | "invoiceSeller" | "analyticsId" | "googleAnalyticsId" | "googleTagManagerId" | "searchConsoleVerification" | "robotsIndex" | "robotsFollow" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
@@ -33183,6 +33190,10 @@ export namespace Prisma {
       metaDescription: string | null
       ogImageUrl: string | null
       copyrightText: string | null
+      /**
+       * Seller/company details rendered on printable invoices.
+       */
+      invoiceSeller: Prisma.JsonValue | null
       /**
        * Google Analytics (`G-…` / `UA-…`) or Google Tag Manager (`GTM-…`) container ID.
        */
@@ -33659,6 +33670,7 @@ export namespace Prisma {
     readonly metaDescription: FieldRef<"SiteSetting", 'String'>
     readonly ogImageUrl: FieldRef<"SiteSetting", 'String'>
     readonly copyrightText: FieldRef<"SiteSetting", 'String'>
+    readonly invoiceSeller: FieldRef<"SiteSetting", 'Json'>
     readonly analyticsId: FieldRef<"SiteSetting", 'String'>
     readonly googleAnalyticsId: FieldRef<"SiteSetting", 'String'>
     readonly googleTagManagerId: FieldRef<"SiteSetting", 'String'>
@@ -53810,6 +53822,7 @@ export namespace Prisma {
     metaDescription: 'metaDescription',
     ogImageUrl: 'ogImageUrl',
     copyrightText: 'copyrightText',
+    invoiceSeller: 'invoiceSeller',
     analyticsId: 'analyticsId',
     googleAnalyticsId: 'googleAnalyticsId',
     googleTagManagerId: 'googleTagManagerId',
@@ -54230,20 +54243,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'AdminActivityStatus'
-   */
-  export type EnumAdminActivityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminActivityStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'AdminActivityStatus[]'
-   */
-  export type ListEnumAdminActivityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminActivityStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -54254,6 +54253,20 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'AdminActivityStatus'
+   */
+  export type EnumAdminActivityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminActivityStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AdminActivityStatus[]'
+   */
+  export type ListEnumAdminActivityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminActivityStatus[]'>
     
 
 
@@ -56278,6 +56291,7 @@ export namespace Prisma {
     metaDescription?: StringNullableFilter<"SiteSetting"> | string | null
     ogImageUrl?: StringNullableFilter<"SiteSetting"> | string | null
     copyrightText?: StringNullableFilter<"SiteSetting"> | string | null
+    invoiceSeller?: JsonNullableFilter<"SiteSetting">
     analyticsId?: StringNullableFilter<"SiteSetting"> | string | null
     googleAnalyticsId?: StringNullableFilter<"SiteSetting"> | string | null
     googleTagManagerId?: StringNullableFilter<"SiteSetting"> | string | null
@@ -56331,6 +56345,7 @@ export namespace Prisma {
     metaDescription?: SortOrderInput | SortOrder
     ogImageUrl?: SortOrderInput | SortOrder
     copyrightText?: SortOrderInput | SortOrder
+    invoiceSeller?: SortOrderInput | SortOrder
     analyticsId?: SortOrderInput | SortOrder
     googleAnalyticsId?: SortOrderInput | SortOrder
     googleTagManagerId?: SortOrderInput | SortOrder
@@ -56387,6 +56402,7 @@ export namespace Prisma {
     metaDescription?: StringNullableFilter<"SiteSetting"> | string | null
     ogImageUrl?: StringNullableFilter<"SiteSetting"> | string | null
     copyrightText?: StringNullableFilter<"SiteSetting"> | string | null
+    invoiceSeller?: JsonNullableFilter<"SiteSetting">
     analyticsId?: StringNullableFilter<"SiteSetting"> | string | null
     googleAnalyticsId?: StringNullableFilter<"SiteSetting"> | string | null
     googleTagManagerId?: StringNullableFilter<"SiteSetting"> | string | null
@@ -56440,6 +56456,7 @@ export namespace Prisma {
     metaDescription?: SortOrderInput | SortOrder
     ogImageUrl?: SortOrderInput | SortOrder
     copyrightText?: SortOrderInput | SortOrder
+    invoiceSeller?: SortOrderInput | SortOrder
     analyticsId?: SortOrderInput | SortOrder
     googleAnalyticsId?: SortOrderInput | SortOrder
     googleTagManagerId?: SortOrderInput | SortOrder
@@ -56501,6 +56518,7 @@ export namespace Prisma {
     metaDescription?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     ogImageUrl?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     copyrightText?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+    invoiceSeller?: JsonNullableWithAggregatesFilter<"SiteSetting">
     analyticsId?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     googleAnalyticsId?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     googleTagManagerId?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
@@ -59834,6 +59852,7 @@ export namespace Prisma {
     metaDescription?: string | null
     ogImageUrl?: string | null
     copyrightText?: string | null
+    invoiceSeller?: NullableJsonNullValueInput | InputJsonValue
     analyticsId?: string | null
     googleAnalyticsId?: string | null
     googleTagManagerId?: string | null
@@ -59887,6 +59906,7 @@ export namespace Prisma {
     metaDescription?: string | null
     ogImageUrl?: string | null
     copyrightText?: string | null
+    invoiceSeller?: NullableJsonNullValueInput | InputJsonValue
     analyticsId?: string | null
     googleAnalyticsId?: string | null
     googleTagManagerId?: string | null
@@ -59940,6 +59960,7 @@ export namespace Prisma {
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     copyrightText?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceSeller?: NullableJsonNullValueInput | InputJsonValue
     analyticsId?: NullableStringFieldUpdateOperationsInput | string | null
     googleAnalyticsId?: NullableStringFieldUpdateOperationsInput | string | null
     googleTagManagerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59993,6 +60014,7 @@ export namespace Prisma {
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     copyrightText?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceSeller?: NullableJsonNullValueInput | InputJsonValue
     analyticsId?: NullableStringFieldUpdateOperationsInput | string | null
     googleAnalyticsId?: NullableStringFieldUpdateOperationsInput | string | null
     googleTagManagerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60046,6 +60068,7 @@ export namespace Prisma {
     metaDescription?: string | null
     ogImageUrl?: string | null
     copyrightText?: string | null
+    invoiceSeller?: NullableJsonNullValueInput | InputJsonValue
     analyticsId?: string | null
     googleAnalyticsId?: string | null
     googleTagManagerId?: string | null
@@ -60099,6 +60122,7 @@ export namespace Prisma {
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     copyrightText?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceSeller?: NullableJsonNullValueInput | InputJsonValue
     analyticsId?: NullableStringFieldUpdateOperationsInput | string | null
     googleAnalyticsId?: NullableStringFieldUpdateOperationsInput | string | null
     googleTagManagerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60152,6 +60176,7 @@ export namespace Prisma {
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     copyrightText?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceSeller?: NullableJsonNullValueInput | InputJsonValue
     analyticsId?: NullableStringFieldUpdateOperationsInput | string | null
     googleAnalyticsId?: NullableStringFieldUpdateOperationsInput | string | null
     googleTagManagerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63206,6 +63231,29 @@ export namespace Prisma {
     id?: SortOrder
     sortOrder?: SortOrder
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type SiteSettingCountOrderByAggregateInput = {
     id?: SortOrder
@@ -63251,6 +63299,7 @@ export namespace Prisma {
     metaDescription?: SortOrder
     ogImageUrl?: SortOrder
     copyrightText?: SortOrder
+    invoiceSeller?: SortOrder
     analyticsId?: SortOrder
     googleAnalyticsId?: SortOrder
     googleTagManagerId?: SortOrder
@@ -63373,6 +63422,32 @@ export namespace Prisma {
   export type SiteSettingSumOrderByAggregateInput = {
     id?: SortOrder
   }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
 
   export type SeoRedirectCountOrderByAggregateInput = {
     id?: SortOrder
@@ -63441,29 +63516,6 @@ export namespace Prisma {
     notIn?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumAdminActivityStatusFilter<$PrismaModel> | $Enums.AdminActivityStatus
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type AdminActivityLogCountOrderByAggregateInput = {
     id?: SortOrder
@@ -63507,32 +63559,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
     _max?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type SystemSettingCountOrderByAggregateInput = {
@@ -66745,23 +66771,6 @@ export namespace Prisma {
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
   }
-
-  export type NestedEnumAdminActivityStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.AdminActivityStatus | EnumAdminActivityStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumAdminActivityStatusFilter<$PrismaModel> | $Enums.AdminActivityStatus
-  }
-
-  export type NestedEnumAdminActivityStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.AdminActivityStatus | EnumAdminActivityStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumAdminActivityStatusWithAggregatesFilter<$PrismaModel> | $Enums.AdminActivityStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
-    _max?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
-  }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -66784,6 +66793,23 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumAdminActivityStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdminActivityStatus | EnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdminActivityStatusFilter<$PrismaModel> | $Enums.AdminActivityStatus
+  }
+
+  export type NestedEnumAdminActivityStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdminActivityStatus | EnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdminActivityStatus[] | ListEnumAdminActivityStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdminActivityStatusWithAggregatesFilter<$PrismaModel> | $Enums.AdminActivityStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
+    _max?: NestedEnumAdminActivityStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumSmsTargetRoleFilter<$PrismaModel = never> = {

@@ -1,24 +1,33 @@
-/**
- * Seller / company details for printable wholesale invoices.
- * Values match the paper «فاکتور فروش» (PDF sample).
- */
+import 'server-only';
 
-export const INVOICE_SELLER = {
-  brandName: 'کارخودرو',
-  storeName: 'فروشگاه قطعات خودرو شاه گل',
-  website: 'WWW.CARKHODRO.IR',
-  websiteUrl: 'https://carkhodro.ir',
-  country: 'ایران',
-  province: 'خراسان رضوی',
-  city: 'مشهد',
-  postalCode: '۹۱۶۵۶۱۸۶۹۵',
-  address: 'بلوار جمهوری اسلامی ۸، نبش شهید صیادتی ۱۹',
-  phone: '۰۵۱۳۳۴۳۳۳۷۱',
-  categoriesNote:
-    'قطعات موتوری، جلوبندی، برقی، انژکتوری — برندهای ویژن، والئو، آیسین، اپتی‌بلت، WAX، امیرنیا، پاورگریپ، تیتیک، فران‌تک، قائم، رینگ مارموت، رینگ ماشین‌کاران، تری‌پارت، کمک KDS و کوشاران، کمک ایران، فنر لول زمان و … SM، موتوپاور، هانتر، شرق',
-  trustNote: 'فاکتور تا تسویه کامل نزد خریدار امانت می‌باشد. لطفاً وجه فاکتور را به شماره زیر واریز نمایید.',
-  bankName: 'مهر ایران',
-  bankAccountHolder: 'حسین شاه گل زاده',
-  cardNumber: '۶۰۶۳۷۳۱۲۱۱۲۳۸۷۷۰',
-  sheba: 'IR۰۹۰۶۰۰۳۶۱۹۷۰۰۱۷۹۸۵۶۶۷۰۰۱',
-} as const;
+import { prisma } from '@/src/lib/prisma';
+import { DEFAULT_INVOICE_SELLER } from '@/src/lib/invoice-seller-defaults';
+import type { InvoiceSeller } from '@/src/lib/invoice-seller-types';
+
+function invoiceSellerFromJson(value: unknown): InvoiceSeller {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return { ...DEFAULT_INVOICE_SELLER };
+  }
+
+  const row = value as Record<string, unknown>;
+  return Object.fromEntries(
+    Object.entries(DEFAULT_INVOICE_SELLER).map(([key, fallback]) => {
+      const candidate = row[key];
+      return [key, typeof candidate === 'string' && candidate.trim() ? candidate.trim() : fallback];
+    }),
+  ) as unknown as InvoiceSeller;
+}
+
+/** Read printable-invoice seller/company details from the settings singleton. */
+export async function getInvoiceSeller(): Promise<InvoiceSeller> {
+  try {
+    const row = await prisma.siteSetting.findUnique({
+      where: { id: 1 },
+      select: { invoiceSeller: true },
+    });
+    return invoiceSellerFromJson(row?.invoiceSeller);
+  } catch (error) {
+    console.error('[invoice-seller:get]', error);
+    return { ...DEFAULT_INVOICE_SELLER };
+  }
+}

@@ -437,6 +437,7 @@ exports.Prisma.SiteSettingScalarFieldEnum = {
   metaDescription: 'metaDescription',
   ogImageUrl: 'ogImageUrl',
   copyrightText: 'copyrightText',
+  invoiceSeller: 'invoiceSeller',
   analyticsId: 'analyticsId',
   googleAnalyticsId: 'googleAnalyticsId',
   googleTagManagerId: 'googleTagManagerId',

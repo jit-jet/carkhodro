@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import type { InvoiceVM } from '@/src/lib/dashboard-types';
-import { INVOICE_SELLER } from '@/src/lib/invoice-seller';
+import type { InvoiceSeller } from '@/src/lib/invoice-seller-types';
 import {
   formatNumberFa,
   noFormatNumberFa,
@@ -10,6 +10,7 @@ import {
 
 interface Props {
   invoice: InvoiceVM;
+  seller: InvoiceSeller;
 }
 
 function rialAmt(toman: number): string {
@@ -22,8 +23,7 @@ function balanceLabel(toman: number): string {
   return `${formatNumberFa(abs * RIAL_PER_TOMAN)} ریال بدهکار`;
 }
 
-export default function InvoicePrint({ invoice }: Props) {
-  const s = INVOICE_SELLER;
+export default function InvoicePrint({ invoice, seller: s }: Props) {
   const buyerAddress = [invoice.address.province, invoice.address.city, invoice.address.street]
     .filter(Boolean)
     .join('، ');
@@ -40,7 +40,7 @@ export default function InvoicePrint({ invoice }: Props) {
       {/* ── Header: logo RIGHT · title CENTER · meta LEFT ── */}
       <div className="inv-header">
         <div className="inv-header-logo">
-          <Image src="/logo.png" alt={s.brandName} width={78} height={78} className="inv-logo" priority />
+          <Image src={s.logoUrl} alt={s.brandName} width={78} height={78} className="inv-logo" priority />
           <p className="inv-website">{s.website}</p>
         </div>
 

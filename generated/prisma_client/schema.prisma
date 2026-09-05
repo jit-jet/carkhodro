@@ -733,6 +733,8 @@ model SiteSetting {
   metaDescription           String?  @map("meta_description") @db.Text
   ogImageUrl                String?  @map("og_image_url")
   copyrightText             String?  @map("copyright_text")
+  /// Seller/company details rendered on printable invoices.
+  invoiceSeller             Json?    @map("invoice_seller")
   /// Google Analytics (`G-…` / `UA-…`) or Google Tag Manager (`GTM-…`) container ID.
   analyticsId               String?  @map("analytics_id")
   googleAnalyticsId         String?  @map("google_analytics_id")

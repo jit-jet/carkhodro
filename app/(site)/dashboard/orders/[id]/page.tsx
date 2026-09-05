@@ -11,6 +11,7 @@ import type { Metadata } from 'next';
 import { getInvoice } from '@/actions/dashboard-orders';
 import PrintButton from '@/src/components/dashboard/PrintButton';
 import InvoicePrint from '@/src/components/dashboard/InvoicePrint';
+import { getInvoiceSeller } from '@/src/lib/invoice-seller';
 
 export const metadata: Metadata = {
   title: 'فاکتور | فروشگاه اینترنتی کارخودرو',
@@ -26,7 +27,7 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
 
 async function InvoiceContent({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const invoice = await getInvoice(id);
+  const [invoice, seller] = await Promise.all([getInvoice(id), getInvoiceSeller()]);
   if (!invoice) notFound();
 
   return (
@@ -53,7 +54,7 @@ async function InvoiceContent({ params }: { params: Promise<{ id: string }> }) {
       </div>
 
       <div className="print-area bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 lg:p-8 print:rounded-none print:border-0 print:shadow-none print:p-0">
-        <InvoicePrint invoice={invoice} />
+        <InvoicePrint invoice={invoice} seller={seller} />
       </div>
 
       <div className="no-print flex justify-center pt-1 pb-4">

@@ -7,6 +7,7 @@ import { PageHeader } from "@/src/components/admin/AdminUI";
 import OrderEditForm from "@/src/components/admin/OrderEditForm";
 import InvoicePrint from "@/src/components/dashboard/InvoicePrint";
 import PrintButton from "@/src/components/dashboard/PrintButton";
+import { getInvoiceSeller } from "@/src/lib/invoice-seller";
 
 export const metadata: Metadata = { title: "جزئیات سفارش | پنل مدیریت" };
 
@@ -24,9 +25,10 @@ export default function AdminOrderDetailPage({ params }: Props) {
 
 async function OrderDetailContent({ params }: Props) {
   const { id } = await params;
-  const [order, invoice] = await Promise.all([
+  const [order, invoice, seller] = await Promise.all([
     getOrderAdminById(id),
     getInvoiceAdmin(id),
+    getInvoiceSeller(),
   ]);
   if (!order || !invoice) notFound();
 
@@ -57,7 +59,7 @@ async function OrderDetailContent({ params }: Props) {
       </div>
 
       <div className="print-area bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 lg:p-8 print:rounded-none print:border-0 print:shadow-none print:p-0">
-        <InvoicePrint invoice={invoice} />
+        <InvoicePrint invoice={invoice} seller={seller} />
       </div>
 
       <div className="no-print flex justify-center pb-4">
