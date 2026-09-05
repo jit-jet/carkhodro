@@ -33,7 +33,8 @@ const MAX_RESULTS = 200;
  * The query is normalized and split into tokens; a product matches if *any*
  * token is trigram-word-similar to its document. Matching stays broad, while
  * ordering gives product-name relevance strict priority over document-level
- * fuzzy relevance:
+ * fuzzy relevance within each stock group. In-stock products always come
+ * before out-of-stock products, then each group is ranked by:
  *   • exact full name
  *   • exact word/phrase in the name (start before middle/end)
  *   • exact substring in the name (earlier before later)
@@ -85,6 +86,7 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
         WITH candidates AS (
           SELECT
             p.id,
+            p.stock,
             p.sale_count,
             p.search_text,
             fts_normalize(p.name) AS normalized_name
@@ -94,6 +96,7 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
         SELECT c.id
         FROM candidates c
         ORDER BY
+          (c.stock > 0) DESC,
           CASE
             WHEN c.normalized_name = ${normalized} THEN 4
             WHEN left(c.normalized_name, length(${normalized}) + 1) = ${normalized} || ' ' THEN 3
