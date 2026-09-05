@@ -1,5 +1,7 @@
 'use client';
 
+import { printDocument } from '@/src/lib/native/print';
+
 /** Triggers the browser print dialog (used to "download" the invoice as PDF). */
 export default function PrintButton({
   label = 'چاپ فاکتور',
@@ -12,16 +14,7 @@ export default function PrintButton({
   return (
     <button
       onClick={() => {
-        const previousTitle = document.title;
-        if (documentTitle?.trim()) {
-          document.title = documentTitle.trim();
-        }
-        window.print();
-        if (documentTitle?.trim()) {
-          window.setTimeout(() => {
-            document.title = previousTitle;
-          }, 1000);
-        }
+        void printDocument({ title: documentTitle });
       }}
       className="no-print flex items-center gap-2 bg-charcoal hover:bg-charcoal/90 text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors"
     >

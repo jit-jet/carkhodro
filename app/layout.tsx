@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Toaster from "@/src/components/ui/Toaster";
 import SiteAnalytics from "@/src/components/layout/SiteAnalytics";
@@ -6,6 +6,13 @@ import { getPublicSiteSettings } from "@/actions/site-settings";
 import { buildRootMetadata } from "@/src/lib/site-branding";
 import JsonLd from "@/src/components/seo/JsonLd";
 import { siteUrl } from "@/src/lib/seo";
+import NativeRuntime from "@/src/components/native/NativeRuntime";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getPublicSiteSettings();
@@ -33,6 +40,7 @@ export default async function RootLayout({
           { '@context': 'https://schema.org', '@type': 'WebSite', name: settings.siteName, url: siteUrl('/'), potentialAction: { '@type': 'SearchAction', target: `${siteUrl('/products')}?q={search_term_string}`, 'query-input': 'required name=search_term_string' } },
         ]} />
         {children}
+        <NativeRuntime />
         {/* Global toast viewport — driven by the cart UI store. */}
         <Toaster />
         <SiteAnalytics

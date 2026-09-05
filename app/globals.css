@@ -69,6 +69,40 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Capacitor 8 injects --safe-area-inset-* on Android when WebView env() values
+   are unreliable. These rules are gated by a runtime class, so the website's
+   existing desktop/mobile layout is unchanged. */
+html.capacitor-native {
+  min-height: 100dvh;
+  padding-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  padding-right: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
+  padding-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  padding-left: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
+  overscroll-behavior-y: none;
+  background: #fff;
+}
+
+html.capacitor-native,
+html.capacitor-native body {
+  min-height: 100dvh;
+}
+
+html.capacitor-native body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html.capacitor-native.capacitor-keyboard-open body {
+  min-height: calc(100dvh - var(--app-keyboard-height, 0px));
+}
+
+html.capacitor-ios input,
+html.capacitor-ios textarea,
+html.capacitor-ios select {
+  /* Prevent iOS focus zoom without disabling user page zoom. */
+  font-size: max(16px, 1em);
+}
+
 ::-webkit-scrollbar {
   height: 5px;
   width: 5px;

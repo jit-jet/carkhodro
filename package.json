@@ -7,7 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test src/lib/hesabfa/*.test.ts",
+    "native:check": "node scripts/validate-native-config.mjs",
+    "native:splash": "node scripts/generate-native-splashes.mjs",
+    "native:assets": "capacitor-assets generate --android && capacitor-assets generate --ios && npm run native:splash",
+    "native:sync": "npm run native:check && cap sync && node scripts/normalize-ios-spm-paths.mjs",
+    "native:android": "npm run native:sync && cap open android",
+    "native:ios": "npm run native:sync && cap open ios",
+    "android:apk": "npm run native:sync && cd android && gradlew.bat assembleDebug",
     "db:seed": "tsx prisma/seed.ts",
     "db:import-system-settings": "node --conditions=react-server --import tsx scripts/import-system-settings.ts",
     "db:deploy": "npx prisma migrate deploy && npx prisma generate"
@@ -16,6 +24,11 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/app-launcher": "^8.0.1",
+    "@capacitor/browser": "^8.0.4",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/keyboard": "^8.0.5",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@prisma/studio-core": "^0.27.3",
@@ -34,6 +47,10 @@
     "zustand": "^5.0.13"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/ios": "^8.5.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
