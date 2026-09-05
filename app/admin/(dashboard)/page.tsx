@@ -28,7 +28,7 @@ async function AdminHomeContent() {
     {
       label: "محصولات فعال",
       value: stats.activeProductCount,
-      href: "/admin/products",
+      href: "/admin/products?status=active",
       tone: "text-charcoal",
       bar: "bg-accent",
     },
@@ -42,7 +42,7 @@ async function AdminHomeContent() {
     {
       label: "ناموجود",
       value: stats.outOfStockCount,
-      href: "/admin/products",
+      href: "/admin/products?status=active&stock=out_of_stock",
       tone: "text-red-600",
       bar: "bg-red-400",
     },
@@ -56,21 +56,21 @@ async function AdminHomeContent() {
     {
       label: "همکاران (عمده)",
       value: stats.partnerCount,
-      href: "/admin/users",
+      href: "/admin/users?role=WHOLESALE",
       tone: "text-accent-dark",
       bar: "bg-accent-dark",
     },
     {
       label: "مشتریان تک‌فروش",
       value: stats.retailCount,
-      href: "/admin/users",
+      href: "/admin/users?role=RETAIL",
       tone: "text-charcoal",
       bar: "bg-gray-300",
     },
     {
       label: "سفارشات در انتظار",
       value: stats.pendingOrderCount,
-      href: "/admin/orders",
+      href: "/admin/orders?status=pending",
       tone: "text-amber-600",
       bar: "bg-amber-400",
     },

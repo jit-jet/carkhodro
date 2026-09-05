@@ -5,6 +5,7 @@
 
 import { prisma } from '@/src/lib/prisma';
 import { safeQuery } from '@/src/lib/result';
+import { PENDING_ADMIN_ORDER_STATUSES } from '@/src/lib/order-labels';
 
 export interface AdminDashboardStatsVM {
   productCount: number;
@@ -39,12 +40,12 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStatsVM> {
       ] = await Promise.all([
         prisma.product.count(),
         prisma.product.count({ where: { isActive: true } }),
-        prisma.product.count({ where: { isActive: true, stock: 0 } }),
+        prisma.product.count({ where: { isActive: true, stock: { lte: 0 } } }),
         prisma.category.count(),
         prisma.user.count({ where: { role: 'WHOLESALE' } }),
         prisma.user.count({ where: { role: 'RETAIL' } }),
         prisma.order.count({
-          where: { status: { in: ['NEW', 'AWAITING_CONFIRMATION', 'CONFIRMED_AWAITING_PAYMENT'] } },
+          where: { status: { in: PENDING_ADMIN_ORDER_STATUSES } },
         }),
         prisma.smsCampaign.count(),
         prisma.review.count({ where: { isRead: false } }),

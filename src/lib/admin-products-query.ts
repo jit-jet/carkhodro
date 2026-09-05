@@ -17,6 +17,7 @@ export interface ProductsTableFilters {
   carModelId: string;
   status: string;
   offer: string;
+  stock: string;
   callForPrice: string;
   sortBy: string;
   sortDir: string;
@@ -32,6 +33,7 @@ export function productsFilterKey(filters: ProductsTableFilters): string {
     filters.carModelId,
     filters.status,
     filters.offer,
+    filters.stock,
     filters.callForPrice,
   ].join("\0");
 }
@@ -63,6 +65,10 @@ export function toAdminProductWhereFilters(
       filters.status === "active" ? true : filters.status === "inactive" ? false : undefined,
     isOffer:
       filters.offer === "special" ? true : filters.offer === "normal" ? false : undefined,
+    stock:
+      filters.stock === "in_stock" || filters.stock === "out_of_stock"
+        ? filters.stock
+        : undefined,
     callForPrice: parseCallForPriceFilter(filters.callForPrice),
   };
 }
@@ -75,6 +81,7 @@ export function buildProductsHref(filters: ProductsTableFilters, page?: number):
   if (filters.carModelId) params.set("carModelId", filters.carModelId);
   if (filters.status) params.set("status", filters.status);
   if (filters.offer) params.set("offer", filters.offer);
+  if (filters.stock) params.set("stock", filters.stock);
   if (filters.callForPrice) params.set("callForPrice", filters.callForPrice);
   if (filters.sortBy) params.set("sortBy", filters.sortBy);
   if (filters.sortDir) params.set("sortDir", filters.sortDir);

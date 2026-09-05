@@ -252,6 +252,8 @@ export interface AdminProductFilters {
   carModelId?: number;
   isActive?: boolean;
   isOffer?: boolean;
+  /** in_stock | out_of_stock */
+  stock?: 'in_stock' | 'out_of_stock';
   /** retail | wholesale | none | any */
   callForPrice?: 'retail' | 'wholesale' | 'none' | 'any';
   sortBy?: AdminProductSortBy;
@@ -367,6 +369,7 @@ export async function getProductsAdmin(
         carModelId: filters.carModelId,
         isActive: filters.isActive,
         isOffer: filters.isOffer,
+        stock: filters.stock,
         callForPrice: filters.callForPrice,
       });
 

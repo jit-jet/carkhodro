@@ -54,6 +54,7 @@ async function ProductsContent({ searchParams }: Props) {
   const carModelId = pickSearchParam(sp.carModelId);
   const status = pickSearchParam(sp.status);
   const offer = pickSearchParam(sp.offer);
+  const stock = pickSearchParam(sp.stock);
   const callForPrice = pickSearchParam(sp.callForPrice);
   const sortBy = pickSearchParam(sp.sortBy);
   const sortDir = pickSearchParam(sp.sortDir);
@@ -75,6 +76,7 @@ async function ProductsContent({ searchParams }: Props) {
     carModelId,
     status,
     offer,
+    stock,
     callForPrice,
     sortBy,
     sortDir,
@@ -89,6 +91,8 @@ async function ProductsContent({ searchParams }: Props) {
       carModelId: carModelId ? Number(carModelId) : undefined,
       isActive: status === "active" ? true : status === "inactive" ? false : undefined,
       isOffer: offer === "special" ? true : offer === "normal" ? false : undefined,
+      stock:
+        stock === "in_stock" || stock === "out_of_stock" ? stock : undefined,
       callForPrice: callForPriceFilter,
       sortBy: parseSortBy(sortBy),
       sortDir: parseSortDir(sortDir),
@@ -134,6 +138,7 @@ async function ProductsContent({ searchParams }: Props) {
           ...(carModelId ? { carModelId } : {}),
           ...(status ? { status } : {}),
           ...(offer ? { offer } : {}),
+          ...(stock ? { stock } : {}),
           ...(callForPrice ? { callForPrice } : {}),
           ...(sortBy ? { sortBy } : {}),
           ...(sortDir ? { sortDir } : {}),

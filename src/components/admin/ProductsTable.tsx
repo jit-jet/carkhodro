@@ -637,13 +637,24 @@ export default function ProductsTable({
                   />
                 </th>
                 <th className={`${thClass} w-[5%] whitespace-nowrap`}>
-                  <SortButton
-                    label="موجودی"
-                    column="stock"
-                    sortBy={filters.sortBy}
-                    sortDir={filters.sortDir}
-                    onSort={toggleSort}
-                  />
+                  <div className="flex flex-col gap-1.5 min-w-0">
+                    <SortButton
+                      label="موجودی"
+                      column="stock"
+                      sortBy={filters.sortBy}
+                      sortDir={filters.sortDir}
+                      onSort={toggleSort}
+                    />
+                    <Select
+                      value={filters.stock}
+                      onChange={(e) => pushFilters({ stock: e.target.value })}
+                      className={headerSelectClass}
+                    >
+                      <option value="">همه</option>
+                      <option value="in_stock">موجود</option>
+                      <option value="out_of_stock">ناموجود</option>
+                    </Select>
+                  </div>
                 </th>
                 <th className={`${thClass} w-[7%]`}>
                   <div className="flex flex-col gap-1.5 min-w-0">

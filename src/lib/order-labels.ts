@@ -5,6 +5,15 @@
 
 import type { OrderStatus, PaymentMethod, PaymentStatus } from '@/generated/prisma_client';
 
+export type AdminOrderStatusFilter = OrderStatus | 'pending';
+
+/** Statuses that still need an admin action on the orders screen. */
+export const PENDING_ADMIN_ORDER_STATUSES: OrderStatus[] = [
+  'NEW',
+  'AWAITING_CONFIRMATION',
+  'CONFIRMED_AWAITING_PAYMENT',
+];
+
 export const ORDER_STATUS_FA: Record<OrderStatus, string> = {
   NEW: 'سفارش جدید',
   AWAITING_CONFIRMATION: 'در انتظار تایید',

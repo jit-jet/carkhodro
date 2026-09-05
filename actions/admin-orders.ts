@@ -14,10 +14,12 @@ import { getCurrentAdmin } from '@/src/lib/admin-session';
 import { syncOrderStatusToHesabfa } from '@/src/lib/hesabfa/invoices';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import {
+  PENDING_ADMIN_ORDER_STATUSES,
   ORDER_STATUS_FA,
   PAYMENT_STATUS_FA,
   PAYMENT_METHOD_FA,
 } from '@/src/lib/order-labels';
+import type { AdminOrderStatusFilter } from '@/src/lib/order-labels';
 import { USER_ROLE_FA } from '@/src/lib/user-labels';
 import {
   formatJalaliDate,
@@ -67,7 +69,7 @@ export interface AdminOrderFilters {
   customer?: string;
   phone?: string;
   userId?: string;
-  status?: OrderStatus;
+  status?: AdminOrderStatusFilter;
   paymentStatus?: PaymentStatus;
   sortBy?: AdminOrderSortBy;
   sortDir?: AdminOrderSortDir;
@@ -181,7 +183,11 @@ export async function getOrdersAdmin(
           ? { orderNumber: parsedNumber }
           : {}),
         ...(filters.userId ? { userId: filters.userId } : {}),
-        ...(filters.status ? { status: filters.status } : {}),
+        ...(filters.status === 'pending'
+          ? { status: { in: PENDING_ADMIN_ORDER_STATUSES } }
+          : filters.status
+            ? { status: filters.status }
+            : {}),
         ...(filters.paymentStatus ? { paymentStatus: filters.paymentStatus } : {}),
         ...(customer || phone
           ? {

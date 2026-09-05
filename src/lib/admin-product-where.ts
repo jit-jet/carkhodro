@@ -12,6 +12,8 @@ export type AdminProductWhereFilters = {
   carModelId?: number;
   isActive?: boolean;
   isOffer?: boolean;
+  /** in_stock | out_of_stock */
+  stock?: "in_stock" | "out_of_stock";
   /** retail | wholesale | none | any */
   callForPrice?: "retail" | "wholesale" | "none" | "any";
 };
@@ -40,6 +42,12 @@ export function buildAdminProductWhere(
     and.push({
       OR: [{ callForPriceRetail: true }, { callForPriceWholesale: true }],
     });
+  }
+
+  if (filters.stock === "in_stock") {
+    and.push({ stock: { gt: 0 } });
+  } else if (filters.stock === "out_of_stock") {
+    and.push({ stock: { lte: 0 } });
   }
 
   return {

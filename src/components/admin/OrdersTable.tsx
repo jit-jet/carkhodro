@@ -209,6 +209,7 @@ export default function OrdersTable({
                     className={headerControl}
                   >
                     <option value="">همه</option>
+                    <option value="pending">در انتظار اقدام</option>
                     {ORDER_STATUS_ORDER.map((s) => (
                       <option key={s} value={s}>
                         {ORDER_STATUS_FA[s]}

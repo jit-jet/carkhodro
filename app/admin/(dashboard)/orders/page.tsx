@@ -11,6 +11,10 @@ import OrdersTable from "@/src/components/admin/OrdersTable";
 import { parsePage, parsePerPage, pickSearchParam } from "@/src/lib/admin-pagination";
 import { formatNumberFa } from "@/src/lib/format";
 import type { OrderStatus, PaymentStatus } from "@/generated/prisma_client";
+import {
+  ORDER_STATUS_ORDER,
+  type AdminOrderStatusFilter,
+} from "@/src/lib/order-labels";
 
 export const metadata: Metadata = { title: "سفارشات و فاکتورها | پنل مدیریت" };
 
@@ -38,6 +42,13 @@ function parseSortDir(value: string): AdminOrderSortDir | undefined {
   return value === "asc" || value === "desc" ? value : undefined;
 }
 
+function parseStatus(value: string): AdminOrderStatusFilter | undefined {
+  if (value === "pending" || ORDER_STATUS_ORDER.includes(value as OrderStatus)) {
+    return value as AdminOrderStatusFilter;
+  }
+  return undefined;
+}
+
 export default function AdminOrdersPage({ searchParams }: Props) {
   return (
     <Suspense fallback={<OrdersSkeleton />}>
@@ -52,7 +63,7 @@ async function OrdersContent({ searchParams }: Props) {
   const customer = pickSearchParam(sp.customer);
   const phone = pickSearchParam(sp.phone);
   const userId = pickSearchParam(sp.userId);
-  const status = pickSearchParam(sp.status);
+  const status = parseStatus(pickSearchParam(sp.status)) ?? "";
   const paymentStatus = pickSearchParam(sp.paymentStatus);
   const sortBy = pickSearchParam(sp.sortBy);
   const sortDir = pickSearchParam(sp.sortDir);
@@ -76,7 +87,7 @@ async function OrdersContent({ searchParams }: Props) {
     customer: customer || undefined,
     phone: phone || undefined,
     userId: userId || undefined,
-    status: (status as OrderStatus) || undefined,
+    status: status || undefined,
     paymentStatus: (paymentStatus as PaymentStatus) || undefined,
     sortBy: parseSortBy(sortBy),
     sortDir: parseSortDir(sortDir),
