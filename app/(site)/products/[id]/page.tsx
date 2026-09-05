@@ -171,7 +171,9 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
 
             {/* Price box */}
             <div className="bg-silver-light rounded-xl px-5 py-4">
-              {product.callForPrice ? (
+              {product.stock < 1 ? (
+                <p className="text-lg font-bold text-red-600">ناموجود</p>
+              ) : product.callForPrice ? (
                 <CallForPrice phone={shopPhone} />
               ) : (
                 <>

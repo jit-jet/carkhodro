@@ -48,7 +48,9 @@ export default function RelatedProducts({ products }: Props) {
                 {p.name}
               </h3>
               <div>
-                {p.callForPrice ? (
+                {p.stock < 1 ? (
+                  <p className="text-sm font-bold text-gray-400 leading-none">ناموجود</p>
+                ) : p.callForPrice ? (
                   <p className="text-sm font-bold text-accent-dark leading-none">
                     {CALL_FOR_PRICE_LABEL}
                   </p>
@@ -59,8 +61,8 @@ export default function RelatedProducts({ products }: Props) {
                         {formatPrice(p.oldPrice)}
                       </p>
                     )}
-                    <p className={`text-xs font-bold leading-tight [overflow-wrap:anywhere] sm:text-sm ${p.orderQuantityCap !== 0 ? 'text-accent-dark' : 'text-gray-400'}`}>
-                      {p.orderQuantityCap !== 0 ? formatPrice(p.price) : 'ناموجود'}
+                    <p className="text-xs font-bold leading-tight text-accent-dark [overflow-wrap:anywhere] sm:text-sm">
+                      {formatPrice(p.price)}
                     </p>
                   </>
                 )}

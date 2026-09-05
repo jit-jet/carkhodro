@@ -159,13 +159,25 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
 
         {/* Price / Call for price */}
         {product.callForPrice ? (
-          <div className="mt-auto flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <WishlistButton productId={product.id} productName={product.name} variant="compact" />
-              <CompareButton productId={product.id} productName={product.name} variant="compact" />
+          !inStock ? (
+            <div className="mt-auto space-y-3">
+              <div className="flex items-center gap-2">
+                <WishlistButton productId={product.id} productName={product.name} variant="compact" />
+                <CompareButton productId={product.id} productName={product.name} variant="compact" />
+              </div>
+              <p className="w-full rounded-xl bg-red-50 px-3 py-3 text-center text-sm font-bold text-red-600">
+                ناموجود
+              </p>
             </div>
-            <CallForPrice variant="card" />
-          </div>
+          ) : (
+            <div className="mt-auto flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <WishlistButton productId={product.id} productName={product.name} variant="compact" />
+                <CompareButton productId={product.id} productName={product.name} variant="compact" />
+              </div>
+              <CallForPrice variant="card" />
+            </div>
+          )
         ) : (
           <>
             <div className="mb-3">

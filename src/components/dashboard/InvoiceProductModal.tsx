@@ -171,6 +171,7 @@ function ProductRow({
   highlighted: boolean;
 }) {
   const [qty, setQty] = useState(1);
+  const unavailable = product.stock < 1;
 
   return (
     <li className={["flex items-center gap-3 py-3", highlighted ? "border-2 border-accent rounded-xl px-2" : ""].join(" ")}>
@@ -191,9 +192,15 @@ function ProductRow({
 
       <div className="text-left shrink-0">
         <p className="text-sm font-bold text-charcoal whitespace-nowrap">
-          {product.callForPrice ? 'تماس برای قیمت' : formatRial(product.priceToman)}
+          {unavailable
+            ? <span className="text-red-600">ناموجود</span>
+            : product.callForPrice
+              ? 'تماس برای قیمت'
+              : formatRial(product.priceToman)}
         </p>
-        {product.callForPrice ? (
+        {unavailable ? (
+          <p className="text-[11px] text-red-600 mt-1">قابل افزودن به فاکتور نیست</p>
+        ) : product.callForPrice ? (
           <p className="text-[11px] text-amber-700 mt-1">فقط با تماس</p>
         ) : (
           <div className="flex items-center gap-1.5 mt-1.5 justify-end">

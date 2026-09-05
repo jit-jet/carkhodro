@@ -16,12 +16,13 @@
  * Per-user / dynamic (session cookie) — never cached.
  */
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
 import { clearCart } from '@/actions/cart';
 import { searchProducts } from '@/actions/search';
+import { tags } from '@/actions/cache-tags';
 import { PAYMENT_TERMS } from '@/src/lib/dashboard-options';
 import {
   resolveProductPrice,
@@ -145,6 +146,7 @@ export async function addToInvoice(
       },
     });
     if (!product) return fail('محصول یافت نشد.');
+    if (product.stock < 1) return fail('این محصول موجود نیست.');
 
     const role = pricingRoleFromUser(user.role);
     if (
@@ -198,6 +200,7 @@ export async function setInvoiceLineQty(
       include: { product: { select: { stock: true } } },
     });
     if (!item) return fail('ردیف فاکتور یافت نشد.');
+    if (item.product.stock < 1) return fail('این محصول موجود نیست.');
 
     const role = pricingRoleFromUser(user.role);
     const qty = clampOrderQuantity(Math.round(quantity), item.product.stock, role);
@@ -401,6 +404,9 @@ export async function submitInvoice(input: {
     if (!cart || cart.items.length === 0) return fail('سبد خرید شما خالی است.');
 
     for (const item of cart.items) {
+      if (item.product.stock < 1) {
+        return fail(`«${item.product.name}» در حال حاضر ناموجود است.`);
+      }
       if (
         isCallForPriceForRole(
           {
@@ -516,6 +522,9 @@ export async function submitInvoice(input: {
       }
       return created;
     });
+
+    updateTag(tags.products);
+    for (const item of cart.items) updateTag(tags.product(item.productId));
 
     const cleared = await clearCart();
     if (!cleared.ok) {

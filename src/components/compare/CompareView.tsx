@@ -41,12 +41,12 @@ function AddToCartCell({ product }: { product: ProductVM }) {
   const [busy, setBusy] = useState(false);
   const notify = useCartUI((s) => s.notify);
 
-  if (product.callForPrice) {
-    return <CallForPrice compact />;
-  }
-
   if (product.stock <= 0) {
     return <span className="text-xs font-medium text-red-500">ناموجود</span>;
+  }
+
+  if (product.callForPrice) {
+    return <CallForPrice compact />;
   }
 
   function handleAdd() {
@@ -117,7 +117,6 @@ export default function CompareView({ initial, loggedIn }: Props) {
   const [removing, setRemoving] = useState<string | null>(null);
 
   const productsRef = useRef(products);
-  productsRef.current = products;
 
   const compare   = useListsUI((s) => s.compare);
   const hydrated  = useListsUI((s) => s.hydrated);
@@ -125,6 +124,7 @@ export default function CompareView({ initial, loggedIn }: Props) {
   const notify = useCartUI((s) => s.notify);
 
   useEffect(() => { ensureListsHydrated(); }, []);
+  useEffect(() => { productsRef.current = products; }, [products]);
 
   // Re-fetch full product data when the store contains IDs not yet displayed
   // (happens when the user added items from another page and the rendered shell
@@ -136,7 +136,7 @@ export default function CompareView({ initial, loggedIn }: Props) {
     if (hasNew) {
       getCompareList().then(setProducts).catch(() => {});
     }
-  }, [compare, hydrated]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [compare, hydrated]);
 
   function handleRemove(productId: string) {
     setRemoving(productId);

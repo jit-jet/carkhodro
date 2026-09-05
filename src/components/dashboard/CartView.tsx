@@ -147,6 +147,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
 
   const empty = cart.lines.length === 0;
   const hasCallForPrice = cart.lines.some((l) => l.callForPrice);
+  const hasUnavailableItems = cart.lines.some((l) => l.stock < 1);
   const payableToman = Math.max(0, cart.subtotalToman - discountAmount);
 
   return (
@@ -235,6 +236,9 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
                       <td className="py-3 px-2 font-mono text-xs text-gray-500 text-right">{line.sku}</td>
                       <td className="py-3 px-2 text-right font-semibold max-w-[16rem]">
                         <span className="block truncate">{line.name}</span>
+                        {line.stock < 1 && (
+                          <span className="text-xs font-medium text-red-600">ناموجود</span>
+                        )}
                       </td>
                       <td className="py-3 px-2 text-center whitespace-nowrap tabular-nums">
                         {line.callForPrice
@@ -245,7 +249,9 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
                         {line.callForPrice ? '—' : `٪${line.discountPct.toLocaleString('fa-IR')}`}
                       </td>
                       <td className="py-3 px-2">
-                        {line.callForPrice ? (
+                        {line.stock < 1 ? (
+                          <span className="text-xs text-red-600">ناموجود</span>
+                        ) : line.callForPrice ? (
                           <span className="text-xs text-amber-700">فقط تماس</span>
                         ) : (
                           <QtyStepper
@@ -256,7 +262,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
                         )}
                       </td>
                       <td className="py-3 px-2 text-center font-bold whitespace-nowrap tabular-nums">
-                        {line.callForPrice
+                        {line.stock < 1 || line.callForPrice
                           ? '—'
                           : formatNumberFa(line.lineTotalToman * 10)}
                       </td>
@@ -372,7 +378,7 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
             </div>
             <button
               onClick={() => setConfirmOpen(true)}
-              disabled={submitting || hasCallForPrice}
+              disabled={submitting || hasCallForPrice || hasUnavailableItems}
               className="mt-4 w-full flex items-center justify-center gap-2 bg-charcoal hover:bg-charcoal/90 text-white font-bold text-sm py-3.5 rounded-xl transition-colors disabled:opacity-60"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} className="w-4.5 h-4.5">
@@ -383,6 +389,11 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
             {hasCallForPrice && (
               <p className="text-xs text-amber-700 mt-2 text-center leading-5">
                 لطفاً ردیف‌های «تماس برای قیمت» را از فاکتور حذف کنید.
+              </p>
+            )}
+            {hasUnavailableItems && (
+              <p className="text-xs text-red-600 mt-2 text-center leading-5">
+                لطفاً محصولات ناموجود را از فاکتور حذف کنید.
               </p>
             )}
           </div>
