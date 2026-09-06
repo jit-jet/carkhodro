@@ -41,7 +41,9 @@ export default function InvoicePrint({ invoice, seller: s }: Props) {
       <div className="inv-header">
         <div className="inv-header-logo">
           <Image src={s.logoUrl} alt={s.brandName} width={78} height={78} className="inv-logo" priority />
-          <p className="inv-website">{s.website}</p>
+          <p className="inv-website">
+            <a href={s.websiteUrl}>{s.website}</a>
+          </p>
         </div>
 
         <div className="inv-header-center">
@@ -186,8 +188,10 @@ export default function InvoicePrint({ invoice, seller: s }: Props) {
 
       {/* ── Footer ── */}
       <div className="inv-footer">
-        <p>{s.categoriesNote}</p>
-        <p>{s.trustNote}</p>
+        <div
+          className="inv-description"
+          dangerouslySetInnerHTML={{ __html: s.description }}
+        />
         <p>
           بانک: {s.bankName} — نام: {s.bankAccountHolder}
         </p>

@@ -1,19 +1,22 @@
-export interface InvoiceSeller {
+export interface InvoiceContent {
   brandName: string;
   storeName: string;
   website: string;
   websiteUrl: string;
-  logoUrl: string;
   country: string;
   province: string;
   city: string;
   postalCode: string;
   address: string;
   phone: string;
-  categoriesNote: string;
-  trustNote: string;
+  description: string;
   bankName: string;
   bankAccountHolder: string;
   cardNumber: string;
   sheba: string;
+}
+
+/** Printable data: admin-authored invoice content + the current site logo. */
+export interface InvoiceSeller extends InvoiceContent {
+  logoUrl: string;
 }

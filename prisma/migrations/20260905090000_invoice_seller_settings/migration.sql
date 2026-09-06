@@ -6,8 +6,8 @@ UPDATE "site_settings"
 SET "invoice_seller" = '{
   "brandName": "کارخودرو",
   "storeName": "فروشگاه قطعات خودرو شاه گل",
-  "website": "WWW.CARKHODRO.IR",
-  "websiteUrl": "https://carkhodro.ir",
+  "website": "WWW.CARKHODRO.com",
+  "websiteUrl": "https://carkhodro.com",
   "logoUrl": "/logo.png",
   "country": "ایران",
   "province": "خراسان رضوی",

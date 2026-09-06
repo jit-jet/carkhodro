@@ -369,6 +369,31 @@ html.capacitor-ios select {
   color: #222;
 }
 
+.inv-description > :first-child {
+  margin-top: 0;
+}
+
+.inv-description > :last-child {
+  margin-bottom: 0;
+}
+
+.inv-description p,
+.inv-description ul,
+.inv-description ol,
+.inv-description blockquote {
+  margin: 0 0 4px;
+}
+
+.inv-description ul,
+.inv-description ol {
+  padding-right: 20px;
+}
+
+.inv-description a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 @media print {
   header,
   footer:not(.inv-footer),
