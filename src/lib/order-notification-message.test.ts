@@ -23,7 +23,10 @@ test('retail notification contains buyer, amount, and invoice link', () => {
   assert.match(body, /پرداخت آنلاین جدید/);
   assert.match(body, /خریدار: علی رضایی/);
   assert.match(body, /۱٬۲۵۰٬۰۰۰ تومان/);
-  assert.match(body, /https:\/\/carkhodro\.com\/admin\/orders\/order-123/);
+  assert.match(
+    body,
+    /مشاهده سفارش:\nhttps:\/\/carkhodro\.com\/admin\/orders\/order-123/,
+  );
 });
 
 test('wholesale notification uses the invoice-created title', () => {
@@ -37,5 +40,8 @@ test('wholesale notification uses the invoice-created title', () => {
   assert.match(body, /فاکتور همکاری جدید/);
   assert.match(body, /خریدار: مریم احمدی/);
   assert.match(body, /۸۰۰٬۰۰۰ تومان/);
-  assert.match(body, /https:\/\/carkhodro\.com\/admin\/orders\/order-456/);
+  assert.match(
+    body,
+    /مشاهده سفارش:\nhttps:\/\/carkhodro\.com\/admin\/orders\/order-456/,
+  );
 });

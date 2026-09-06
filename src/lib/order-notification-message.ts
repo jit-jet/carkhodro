@@ -24,6 +24,7 @@ export function buildAdminOrderNotificationMessage(
     title,
     `خریدار: ${input.buyerFullName}`,
     `مبلغ: ${input.amountToman.toLocaleString('fa-IR')} تومان`,
-    `فاکتور: ${input.invoiceUrl}`,
+    'مشاهده سفارش:',
+    input.invoiceUrl,
   ].join('\n');
 }
