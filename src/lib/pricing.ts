@@ -14,6 +14,8 @@
 import type { Prisma } from '@/generated/prisma_client';
 import { isWholesaleUser, type PricingRole } from '@/src/lib/user-role';
 
+const RETAIL_ROUNDING_STEP_TOMAN = 100;
+
 export interface ProductPriceFields {
   wholesalePrice: bigint | number;
   wholesaleDiscountPct: number | Prisma.Decimal;
@@ -42,13 +44,13 @@ function toNumber(amount: bigint | number): number {
 /**
  * retailPrice = wholesalePrice × (1 + retailPriceDiffPct / 100)
  *
- * Retail prices always round up to the next whole Toman so the storefront,
+ * Retail prices always round up to the next 100 Toman so the storefront,
  * cart and checkout never undercut the configured percentage.
  */
 export function computeRetailPrice(fields: ProductPriceFields): number {
   const wholesale = toNumber(fields.wholesalePrice);
   const diff = pct(fields.retailPriceDiffPct);
-  return Math.ceil((wholesale * (100 + diff)) / 100);
+  return roundRetailPriceUp((wholesale * (100 + diff)) / 100);
 }
 
 /** wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100) */
@@ -69,9 +71,14 @@ export function applyDiscount(base: number, discountPct: number): number {
   return Math.round((base * (100 - discountPct)) / 100);
 }
 
-/** Retail discount result, rounded upward to a whole Toman. */
+/** Round a retail amount upward to the next 100 Toman. */
+export function roundRetailPriceUp(amount: number): number {
+  return Math.ceil(amount / RETAIL_ROUNDING_STEP_TOMAN) * RETAIL_ROUNDING_STEP_TOMAN;
+}
+
+/** Retail discount result, rounded upward to the next 100 Toman. */
 export function applyRetailDiscount(base: number, discountPct: number): number {
-  return Math.ceil((base * (100 - discountPct)) / 100);
+  return roundRetailPriceUp((base * (100 - discountPct)) / 100);
 }
 
 /** Pick the list + final price triple shown to the current user. */
@@ -155,8 +162,11 @@ export function netLineTotalBigIntForRole(
   }
 
   const denominator = BigInt(10000);
+  const roundingStep = BigInt(RETAIL_ROUNDING_STEP_TOMAN);
   const discountFactor = BigInt(Math.round((100 - discountPct) * 100));
   const unitNumerator = unitList * discountFactor;
-  const unitNet = (unitNumerator + denominator - BigInt(1)) / denominator;
+  const roundingBucket = denominator * roundingStep;
+  const unitNet =
+    ((unitNumerator + roundingBucket - BigInt(1)) / roundingBucket) * roundingStep;
   return unitNet * BigInt(quantity);
 }

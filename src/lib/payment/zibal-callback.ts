@@ -9,6 +9,7 @@ import { RIAL_PER_TOMAN } from '@/src/lib/format';
 import { clearUserCart } from '@/src/lib/clear-user-cart';
 import { pushPaidRetailInvoice } from '@/src/lib/hesabfa/invoices';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
+import { queueAdminOrderNotification } from '@/src/lib/order-notification';
 import { zibalVerifyPayment } from '@/src/lib/zibal/client';
 import { zibalStatusMessage } from '@/src/lib/zibal/status-messages';
 import {
@@ -91,6 +92,7 @@ async function confirmPaidOrder(
   });
   await clearUserCart(order.userId);
   runHesabfaBackground('pushPaidRetailInvoice', () => pushPaidRetailInvoice(orderId));
+  queueAdminOrderNotification(orderId, 'RETAIL_PAYMENT');
 }
 
 /**

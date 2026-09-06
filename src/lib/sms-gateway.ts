@@ -57,7 +57,10 @@ export async function sendOtpSms(
 }
 
 /** Send one free-text message to one recipient. Never throws. */
-async function sendOne(phoneNumber: string, body: string): Promise<SmsSendResult> {
+export async function sendSms(
+  phoneNumber: string,
+  body: string,
+): Promise<SmsSendResult> {
   try {
     if (await isSmsConsoleMode()) {
       console.info(`[sms] → ${phoneNumber}: ${body}`);
@@ -101,7 +104,7 @@ export async function sendBulkSms(
     } catch (err) {
       console.error('[sms-gateway:sendBulkSms]', err);
       // Fall back to per-number sends so a single bad number does not fail the batch.
-      const fallback = await Promise.all(batch.map((phone) => sendOne(phone, body)));
+      const fallback = await Promise.all(batch.map((phone) => sendSms(phone, body)));
       results.push(...fallback);
     }
   }

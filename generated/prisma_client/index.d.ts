@@ -32413,6 +32413,7 @@ export namespace Prisma {
 
   export type SiteSettingMinAggregateOutputType = {
     id: number | null
+    adminSmsNotificationPhone: string | null
     retailPhone1: string | null
     retailPhone2: string | null
     wholesalePhone1: string | null
@@ -32466,6 +32467,7 @@ export namespace Prisma {
 
   export type SiteSettingMaxAggregateOutputType = {
     id: number | null
+    adminSmsNotificationPhone: string | null
     retailPhone1: string | null
     retailPhone2: string | null
     wholesalePhone1: string | null
@@ -32519,6 +32521,7 @@ export namespace Prisma {
 
   export type SiteSettingCountAggregateOutputType = {
     id: number
+    adminSmsNotificationPhone: number
     retailPhone1: number
     retailPhone2: number
     wholesalePhone1: number
@@ -32583,6 +32586,7 @@ export namespace Prisma {
 
   export type SiteSettingMinAggregateInputType = {
     id?: true
+    adminSmsNotificationPhone?: true
     retailPhone1?: true
     retailPhone2?: true
     wholesalePhone1?: true
@@ -32636,6 +32640,7 @@ export namespace Prisma {
 
   export type SiteSettingMaxAggregateInputType = {
     id?: true
+    adminSmsNotificationPhone?: true
     retailPhone1?: true
     retailPhone2?: true
     wholesalePhone1?: true
@@ -32689,6 +32694,7 @@ export namespace Prisma {
 
   export type SiteSettingCountAggregateInputType = {
     id?: true
+    adminSmsNotificationPhone?: true
     retailPhone1?: true
     retailPhone2?: true
     wholesalePhone1?: true
@@ -32830,6 +32836,7 @@ export namespace Prisma {
 
   export type SiteSettingGroupByOutputType = {
     id: number
+    adminSmsNotificationPhone: string | null
     retailPhone1: string | null
     retailPhone2: string | null
     wholesalePhone1: string | null
@@ -32903,6 +32910,7 @@ export namespace Prisma {
 
   export type SiteSettingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    adminSmsNotificationPhone?: boolean
     retailPhone1?: boolean
     retailPhone2?: boolean
     wholesalePhone1?: boolean
@@ -32957,6 +32965,7 @@ export namespace Prisma {
 
   export type SiteSettingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    adminSmsNotificationPhone?: boolean
     retailPhone1?: boolean
     retailPhone2?: boolean
     wholesalePhone1?: boolean
@@ -33011,6 +33020,7 @@ export namespace Prisma {
 
   export type SiteSettingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    adminSmsNotificationPhone?: boolean
     retailPhone1?: boolean
     retailPhone2?: boolean
     wholesalePhone1?: boolean
@@ -33065,6 +33075,7 @@ export namespace Prisma {
 
   export type SiteSettingSelectScalar = {
     id?: boolean
+    adminSmsNotificationPhone?: boolean
     retailPhone1?: boolean
     retailPhone2?: boolean
     wholesalePhone1?: boolean
@@ -33117,13 +33128,17 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "heroTitle" | "heroDescription" | "heroButton1Text" | "heroButton1Href" | "heroButton2Text" | "heroButton2Href" | "siteName" | "logoUrl" | "productWatermarkUrl" | "productWatermarkPosition" | "faviconUrl" | "appleTouchIconUrl" | "metaTitle" | "metaDescription" | "ogImageUrl" | "copyrightText" | "invoiceSeller" | "analyticsId" | "googleAnalyticsId" | "googleTagManagerId" | "searchConsoleVerification" | "robotsIndex" | "robotsFollow" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+  export type SiteSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "adminSmsNotificationPhone" | "retailPhone1" | "retailPhone2" | "wholesalePhone1" | "wholesalePhone2" | "wholesalePhone3" | "wholesalePhone4" | "email" | "address" | "workingHours" | "headerPromo1" | "headerPromo2" | "headerPromo1Icon" | "headerPromo2Icon" | "aboutText" | "footerTrust1Icon" | "footerTrust1Title" | "footerTrust1Desc" | "footerTrust2Icon" | "footerTrust2Title" | "footerTrust2Desc" | "footerTrust3Icon" | "footerTrust3Title" | "footerTrust3Desc" | "footerTrust4Icon" | "footerTrust4Title" | "footerTrust4Desc" | "heroTitle" | "heroDescription" | "heroButton1Text" | "heroButton1Href" | "heroButton2Text" | "heroButton2Href" | "siteName" | "logoUrl" | "productWatermarkUrl" | "productWatermarkPosition" | "faviconUrl" | "appleTouchIconUrl" | "metaTitle" | "metaDescription" | "ogImageUrl" | "copyrightText" | "invoiceSeller" | "analyticsId" | "googleAnalyticsId" | "googleTagManagerId" | "searchConsoleVerification" | "robotsIndex" | "robotsFollow" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
   export type $SiteSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSetting"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      /**
+       * Private recipient for new paid-order / wholesale-invoice SMS alerts.
+       */
+      adminSmsNotificationPhone: string | null
       /**
        * Shown to guests and RETAIL customers.
        */
@@ -33628,6 +33643,7 @@ export namespace Prisma {
    */
   interface SiteSettingFieldRefs {
     readonly id: FieldRef<"SiteSetting", 'Int'>
+    readonly adminSmsNotificationPhone: FieldRef<"SiteSetting", 'String'>
     readonly retailPhone1: FieldRef<"SiteSetting", 'String'>
     readonly retailPhone2: FieldRef<"SiteSetting", 'String'>
     readonly wholesalePhone1: FieldRef<"SiteSetting", 'String'>
@@ -53780,6 +53796,7 @@ export namespace Prisma {
 
   export const SiteSettingScalarFieldEnum: {
     id: 'id',
+    adminSmsNotificationPhone: 'adminSmsNotificationPhone',
     retailPhone1: 'retailPhone1',
     retailPhone2: 'retailPhone2',
     wholesalePhone1: 'wholesalePhone1',
@@ -56249,6 +56266,7 @@ export namespace Prisma {
     OR?: SiteSettingWhereInput[]
     NOT?: SiteSettingWhereInput | SiteSettingWhereInput[]
     id?: IntFilter<"SiteSetting"> | number
+    adminSmsNotificationPhone?: StringNullableFilter<"SiteSetting"> | string | null
     retailPhone1?: StringNullableFilter<"SiteSetting"> | string | null
     retailPhone2?: StringNullableFilter<"SiteSetting"> | string | null
     wholesalePhone1?: StringNullableFilter<"SiteSetting"> | string | null
@@ -56303,6 +56321,7 @@ export namespace Prisma {
 
   export type SiteSettingOrderByWithRelationInput = {
     id?: SortOrder
+    adminSmsNotificationPhone?: SortOrderInput | SortOrder
     retailPhone1?: SortOrderInput | SortOrder
     retailPhone2?: SortOrderInput | SortOrder
     wholesalePhone1?: SortOrderInput | SortOrder
@@ -56360,6 +56379,7 @@ export namespace Prisma {
     AND?: SiteSettingWhereInput | SiteSettingWhereInput[]
     OR?: SiteSettingWhereInput[]
     NOT?: SiteSettingWhereInput | SiteSettingWhereInput[]
+    adminSmsNotificationPhone?: StringNullableFilter<"SiteSetting"> | string | null
     retailPhone1?: StringNullableFilter<"SiteSetting"> | string | null
     retailPhone2?: StringNullableFilter<"SiteSetting"> | string | null
     wholesalePhone1?: StringNullableFilter<"SiteSetting"> | string | null
@@ -56414,6 +56434,7 @@ export namespace Prisma {
 
   export type SiteSettingOrderByWithAggregationInput = {
     id?: SortOrder
+    adminSmsNotificationPhone?: SortOrderInput | SortOrder
     retailPhone1?: SortOrderInput | SortOrder
     retailPhone2?: SortOrderInput | SortOrder
     wholesalePhone1?: SortOrderInput | SortOrder
@@ -56476,6 +56497,7 @@ export namespace Prisma {
     OR?: SiteSettingScalarWhereWithAggregatesInput[]
     NOT?: SiteSettingScalarWhereWithAggregatesInput | SiteSettingScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"SiteSetting"> | number
+    adminSmsNotificationPhone?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     retailPhone1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     retailPhone2?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
     wholesalePhone1?: StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
@@ -59810,6 +59832,7 @@ export namespace Prisma {
 
   export type SiteSettingCreateInput = {
     id?: number
+    adminSmsNotificationPhone?: string | null
     retailPhone1?: string | null
     retailPhone2?: string | null
     wholesalePhone1?: string | null
@@ -59864,6 +59887,7 @@ export namespace Prisma {
 
   export type SiteSettingUncheckedCreateInput = {
     id?: number
+    adminSmsNotificationPhone?: string | null
     retailPhone1?: string | null
     retailPhone2?: string | null
     wholesalePhone1?: string | null
@@ -59918,6 +59942,7 @@ export namespace Prisma {
 
   export type SiteSettingUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    adminSmsNotificationPhone?: NullableStringFieldUpdateOperationsInput | string | null
     retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
     retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
     wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59972,6 +59997,7 @@ export namespace Prisma {
 
   export type SiteSettingUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    adminSmsNotificationPhone?: NullableStringFieldUpdateOperationsInput | string | null
     retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
     retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
     wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60026,6 +60052,7 @@ export namespace Prisma {
 
   export type SiteSettingCreateManyInput = {
     id?: number
+    adminSmsNotificationPhone?: string | null
     retailPhone1?: string | null
     retailPhone2?: string | null
     wholesalePhone1?: string | null
@@ -60080,6 +60107,7 @@ export namespace Prisma {
 
   export type SiteSettingUpdateManyMutationInput = {
     id?: IntFieldUpdateOperationsInput | number
+    adminSmsNotificationPhone?: NullableStringFieldUpdateOperationsInput | string | null
     retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
     retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
     wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60134,6 +60162,7 @@ export namespace Prisma {
 
   export type SiteSettingUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    adminSmsNotificationPhone?: NullableStringFieldUpdateOperationsInput | string | null
     retailPhone1?: NullableStringFieldUpdateOperationsInput | string | null
     retailPhone2?: NullableStringFieldUpdateOperationsInput | string | null
     wholesalePhone1?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63257,6 +63286,7 @@ export namespace Prisma {
 
   export type SiteSettingCountOrderByAggregateInput = {
     id?: SortOrder
+    adminSmsNotificationPhone?: SortOrder
     retailPhone1?: SortOrder
     retailPhone2?: SortOrder
     wholesalePhone1?: SortOrder
@@ -63315,6 +63345,7 @@ export namespace Prisma {
 
   export type SiteSettingMaxOrderByAggregateInput = {
     id?: SortOrder
+    adminSmsNotificationPhone?: SortOrder
     retailPhone1?: SortOrder
     retailPhone2?: SortOrder
     wholesalePhone1?: SortOrder
@@ -63368,6 +63399,7 @@ export namespace Prisma {
 
   export type SiteSettingMinOrderByAggregateInput = {
     id?: SortOrder
+    adminSmsNotificationPhone?: SortOrder
     retailPhone1?: SortOrder
     retailPhone2?: SortOrder
     wholesalePhone1?: SortOrder

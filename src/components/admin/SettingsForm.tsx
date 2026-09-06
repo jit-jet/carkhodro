@@ -185,30 +185,47 @@ export default function SettingsForm({ initial }: { initial: SiteSettingVM }) {
           />
           <div className="p-5 sm:p-6 space-y-4">
             <div>
-              <p className="text-sm font-semibold text-charcoal mb-3">
-                تلفن‌های خرده‌فروشی
+              <Label>شماره دریافت اعلان پیامکی سفارش‌ها</Label>
+              <Input
+                dir="ltr"
+                type="tel"
+                inputMode="tel"
+                value={form.adminSmsNotificationPhone}
+                onChange={(e) => set("adminSmsNotificationPhone", e.target.value)}
+                placeholder="09123456789"
+              />
+              <p className="mt-1.5 text-xs leading-5 text-gray-500">
+                پس از پرداخت آنلاین خرده‌فروشی یا ثبت فاکتور همکاری، مشخصات خریدار و لینک فاکتور به این شماره ارسال می‌شود. برای غیرفعال‌کردن اعلان‌ها، فیلد را خالی کنید.
               </p>
-              <p className="text-xs text-gray-500 mb-3">
-                برای بازدیدکنندگان مهمان و مشتریان خرده‌فروشی نمایش داده می‌شوند.
-              </p>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <Label>تلفن خرده‌فروشی ۱</Label>
-                  <Input
-                    dir="ltr"
-                    value={form.retailPhone1}
-                    onChange={(e) => set("retailPhone1", e.target.value)}
-                    placeholder="021xxxxxxx"
-                  />
-                </div>
-                <div>
-                  <Label>تلفن خرده‌فروشی ۲</Label>
-                  <Input
-                    dir="ltr"
-                    value={form.retailPhone2}
-                    onChange={(e) => set("retailPhone2", e.target.value)}
-                    placeholder="021xxxxxxx"
-                  />
+            </div>
+
+            <div className="border-t border-gray-100 pt-4">
+              <div>
+                <p className="text-sm font-semibold text-charcoal mb-3">
+                  تلفن‌های خرده‌فروشی
+                </p>
+                <p className="text-xs text-gray-500 mb-3">
+                  برای بازدیدکنندگان مهمان و مشتریان خرده‌فروشی نمایش داده می‌شوند.
+                </p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label>تلفن خرده‌فروشی ۱</Label>
+                    <Input
+                      dir="ltr"
+                      value={form.retailPhone1}
+                      onChange={(e) => set("retailPhone1", e.target.value)}
+                      placeholder="021xxxxxxx"
+                    />
+                  </div>
+                  <div>
+                    <Label>تلفن خرده‌فروشی ۲</Label>
+                    <Input
+                      dir="ltr"
+                      value={form.retailPhone2}
+                      onChange={(e) => set("retailPhone2", e.target.value)}
+                      placeholder="021xxxxxxx"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -683,6 +683,8 @@ model Faq {
 /// single row — the app upserts `id = 1`.
 model SiteSetting {
   id                        Int      @id @default(1)
+  /// Private recipient for new paid-order / wholesale-invoice SMS alerts.
+  adminSmsNotificationPhone String?  @map("admin_sms_notification_phone")
   /// Shown to guests and RETAIL customers.
   retailPhone1              String?  @map("retail_phone_1")
   retailPhone2              String?  @map("retail_phone_2")

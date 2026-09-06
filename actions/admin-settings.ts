@@ -21,10 +21,16 @@ import {
 } from '@/src/lib/serializers';
 import { tags } from '@/actions/cache-tags';
 import { deleteFile, deleteRemovedFiles } from '@/src/lib/storage';
+import { normalizeIranMobile } from '@/src/lib/hesabfa/phone';
 
-export type SiteSettingVM = PublicSiteSettingsVM;
+export type SiteSettingVM = PublicSiteSettingsVM & {
+  adminSmsNotificationPhone: string;
+};
 
-const EMPTY_SETTINGS: SiteSettingVM = toPublicSiteSettingsVM(null);
+const EMPTY_SETTINGS: SiteSettingVM = {
+  ...toPublicSiteSettingsVM(null),
+  adminSmsNotificationPhone: '',
+};
 
 const ASSET_KEYS = [
   'headerPromo1Icon',
@@ -46,7 +52,10 @@ export async function getSiteSettings(): Promise<SiteSettingVM> {
     'getSiteSettings',
     async () => {
       const row = await prisma.siteSetting.findUnique({ where: { id: 1 } });
-      return toPublicSiteSettingsVM(row);
+      return {
+        ...toPublicSiteSettingsVM(row),
+        adminSmsNotificationPhone: row?.adminSmsNotificationPhone ?? '',
+      };
     },
     EMPTY_SETTINGS,
   );
@@ -87,6 +96,14 @@ export async function updateSiteSettings(
 
     const data: Record<string, string | boolean | null> = {};
 
+    if (input.adminSmsNotificationPhone !== undefined) {
+      const rawPhone = input.adminSmsNotificationPhone.trim();
+      const phone = rawPhone ? normalizeIranMobile(rawPhone) : null;
+      if (rawPhone && !phone) {
+        return fail('شماره اعلان پیامکی باید یک شماره موبایل معتبر ایرانی باشد.');
+      }
+      data.adminSmsNotificationPhone = phone;
+    }
     if (input.retailPhone1 !== undefined) {
       data.retailPhone1 = input.retailPhone1.trim() || null;
     }

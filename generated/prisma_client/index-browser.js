@@ -395,6 +395,7 @@ exports.Prisma.FaqScalarFieldEnum = {
 
 exports.Prisma.SiteSettingScalarFieldEnum = {
   id: 'id',
+  adminSmsNotificationPhone: 'adminSmsNotificationPhone',
   retailPhone1: 'retailPhone1',
   retailPhone2: 'retailPhone2',
   wholesalePhone1: 'wholesalePhone1',

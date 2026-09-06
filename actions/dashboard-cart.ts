@@ -42,6 +42,7 @@ import {
 } from '@/src/lib/call-for-price';
 import { pushWholesaleInvoice } from '@/src/lib/hesabfa/invoices';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
+import { queueAdminOrderNotification } from '@/src/lib/order-notification';
 import {
   resolveDiscountForCheckout,
   incrementDiscountUsage,
@@ -535,6 +536,7 @@ export async function submitInvoice(input: {
     revalidatePath('/dashboard/orders');
     revalidatePath('/dashboard');
     runHesabfaBackground('pushWholesaleInvoice', () => pushWholesaleInvoice(order.id));
+    queueAdminOrderNotification(order.id, 'WHOLESALE_INVOICE');
     return ok(order);
   });
 }
