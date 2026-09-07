@@ -23,6 +23,7 @@ import {
 } from './categories';
 import { topCategoryNameFromNodeFamily } from './category-path';
 import { rialToToman, tomanToRial } from './currency';
+import { wholesaleFromHesabfaItem } from './product-pricing';
 import { stockFromHesabfaItem } from './stock';
 import { planProductIdentitySync } from './product-identity';
 import { computeRetailPrice, computeWholesaleFinal } from '@/src/lib/pricing';
@@ -47,16 +48,6 @@ export interface ProductSyncStats {
 
 function codeOf(item: HesabfaItem): string {
   return item.Code != null ? String(item.Code).trim() : '';
-}
-
-/** Prefer PriceList «عمده» / «همکار» / «کلی فروشی»; fall back to SellPrice. */
-function wholesaleFromItem(item: HesabfaItem): bigint {
-  const list = item.PriceList ?? [];
-  const titles = new Set(['عمده', 'همکار', 'کلی فروشی']);
-  const entry = list.find((e) => titles.has((e.Title ?? e.title ?? '').trim()));
-  const price = entry?.Price ?? entry?.price;
-  if (price != null && Number(price) > 0) return rialToToman(price);
-  return rialToToman(item.SellPrice);
 }
 
 async function getFallbackCategoryId(): Promise<number> {
@@ -177,7 +168,7 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
     prepared.set(code, {
       code,
       name,
-      wholesalePrice: wholesaleFromItem(item),
+      wholesalePrice: wholesaleFromHesabfaItem(item),
       buyPrice: item.BuyPrice != null && item.BuyPrice > 0 ? rialToToman(item.BuyPrice) : null,
       stock: stockFromHesabfaItem(item),
       hesabfaId: typeof item.Id === 'number' ? item.Id : undefined,
