@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test src/lib/*.test.ts src/lib/hesabfa/*.test.ts",
+    "test": "node --import tsx --test src/lib/*.test.ts src/lib/hesabfa/*.test.ts src/lib/torob/*.test.ts",
     "native:check": "node scripts/validate-native-config.mjs",
     "native:splash": "node scripts/generate-native-splashes.mjs",
     "native:assets": "capacitor-assets generate --android && capacitor-assets generate --ios && npm run native:splash",

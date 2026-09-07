@@ -103,3 +103,29 @@ pm2 save
 
 # Configure PM2 to start on server boot
 pm2 startup
+
+## Torob Product API v3
+
+Torob can pull the public retail catalogue from:
+
+```text
+POST https://YOUR_PRODUCTION_HOST/torob_api/v3/products
+```
+
+The endpoint implements all three v3 request modes (`page`/`sort`,
+`page_urls`, and `page_uniques`) and verifies Torob's Ed25519 JWT from the
+`X-Torob-Token` header. No inbound API secret needs to be configured: Torob
+signs requests and the application verifies them with Torob's published public
+key. `NEXT_PUBLIC_APP_URL` must be the exact public HTTPS origin used by Torob;
+its hostname (and port, when non-default) must match the JWT `aud` claim and the
+incoming `Host` header.
+
+Only active products with a public retail price are listed. Out-of-stock items
+remain addressable but are returned with `availability: false` and
+`current_price: 0`, as required by Torob. Product IDs are reused as stable
+`page_unique` values; no duplicate catalogue is stored.
+
+To activate the integration, give Torob support the endpoint URL and production
+domain and ask them to enable Product API v3 for the shop. The optional outbound
+real-time webhook is not enabled; periodic and targeted pulls are fully
+supported by this endpoint.
