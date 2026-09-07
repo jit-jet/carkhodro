@@ -33,6 +33,7 @@ export interface FullSyncSummary {
   categories: CategorySyncStats;
   products: ProductSyncStats;
   contacts: ContactSyncStats;
+  stockUpdated: number;
 }
 
 /** Run a full sync (pull categories/products/contacts). */
@@ -43,12 +44,16 @@ export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
 
   const categories = await fullSyncCategories();
   const products = await fullSyncProducts();
+  // Re-read every quantity from Hesabfa's dedicated inventory endpoint after
+  // product upserts so a full sync verifies stock as well as item metadata.
+  const stockUpdated = await refreshAllLocalStockFromHesabfa();
   const contacts = await fullSyncContacts();
 
   return {
     categories,
     products,
     contacts,
+    stockUpdated,
   };
 }
 

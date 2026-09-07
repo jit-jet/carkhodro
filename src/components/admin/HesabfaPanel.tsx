@@ -32,10 +32,11 @@ export default function HesabfaPanel({ configured, hookUrl, appWebhookUrl }: Pro
     startTransition(async () => {
       const res = await forceSyncHesabfa();
       if (res.ok) {
-        const { categories, products, contacts } = res.data;
+        const { categories, products, contacts, stockUpdated } = res.data;
         const msg =
           `همگام‌سازی کامل شد — دسته‌بندی: ${fa(categories.created)} جدید / ${fa(categories.updated)} به‌روزرسانی، ` +
           `کالا: ${fa(products.created)} جدید / ${fa(products.updated)} به‌روزرسانی / ${fa(products.deleted)} حذف‌شده، ` +
+          `موجودی: ${fa(stockUpdated)} بازخوانی‌شده، ` +
           `اشخاص: ${fa(contacts.created)} جدید / ${fa(contacts.updated)} به‌روزرسانی / ${fa(contacts.skipped)} ردشده`;
         setLastMessage(msg);
         notify({ variant: 'success', title: 'همگام‌سازی حسابفا', description: msg });

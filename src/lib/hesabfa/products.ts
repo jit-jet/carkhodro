@@ -231,6 +231,7 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
         stock: item.stock,
         categoryId: resolveCategoryId(item.nodeFamily, categoryMap, fallbackCategoryId),
         hesabfaCode: item.code,
+        description: item.description,
         ...(item.hesabfaId != null ? { hesabfaId: item.hesabfaId } : {}),
         lastSyncedAt: now,
         ...(item.active === false ? { isActive: false } : {}),
