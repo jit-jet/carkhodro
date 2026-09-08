@@ -6,6 +6,7 @@ import Link from 'next/link';
 import type { ProductVM as Product } from '@/src/lib/serializers';
 import { resolveOrderQtyUI } from '@/src/lib/order-quantity';
 import { addToCart } from '@/actions/cart';
+import { subscribeToStockNotification } from '@/actions/stock-notifications';
 import { handleAddToCartResult, notifyStockLimit, useCartUI } from '@/src/store/cart-ui';
 import CallForPrice from '@/src/components/product/CallForPrice';
 import WishlistButton from '@/src/components/product/WishlistButton';
@@ -34,6 +35,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
   const [qty, setQty] = useState(1);
   const [phone, setPhone]           = useState('');
   const [notifyState, setNotifyState] = useState<'idle' | 'success' | 'error'>('idle');
+  const [notifyError, setNotifyError] = useState('');
   const [added, setAdded]           = useState(false);
   const [pending, startTransition]  = useTransition();
   const notify = useCartUI((s) => s.notify);
@@ -83,12 +85,16 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
   }
 
   function handleNotify() {
-    const cleaned = phone.replace(/\s|-/g, '');
-    if (/^09\d{9}$/.test(cleaned)) {
-      setNotifyState('success');
-    } else {
-      setNotifyState('error');
-    }
+    setNotifyError('');
+    startTransition(async () => {
+      const result = await subscribeToStockNotification(product.id, phone);
+      if (result.ok) {
+        setNotifyState('success');
+      } else {
+        setNotifyState('error');
+        setNotifyError(result.error);
+      }
+    });
   }
 
   return (
@@ -262,7 +268,11 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
                       type="tel"
                       dir="ltr"
                       value={phone}
-                      onChange={e => { setPhone(e.target.value); setNotifyState('idle'); }}
+                      onChange={e => {
+                        setPhone(e.target.value);
+                        setNotifyState('idle');
+                        setNotifyError('');
+                      }}
                       placeholder="09xxxxxxxxx"
                       className={`w-full border rounded-xl px-3 py-2 text-sm text-center tracking-wider focus:outline-none transition-colors mb-1.5 ${
                         notifyState === 'error'
@@ -271,13 +281,14 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
                       }`}
                     />
                     {notifyState === 'error' && (
-                      <p className="text-xs text-red-500 mb-1.5">شماره موبایل معتبر نیست (مثال: ۰۹۱۲۳۴۵۶۷۸۹)</p>
+                      <p className="text-xs text-red-500 mb-1.5">{notifyError}</p>
                     )}
                     <button
                       onClick={handleNotify}
+                      disabled={pending}
                       className="w-full bg-charcoal hover:bg-gray-800 active:scale-95 text-white font-semibold text-xs py-2.5 rounded-xl transition-all duration-150"
                     >
-                      موجود شد خبرم کن
+                      {pending ? 'در حال ثبت…' : 'موجود شد خبرم کن'}
                     </button>
                   </>
                 )}

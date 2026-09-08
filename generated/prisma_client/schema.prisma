@@ -449,15 +449,16 @@ model Product {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  partsBrand      PartsBrand             @relation(fields: [partsBrandId], references: [id])
-  category        Category               @relation(fields: [categoryId], references: [id])
-  images          ProductImage[]
-  compatibilities ProductCompatibility[]
-  reviews         Review[]
-  cartItems       CartItem[]
-  orderItems      OrderItem[]
-  wishlistedBy    WishlistItem[]
-  comparedBy      CompareItem[]
+  partsBrand         PartsBrand             @relation(fields: [partsBrandId], references: [id])
+  category           Category               @relation(fields: [categoryId], references: [id])
+  images             ProductImage[]
+  compatibilities    ProductCompatibility[]
+  reviews            Review[]
+  cartItems          CartItem[]
+  orderItems         OrderItem[]
+  wishlistedBy       WishlistItem[]
+  comparedBy         CompareItem[]
+  stockNotifications StockNotification[]
 
   @@index([sku])
   @@index([hesabfaCode])
@@ -468,6 +469,25 @@ model Product {
   @@index([viewCount])
   @@index([searchText(ops: raw("gin_trgm_ops"))], type: Gin, map: "products_search_text_trgm_idx")
   @@map("products")
+}
+
+/// A shopper's one-shot request to receive an SMS when a product is available.
+/// Re-subscribing after a previous delivery resets the same row to pending.
+model StockNotification {
+  id           String    @id @default(cuid())
+  productId    String    @map("product_id")
+  phoneNumber  String    @map("phone_number")
+  requestedAt  DateTime  @default(now()) @map("requested_at")
+  processingAt DateTime? @map("processing_at")
+  sentAt       DateTime? @map("sent_at")
+  attemptCount Int       @default(0) @map("attempt_count")
+  lastError    String?   @map("last_error")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, phoneNumber])
+  @@index([sentAt, processingAt])
+  @@map("stock_notifications")
 }
 
 /// Additional product gallery images (beyond mainImage).

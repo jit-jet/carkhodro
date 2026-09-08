@@ -291,6 +291,17 @@ exports.Prisma.ProductScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StockNotificationScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  phoneNumber: 'phoneNumber',
+  requestedAt: 'requestedAt',
+  processingAt: 'processingAt',
+  sentAt: 'sentAt',
+  attemptCount: 'attemptCount',
+  lastError: 'lastError'
+};
+
 exports.Prisma.ProductImageScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -773,6 +784,7 @@ exports.Prisma.ModelName = {
   PartsBrand: 'PartsBrand',
   Category: 'Category',
   Product: 'Product',
+  StockNotification: 'StockNotification',
   ProductImage: 'ProductImage',
   ProductCompatibility: 'ProductCompatibility',
   Review: 'Review',

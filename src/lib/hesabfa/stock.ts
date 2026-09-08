@@ -5,6 +5,7 @@
 import { revalidateTag } from 'next/cache';
 import { tags } from '@/actions/cache-tags';
 import { prisma } from '@/src/lib/prisma';
+import { dispatchStockNotificationsForProducts } from '@/src/lib/stock-notification';
 import {
   getItemByCode,
   getItemQuantities,
@@ -104,6 +105,7 @@ async function persistStockByCode(stockByCode: Map<string, number>): Promise<num
 
   const productIds = [...productIdsByStock.values()].flat();
   invalidateStock(productIds);
+  await dispatchStockNotificationsForProducts(productIds);
   return productIds.length;
 }
 
@@ -148,6 +150,7 @@ export async function resolveLiveStockForLines(
     });
   }
 
+  await dispatchStockNotificationsForProducts(lines.map((line) => line.productId));
   return byProduct;
 }
 

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { addToCart } from '@/actions/cart';
+import { subscribeToStockNotification } from '@/actions/stock-notifications';
 import { handleAddToCartResult, notifyStockLimit, useCartUI } from '@/src/store/cart-ui';
 import { resolveOrderQtyUI } from '@/src/lib/order-quantity';
 import type { PDPProductVM } from '@/src/lib/serializers';
@@ -36,6 +37,7 @@ export default function CartActions({ product }: Props) {
   const [added,       setAdded]       = useState(false);
   const [phone,       setPhone]       = useState('');
   const [notifyState, setNotifyState] = useState<'idle' | 'success' | 'error'>('idle');
+  const [notifyError, setNotifyError] = useState('');
   const [pending, startTransition]    = useTransition();
   const notify = useCartUI((s) => s.notify);
 
@@ -75,12 +77,16 @@ export default function CartActions({ product }: Props) {
   }
 
   function handleNotify() {
-    const cleaned = phone.replace(/[\s\-]/g, '');
-    if (/^09\d{9}$/.test(cleaned)) {
-      setNotifyState('success');
-    } else {
-      setNotifyState('error');
-    }
+    setNotifyError('');
+    startTransition(async () => {
+      const result = await subscribeToStockNotification(product.id, phone);
+      if (result.ok) {
+        setNotifyState('success');
+      } else {
+        setNotifyState('error');
+        setNotifyError(result.error);
+      }
+    });
   }
 
   if (!inStock) {
@@ -111,7 +117,11 @@ export default function CartActions({ product }: Props) {
                 dir="ltr"
                 value={phone}
                 placeholder="09xxxxxxxxx"
-                onChange={e => { setPhone(e.target.value); setNotifyState('idle'); }}
+                onChange={e => {
+                  setPhone(e.target.value);
+                  setNotifyState('idle');
+                  setNotifyError('');
+                }}
                 className={[
                   'min-w-0 flex-1 border rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:outline-none transition-colors',
                   notifyState === 'error'
@@ -121,14 +131,15 @@ export default function CartActions({ product }: Props) {
               />
               <button
                 onClick={handleNotify}
+                disabled={pending}
                 className="flex items-center gap-2 bg-charcoal hover:bg-gray-800 active:scale-95 text-white font-semibold text-sm px-4 py-3 rounded-xl transition-all duration-150 whitespace-nowrap"
               >
                 <BellIcon />
-                موجود شد خبرم کن
+                {pending ? 'در حال ثبت…' : 'موجود شد خبرم کن'}
               </button>
             </div>
             {notifyState === 'error' && (
-              <p className="text-xs text-red-500">شماره موبایل معتبر نیست (مثال: ۰۹۱۲۳۴۵۶۷۸۹)</p>
+              <p className="text-xs text-red-500">{notifyError}</p>
             )}
           </div>
         )}

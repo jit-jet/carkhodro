@@ -34,6 +34,7 @@ import {
   stockFromHesabfaItem,
 } from '@/src/lib/hesabfa/stock';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
+import { dispatchStockNotificationsForProducts } from '@/src/lib/stock-notification';
 import crypto from 'node:crypto';
 
 export interface ProductInput {
@@ -237,6 +238,7 @@ export async function createProduct(
     });
     await syncProductImages(persisted.id, input.images);
     await syncProductCompatibilities(persisted.id, input.carModelIds ?? []);
+    await dispatchStockNotificationsForProducts([persisted.id]);
     updateTag(tags.products);
     return ok(persisted);
   });
@@ -368,6 +370,7 @@ export async function updateProduct(
     });
     await syncProductImages(id, input.images);
     await syncProductCompatibilities(id, input.carModelIds);
+    await dispatchStockNotificationsForProducts([id]);
     if (input.images !== undefined || input.mainImage !== undefined) {
       await deleteRemovedFiles(
         [existing.mainImage, ...existing.images.map((image) => image.url)],
@@ -434,6 +437,7 @@ export async function permanentlyDeleteProduct(id: string): Promise<ActionResult
 export async function reactivateProduct(id: string): Promise<ActionResult> {
   return runMutation('reactivateProduct', async () => {
     await prisma.product.update({ where: { id }, data: { isActive: true } });
+    await dispatchStockNotificationsForProducts([id]);
     updateTag(tags.products);
     updateTag(tags.product(id));
     runHesabfaBackground('pushProduct:reactivate', () => pushProductToHesabfa(id));

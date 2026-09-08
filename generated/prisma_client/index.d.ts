@@ -80,6 +80,12 @@ export type Category = $Result.DefaultSelection<Prisma.$CategoryPayload>
  */
 export type Product = $Result.DefaultSelection<Prisma.$ProductPayload>
 /**
+ * Model StockNotification
+ * A shopper's one-shot request to receive an SMS when a product is available.
+ * Re-subscribing after a previous delivery resets the same row to pending.
+ */
+export type StockNotification = $Result.DefaultSelection<Prisma.$StockNotificationPayload>
+/**
  * Model ProductImage
  * Additional product gallery images (beyond mainImage).
  */
@@ -658,6 +664,16 @@ export class PrismaClient<
     * ```
     */
   get product(): Prisma.ProductDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.stockNotification`: Exposes CRUD operations for the **StockNotification** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StockNotifications
+    * const stockNotifications = await prisma.stockNotification.findMany()
+    * ```
+    */
+  get stockNotification(): Prisma.StockNotificationDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.productImage`: Exposes CRUD operations for the **ProductImage** model.
@@ -1398,6 +1414,7 @@ export namespace Prisma {
     PartsBrand: 'PartsBrand',
     Category: 'Category',
     Product: 'Product',
+    StockNotification: 'StockNotification',
     ProductImage: 'ProductImage',
     ProductCompatibility: 'ProductCompatibility',
     Review: 'Review',
@@ -1441,7 +1458,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "seoRedirect" | "staticPageSeo" | "adminActivityLog" | "systemSetting" | "rulesContent" | "returnContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
+      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "stockNotification" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "seoRedirect" | "staticPageSeo" | "adminActivityLog" | "systemSetting" | "rulesContent" | "returnContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2404,6 +2421,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ProductCountArgs<ExtArgs>
             result: $Utils.Optional<ProductCountAggregateOutputType> | number
+          }
+        }
+      }
+      StockNotification: {
+        payload: Prisma.$StockNotificationPayload<ExtArgs>
+        fields: Prisma.StockNotificationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StockNotificationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StockNotificationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload>
+          }
+          findFirst: {
+            args: Prisma.StockNotificationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StockNotificationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload>
+          }
+          findMany: {
+            args: Prisma.StockNotificationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload>[]
+          }
+          create: {
+            args: Prisma.StockNotificationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload>
+          }
+          createMany: {
+            args: Prisma.StockNotificationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StockNotificationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload>[]
+          }
+          delete: {
+            args: Prisma.StockNotificationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload>
+          }
+          update: {
+            args: Prisma.StockNotificationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload>
+          }
+          deleteMany: {
+            args: Prisma.StockNotificationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StockNotificationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StockNotificationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload>[]
+          }
+          upsert: {
+            args: Prisma.StockNotificationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockNotificationPayload>
+          }
+          aggregate: {
+            args: Prisma.StockNotificationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStockNotification>
+          }
+          groupBy: {
+            args: Prisma.StockNotificationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StockNotificationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StockNotificationCountArgs<ExtArgs>
+            result: $Utils.Optional<StockNotificationCountAggregateOutputType> | number
           }
         }
       }
@@ -4615,6 +4706,7 @@ export namespace Prisma {
     partsBrand?: PartsBrandOmit
     category?: CategoryOmit
     product?: ProductOmit
+    stockNotification?: StockNotificationOmit
     productImage?: ProductImageOmit
     productCompatibility?: ProductCompatibilityOmit
     review?: ReviewOmit
@@ -5077,6 +5169,7 @@ export namespace Prisma {
     orderItems: number
     wishlistedBy: number
     comparedBy: number
+    stockNotifications: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5087,6 +5180,7 @@ export namespace Prisma {
     orderItems?: boolean | ProductCountOutputTypeCountOrderItemsArgs
     wishlistedBy?: boolean | ProductCountOutputTypeCountWishlistedByArgs
     comparedBy?: boolean | ProductCountOutputTypeCountComparedByArgs
+    stockNotifications?: boolean | ProductCountOutputTypeCountStockNotificationsArgs
   }
 
   // Custom InputTypes
@@ -5147,6 +5241,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountComparedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CompareItemWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountStockNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockNotificationWhereInput
   }
 
 
@@ -19835,6 +19936,7 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     wishlistedBy?: boolean | Product$wishlistedByArgs<ExtArgs>
     comparedBy?: boolean | Product$comparedByArgs<ExtArgs>
+    stockNotifications?: boolean | Product$stockNotificationsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -19964,6 +20066,7 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     wishlistedBy?: boolean | Product$wishlistedByArgs<ExtArgs>
     comparedBy?: boolean | Product$comparedByArgs<ExtArgs>
+    stockNotifications?: boolean | Product$stockNotificationsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19987,6 +20090,7 @@ export namespace Prisma {
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
       wishlistedBy: Prisma.$WishlistItemPayload<ExtArgs>[]
       comparedBy: Prisma.$CompareItemPayload<ExtArgs>[]
+      stockNotifications: Prisma.$StockNotificationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20482,6 +20586,7 @@ export namespace Prisma {
     orderItems<T extends Product$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     wishlistedBy<T extends Product$wishlistedByArgs<ExtArgs> = {}>(args?: Subset<T, Product$wishlistedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WishlistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comparedBy<T extends Product$comparedByArgs<ExtArgs> = {}>(args?: Subset<T, Product$comparedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompareItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    stockNotifications<T extends Product$stockNotificationsArgs<ExtArgs> = {}>(args?: Subset<T, Product$stockNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -21114,6 +21219,30 @@ export namespace Prisma {
   }
 
   /**
+   * Product.stockNotifications
+   */
+  export type Product$stockNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    where?: StockNotificationWhereInput
+    orderBy?: StockNotificationOrderByWithRelationInput | StockNotificationOrderByWithRelationInput[]
+    cursor?: StockNotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockNotificationScalarFieldEnum | StockNotificationScalarFieldEnum[]
+  }
+
+  /**
    * Product without action
    */
   export type ProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21129,6 +21258,1142 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProductInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StockNotification
+   */
+
+  export type AggregateStockNotification = {
+    _count: StockNotificationCountAggregateOutputType | null
+    _avg: StockNotificationAvgAggregateOutputType | null
+    _sum: StockNotificationSumAggregateOutputType | null
+    _min: StockNotificationMinAggregateOutputType | null
+    _max: StockNotificationMaxAggregateOutputType | null
+  }
+
+  export type StockNotificationAvgAggregateOutputType = {
+    attemptCount: number | null
+  }
+
+  export type StockNotificationSumAggregateOutputType = {
+    attemptCount: number | null
+  }
+
+  export type StockNotificationMinAggregateOutputType = {
+    id: string | null
+    productId: string | null
+    phoneNumber: string | null
+    requestedAt: Date | null
+    processingAt: Date | null
+    sentAt: Date | null
+    attemptCount: number | null
+    lastError: string | null
+  }
+
+  export type StockNotificationMaxAggregateOutputType = {
+    id: string | null
+    productId: string | null
+    phoneNumber: string | null
+    requestedAt: Date | null
+    processingAt: Date | null
+    sentAt: Date | null
+    attemptCount: number | null
+    lastError: string | null
+  }
+
+  export type StockNotificationCountAggregateOutputType = {
+    id: number
+    productId: number
+    phoneNumber: number
+    requestedAt: number
+    processingAt: number
+    sentAt: number
+    attemptCount: number
+    lastError: number
+    _all: number
+  }
+
+
+  export type StockNotificationAvgAggregateInputType = {
+    attemptCount?: true
+  }
+
+  export type StockNotificationSumAggregateInputType = {
+    attemptCount?: true
+  }
+
+  export type StockNotificationMinAggregateInputType = {
+    id?: true
+    productId?: true
+    phoneNumber?: true
+    requestedAt?: true
+    processingAt?: true
+    sentAt?: true
+    attemptCount?: true
+    lastError?: true
+  }
+
+  export type StockNotificationMaxAggregateInputType = {
+    id?: true
+    productId?: true
+    phoneNumber?: true
+    requestedAt?: true
+    processingAt?: true
+    sentAt?: true
+    attemptCount?: true
+    lastError?: true
+  }
+
+  export type StockNotificationCountAggregateInputType = {
+    id?: true
+    productId?: true
+    phoneNumber?: true
+    requestedAt?: true
+    processingAt?: true
+    sentAt?: true
+    attemptCount?: true
+    lastError?: true
+    _all?: true
+  }
+
+  export type StockNotificationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockNotification to aggregate.
+     */
+    where?: StockNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockNotifications to fetch.
+     */
+    orderBy?: StockNotificationOrderByWithRelationInput | StockNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StockNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StockNotifications
+    **/
+    _count?: true | StockNotificationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StockNotificationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StockNotificationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StockNotificationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StockNotificationMaxAggregateInputType
+  }
+
+  export type GetStockNotificationAggregateType<T extends StockNotificationAggregateArgs> = {
+        [P in keyof T & keyof AggregateStockNotification]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStockNotification[P]>
+      : GetScalarType<T[P], AggregateStockNotification[P]>
+  }
+
+
+
+
+  export type StockNotificationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockNotificationWhereInput
+    orderBy?: StockNotificationOrderByWithAggregationInput | StockNotificationOrderByWithAggregationInput[]
+    by: StockNotificationScalarFieldEnum[] | StockNotificationScalarFieldEnum
+    having?: StockNotificationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StockNotificationCountAggregateInputType | true
+    _avg?: StockNotificationAvgAggregateInputType
+    _sum?: StockNotificationSumAggregateInputType
+    _min?: StockNotificationMinAggregateInputType
+    _max?: StockNotificationMaxAggregateInputType
+  }
+
+  export type StockNotificationGroupByOutputType = {
+    id: string
+    productId: string
+    phoneNumber: string
+    requestedAt: Date
+    processingAt: Date | null
+    sentAt: Date | null
+    attemptCount: number
+    lastError: string | null
+    _count: StockNotificationCountAggregateOutputType | null
+    _avg: StockNotificationAvgAggregateOutputType | null
+    _sum: StockNotificationSumAggregateOutputType | null
+    _min: StockNotificationMinAggregateOutputType | null
+    _max: StockNotificationMaxAggregateOutputType | null
+  }
+
+  type GetStockNotificationGroupByPayload<T extends StockNotificationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StockNotificationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StockNotificationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StockNotificationGroupByOutputType[P]>
+            : GetScalarType<T[P], StockNotificationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StockNotificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    phoneNumber?: boolean
+    requestedAt?: boolean
+    processingAt?: boolean
+    sentAt?: boolean
+    attemptCount?: boolean
+    lastError?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockNotification"]>
+
+  export type StockNotificationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    phoneNumber?: boolean
+    requestedAt?: boolean
+    processingAt?: boolean
+    sentAt?: boolean
+    attemptCount?: boolean
+    lastError?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockNotification"]>
+
+  export type StockNotificationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    phoneNumber?: boolean
+    requestedAt?: boolean
+    processingAt?: boolean
+    sentAt?: boolean
+    attemptCount?: boolean
+    lastError?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockNotification"]>
+
+  export type StockNotificationSelectScalar = {
+    id?: boolean
+    productId?: boolean
+    phoneNumber?: boolean
+    requestedAt?: boolean
+    processingAt?: boolean
+    sentAt?: boolean
+    attemptCount?: boolean
+    lastError?: boolean
+  }
+
+  export type StockNotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "phoneNumber" | "requestedAt" | "processingAt" | "sentAt" | "attemptCount" | "lastError", ExtArgs["result"]["stockNotification"]>
+  export type StockNotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type StockNotificationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type StockNotificationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $StockNotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StockNotification"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      productId: string
+      phoneNumber: string
+      requestedAt: Date
+      processingAt: Date | null
+      sentAt: Date | null
+      attemptCount: number
+      lastError: string | null
+    }, ExtArgs["result"]["stockNotification"]>
+    composites: {}
+  }
+
+  type StockNotificationGetPayload<S extends boolean | null | undefined | StockNotificationDefaultArgs> = $Result.GetResult<Prisma.$StockNotificationPayload, S>
+
+  type StockNotificationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StockNotificationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StockNotificationCountAggregateInputType | true
+    }
+
+  export interface StockNotificationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StockNotification'], meta: { name: 'StockNotification' } }
+    /**
+     * Find zero or one StockNotification that matches the filter.
+     * @param {StockNotificationFindUniqueArgs} args - Arguments to find a StockNotification
+     * @example
+     * // Get one StockNotification
+     * const stockNotification = await prisma.stockNotification.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StockNotificationFindUniqueArgs>(args: SelectSubset<T, StockNotificationFindUniqueArgs<ExtArgs>>): Prisma__StockNotificationClient<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StockNotification that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StockNotificationFindUniqueOrThrowArgs} args - Arguments to find a StockNotification
+     * @example
+     * // Get one StockNotification
+     * const stockNotification = await prisma.stockNotification.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StockNotificationFindUniqueOrThrowArgs>(args: SelectSubset<T, StockNotificationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StockNotificationClient<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockNotification that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockNotificationFindFirstArgs} args - Arguments to find a StockNotification
+     * @example
+     * // Get one StockNotification
+     * const stockNotification = await prisma.stockNotification.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StockNotificationFindFirstArgs>(args?: SelectSubset<T, StockNotificationFindFirstArgs<ExtArgs>>): Prisma__StockNotificationClient<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockNotification that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockNotificationFindFirstOrThrowArgs} args - Arguments to find a StockNotification
+     * @example
+     * // Get one StockNotification
+     * const stockNotification = await prisma.stockNotification.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StockNotificationFindFirstOrThrowArgs>(args?: SelectSubset<T, StockNotificationFindFirstOrThrowArgs<ExtArgs>>): Prisma__StockNotificationClient<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StockNotifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockNotificationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StockNotifications
+     * const stockNotifications = await prisma.stockNotification.findMany()
+     * 
+     * // Get first 10 StockNotifications
+     * const stockNotifications = await prisma.stockNotification.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stockNotificationWithIdOnly = await prisma.stockNotification.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StockNotificationFindManyArgs>(args?: SelectSubset<T, StockNotificationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StockNotification.
+     * @param {StockNotificationCreateArgs} args - Arguments to create a StockNotification.
+     * @example
+     * // Create one StockNotification
+     * const StockNotification = await prisma.stockNotification.create({
+     *   data: {
+     *     // ... data to create a StockNotification
+     *   }
+     * })
+     * 
+     */
+    create<T extends StockNotificationCreateArgs>(args: SelectSubset<T, StockNotificationCreateArgs<ExtArgs>>): Prisma__StockNotificationClient<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StockNotifications.
+     * @param {StockNotificationCreateManyArgs} args - Arguments to create many StockNotifications.
+     * @example
+     * // Create many StockNotifications
+     * const stockNotification = await prisma.stockNotification.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StockNotificationCreateManyArgs>(args?: SelectSubset<T, StockNotificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StockNotifications and returns the data saved in the database.
+     * @param {StockNotificationCreateManyAndReturnArgs} args - Arguments to create many StockNotifications.
+     * @example
+     * // Create many StockNotifications
+     * const stockNotification = await prisma.stockNotification.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StockNotifications and only return the `id`
+     * const stockNotificationWithIdOnly = await prisma.stockNotification.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StockNotificationCreateManyAndReturnArgs>(args?: SelectSubset<T, StockNotificationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StockNotification.
+     * @param {StockNotificationDeleteArgs} args - Arguments to delete one StockNotification.
+     * @example
+     * // Delete one StockNotification
+     * const StockNotification = await prisma.stockNotification.delete({
+     *   where: {
+     *     // ... filter to delete one StockNotification
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StockNotificationDeleteArgs>(args: SelectSubset<T, StockNotificationDeleteArgs<ExtArgs>>): Prisma__StockNotificationClient<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StockNotification.
+     * @param {StockNotificationUpdateArgs} args - Arguments to update one StockNotification.
+     * @example
+     * // Update one StockNotification
+     * const stockNotification = await prisma.stockNotification.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StockNotificationUpdateArgs>(args: SelectSubset<T, StockNotificationUpdateArgs<ExtArgs>>): Prisma__StockNotificationClient<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StockNotifications.
+     * @param {StockNotificationDeleteManyArgs} args - Arguments to filter StockNotifications to delete.
+     * @example
+     * // Delete a few StockNotifications
+     * const { count } = await prisma.stockNotification.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StockNotificationDeleteManyArgs>(args?: SelectSubset<T, StockNotificationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockNotifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockNotificationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StockNotifications
+     * const stockNotification = await prisma.stockNotification.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StockNotificationUpdateManyArgs>(args: SelectSubset<T, StockNotificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockNotifications and returns the data updated in the database.
+     * @param {StockNotificationUpdateManyAndReturnArgs} args - Arguments to update many StockNotifications.
+     * @example
+     * // Update many StockNotifications
+     * const stockNotification = await prisma.stockNotification.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StockNotifications and only return the `id`
+     * const stockNotificationWithIdOnly = await prisma.stockNotification.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StockNotificationUpdateManyAndReturnArgs>(args: SelectSubset<T, StockNotificationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StockNotification.
+     * @param {StockNotificationUpsertArgs} args - Arguments to update or create a StockNotification.
+     * @example
+     * // Update or create a StockNotification
+     * const stockNotification = await prisma.stockNotification.upsert({
+     *   create: {
+     *     // ... data to create a StockNotification
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StockNotification we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StockNotificationUpsertArgs>(args: SelectSubset<T, StockNotificationUpsertArgs<ExtArgs>>): Prisma__StockNotificationClient<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StockNotifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockNotificationCountArgs} args - Arguments to filter StockNotifications to count.
+     * @example
+     * // Count the number of StockNotifications
+     * const count = await prisma.stockNotification.count({
+     *   where: {
+     *     // ... the filter for the StockNotifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends StockNotificationCountArgs>(
+      args?: Subset<T, StockNotificationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StockNotificationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StockNotification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockNotificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StockNotificationAggregateArgs>(args: Subset<T, StockNotificationAggregateArgs>): Prisma.PrismaPromise<GetStockNotificationAggregateType<T>>
+
+    /**
+     * Group by StockNotification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockNotificationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StockNotificationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StockNotificationGroupByArgs['orderBy'] }
+        : { orderBy?: StockNotificationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StockNotificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStockNotificationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StockNotification model
+   */
+  readonly fields: StockNotificationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StockNotification.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StockNotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StockNotification model
+   */
+  interface StockNotificationFieldRefs {
+    readonly id: FieldRef<"StockNotification", 'String'>
+    readonly productId: FieldRef<"StockNotification", 'String'>
+    readonly phoneNumber: FieldRef<"StockNotification", 'String'>
+    readonly requestedAt: FieldRef<"StockNotification", 'DateTime'>
+    readonly processingAt: FieldRef<"StockNotification", 'DateTime'>
+    readonly sentAt: FieldRef<"StockNotification", 'DateTime'>
+    readonly attemptCount: FieldRef<"StockNotification", 'Int'>
+    readonly lastError: FieldRef<"StockNotification", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StockNotification findUnique
+   */
+  export type StockNotificationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which StockNotification to fetch.
+     */
+    where: StockNotificationWhereUniqueInput
+  }
+
+  /**
+   * StockNotification findUniqueOrThrow
+   */
+  export type StockNotificationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which StockNotification to fetch.
+     */
+    where: StockNotificationWhereUniqueInput
+  }
+
+  /**
+   * StockNotification findFirst
+   */
+  export type StockNotificationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which StockNotification to fetch.
+     */
+    where?: StockNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockNotifications to fetch.
+     */
+    orderBy?: StockNotificationOrderByWithRelationInput | StockNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockNotifications.
+     */
+    cursor?: StockNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockNotifications.
+     */
+    distinct?: StockNotificationScalarFieldEnum | StockNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * StockNotification findFirstOrThrow
+   */
+  export type StockNotificationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which StockNotification to fetch.
+     */
+    where?: StockNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockNotifications to fetch.
+     */
+    orderBy?: StockNotificationOrderByWithRelationInput | StockNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockNotifications.
+     */
+    cursor?: StockNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockNotifications.
+     */
+    distinct?: StockNotificationScalarFieldEnum | StockNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * StockNotification findMany
+   */
+  export type StockNotificationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which StockNotifications to fetch.
+     */
+    where?: StockNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockNotifications to fetch.
+     */
+    orderBy?: StockNotificationOrderByWithRelationInput | StockNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StockNotifications.
+     */
+    cursor?: StockNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockNotifications.
+     */
+    distinct?: StockNotificationScalarFieldEnum | StockNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * StockNotification create
+   */
+  export type StockNotificationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StockNotification.
+     */
+    data: XOR<StockNotificationCreateInput, StockNotificationUncheckedCreateInput>
+  }
+
+  /**
+   * StockNotification createMany
+   */
+  export type StockNotificationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StockNotifications.
+     */
+    data: StockNotificationCreateManyInput | StockNotificationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockNotification createManyAndReturn
+   */
+  export type StockNotificationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * The data used to create many StockNotifications.
+     */
+    data: StockNotificationCreateManyInput | StockNotificationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockNotification update
+   */
+  export type StockNotificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StockNotification.
+     */
+    data: XOR<StockNotificationUpdateInput, StockNotificationUncheckedUpdateInput>
+    /**
+     * Choose, which StockNotification to update.
+     */
+    where: StockNotificationWhereUniqueInput
+  }
+
+  /**
+   * StockNotification updateMany
+   */
+  export type StockNotificationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StockNotifications.
+     */
+    data: XOR<StockNotificationUpdateManyMutationInput, StockNotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which StockNotifications to update
+     */
+    where?: StockNotificationWhereInput
+    /**
+     * Limit how many StockNotifications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockNotification updateManyAndReturn
+   */
+  export type StockNotificationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * The data used to update StockNotifications.
+     */
+    data: XOR<StockNotificationUpdateManyMutationInput, StockNotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which StockNotifications to update
+     */
+    where?: StockNotificationWhereInput
+    /**
+     * Limit how many StockNotifications to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockNotification upsert
+   */
+  export type StockNotificationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StockNotification to update in case it exists.
+     */
+    where: StockNotificationWhereUniqueInput
+    /**
+     * In case the StockNotification found by the `where` argument doesn't exist, create a new StockNotification with this data.
+     */
+    create: XOR<StockNotificationCreateInput, StockNotificationUncheckedCreateInput>
+    /**
+     * In case the StockNotification was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StockNotificationUpdateInput, StockNotificationUncheckedUpdateInput>
+  }
+
+  /**
+   * StockNotification delete
+   */
+  export type StockNotificationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
+    /**
+     * Filter which StockNotification to delete.
+     */
+    where: StockNotificationWhereUniqueInput
+  }
+
+  /**
+   * StockNotification deleteMany
+   */
+  export type StockNotificationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockNotifications to delete
+     */
+    where?: StockNotificationWhereInput
+    /**
+     * Limit how many StockNotifications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockNotification without action
+   */
+  export type StockNotificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockNotification
+     */
+    select?: StockNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockNotification
+     */
+    omit?: StockNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockNotificationInclude<ExtArgs> | null
   }
 
 
@@ -53662,6 +54927,20 @@ export namespace Prisma {
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
 
 
+  export const StockNotificationScalarFieldEnum: {
+    id: 'id',
+    productId: 'productId',
+    phoneNumber: 'phoneNumber',
+    requestedAt: 'requestedAt',
+    processingAt: 'processingAt',
+    sentAt: 'sentAt',
+    attemptCount: 'attemptCount',
+    lastError: 'lastError'
+  };
+
+  export type StockNotificationScalarFieldEnum = (typeof StockNotificationScalarFieldEnum)[keyof typeof StockNotificationScalarFieldEnum]
+
+
   export const ProductImageScalarFieldEnum: {
     id: 'id',
     productId: 'productId',
@@ -55389,6 +56668,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     wishlistedBy?: WishlistItemListRelationFilter
     comparedBy?: CompareItemListRelationFilter
+    stockNotifications?: StockNotificationListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -55435,6 +56715,7 @@ export namespace Prisma {
     orderItems?: OrderItemOrderByRelationAggregateInput
     wishlistedBy?: WishlistItemOrderByRelationAggregateInput
     comparedBy?: CompareItemOrderByRelationAggregateInput
+    stockNotifications?: StockNotificationOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -55484,6 +56765,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     wishlistedBy?: WishlistItemListRelationFilter
     comparedBy?: CompareItemListRelationFilter
+    stockNotifications?: StockNotificationListRelationFilter
   }, "id" | "sku" | "hesabfaCode" | "hesabfaId">
 
   export type ProductOrderByWithAggregationInput = {
@@ -55566,6 +56848,79 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"Product"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
+  }
+
+  export type StockNotificationWhereInput = {
+    AND?: StockNotificationWhereInput | StockNotificationWhereInput[]
+    OR?: StockNotificationWhereInput[]
+    NOT?: StockNotificationWhereInput | StockNotificationWhereInput[]
+    id?: StringFilter<"StockNotification"> | string
+    productId?: StringFilter<"StockNotification"> | string
+    phoneNumber?: StringFilter<"StockNotification"> | string
+    requestedAt?: DateTimeFilter<"StockNotification"> | Date | string
+    processingAt?: DateTimeNullableFilter<"StockNotification"> | Date | string | null
+    sentAt?: DateTimeNullableFilter<"StockNotification"> | Date | string | null
+    attemptCount?: IntFilter<"StockNotification"> | number
+    lastError?: StringNullableFilter<"StockNotification"> | string | null
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }
+
+  export type StockNotificationOrderByWithRelationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    phoneNumber?: SortOrder
+    requestedAt?: SortOrder
+    processingAt?: SortOrderInput | SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
+    lastError?: SortOrderInput | SortOrder
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type StockNotificationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    productId_phoneNumber?: StockNotificationProductIdPhoneNumberCompoundUniqueInput
+    AND?: StockNotificationWhereInput | StockNotificationWhereInput[]
+    OR?: StockNotificationWhereInput[]
+    NOT?: StockNotificationWhereInput | StockNotificationWhereInput[]
+    productId?: StringFilter<"StockNotification"> | string
+    phoneNumber?: StringFilter<"StockNotification"> | string
+    requestedAt?: DateTimeFilter<"StockNotification"> | Date | string
+    processingAt?: DateTimeNullableFilter<"StockNotification"> | Date | string | null
+    sentAt?: DateTimeNullableFilter<"StockNotification"> | Date | string | null
+    attemptCount?: IntFilter<"StockNotification"> | number
+    lastError?: StringNullableFilter<"StockNotification"> | string | null
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }, "id" | "productId_phoneNumber">
+
+  export type StockNotificationOrderByWithAggregationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    phoneNumber?: SortOrder
+    requestedAt?: SortOrder
+    processingAt?: SortOrderInput | SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
+    lastError?: SortOrderInput | SortOrder
+    _count?: StockNotificationCountOrderByAggregateInput
+    _avg?: StockNotificationAvgOrderByAggregateInput
+    _max?: StockNotificationMaxOrderByAggregateInput
+    _min?: StockNotificationMinOrderByAggregateInput
+    _sum?: StockNotificationSumOrderByAggregateInput
+  }
+
+  export type StockNotificationScalarWhereWithAggregatesInput = {
+    AND?: StockNotificationScalarWhereWithAggregatesInput | StockNotificationScalarWhereWithAggregatesInput[]
+    OR?: StockNotificationScalarWhereWithAggregatesInput[]
+    NOT?: StockNotificationScalarWhereWithAggregatesInput | StockNotificationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StockNotification"> | string
+    productId?: StringWithAggregatesFilter<"StockNotification"> | string
+    phoneNumber?: StringWithAggregatesFilter<"StockNotification"> | string
+    requestedAt?: DateTimeWithAggregatesFilter<"StockNotification"> | Date | string
+    processingAt?: DateTimeNullableWithAggregatesFilter<"StockNotification"> | Date | string | null
+    sentAt?: DateTimeNullableWithAggregatesFilter<"StockNotification"> | Date | string | null
+    attemptCount?: IntWithAggregatesFilter<"StockNotification"> | number
+    lastError?: StringNullableWithAggregatesFilter<"StockNotification"> | string | null
   }
 
   export type ProductImageWhereInput = {
@@ -58887,6 +60242,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -58931,6 +60287,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -58975,6 +60332,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -59019,6 +60377,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -59128,6 +60487,82 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockNotificationCreateInput = {
+    id?: string
+    phoneNumber: string
+    requestedAt?: Date | string
+    processingAt?: Date | string | null
+    sentAt?: Date | string | null
+    attemptCount?: number
+    lastError?: string | null
+    product: ProductCreateNestedOneWithoutStockNotificationsInput
+  }
+
+  export type StockNotificationUncheckedCreateInput = {
+    id?: string
+    productId: string
+    phoneNumber: string
+    requestedAt?: Date | string
+    processingAt?: Date | string | null
+    sentAt?: Date | string | null
+    attemptCount?: number
+    lastError?: string | null
+  }
+
+  export type StockNotificationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    product?: ProductUpdateOneRequiredWithoutStockNotificationsNestedInput
+  }
+
+  export type StockNotificationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type StockNotificationCreateManyInput = {
+    id?: string
+    productId: string
+    phoneNumber: string
+    requestedAt?: Date | string
+    processingAt?: Date | string | null
+    sentAt?: Date | string | null
+    attemptCount?: number
+    lastError?: string | null
+  }
+
+  export type StockNotificationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type StockNotificationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductImageCreateInput = {
@@ -62639,6 +64074,12 @@ export namespace Prisma {
     none?: OrderItemWhereInput
   }
 
+  export type StockNotificationListRelationFilter = {
+    every?: StockNotificationWhereInput
+    some?: StockNotificationWhereInput
+    none?: StockNotificationWhereInput
+  }
+
   export type ProductImageOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -62648,6 +64089,10 @@ export namespace Prisma {
   }
 
   export type OrderItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StockNotificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -62833,6 +64278,52 @@ export namespace Prisma {
   export type ProductScalarRelationFilter = {
     is?: ProductWhereInput
     isNot?: ProductWhereInput
+  }
+
+  export type StockNotificationProductIdPhoneNumberCompoundUniqueInput = {
+    productId: string
+    phoneNumber: string
+  }
+
+  export type StockNotificationCountOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    phoneNumber?: SortOrder
+    requestedAt?: SortOrder
+    processingAt?: SortOrder
+    sentAt?: SortOrder
+    attemptCount?: SortOrder
+    lastError?: SortOrder
+  }
+
+  export type StockNotificationAvgOrderByAggregateInput = {
+    attemptCount?: SortOrder
+  }
+
+  export type StockNotificationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    phoneNumber?: SortOrder
+    requestedAt?: SortOrder
+    processingAt?: SortOrder
+    sentAt?: SortOrder
+    attemptCount?: SortOrder
+    lastError?: SortOrder
+  }
+
+  export type StockNotificationMinOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    phoneNumber?: SortOrder
+    requestedAt?: SortOrder
+    processingAt?: SortOrder
+    sentAt?: SortOrder
+    attemptCount?: SortOrder
+    lastError?: SortOrder
+  }
+
+  export type StockNotificationSumOrderByAggregateInput = {
+    attemptCount?: SortOrder
   }
 
   export type ProductImageCountOrderByAggregateInput = {
@@ -65478,6 +66969,13 @@ export namespace Prisma {
     connect?: CompareItemWhereUniqueInput | CompareItemWhereUniqueInput[]
   }
 
+  export type StockNotificationCreateNestedManyWithoutProductInput = {
+    create?: XOR<StockNotificationCreateWithoutProductInput, StockNotificationUncheckedCreateWithoutProductInput> | StockNotificationCreateWithoutProductInput[] | StockNotificationUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockNotificationCreateOrConnectWithoutProductInput | StockNotificationCreateOrConnectWithoutProductInput[]
+    createMany?: StockNotificationCreateManyProductInputEnvelope
+    connect?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+  }
+
   export type ProductImageUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput> | ProductImageCreateWithoutProductInput[] | ProductImageUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductImageCreateOrConnectWithoutProductInput | ProductImageCreateOrConnectWithoutProductInput[]
@@ -65525,6 +67023,13 @@ export namespace Prisma {
     connectOrCreate?: CompareItemCreateOrConnectWithoutProductInput | CompareItemCreateOrConnectWithoutProductInput[]
     createMany?: CompareItemCreateManyProductInputEnvelope
     connect?: CompareItemWhereUniqueInput | CompareItemWhereUniqueInput[]
+  }
+
+  export type StockNotificationUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<StockNotificationCreateWithoutProductInput, StockNotificationUncheckedCreateWithoutProductInput> | StockNotificationCreateWithoutProductInput[] | StockNotificationUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockNotificationCreateOrConnectWithoutProductInput | StockNotificationCreateOrConnectWithoutProductInput[]
+    createMany?: StockNotificationCreateManyProductInputEnvelope
+    connect?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
   }
 
   export type NullableBigIntFieldUpdateOperationsInput = {
@@ -65657,6 +67162,20 @@ export namespace Prisma {
     deleteMany?: CompareItemScalarWhereInput | CompareItemScalarWhereInput[]
   }
 
+  export type StockNotificationUpdateManyWithoutProductNestedInput = {
+    create?: XOR<StockNotificationCreateWithoutProductInput, StockNotificationUncheckedCreateWithoutProductInput> | StockNotificationCreateWithoutProductInput[] | StockNotificationUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockNotificationCreateOrConnectWithoutProductInput | StockNotificationCreateOrConnectWithoutProductInput[]
+    upsert?: StockNotificationUpsertWithWhereUniqueWithoutProductInput | StockNotificationUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: StockNotificationCreateManyProductInputEnvelope
+    set?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+    disconnect?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+    delete?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+    connect?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+    update?: StockNotificationUpdateWithWhereUniqueWithoutProductInput | StockNotificationUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: StockNotificationUpdateManyWithWhereWithoutProductInput | StockNotificationUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: StockNotificationScalarWhereInput | StockNotificationScalarWhereInput[]
+  }
+
   export type ProductImageUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput> | ProductImageCreateWithoutProductInput[] | ProductImageUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductImageCreateOrConnectWithoutProductInput | ProductImageCreateOrConnectWithoutProductInput[]
@@ -65753,6 +67272,34 @@ export namespace Prisma {
     update?: CompareItemUpdateWithWhereUniqueWithoutProductInput | CompareItemUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: CompareItemUpdateManyWithWhereWithoutProductInput | CompareItemUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: CompareItemScalarWhereInput | CompareItemScalarWhereInput[]
+  }
+
+  export type StockNotificationUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<StockNotificationCreateWithoutProductInput, StockNotificationUncheckedCreateWithoutProductInput> | StockNotificationCreateWithoutProductInput[] | StockNotificationUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: StockNotificationCreateOrConnectWithoutProductInput | StockNotificationCreateOrConnectWithoutProductInput[]
+    upsert?: StockNotificationUpsertWithWhereUniqueWithoutProductInput | StockNotificationUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: StockNotificationCreateManyProductInputEnvelope
+    set?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+    disconnect?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+    delete?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+    connect?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+    update?: StockNotificationUpdateWithWhereUniqueWithoutProductInput | StockNotificationUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: StockNotificationUpdateManyWithWhereWithoutProductInput | StockNotificationUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: StockNotificationScalarWhereInput | StockNotificationScalarWhereInput[]
+  }
+
+  export type ProductCreateNestedOneWithoutStockNotificationsInput = {
+    create?: XOR<ProductCreateWithoutStockNotificationsInput, ProductUncheckedCreateWithoutStockNotificationsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutStockNotificationsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutStockNotificationsNestedInput = {
+    create?: XOR<ProductCreateWithoutStockNotificationsInput, ProductUncheckedCreateWithoutStockNotificationsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutStockNotificationsInput
+    upsert?: ProductUpsertWithoutStockNotificationsInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutStockNotificationsInput, ProductUpdateWithoutStockNotificationsInput>, ProductUncheckedUpdateWithoutStockNotificationsInput>
   }
 
   export type ProductCreateNestedOneWithoutImagesInput = {
@@ -68640,6 +70187,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutPartsBrandInput = {
@@ -68683,6 +70231,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPartsBrandInput = {
@@ -68792,6 +70341,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -68835,6 +70385,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -69105,6 +70656,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StockNotificationCreateWithoutProductInput = {
+    id?: string
+    phoneNumber: string
+    requestedAt?: Date | string
+    processingAt?: Date | string | null
+    sentAt?: Date | string | null
+    attemptCount?: number
+    lastError?: string | null
+  }
+
+  export type StockNotificationUncheckedCreateWithoutProductInput = {
+    id?: string
+    phoneNumber: string
+    requestedAt?: Date | string
+    processingAt?: Date | string | null
+    sentAt?: Date | string | null
+    attemptCount?: number
+    lastError?: string | null
+  }
+
+  export type StockNotificationCreateOrConnectWithoutProductInput = {
+    where: StockNotificationWhereUniqueInput
+    create: XOR<StockNotificationCreateWithoutProductInput, StockNotificationUncheckedCreateWithoutProductInput>
+  }
+
+  export type StockNotificationCreateManyProductInputEnvelope = {
+    data: StockNotificationCreateManyProductInput | StockNotificationCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PartsBrandUpsertWithoutProductsInput = {
     update: XOR<PartsBrandUpdateWithoutProductsInput, PartsBrandUncheckedUpdateWithoutProductsInput>
     create: XOR<PartsBrandCreateWithoutProductsInput, PartsBrandUncheckedCreateWithoutProductsInput>
@@ -69326,6 +70907,228 @@ export namespace Prisma {
     data: XOR<CompareItemUpdateManyMutationInput, CompareItemUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type StockNotificationUpsertWithWhereUniqueWithoutProductInput = {
+    where: StockNotificationWhereUniqueInput
+    update: XOR<StockNotificationUpdateWithoutProductInput, StockNotificationUncheckedUpdateWithoutProductInput>
+    create: XOR<StockNotificationCreateWithoutProductInput, StockNotificationUncheckedCreateWithoutProductInput>
+  }
+
+  export type StockNotificationUpdateWithWhereUniqueWithoutProductInput = {
+    where: StockNotificationWhereUniqueInput
+    data: XOR<StockNotificationUpdateWithoutProductInput, StockNotificationUncheckedUpdateWithoutProductInput>
+  }
+
+  export type StockNotificationUpdateManyWithWhereWithoutProductInput = {
+    where: StockNotificationScalarWhereInput
+    data: XOR<StockNotificationUpdateManyMutationInput, StockNotificationUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type StockNotificationScalarWhereInput = {
+    AND?: StockNotificationScalarWhereInput | StockNotificationScalarWhereInput[]
+    OR?: StockNotificationScalarWhereInput[]
+    NOT?: StockNotificationScalarWhereInput | StockNotificationScalarWhereInput[]
+    id?: StringFilter<"StockNotification"> | string
+    productId?: StringFilter<"StockNotification"> | string
+    phoneNumber?: StringFilter<"StockNotification"> | string
+    requestedAt?: DateTimeFilter<"StockNotification"> | Date | string
+    processingAt?: DateTimeNullableFilter<"StockNotification"> | Date | string | null
+    sentAt?: DateTimeNullableFilter<"StockNotification"> | Date | string | null
+    attemptCount?: IntFilter<"StockNotification"> | number
+    lastError?: StringNullableFilter<"StockNotification"> | string | null
+  }
+
+  export type ProductCreateWithoutStockNotificationsInput = {
+    id?: string
+    sku: string
+    name: string
+    wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
+    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
+    retailDiscountPct?: Decimal | DecimalJsLike | number | string
+    isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    lastSyncedAt?: Date | string | null
+    stock?: number
+    origin?: string | null
+    packQuantity?: number
+    cartonQuantity?: number
+    unit?: string
+    mainImage?: string | null
+    description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
+    searchText?: string | null
+    viewCount?: number
+    saleCount?: number
+    ratingAvg?: Decimal | DecimalJsLike | number | string
+    reviewCount?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partsBrand: PartsBrandCreateNestedOneWithoutProductsInput
+    category: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    compatibilities?: ProductCompatibilityCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+    cartItems?: CartItemCreateNestedManyWithoutProductInput
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
+    comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutStockNotificationsInput = {
+    id?: string
+    sku: string
+    name: string
+    partsBrandId: number
+    categoryId: number
+    wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
+    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
+    retailDiscountPct?: Decimal | DecimalJsLike | number | string
+    isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    lastSyncedAt?: Date | string | null
+    stock?: number
+    origin?: string | null
+    packQuantity?: number
+    cartonQuantity?: number
+    unit?: string
+    mainImage?: string | null
+    description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
+    searchText?: string | null
+    viewCount?: number
+    saleCount?: number
+    ratingAvg?: Decimal | DecimalJsLike | number | string
+    reviewCount?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    compatibilities?: ProductCompatibilityUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
+    comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutStockNotificationsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutStockNotificationsInput, ProductUncheckedCreateWithoutStockNotificationsInput>
+  }
+
+  export type ProductUpsertWithoutStockNotificationsInput = {
+    update: XOR<ProductUpdateWithoutStockNotificationsInput, ProductUncheckedUpdateWithoutStockNotificationsInput>
+    create: XOR<ProductCreateWithoutStockNotificationsInput, ProductUncheckedCreateWithoutStockNotificationsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutStockNotificationsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutStockNotificationsInput, ProductUncheckedUpdateWithoutStockNotificationsInput>
+  }
+
+  export type ProductUpdateWithoutStockNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    origin?: NullableStringFieldUpdateOperationsInput | string | null
+    packQuantity?: IntFieldUpdateOperationsInput | number
+    cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    mainImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
+    viewCount?: IntFieldUpdateOperationsInput | number
+    saleCount?: IntFieldUpdateOperationsInput | number
+    ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reviewCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partsBrand?: PartsBrandUpdateOneRequiredWithoutProductsNestedInput
+    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    compatibilities?: ProductCompatibilityUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+    cartItems?: CartItemUpdateManyWithoutProductNestedInput
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
+    comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutStockNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    partsBrandId?: IntFieldUpdateOperationsInput | number
+    categoryId?: IntFieldUpdateOperationsInput | number
+    wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    origin?: NullableStringFieldUpdateOperationsInput | string | null
+    packQuantity?: IntFieldUpdateOperationsInput | number
+    cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    mainImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
+    viewCount?: IntFieldUpdateOperationsInput | number
+    saleCount?: IntFieldUpdateOperationsInput | number
+    ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reviewCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    compatibilities?: ProductCompatibilityUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+    comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+  }
+
   export type ProductCreateWithoutImagesInput = {
     id?: string
     sku: string
@@ -69367,6 +71170,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutImagesInput = {
@@ -69410,6 +71214,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutImagesInput = {
@@ -69469,6 +71274,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -69512,6 +71318,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutCompatibilitiesInput = {
@@ -69555,6 +71362,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCompatibilitiesInput = {
@@ -69598,6 +71406,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCompatibilitiesInput = {
@@ -69685,6 +71494,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCompatibilitiesInput = {
@@ -69728,6 +71538,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CarModelUpsertWithoutCompatibilitiesInput = {
@@ -69805,6 +71616,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutReviewsInput = {
@@ -69848,6 +71660,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutReviewsInput = {
@@ -69982,6 +71795,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutReviewsInput = {
@@ -70025,6 +71839,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -70364,6 +72179,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCartItemsInput = {
@@ -70407,6 +72223,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCartItemsInput = {
@@ -70491,6 +72308,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCartItemsInput = {
@@ -70534,6 +72352,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutWishlistInput = {
@@ -70652,6 +72471,7 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutWishlistedByInput = {
@@ -70695,6 +72515,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutWishlistedByInput = {
@@ -70835,6 +72656,7 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutWishlistedByInput = {
@@ -70878,6 +72700,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutCompareItemsInput = {
@@ -70996,6 +72819,7 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutComparedByInput = {
@@ -71039,6 +72863,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutComparedByInput = {
@@ -71179,6 +73004,7 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutComparedByInput = {
@@ -71222,6 +73048,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type PostCreateWithoutCategoryInput = {
@@ -72397,6 +74224,7 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -72440,6 +74268,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -72581,6 +74410,7 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -72624,6 +74454,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutSupportMessagesInput = {
@@ -74408,6 +76239,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPartsBrandInput = {
@@ -74451,6 +76283,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutPartsBrandInput = {
@@ -74566,6 +76399,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -74609,6 +76443,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -74701,6 +76536,16 @@ export namespace Prisma {
     id?: string
     userId: string
     createdAt?: Date | string
+  }
+
+  export type StockNotificationCreateManyProductInput = {
+    id?: string
+    phoneNumber: string
+    requestedAt?: Date | string
+    processingAt?: Date | string | null
+    sentAt?: Date | string | null
+    attemptCount?: number
+    lastError?: string | null
   }
 
   export type ProductImageUpdateWithoutProductInput = {
@@ -74869,6 +76714,36 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockNotificationUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type StockNotificationUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type StockNotificationUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CartItemCreateManyCartInput = {

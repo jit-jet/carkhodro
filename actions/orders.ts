@@ -45,6 +45,7 @@ import type {
 import type { DiscountCartLine } from '@/src/lib/apply-discount-code';
 import { formatCartStockIssues } from '@/src/lib/cart-stock';
 import { validateLinesAgainstHesabfaStock } from '@/src/lib/hesabfa/stock';
+import { dispatchStockNotificationsForProducts } from '@/src/lib/stock-notification';
 
 /**
  * VAT / tax rate applied to the order subtotal at checkout. Kept at 0 so totals
@@ -459,14 +460,16 @@ export async function submitCheckout(
       });
 
       if (payment.result !== ZIBAL_RESULT_OK || payment.trackId == null) {
-        await prisma.$transaction(async (tx) => {
+        const restoredProductIds = await prisma.$transaction(async (tx) => {
           const pending = await tx.order.findUnique({
             where: { id: order.id },
             include: { items: true },
           });
-          if (!pending || pending.paymentStatus !== 'PENDING') return;
+          if (!pending || pending.paymentStatus !== 'PENDING') return [];
+          const productIds: string[] = [];
           for (const item of pending.items) {
             if (!item.productId) continue;
+            productIds.push(item.productId);
             await tx.product.update({
               where: { id: item.productId },
               data: {
@@ -488,7 +491,9 @@ export async function submitCheckout(
               status: 'CANCELLED_BY_CUSTOMER',
             },
           });
+          return [...new Set(productIds)];
         });
+        await dispatchStockNotificationsForProducts(restoredProductIds);
         updateTag(tags.products);
         return fail(payment.message || 'اتصال به درگاه پرداخت برقرار نشد. لطفاً دوباره تلاش کنید.');
       }

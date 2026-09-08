@@ -25,6 +25,7 @@ import { topCategoryNameFromNodeFamily } from './category-path';
 import { rialToToman, tomanToRial } from './currency';
 import { wholesaleFromHesabfaItem } from './product-pricing';
 import { stockFromHesabfaItem } from './stock';
+import { dispatchStockNotificationsForProducts } from '@/src/lib/stock-notification';
 import { planProductIdentitySync } from './product-identity';
 import { computeRetailPrice, computeWholesaleFinal } from '@/src/lib/pricing';
 import {
@@ -279,6 +280,7 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
   }
 
   invalidate(stats.touchedIds);
+  await dispatchStockNotificationsForProducts(stats.touchedIds);
   return stats;
 }
 

@@ -10,6 +10,7 @@ import { clearUserCart } from '@/src/lib/clear-user-cart';
 import { pushPaidRetailInvoice } from '@/src/lib/hesabfa/invoices';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import { queueAdminOrderNotification } from '@/src/lib/order-notification';
+import { dispatchStockNotificationsForProducts } from '@/src/lib/stock-notification';
 import { zibalVerifyPayment } from '@/src/lib/zibal/client';
 import { zibalStatusMessage } from '@/src/lib/zibal/status-messages';
 import {
@@ -35,15 +36,18 @@ function buildSuccessRedirect(orderId: string): ZibalCallbackOutcome {
 
 /** Restore stock and mark an unpaid online order as failed/cancelled. */
 async function failUnpaidOrder(orderId: string): Promise<void> {
-  await prisma.$transaction(async (tx) => {
+  const restoredProductIds = await prisma.$transaction(async (tx) => {
     const order = await tx.order.findUnique({
       where: { id: orderId },
       include: { items: true },
     });
-    if (!order || order.paymentStatus !== 'PENDING') return;
+    if (!order || order.paymentStatus !== 'PENDING') return [];
+
+    const productIds: string[] = [];
 
     for (const item of order.items) {
       if (!item.productId) continue;
+      productIds.push(item.productId);
       await tx.product.update({
         where: { id: item.productId },
         data: {
@@ -67,7 +71,10 @@ async function failUnpaidOrder(orderId: string): Promise<void> {
         status: 'CANCELLED_BY_CUSTOMER',
       },
     });
+    return [...new Set(productIds)];
   });
+
+  await dispatchStockNotificationsForProducts(restoredProductIds);
 }
 
 /** Mark order as paid after a successful Zibal verify. Idempotent when already PAID. */
