@@ -66,7 +66,7 @@ export async function getProducts(): Promise<ProductVM[]> {
   }, []);
 }
 
-/** Newest active products for the "جدیدترین محصولات" home slider. */
+/** Newest active, in-stock products for the "جدیدترین محصولات" home slider. */
 export async function getNewArrivals(limit = 10): Promise<ProductVM[]> {
   'use cache';
   cacheLife('hours');
@@ -74,7 +74,7 @@ export async function getNewArrivals(limit = 10): Promise<ProductVM[]> {
 
   return safeQuery('getNewArrivals', async () => {
     const [rows, fallbackImage] = await Promise.all([prisma.product.findMany({
-      where: { isActive: true },
+      where: { isActive: true, stock: { gt: 0 } },
       include: productInclude,
       orderBy: { createdAt: 'desc' },
       take: limit,
@@ -83,7 +83,7 @@ export async function getNewArrivals(limit = 10): Promise<ProductVM[]> {
   }, []);
 }
 
-/** Active products currently on offer — "پیشنهادات شگفت‌انگیز" home slider. */
+/** Active, in-stock products currently on offer — "پیشنهادات شگفت‌انگیز" home slider. */
 export async function getSpecialOffers(limit = 12): Promise<ProductVM[]> {
   'use cache';
   cacheLife('hours');
@@ -91,7 +91,7 @@ export async function getSpecialOffers(limit = 12): Promise<ProductVM[]> {
 
   return safeQuery('getSpecialOffers', async () => {
     const [rows, fallbackImage] = await Promise.all([prisma.product.findMany({
-      where: { isActive: true, isOffer: true },
+      where: { isActive: true, isOffer: true, stock: { gt: 0 } },
       include: productInclude,
       orderBy: { saleCount: 'desc' },
       take: limit,
