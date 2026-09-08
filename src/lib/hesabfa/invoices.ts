@@ -25,6 +25,7 @@ import {
 import { getSystemConfig } from '@/src/lib/system-settings';
 import { planInvoiceIdentitySync } from './invoice-identity';
 import { mapHesabfaToLocalStatus } from './invoice-status';
+import { hesabfaInvoiceStatusForRole } from './invoice-approval';
 
 export interface InvoiceSyncStats {
   updated: number;
@@ -144,7 +145,7 @@ function buildInvoicePayload(
     note: opts.paidNote ? HESABFA_INVOICE_NOTE : order.notes?.trim() || HESABFA_INVOICE_NOTE,
     sent: order.status === 'SHIPPED' || order.status === 'COMPLETED',
     invoiceType: HESABFA_INVOICE_TYPE_SALE,
-    status: 1,
+    status: hesabfaInvoiceStatusForRole(order.user.role),
     tag: `${HESABFA_TAG}:${order.id}`,
     freight: 0,
     currency: 'IRR',
