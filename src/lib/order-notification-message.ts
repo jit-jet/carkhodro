@@ -1,3 +1,5 @@
+import { toEnglishDigits } from './persian';
+
 export type AdminOrderNotificationKind = 'RETAIL_PAYMENT' | 'WHOLESALE_INVOICE';
 
 export interface AdminOrderNotificationMessageInput {
@@ -8,9 +10,12 @@ export interface AdminOrderNotificationMessageInput {
 }
 
 export function buildAdminInvoiceUrl(appUrl: string, orderId: string): string {
-  const baseUrl = appUrl.trim().replace(/\/$/, '');
+  const baseUrl = toEnglishDigits(appUrl.trim().replace(/\/$/, ''));
   if (!baseUrl) throw new Error('NEXT_PUBLIC_APP_URL is required for order notifications.');
-  return new URL(`/admin/orders/${encodeURIComponent(orderId)}`, `${baseUrl}/`).toString();
+  const asciiOrderId = toEnglishDigits(orderId);
+  return toEnglishDigits(
+    new URL('/admin/orders/' + encodeURIComponent(asciiOrderId), baseUrl + '/').toString(),
+  );
 }
 
 export function buildAdminOrderNotificationMessage(
@@ -25,6 +30,6 @@ export function buildAdminOrderNotificationMessage(
     `خریدار: ${input.buyerFullName}`,
     `مبلغ: ${input.amountToman.toLocaleString('fa-IR')} تومان`,
     'مشاهده سفارش:',
-    input.invoiceUrl,
+    toEnglishDigits(input.invoiceUrl),
   ].join('\n');
 }

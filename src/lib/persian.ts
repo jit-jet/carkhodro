@@ -4,11 +4,15 @@
  * ZWNJ + tatweel, lowercase and collapse whitespace. Keeping the two in sync is
  * what lets app-side text line up with whatever the DB normalized.
  */
-export function normalizePersianText(input: string): string {
+export function toEnglishDigits(input: string): string {
   return input
+    .replace(/[٠-٩]/g, (digit) => String(digit.charCodeAt(0) - 0x0660))
+    .replace(/[۰-۹]/g, (digit) => String(digit.charCodeAt(0) - 0x06f0));
+}
+
+export function normalizePersianText(input: string): string {
+  return toEnglishDigits(input)
     .toLowerCase()
-    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)) // ٠-٩
-    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0)) // ۰-۹
     .replace(/ي/g, 'ی') // ي → ی
     .replace(/ك/g, 'ک') // ك → ک
     .replace(/[‌ـ]/g, '') // ZWNJ, tatweel

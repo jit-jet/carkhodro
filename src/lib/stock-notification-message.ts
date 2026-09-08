@@ -1,3 +1,5 @@
+import { toEnglishDigits } from './persian';
+
 export interface StockNotificationMessageInput {
   productName: string;
   productUrl: string;
@@ -17,6 +19,6 @@ export function buildStockNotificationMessage(
     '',
     'محصول «' + productName + '» موجود شد.',
     'همین حالا می‌توانید سفارش خود را ثبت کنید.',
-    input.productUrl,
+    toEnglishDigits(input.productUrl),
   ].join('\n');
 }

@@ -7,7 +7,7 @@ import {
 
 test('builds the absolute admin invoice URL without a duplicate slash', () => {
   assert.equal(
-    buildAdminInvoiceUrl('https://carkhodro.com/', 'order-123'),
+    buildAdminInvoiceUrl('https://carkhodro.com/', 'order-۱۲٣'),
     'https://carkhodro.com/admin/orders/order-123',
   );
 });
@@ -17,7 +17,7 @@ test('retail notification contains buyer, amount, and invoice link', () => {
     kind: 'RETAIL_PAYMENT',
     buyerFullName: 'علی رضایی',
     amountToman: BigInt(1250000),
-    invoiceUrl: 'https://carkhodro.com/admin/orders/order-123',
+    invoiceUrl: 'https://carkhodro.com/admin/orders/order-۱۲٣',
   });
 
   assert.match(body, /پرداخت آنلاین جدید/);
