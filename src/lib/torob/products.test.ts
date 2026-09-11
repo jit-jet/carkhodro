@@ -35,7 +35,7 @@ test('maps the existing retail price and product data to Torob v3', () => {
 
   assert.equal(product.page_unique, 'product_1');
   assert.equal(product.page_url, 'https://shop.example/products/product_1');
-  assert.equal(product.current_price, 112_500);
+  assert.equal(product.current_price, 113_000);
   assert.equal(product.old_price, 125_000);
   assert.equal(product.availability, true);
   assert.deepEqual(product.image_links, [

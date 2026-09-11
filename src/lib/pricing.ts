@@ -14,7 +14,7 @@
 import type { Prisma } from '@/generated/prisma_client';
 import { isWholesaleUser, type PricingRole } from '@/src/lib/user-role';
 
-const RETAIL_ROUNDING_STEP_TOMAN = 100;
+const RETAIL_ROUNDING_STEP_TOMAN = 1_000;
 
 export interface ProductPriceFields {
   wholesalePrice: bigint | number;
@@ -44,13 +44,13 @@ function toNumber(amount: bigint | number): number {
 /**
  * retailPrice = wholesalePrice × (1 + retailPriceDiffPct / 100)
  *
- * Retail prices always round up to the next 100 Toman so the storefront,
- * cart and checkout never undercut the configured percentage.
+ * Retail prices are rounded to the nearest 1,000 Toman. Remainders of 500
+ * Toman or more round upward; smaller remainders round downward.
  */
 export function computeRetailPrice(fields: ProductPriceFields): number {
   const wholesale = toNumber(fields.wholesalePrice);
   const diff = pct(fields.retailPriceDiffPct);
-  return roundRetailPriceUp((wholesale * (100 + diff)) / 100);
+  return roundRetailPrice((wholesale * (100 + diff)) / 100);
 }
 
 /** wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100) */
@@ -71,14 +71,17 @@ export function applyDiscount(base: number, discountPct: number): number {
   return Math.round((base * (100 - discountPct)) / 100);
 }
 
-/** Round a retail amount upward to the next 100 Toman. */
-export function roundRetailPriceUp(amount: number): number {
-  return Math.ceil(amount / RETAIL_ROUNDING_STEP_TOMAN) * RETAIL_ROUNDING_STEP_TOMAN;
+/** Round a retail amount to the nearest 1,000 Toman, with midpoint values upward. */
+export function roundRetailPrice(amount: number): number {
+  return Math.round(amount / RETAIL_ROUNDING_STEP_TOMAN) * RETAIL_ROUNDING_STEP_TOMAN;
 }
 
-/** Retail discount result, rounded upward to the next 100 Toman. */
+/** @deprecated Use `roundRetailPrice`; retained for callers of the previous API. */
+export const roundRetailPriceUp = roundRetailPrice;
+
+/** Retail discount result, rounded to the nearest 1,000 Toman. */
 export function applyRetailDiscount(base: number, discountPct: number): number {
-  return roundRetailPriceUp((base * (100 - discountPct)) / 100);
+  return roundRetailPrice((base * (100 - discountPct)) / 100);
 }
 
 /** Pick the list + final price triple shown to the current user. */
@@ -167,6 +170,6 @@ export function netLineTotalBigIntForRole(
   const unitNumerator = unitList * discountFactor;
   const roundingBucket = denominator * roundingStep;
   const unitNet =
-    ((unitNumerator + roundingBucket - BigInt(1)) / roundingBucket) * roundingStep;
+    ((unitNumerator + roundingBucket / BigInt(2)) / roundingBucket) * roundingStep;
   return unitNet * BigInt(quantity);
 }
