@@ -31,7 +31,13 @@ interface Props {
   paymentTerms: string[];
 }
 
-export default function CartView({ initialCart, previousPurchases, paymentTerms }: Props) {
+export default function CartView(props: Props) {
+  // Revalidation can deliver a new server cart while this client component stays
+  // mounted. Remount its local state whenever the authoritative cart changes.
+  return <StatefulCartView key={JSON.stringify(props.initialCart)} {...props} />;
+}
+
+function StatefulCartView({ initialCart, previousPurchases, paymentTerms }: Props) {
   const router = useRouter();
   const setCount = useCartUI((s) => s.setCount);
   const notify = useCartUI((s) => s.notify);
@@ -136,7 +142,9 @@ export default function CartView({ initialCart, previousPurchases, paymentTerms 
         discountCode: appliedCode ?? undefined,
       });
       if (result.ok) {
-        setCount(0);
+        apply({ id: cart.id, lines: [], subtotalToman: 0, totalItems: 0 });
+        setSelected(new Set());
+        setConfirmOpen(false);
         router.push(`/dashboard/orders/${result.data.id}`);
       } else {
         setConfirmOpen(false);
