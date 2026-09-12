@@ -649,6 +649,10 @@ export default function Header({
 
           {/* Nav links */}
           <nav className="flex-1 overflow-y-auto">
+
+            {/* Account (logout when signed in) */}
+            {mobileMenuAccount}
+            
             <ul className="py-1">
               <Suspense
                 fallback={
@@ -668,8 +672,6 @@ export default function Header({
               </Suspense>
             </ul>
 
-            {/* Account (logout when signed in) */}
-            {mobileMenuAccount}
 
             {/* Wishlist & Compare */}
             <div className="border-t-4 border-silver-light mt-1">
