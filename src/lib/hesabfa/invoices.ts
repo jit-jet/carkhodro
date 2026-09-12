@@ -39,6 +39,38 @@ type OrderWithItems = Prisma.OrderGetPayload<{
   };
 }>;
 
+type InvoiceLine = Omit<
+  Pick<
+    OrderWithItems['items'][number],
+    | 'productId'
+    | 'productName'
+    | 'productSku'
+    | 'priceAtPurchase'
+    | 'discountPct'
+    | 'taxAmount'
+    | 'quantity'
+  >,
+  'discountPct'
+> & { discountPct: number | Prisma.Decimal };
+
+export type WholesaleInvoiceDraft = Pick<
+  OrderWithItems,
+  | 'id'
+  | 'orderNumber'
+  | 'paidAt'
+  | 'createdAt'
+  | 'shippingCost'
+  | 'discountAmount'
+  | 'discountCode'
+  | 'notes'
+  | 'status'
+  | 'hesabfaCode'
+> & {
+  userId: string;
+  user: Pick<OrderWithItems['user'], 'role' | 'hesabfaCode' | 'firstName' | 'lastName'>;
+  items: InvoiceLine[];
+};
+
 function invoiceNumber(inv: HesabfaInvoice): string {
   return inv.Number != null ? String(inv.Number).trim() : '';
 }
@@ -75,8 +107,8 @@ async function ensureContactCode(
 }
 
 async function resolveItemCodes(
-  items: OrderWithItems['items'],
-): Promise<Array<{ item: OrderWithItems['items'][number]; itemCode: string }>> {
+  items: InvoiceLine[],
+): Promise<Array<{ item: InvoiceLine; itemCode: string }>> {
   const productIds = items
     .map((item) => item.productId)
     .filter((id): id is string => id != null);
@@ -94,9 +126,9 @@ async function resolveItemCodes(
 }
 
 function buildInvoicePayload(
-  order: OrderWithItems,
+  order: WholesaleInvoiceDraft,
   contactCode: string,
-  lines: Array<{ item: OrderWithItems['items'][number]; itemCode: string }>,
+  lines: Array<{ item: InvoiceLine; itemCode: string }>,
   opts: { paidNote: boolean },
 ): Record<string, unknown> {
   const now = order.paidAt ?? order.createdAt;
@@ -152,6 +184,33 @@ function buildInvoicePayload(
     invoiceItems,
     ...(others.length > 0 ? { others } : {}),
   };
+}
+
+/** Save a new wholesale invoice before creating the local order. Hesabfa assigns Number. */
+export async function saveNewWholesaleInvoice(
+  order: WholesaleInvoiceDraft,
+): Promise<{ code: string; id: number | null }> {
+  if (order.hesabfaCode) {
+    throw new Error('Order is already linked to a Hesabfa invoice');
+  }
+  if (!(await isHesabfaConfigured())) {
+    throw new Error('Hesabfa is not configured');
+  }
+  const contactCode = await ensureContactCode(
+    order.userId,
+    order.user.role,
+    order.user.hesabfaCode,
+  );
+  if (!contactCode) throw new Error('Hesabfa contact code is missing');
+
+  const lines = await resolveItemCodes(order.items);
+  const payload = buildInvoicePayload(order, contactCode, lines, { paidNote: false });
+  const saved = await saveInvoice(payload);
+  const code = invoiceNumber(saved);
+  if (!code || code === '0') {
+    throw new Error('Hesabfa returned an invalid invoice number');
+  }
+  return { code, id: typeof saved.Id === 'number' ? saved.Id : null };
 }
 
 async function persistInvoiceLink(orderId: string, saved: HesabfaInvoice): Promise<void> {

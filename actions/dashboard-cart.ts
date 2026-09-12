@@ -17,10 +17,10 @@
  */
 
 import { revalidatePath, updateTag } from 'next/cache';
+import { randomUUID } from 'node:crypto';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { getCurrentUser } from '@/src/lib/session';
-import { clearCart } from '@/actions/cart';
 import { searchProducts } from '@/actions/search';
 import { tags } from '@/actions/cache-tags';
 import { PAYMENT_TERMS } from '@/src/lib/dashboard-options';
@@ -40,8 +40,10 @@ import {
   isCallForPriceForRole,
   CALL_FOR_PRICE_BLOCKED_MSG,
 } from '@/src/lib/call-for-price';
-import { pushWholesaleInvoice } from '@/src/lib/hesabfa/invoices';
-import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
+import {
+  saveNewWholesaleInvoice,
+  type WholesaleInvoiceDraft,
+} from '@/src/lib/hesabfa/invoices';
 import { queueAdminOrderNotification } from '@/src/lib/order-notification';
 import {
   resolveDiscountForCheckout,
@@ -56,6 +58,10 @@ import type {
 } from '@/src/lib/dashboard-types';
 
 const EMPTY_CART: DashboardCartVM = { id: '', lines: [], subtotalToman: 0, totalItems: 0 };
+const ACCOUNTING_ERROR =
+  'در اتصال با سیستم حسابداری مشکلی پیش آمده است. لطفاً با پشتیبانی تماس بگیرید.';
+const LOCAL_ORDER_ERROR =
+  'فاکتور در سیستم حسابداری ثبت شد، اما ثبت سفارش کامل نشد. لطفاً با پشتیبانی تماس بگیرید.';
 
 const cartArgs = {
   include: {
@@ -350,9 +356,8 @@ export async function getPreviousPurchaseProducts(): Promise<InvoiceSearchResult
 
 /**
  * Place the partner invoice from the current cart («ثبت فاکتور»).
- * One transaction: snapshot the partner's saved delivery address, freeze each
- * line's list price + discount, optionally apply a redeemable discount code,
- * decrement stock, create the order (status NEW) and clear the cart.
+ * Save the invoice in Hesabfa first, then create the linked local order and
+ * update stock, coupon usage and cart in one database transaction.
  * Requires a completed profile address.
  */
 export async function submitInvoice(input: {
@@ -482,60 +487,140 @@ export async function submitInvoice(input: {
     const totalAmount = subtotal - discountAmount;
     if (totalAmount < BigInt(0)) return fail('مبلغ نهایی فاکتور نامعتبر است.');
 
-    const order = await prisma.$transaction(async (tx) => {
-      const created = await tx.order.create({
-        data: {
-          userId: user.id,
-          addressId: address?.id ?? null,
-          shippingOptionId: shipping?.id ?? null,
-          paymentMethod: 'COD',
-          paymentTerms,
-          status: 'NEW',
-          snapshotProvince: address?.city.province.name ?? '',
-          snapshotCity: address?.city.name ?? '',
-          snapshotStreet: address?.street ?? '',
-          snapshotPostalCode: address?.postalCode ?? '',
-          subtotal,
-          shippingCost: BigInt(0),
-          taxAmount: BigInt(0),
-          discountAmount,
-          discountCode: applied?.code ?? null,
-          discountCodeId: applied?.discountCodeId ?? null,
-          totalAmount,
-          notes: input.notes?.trim() || null,
-          items: { create: lineItems },
-        },
-        select: { id: true, orderNumber: true },
+    // Reserve only the local display number. The Hesabfa invoice Number is
+    // deliberately omitted from the payload so Hesabfa assigns it.
+    const [reserved] = await prisma.$queryRaw<Array<{ orderNumber: number }>>`
+      SELECT nextval(pg_get_serial_sequence('orders', 'order_number'))::integer AS "orderNumber"
+    `;
+    const draft: WholesaleInvoiceDraft = {
+      id: randomUUID(),
+      orderNumber: reserved.orderNumber,
+      userId: user.id,
+      user: {
+        role: user.role,
+        hesabfaCode: user.hesabfaCode,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      items: lineItems.map((item) => ({ ...item, taxAmount: BigInt(0) })),
+      paidAt: null,
+      createdAt: new Date(),
+      shippingCost: BigInt(0),
+      discountAmount,
+      discountCode: applied?.code ?? null,
+      notes: input.notes?.trim() || null,
+      status: 'NEW',
+      hesabfaCode: null,
+    };
+
+    let hesabfaInvoice: Awaited<ReturnType<typeof saveNewWholesaleInvoice>> | null = null;
+    try {
+      hesabfaInvoice = await saveNewWholesaleInvoice(draft);
+    } catch (err) {
+      console.error('[submitInvoice] Hesabfa invoice failed', {
+        orderId: draft.id,
+        orderNumber: draft.orderNumber,
+        error: err,
       });
+      return fail(ACCOUNTING_ERROR);
+    }
+    if (!hesabfaInvoice) return fail(ACCOUNTING_ERROR);
 
-      if (applied) {
-        await incrementDiscountUsage(tx, applied.discountCodeId);
-      }
-
-      for (const item of cart.items) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data: {
-            stock: { decrement: item.quantity },
-            saleCount: { increment: item.quantity },
-          },
+    try {
+      const linked = await prisma.order.findFirst({
+        where: {
+          OR: [
+            { hesabfaCode: hesabfaInvoice.code },
+            ...(hesabfaInvoice.id != null ? [{ hesabfaId: hesabfaInvoice.id }] : []),
+          ],
+        },
+        select: { id: true },
+      });
+      if (linked) {
+        console.error('[submitInvoice] Hesabfa invoice number is already linked', {
+          orderId: draft.id,
+          orderNumber: draft.orderNumber,
+          invoice: hesabfaInvoice,
+          linkedOrderId: linked.id,
         });
+        return fail(LOCAL_ORDER_ERROR);
       }
-      return created;
-    });
+    } catch (err) {
+      console.error('[submitInvoice] Hesabfa invoice saved but link check failed', {
+        orderId: draft.id,
+        orderNumber: draft.orderNumber,
+        invoice: hesabfaInvoice,
+        error: err,
+      });
+      return fail(LOCAL_ORDER_ERROR);
+    }
+
+    let order: { id: string; orderNumber: number };
+    try {
+      order = await prisma.$transaction(async (tx) => {
+        const created = await tx.order.create({
+          data: {
+            id: draft.id,
+            orderNumber: draft.orderNumber,
+            userId: user.id,
+            addressId: address?.id ?? null,
+            shippingOptionId: shipping?.id ?? null,
+            paymentMethod: 'COD',
+            paymentTerms,
+            status: 'NEW',
+            snapshotProvince: address?.city.province.name ?? '',
+            snapshotCity: address?.city.name ?? '',
+            snapshotStreet: address?.street ?? '',
+            snapshotPostalCode: address?.postalCode ?? '',
+            subtotal,
+            shippingCost: BigInt(0),
+            taxAmount: BigInt(0),
+            discountAmount,
+            discountCode: applied?.code ?? null,
+            discountCodeId: applied?.discountCodeId ?? null,
+            totalAmount,
+            notes: input.notes?.trim() || null,
+            hesabfaCode: hesabfaInvoice.code,
+            hesabfaId: hesabfaInvoice.id,
+            hesabfaSyncedAt: new Date(),
+            items: { create: lineItems },
+          },
+          select: { id: true, orderNumber: true },
+        });
+
+        if (applied) {
+          await incrementDiscountUsage(tx, applied.discountCodeId);
+        }
+
+        for (const item of cart.items) {
+          await tx.product.update({
+            where: { id: item.productId },
+            data: {
+              stock: { decrement: item.quantity },
+              saleCount: { increment: item.quantity },
+            },
+          });
+        }
+        await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
+        return created;
+      });
+    } catch (err) {
+      console.error('[submitInvoice] Hesabfa invoice saved but local order failed', {
+        orderId: draft.id,
+        orderNumber: draft.orderNumber,
+        invoice: hesabfaInvoice,
+        error: err,
+      });
+      return fail(LOCAL_ORDER_ERROR);
+    }
 
     updateTag(tags.products);
     for (const item of cart.items) updateTag(tags.product(item.productId));
 
-    const cleared = await clearCart();
-    if (!cleared.ok) {
-      console.error('[submitInvoice] clearCart failed after order creation:', cleared.error);
-    }
-
+    revalidatePath('/cart');
     revalidatePath('/dashboard/cart');
     revalidatePath('/dashboard/orders');
     revalidatePath('/dashboard');
-    runHesabfaBackground('pushWholesaleInvoice', () => pushWholesaleInvoice(order.id));
     queueAdminOrderNotification(order.id, 'WHOLESALE_INVOICE');
     return ok(order);
   });

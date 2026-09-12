@@ -55,7 +55,13 @@ function useLogoutHandler() {
  * Shows the account button (icon + name at sm+) always, and an inline logout
  * button only on sm+ (mobile users find logout in the hamburger menu).
  */
-export default function AccountMenuClient({ fullName }: { fullName: string }) {
+export default function AccountMenuClient({
+  fullName,
+  isWholesale,
+}: {
+  fullName: string;
+  isWholesale: boolean;
+}) {
   const { handleLogout, loggingOut } = useLogoutHandler();
 
   return (
@@ -64,7 +70,21 @@ export default function AccountMenuClient({ fullName }: { fullName: string }) {
         href="/dashboard"
         className="flex items-center gap-1.5 border-2 border-silver hover:border-accent hover:bg-amber-50 text-charcoal font-semibold text-sm px-2.5 sm:px-3 py-2.5 rounded-xl transition-all active:scale-95"
       >
-        <UserIcon />
+        <span className="relative inline-flex w-5 h-5 shrink-0">
+          <UserIcon />
+          {isWholesale && (
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              className="absolute -bottom-1.5 -left-1.5 w-3.5 h-3.5 text-green-600"
+              aria-hidden="true"
+            >
+              <circle cx="8" cy="8" r="6.5" fill="currentColor" stroke="white" strokeWidth="1.5" />
+              <path d="m4.5 8 2.25 2.25 4.75-4.75" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </span>
+        {isWholesale && <span className="sr-only">حساب همکار</span>}
         <span className="hidden sm:inline">{fullName}</span>
       </Link>
 

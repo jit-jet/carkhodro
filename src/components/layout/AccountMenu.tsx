@@ -14,6 +14,7 @@
 
 import Link from 'next/link';
 import { getCurrentUser } from '@/src/lib/session';
+import { isWholesaleUser } from '@/src/lib/user-role';
 import AccountMenuClient, { MobileLogoutButton } from './AccountMenuClient';
 
 function UserIcon() {
@@ -47,7 +48,7 @@ export default async function AccountMenu() {
 
   const fullName = `${user.firstName} ${user.lastName}`.trim();
 
-  return <AccountMenuClient fullName={fullName} />;
+  return <AccountMenuClient fullName={fullName} isWholesale={isWholesaleUser(user.role)} />;
 }
 
 /**
