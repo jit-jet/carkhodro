@@ -84,6 +84,9 @@ export interface HesabfaContact {
   Tag?: string | null;
   Active?: boolean | null;
   NodeFamily?: string | null;
+  /** Current debit and credit amounts in Rial from contact/get. */
+  Liability?: number | null;
+  Credits?: number | null;
 }
 
 export interface HesabfaInvoiceItem {

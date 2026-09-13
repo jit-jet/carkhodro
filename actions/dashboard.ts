@@ -3,7 +3,7 @@
 /**
  * Partner dashboard stats Server Action.
  * ──────────────────────────────────────
- * One read that powers every card on the dashboard home: ledger balance, order
+ * One read that powers every card on the dashboard home: Hesabfa balance, order
  * counts by lifecycle bucket, cart size, favorites and a pointer to
  * the most recent invoice. Per-user / dynamic (reads the session cookie) — never
  * cached. Returns `null` for guests (the page redirects them via the proxy).
@@ -14,8 +14,20 @@ import { getCurrentUser } from '@/src/lib/session';
 import { safeQuery } from '@/src/lib/result';
 import { USER_ROLE_FA } from '@/src/lib/user-labels';
 import { formatJalaliDate } from '@/src/lib/format';
+import { getContactByCode } from '@/src/lib/hesabfa/client';
+import { contactBalanceRial } from '@/src/lib/hesabfa/contact-balance';
 import type { OrderStatus } from '@/generated/prisma_client';
 import type { DashboardStatsVM } from '@/src/lib/dashboard-types';
+
+async function getWholesaleBalanceRial(code: string | null): Promise<number | null> {
+  if (!code) return null;
+  try {
+    return contactBalanceRial(await getContactByCode(code));
+  } catch (error) {
+    console.error('[dashboard:hesabfa-balance]', error);
+    return null;
+  }
+}
 
 /** Orders still moving through the pipeline (not completed / cancelled / archived). */
 const IN_PROGRESS_STATUSES: OrderStatus[] = [
@@ -40,6 +52,7 @@ export async function getDashboardStats(): Promise<DashboardStatsVM | null> {
         cartItems,
         favoritesCount,
         lastOrder,
+        accountBalanceRial,
       ] = await Promise.all([
         prisma.order.count({ where: { userId: user.id, status: 'COMPLETED' } }),
         prisma.order.count({
@@ -56,14 +69,17 @@ export async function getDashboardStats(): Promise<DashboardStatsVM | null> {
           orderBy: { createdAt: 'desc' },
           select: { id: true, hesabfaCode: true, createdAt: true },
         }),
+        user.role === 'WHOLESALE'
+          ? getWholesaleBalanceRial(user.hesabfaCode)
+          : Promise.resolve(null),
       ]);
 
       return {
         fullName: `${user.firstName} ${user.lastName}`.trim(),
         shopName: user.shopName ?? '',
         userType: USER_ROLE_FA[user.role],
-        isRetail: user.role === 'RETAIL',
-        accountBalanceToman: Number(user.accountBalance),
+        isWholesale: user.role === 'WHOLESALE',
+        accountBalanceRial,
         completedOrders,
         inProgressOrders,
         totalOrders,

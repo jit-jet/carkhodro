@@ -1,7 +1,7 @@
 /**
  * Dashboard home — «داشبورد».
  * ────────────────────────────
- * Live stat cards pulled from the signed-in partner's data: ledger balance,
+ * Live stat cards pulled from the signed-in partner's data: Hesabfa balance,
  * completed / in-progress orders, cart size, favorites, recent
  * orders, last invoice, profile and a back-to-site card. Each
  * card links to the matching page. The cards read the session cookie, so they
@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getDashboardStats } from '@/actions/dashboard';
-import { formatRial, formatNumberFa } from '@/src/lib/format';
+import { formatNumberFa } from '@/src/lib/format';
 import { formatInvoiceNumber } from '@/src/lib/invoice-number';
 import type { DashboardStatsVM } from '@/src/lib/dashboard-types';
 
@@ -35,13 +35,13 @@ async function StatsGrid() {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-      {!stats.isRetail && (
+      {stats.isWholesale && (
         <StatCard
           href="/dashboard/orders"
           icon="wallet"
           title="مانده حساب"
-          value={formatRial(stats.accountBalanceToman)}
-          subtitle="مانده حساب از قبل"
+          value={formatAccountBalance(stats.accountBalanceRial)}
+          subtitle={stats.accountBalanceRial === null ? 'دریافت مانده از حسابفا ممکن نشد' : ''}
           tone="accent"
         />
       )}
@@ -91,6 +91,13 @@ async function StatsGrid() {
       />
     </div>
   );
+}
+
+function formatAccountBalance(balanceRial: number | null): string {
+  if (balanceRial === null) return 'نامشخص';
+  const amount = `${formatNumberFa(Math.abs(balanceRial))} ریال`;
+  if (balanceRial === 0) return amount;
+  return `${amount} ${balanceRial > 0 ? 'بدهکار' : 'بستانکار'}`;
 }
 
 function LastInvoiceCard({ lastInvoice }: { lastInvoice: DashboardStatsVM['lastInvoice'] }) {

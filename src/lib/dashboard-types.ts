@@ -19,8 +19,8 @@ export interface DashboardStatsVM {
   fullName: string;
   shopName: string;
   userType: string; // Persian role label
-  isRetail: boolean;
-  accountBalanceToman: number;
+  isWholesale: boolean;
+  accountBalanceRial: number | null;
   completedOrders: number;
   inProgressOrders: number;
   totalOrders: number;
