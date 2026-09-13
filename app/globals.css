@@ -394,6 +394,17 @@ html.capacitor-ios select {
   text-decoration: underline;
 }
 
+@media screen and (max-width: 767px) {
+  .invoice-mobile-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .invoice-mobile-scroll > .inv {
+    min-width: 210mm;
+  }
+}
+
 @media print {
   header,
   footer:not(.inv-footer),

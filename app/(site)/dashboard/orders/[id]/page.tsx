@@ -54,7 +54,7 @@ async function InvoiceContent({ params }: { params: Promise<{ id: string }> }) {
         </div>
       </div>
 
-      <div className="print-area bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 lg:p-8 print:rounded-none print:border-0 print:shadow-none print:p-0">
+      <div className="print-area invoice-mobile-scroll bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 lg:p-8 print:rounded-none print:border-0 print:shadow-none print:p-0">
         <InvoicePrint invoice={invoice} seller={seller} />
       </div>
 
