@@ -77,6 +77,11 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum OrderSource {
+  ONLINE
+  OFFLINE
+}
+
 /// How a redeemable coupon reduces the order total.
 enum DiscountType {
   PERCENTAGE // درصدی — value is 0–100
@@ -924,8 +929,8 @@ model ShippingOption {
 
 model Order {
   id               String        @id @default(cuid())
-  /// Human-facing, sequential invoice number («شماره فاکتور») shown on the
-  /// partner's orders list and printable invoice — distinct from the cuid `id`.
+  /// Internal sequential order reference sent as Hesabfa `Reference`.
+  /// The displayed invoice number comes from `hesabfaCode` instead.
   orderNumber      Int           @unique @default(autoincrement()) @map("order_number")
   userId           String        @map("user_id")
   /// Optional for wholesale invoices, which may be registered before delivery
@@ -933,6 +938,9 @@ model Order {
   addressId        String?       @map("address_id")
   shippingOptionId String?       @map("shipping_option_id")
   status           OrderStatus   @default(NEW)
+  source           OrderSource   @default(ONLINE)
+  /// Hesabfa InvoiceType: 0 sales, 1 purchase, 2 sales return, 3 purchase return.
+  invoiceType      Int           @default(0) @map("invoice_type")
   paymentMethod    PaymentMethod @map("payment_method")
   paymentStatus    PaymentStatus @default(PENDING) @map("payment_status")
   /// Free-text settlement terms chosen on the partner invoice (e.g. «چکی», «نقدی»,
@@ -967,8 +975,8 @@ model Order {
   /// Bank reference number returned by Zibal after a successful verify.
   paymentRefNumber String? @map("payment_ref_number")
 
-  /// Hesabfa sales invoice `Number` — unique link key (never import unknown invoices).
-  hesabfaCode     String?   @unique @map("hesabfa_code")
+  /// Invoice numbers are unique only within a Hesabfa invoice type.
+  hesabfaCode     String?   @map("hesabfa_code")
   /// Hesabfa internal numeric invoice Id (webhook ObjectIdList).
   hesabfaId       Int?      @unique @map("hesabfa_id")
   /// Last successful Hesabfa invoice sync timestamp.
@@ -987,6 +995,7 @@ model Order {
   items          OrderItem[]
   survey         OrderSurvey?
 
+  @@unique([hesabfaCode, invoiceType])
   @@index([userId])
   @@index([status])
   @@index([paymentStatus])

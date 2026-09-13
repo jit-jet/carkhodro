@@ -14,7 +14,7 @@ import {
   type ContactSyncStats,
 } from './contacts';
 import { getInvoicesById, isHesabfaConfigured } from './client';
-import { syncInvoicesFromHesabfa, type InvoiceSyncStats } from './invoices';
+import { fullSyncInvoices, syncInvoicesFromHesabfa, type InvoiceSyncStats } from './invoices';
 import {
   deleteProductsByHesabfaIds,
   fullSyncProducts,
@@ -33,10 +33,11 @@ export interface FullSyncSummary {
   categories: CategorySyncStats;
   products: ProductSyncStats;
   contacts: ContactSyncStats;
+  invoices: InvoiceSyncStats;
   stockUpdated: number;
 }
 
-/** Run a full sync (pull categories/products/contacts). */
+/** Run a full sync (pull categories/products/contacts/all invoice types). */
 export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
   if (!(await isHesabfaConfigured())) {
     throw new Error('حسابفا پیکربندی نشده است.');
@@ -48,11 +49,13 @@ export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
   // product upserts so a full sync verifies stock as well as item metadata.
   const stockUpdated = await refreshAllLocalStockFromHesabfa();
   const contacts = await fullSyncContacts();
+  const invoices = await fullSyncInvoices();
 
   return {
     categories,
     products,
     contacts,
+    invoices,
     stockUpdated,
   };
 }
@@ -112,6 +115,7 @@ export async function handleHesabfaWebhook(
       const stockUpdated = await refreshAllLocalStockFromHesabfa();
       return {
         objectType,
+        created: 0,
         updated: 0,
         skipped: ids.length,
         stockUpdated,

@@ -329,6 +329,11 @@ export async function getInvoicesById(ids: number[]): Promise<HesabfaInvoice[]> 
   return asList(result);
 }
 
+/** The list endpoint requires an invoice type and omits line items. */
+export async function getAllInvoices(type: number): Promise<HesabfaInvoice[]> {
+  return getAllPages<HesabfaInvoice>('invoice/getInvoices', { type }, 'Date');
+}
+
 export async function saveInvoice(
   invoice: Record<string, unknown>,
 ): Promise<HesabfaInvoice> {

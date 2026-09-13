@@ -327,6 +327,14 @@ export const PaymentStatus: {
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
+export const OrderSource: {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE'
+};
+
+export type OrderSource = (typeof OrderSource)[keyof typeof OrderSource]
+
+
 export const DiscountType: {
   PERCENTAGE: 'PERCENTAGE',
   FIXED_AMOUNT: 'FIXED_AMOUNT',
@@ -397,6 +405,10 @@ export const PaymentMethod: typeof $Enums.PaymentMethod
 export type PaymentStatus = $Enums.PaymentStatus
 
 export const PaymentStatus: typeof $Enums.PaymentStatus
+
+export type OrderSource = $Enums.OrderSource
+
+export const OrderSource: typeof $Enums.OrderSource
 
 export type DiscountType = $Enums.DiscountType
 
@@ -46078,6 +46090,7 @@ export namespace Prisma {
 
   export type OrderAvgAggregateOutputType = {
     orderNumber: number | null
+    invoiceType: number | null
     subtotal: number | null
     shippingCost: number | null
     taxAmount: number | null
@@ -46089,6 +46102,7 @@ export namespace Prisma {
 
   export type OrderSumAggregateOutputType = {
     orderNumber: number | null
+    invoiceType: number | null
     subtotal: bigint | null
     shippingCost: bigint | null
     taxAmount: bigint | null
@@ -46105,6 +46119,8 @@ export namespace Prisma {
     addressId: string | null
     shippingOptionId: string | null
     status: $Enums.OrderStatus | null
+    source: $Enums.OrderSource | null
+    invoiceType: number | null
     paymentMethod: $Enums.PaymentMethod | null
     paymentStatus: $Enums.PaymentStatus | null
     paymentTerms: string | null
@@ -46140,6 +46156,8 @@ export namespace Prisma {
     addressId: string | null
     shippingOptionId: string | null
     status: $Enums.OrderStatus | null
+    source: $Enums.OrderSource | null
+    invoiceType: number | null
     paymentMethod: $Enums.PaymentMethod | null
     paymentStatus: $Enums.PaymentStatus | null
     paymentTerms: string | null
@@ -46175,6 +46193,8 @@ export namespace Prisma {
     addressId: number
     shippingOptionId: number
     status: number
+    source: number
+    invoiceType: number
     paymentMethod: number
     paymentStatus: number
     paymentTerms: number
@@ -46207,6 +46227,7 @@ export namespace Prisma {
 
   export type OrderAvgAggregateInputType = {
     orderNumber?: true
+    invoiceType?: true
     subtotal?: true
     shippingCost?: true
     taxAmount?: true
@@ -46218,6 +46239,7 @@ export namespace Prisma {
 
   export type OrderSumAggregateInputType = {
     orderNumber?: true
+    invoiceType?: true
     subtotal?: true
     shippingCost?: true
     taxAmount?: true
@@ -46234,6 +46256,8 @@ export namespace Prisma {
     addressId?: true
     shippingOptionId?: true
     status?: true
+    source?: true
+    invoiceType?: true
     paymentMethod?: true
     paymentStatus?: true
     paymentTerms?: true
@@ -46269,6 +46293,8 @@ export namespace Prisma {
     addressId?: true
     shippingOptionId?: true
     status?: true
+    source?: true
+    invoiceType?: true
     paymentMethod?: true
     paymentStatus?: true
     paymentTerms?: true
@@ -46304,6 +46330,8 @@ export namespace Prisma {
     addressId?: true
     shippingOptionId?: true
     status?: true
+    source?: true
+    invoiceType?: true
     paymentMethod?: true
     paymentStatus?: true
     paymentTerms?: true
@@ -46426,6 +46454,8 @@ export namespace Prisma {
     addressId: string | null
     shippingOptionId: string | null
     status: $Enums.OrderStatus
+    source: $Enums.OrderSource
+    invoiceType: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus: $Enums.PaymentStatus
     paymentTerms: string | null
@@ -46480,6 +46510,8 @@ export namespace Prisma {
     addressId?: boolean
     shippingOptionId?: boolean
     status?: boolean
+    source?: boolean
+    invoiceType?: boolean
     paymentMethod?: boolean
     paymentStatus?: boolean
     paymentTerms?: boolean
@@ -46522,6 +46554,8 @@ export namespace Prisma {
     addressId?: boolean
     shippingOptionId?: boolean
     status?: boolean
+    source?: boolean
+    invoiceType?: boolean
     paymentMethod?: boolean
     paymentStatus?: boolean
     paymentTerms?: boolean
@@ -46561,6 +46595,8 @@ export namespace Prisma {
     addressId?: boolean
     shippingOptionId?: boolean
     status?: boolean
+    source?: boolean
+    invoiceType?: boolean
     paymentMethod?: boolean
     paymentStatus?: boolean
     paymentTerms?: boolean
@@ -46600,6 +46636,8 @@ export namespace Prisma {
     addressId?: boolean
     shippingOptionId?: boolean
     status?: boolean
+    source?: boolean
+    invoiceType?: boolean
     paymentMethod?: boolean
     paymentStatus?: boolean
     paymentTerms?: boolean
@@ -46628,7 +46666,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "discountAmount" | "discountCode" | "discountCodeId" | "totalAmount" | "notes" | "trackingCode" | "paymentTrackId" | "paymentRefNumber" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "source" | "invoiceType" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "discountAmount" | "discountCode" | "discountCodeId" | "totalAmount" | "notes" | "trackingCode" | "paymentTrackId" | "paymentRefNumber" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
@@ -46664,8 +46702,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       /**
-       * Human-facing, sequential invoice number («شماره فاکتور») shown on the
-       * partner's orders list and printable invoice — distinct from the cuid `id`.
+       * Internal sequential order reference sent as Hesabfa `Reference`.
+       * The displayed invoice number comes from `hesabfaCode` instead.
        */
       orderNumber: number
       userId: string
@@ -46676,6 +46714,11 @@ export namespace Prisma {
       addressId: string | null
       shippingOptionId: string | null
       status: $Enums.OrderStatus
+      source: $Enums.OrderSource
+      /**
+       * Hesabfa InvoiceType: 0 sales, 1 purchase, 2 sales return, 3 purchase return.
+       */
+      invoiceType: number
       paymentMethod: $Enums.PaymentMethod
       paymentStatus: $Enums.PaymentStatus
       /**
@@ -46717,7 +46760,7 @@ export namespace Prisma {
        */
       paymentRefNumber: string | null
       /**
-       * Hesabfa sales invoice `Number` — unique link key (never import unknown invoices).
+       * Invoice numbers are unique only within a Hesabfa invoice type.
        */
       hesabfaCode: string | null
       /**
@@ -47168,6 +47211,8 @@ export namespace Prisma {
     readonly addressId: FieldRef<"Order", 'String'>
     readonly shippingOptionId: FieldRef<"Order", 'String'>
     readonly status: FieldRef<"Order", 'OrderStatus'>
+    readonly source: FieldRef<"Order", 'OrderSource'>
+    readonly invoiceType: FieldRef<"Order", 'Int'>
     readonly paymentMethod: FieldRef<"Order", 'PaymentMethod'>
     readonly paymentStatus: FieldRef<"Order", 'PaymentStatus'>
     readonly paymentTerms: FieldRef<"Order", 'String'>
@@ -55263,6 +55308,8 @@ export namespace Prisma {
     addressId: 'addressId',
     shippingOptionId: 'shippingOptionId',
     status: 'status',
+    source: 'source',
+    invoiceType: 'invoiceType',
     paymentMethod: 'paymentMethod',
     paymentStatus: 'paymentStatus',
     paymentTerms: 'paymentTerms',
@@ -55605,6 +55652,20 @@ export namespace Prisma {
    * Reference to a field of type 'OrderStatus[]'
    */
   export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'OrderSource'
+   */
+  export type EnumOrderSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderSource'>
+    
+
+
+  /**
+   * Reference to a field of type 'OrderSource[]'
+   */
+  export type ListEnumOrderSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderSource[]'>
     
 
 
@@ -58535,6 +58596,8 @@ export namespace Prisma {
     addressId?: StringNullableFilter<"Order"> | string | null
     shippingOptionId?: StringNullableFilter<"Order"> | string | null
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    source?: EnumOrderSourceFilter<"Order"> | $Enums.OrderSource
+    invoiceType?: IntFilter<"Order"> | number
     paymentMethod?: EnumPaymentMethodFilter<"Order"> | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
     paymentTerms?: StringNullableFilter<"Order"> | string | null
@@ -58576,6 +58639,8 @@ export namespace Prisma {
     addressId?: SortOrderInput | SortOrder
     shippingOptionId?: SortOrderInput | SortOrder
     status?: SortOrder
+    source?: SortOrder
+    invoiceType?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     paymentTerms?: SortOrderInput | SortOrder
@@ -58613,8 +58678,8 @@ export namespace Prisma {
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     orderNumber?: number
-    hesabfaCode?: string
     hesabfaId?: number
+    hesabfaCode_invoiceType?: OrderHesabfaCodeInvoiceTypeCompoundUniqueInput
     AND?: OrderWhereInput | OrderWhereInput[]
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
@@ -58622,6 +58687,8 @@ export namespace Prisma {
     addressId?: StringNullableFilter<"Order"> | string | null
     shippingOptionId?: StringNullableFilter<"Order"> | string | null
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    source?: EnumOrderSourceFilter<"Order"> | $Enums.OrderSource
+    invoiceType?: IntFilter<"Order"> | number
     paymentMethod?: EnumPaymentMethodFilter<"Order"> | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
     paymentTerms?: StringNullableFilter<"Order"> | string | null
@@ -58640,6 +58707,7 @@ export namespace Prisma {
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
     paymentRefNumber?: StringNullableFilter<"Order"> | string | null
+    hesabfaCode?: StringNullableFilter<"Order"> | string | null
     hesabfaSyncedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     shippedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
@@ -58652,7 +58720,7 @@ export namespace Prisma {
     coupon?: XOR<DiscountCodeNullableScalarRelationFilter, DiscountCodeWhereInput> | null
     items?: OrderItemListRelationFilter
     survey?: XOR<OrderSurveyNullableScalarRelationFilter, OrderSurveyWhereInput> | null
-  }, "id" | "orderNumber" | "hesabfaCode" | "hesabfaId">
+  }, "id" | "orderNumber" | "hesabfaId" | "hesabfaCode_invoiceType">
 
   export type OrderOrderByWithAggregationInput = {
     id?: SortOrder
@@ -58661,6 +58729,8 @@ export namespace Prisma {
     addressId?: SortOrderInput | SortOrder
     shippingOptionId?: SortOrderInput | SortOrder
     status?: SortOrder
+    source?: SortOrder
+    invoiceType?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     paymentTerms?: SortOrderInput | SortOrder
@@ -58704,6 +58774,8 @@ export namespace Prisma {
     addressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     shippingOptionId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
+    source?: EnumOrderSourceWithAggregatesFilter<"Order"> | $Enums.OrderSource
+    invoiceType?: IntWithAggregatesFilter<"Order"> | number
     paymentMethod?: EnumPaymentMethodWithAggregatesFilter<"Order"> | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusWithAggregatesFilter<"Order"> | $Enums.PaymentStatus
     paymentTerms?: StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -62312,6 +62384,8 @@ export namespace Prisma {
     id?: string
     orderNumber?: number
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -62352,6 +62426,8 @@ export namespace Prisma {
     addressId?: string | null
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -62385,6 +62461,8 @@ export namespace Prisma {
   export type OrderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62425,6 +62503,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62462,6 +62542,8 @@ export namespace Prisma {
     addressId?: string | null
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -62493,6 +62575,8 @@ export namespace Prisma {
   export type OrderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62527,6 +62611,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65387,6 +65473,13 @@ export namespace Prisma {
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
   }
 
+  export type EnumOrderSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderSource | EnumOrderSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderSource[] | ListEnumOrderSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderSource[] | ListEnumOrderSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderSourceFilter<$PrismaModel> | $Enums.OrderSource
+  }
+
   export type EnumPaymentMethodFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentMethod | EnumPaymentMethodFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
@@ -65421,6 +65514,11 @@ export namespace Prisma {
     isNot?: OrderSurveyWhereInput | null
   }
 
+  export type OrderHesabfaCodeInvoiceTypeCompoundUniqueInput = {
+    hesabfaCode: string
+    invoiceType: number
+  }
+
   export type OrderCountOrderByAggregateInput = {
     id?: SortOrder
     orderNumber?: SortOrder
@@ -65428,6 +65526,8 @@ export namespace Prisma {
     addressId?: SortOrder
     shippingOptionId?: SortOrder
     status?: SortOrder
+    source?: SortOrder
+    invoiceType?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     paymentTerms?: SortOrder
@@ -65458,6 +65558,7 @@ export namespace Prisma {
 
   export type OrderAvgOrderByAggregateInput = {
     orderNumber?: SortOrder
+    invoiceType?: SortOrder
     subtotal?: SortOrder
     shippingCost?: SortOrder
     taxAmount?: SortOrder
@@ -65474,6 +65575,8 @@ export namespace Prisma {
     addressId?: SortOrder
     shippingOptionId?: SortOrder
     status?: SortOrder
+    source?: SortOrder
+    invoiceType?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     paymentTerms?: SortOrder
@@ -65509,6 +65612,8 @@ export namespace Prisma {
     addressId?: SortOrder
     shippingOptionId?: SortOrder
     status?: SortOrder
+    source?: SortOrder
+    invoiceType?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     paymentTerms?: SortOrder
@@ -65539,6 +65644,7 @@ export namespace Prisma {
 
   export type OrderSumOrderByAggregateInput = {
     orderNumber?: SortOrder
+    invoiceType?: SortOrder
     subtotal?: SortOrder
     shippingCost?: SortOrder
     taxAmount?: SortOrder
@@ -65556,6 +65662,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
+  }
+
+  export type EnumOrderSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderSource | EnumOrderSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderSource[] | ListEnumOrderSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderSource[] | ListEnumOrderSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderSourceWithAggregatesFilter<$PrismaModel> | $Enums.OrderSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrderSourceFilter<$PrismaModel>
+    _max?: NestedEnumOrderSourceFilter<$PrismaModel>
   }
 
   export type EnumPaymentMethodWithAggregatesFilter<$PrismaModel = never> = {
@@ -67721,6 +67837,10 @@ export namespace Prisma {
     set?: $Enums.OrderStatus
   }
 
+  export type EnumOrderSourceFieldUpdateOperationsInput = {
+    set?: $Enums.OrderSource
+  }
+
   export type EnumPaymentMethodFieldUpdateOperationsInput = {
     set?: $Enums.PaymentMethod
   }
@@ -68432,6 +68552,13 @@ export namespace Prisma {
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
   }
 
+  export type NestedEnumOrderSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderSource | EnumOrderSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderSource[] | ListEnumOrderSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderSource[] | ListEnumOrderSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderSourceFilter<$PrismaModel> | $Enums.OrderSource
+  }
+
   export type NestedEnumPaymentMethodFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentMethod | EnumPaymentMethodFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
@@ -68454,6 +68581,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumOrderSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderSource | EnumOrderSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderSource[] | ListEnumOrderSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderSource[] | ListEnumOrderSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderSourceWithAggregatesFilter<$PrismaModel> | $Enums.OrderSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrderSourceFilter<$PrismaModel>
+    _max?: NestedEnumOrderSourceFilter<$PrismaModel>
   }
 
   export type NestedEnumPaymentMethodWithAggregatesFilter<$PrismaModel = never> = {
@@ -68780,6 +68917,8 @@ export namespace Prisma {
     id?: string
     orderNumber?: number
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -68818,6 +68957,8 @@ export namespace Prisma {
     addressId?: string | null
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -69208,6 +69349,8 @@ export namespace Prisma {
     addressId?: StringNullableFilter<"Order"> | string | null
     shippingOptionId?: StringNullableFilter<"Order"> | string | null
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    source?: EnumOrderSourceFilter<"Order"> | $Enums.OrderSource
+    invoiceType?: IntFilter<"Order"> | number
     paymentMethod?: EnumPaymentMethodFilter<"Order"> | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
     paymentTerms?: StringNullableFilter<"Order"> | string | null
@@ -69780,6 +69923,8 @@ export namespace Prisma {
     id?: string
     orderNumber?: number
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -69818,6 +69963,8 @@ export namespace Prisma {
     userId: string
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -73528,6 +73675,8 @@ export namespace Prisma {
     id?: string
     orderNumber?: number
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -73566,6 +73715,8 @@ export namespace Prisma {
     userId: string
     addressId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -74110,6 +74261,8 @@ export namespace Prisma {
     id?: string
     orderNumber?: number
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -74149,6 +74302,8 @@ export namespace Prisma {
     addressId?: string | null
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -74290,6 +74445,8 @@ export namespace Prisma {
   export type OrderUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74329,6 +74486,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74617,6 +74776,8 @@ export namespace Prisma {
     id?: string
     orderNumber?: number
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -74656,6 +74817,8 @@ export namespace Prisma {
     addressId?: string | null
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -74779,6 +74942,8 @@ export namespace Prisma {
   export type OrderUpdateWithoutSurveyInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74818,6 +74983,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75244,6 +75411,8 @@ export namespace Prisma {
     id?: string
     orderNumber?: number
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -75283,6 +75452,8 @@ export namespace Prisma {
     addressId?: string | null
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -75428,6 +75599,8 @@ export namespace Prisma {
     addressId?: string | null
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -75598,6 +75771,8 @@ export namespace Prisma {
   export type OrderUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75636,6 +75811,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75672,6 +75849,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75964,6 +76143,8 @@ export namespace Prisma {
     userId: string
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -75995,6 +76176,8 @@ export namespace Prisma {
   export type OrderUpdateWithoutAddressInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76033,6 +76216,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76069,6 +76254,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76867,6 +77054,8 @@ export namespace Prisma {
     userId: string
     addressId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -76898,6 +77087,8 @@ export namespace Prisma {
   export type OrderUpdateWithoutShippingOptionInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76936,6 +77127,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76972,6 +77165,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77051,6 +77246,8 @@ export namespace Prisma {
     addressId?: string | null
     shippingOptionId?: string | null
     status?: $Enums.OrderStatus
+    source?: $Enums.OrderSource
+    invoiceType?: number
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.PaymentStatus
     paymentTerms?: string | null
@@ -77081,6 +77278,8 @@ export namespace Prisma {
   export type OrderUpdateWithoutCouponInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77120,6 +77319,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77156,6 +77357,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     shippingOptionId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    source?: EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+    invoiceType?: IntFieldUpdateOperationsInput | number
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     paymentTerms?: NullableStringFieldUpdateOperationsInput | string | null

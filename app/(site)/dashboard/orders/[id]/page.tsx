@@ -32,6 +32,7 @@ async function InvoiceContent({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div className="space-y-4">
+      <div className="text-xs font-normal text-gray-600">{invoice.sourceTypeLabel}</div>
       <div className="no-print flex items-center justify-between gap-3 flex-wrap">
         <Link
           href="/dashboard/orders"

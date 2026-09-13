@@ -90,9 +90,9 @@ export interface HesabfaInvoiceItem {
   Id?: number;
   RowNumber?: number;
   Description?: string;
-  ItemCode?: string | null;
+  ItemCode?: string | number | null;
   /** Some invoice responses put the code only on the nested Item object. */
-  Item?: Pick<HesabfaItem, 'Code'> | null;
+  Item?: Pick<HesabfaItem, 'Code'> & Partial<Pick<HesabfaItem, 'Id' | 'Name'>> | null;
   Unit?: string | null;
   Quantity?: number;
   UnitPrice?: number;
@@ -108,6 +108,7 @@ export interface HesabfaInvoice {
   Date?: string;
   DueDate?: string;
   ContactCode?: string | null;
+  Contact?: HesabfaContact | null;
   ContactTitle?: string | null;
   Sum?: number;
   Payable?: number;

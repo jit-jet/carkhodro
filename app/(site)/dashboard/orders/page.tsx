@@ -83,6 +83,7 @@ async function OrdersContent({ searchParams }: Props) {
                 <tr className="text-gray-400 text-xs border-b border-gray-100">
                   <th className="py-3 px-3 font-medium">#</th>
                   <th className="py-3 px-3 font-medium text-right">شماره فاکتور</th>
+                  <th className="py-3 px-3 font-medium">نوع سفارش</th>
                   <th className="py-3 px-3 font-medium">وضعیت</th>
                   <th className="py-3 px-3 font-medium text-right">تاریخ</th>
                   <th className="py-3 px-3 font-medium">مبلغ</th>
@@ -97,6 +98,9 @@ async function OrdersContent({ searchParams }: Props) {
                     </td>
                     <td className="py-3 px-3 text-right font-mono font-semibold">
                       {formatInvoiceNumber(order.invoiceNumber)}
+                    </td>
+                    <td className="py-3 px-3 text-center text-[11px] whitespace-nowrap font-normal text-gray-600">
+                      {order.sourceTypeLabel}
                     </td>
                     <td className="py-3 px-3 text-center">
                       <span

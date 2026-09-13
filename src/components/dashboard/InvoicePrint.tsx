@@ -49,7 +49,7 @@ export default function InvoicePrint({ invoice, seller: s }: Props) {
         <div className="inv-header-center">
           <p className="inv-brand">{s.brandName}</p>
           <p className="inv-store">{s.storeName}</p>
-          <p className="inv-title">فاکتور فروش</p>
+          <p className="inv-title">{invoice.sourceTypeLabel}</p>
         </div>
 
         <div className="inv-header-meta">

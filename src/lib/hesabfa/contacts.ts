@@ -233,15 +233,14 @@ export async function syncContactsFromHesabfa(
   stats.skipped += identityPlan.skipped;
 
   const now = new Date();
-  if (identityPlan.hesabfaIdsToRelease.length > 0) {
-    await prisma.$transaction(
-      identityPlan.hesabfaIdsToRelease.map(({ userId, hesabfaId }) =>
-        prisma.user.updateMany({
-          where: { id: userId, hesabfaId },
-          data: { hesabfaId: null },
-        }),
-      ),
-    );
+  // Recycled contact Ids are released with bounded, set-based statements so
+  // a large full sync cannot expire Prisma's interactive transaction window.
+  for (let i = 0; i < identityPlan.hesabfaIdsToRelease.length; i += 100) {
+    const chunk = identityPlan.hesabfaIdsToRelease.slice(i, i + 100);
+    await prisma.user.updateMany({
+      where: { OR: chunk.map(({ userId, hesabfaId }) => ({ id: userId, hesabfaId })) },
+      data: { hesabfaId: null },
+    });
   }
 
   // 3) Concurrent updates of existing wholesale accounts.

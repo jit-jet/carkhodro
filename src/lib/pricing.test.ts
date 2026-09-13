@@ -4,6 +4,7 @@ import {
   applyRetailDiscount,
   computeRetailPrice,
   netLineTotalBigIntForRole,
+  netLineTotalForOrder,
   roundRetailPrice,
 } from './pricing';
 
@@ -12,6 +13,11 @@ test('rounds retail prices to the nearest 1,000 Toman', () => {
   assert.equal(roundRetailPrice(12_500), 13_000);
   assert.equal(roundRetailPrice(12_501), 13_000);
   assert.equal(roundRetailPrice(13_000), 13_000);
+});
+
+test('keeps imported invoice prices without retail tier rounding', () => {
+  assert.equal(netLineTotalForOrder(12_345, 2, 0, 'RETAIL', true), 24_690);
+  assert.equal(netLineTotalForOrder(12_345, 2, 0, 'RETAIL', false), 24_000);
 });
 
 test('rounds both the retail list price and discounted price', () => {

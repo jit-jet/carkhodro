@@ -67,6 +67,8 @@ export interface InvoiceSearchResultVM {
 
 export interface OrderListItemVM {
   id: string;
+  isOffline: boolean;
+  sourceTypeLabel: string;
   invoiceNumber: string | null;
   status: OrderStatus;
   statusLabel: string;
@@ -97,6 +99,8 @@ export interface InvoiceLineVM {
 
 export interface InvoiceVM {
   id: string;
+  isOffline: boolean;
+  sourceTypeLabel: string;
   invoiceNumber: string | null;
   status: OrderStatus;
   statusLabel: string;

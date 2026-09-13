@@ -173,3 +173,16 @@ export function netLineTotalBigIntForRole(
     ((unitNumerator + roundingBucket / BigInt(2)) / roundingBucket) * roundingStep;
   return unitNet * BigInt(quantity);
 }
+
+/** Imported invoice prices are authoritative and do not use storefront tier rounding. */
+export function netLineTotalForOrder(
+  unitListToman: number,
+  quantity: number,
+  discountPct: number,
+  role: PricingRole,
+  isOffline: boolean,
+): number {
+  return isOffline
+    ? netLineTotal(unitListToman, quantity, discountPct)
+    : netLineTotalForRole(unitListToman, quantity, discountPct, role);
+}

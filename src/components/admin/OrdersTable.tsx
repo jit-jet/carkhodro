@@ -277,6 +277,7 @@ export default function OrdersTable({
                   <tr key={o.id} className={tableRowClass}>
                     <td className="px-4 py-3 font-mono font-semibold text-charcoal text-right" dir="ltr">
                       {formatInvoiceNumber(o.invoiceNumber)}
+                      <span dir="rtl" className="block text-[11px] font-normal text-gray-500 font-sans">{o.sourceTypeLabel}</span>
                     </td>
                     <td className="px-4 py-3">
                       <p className="font-semibold text-charcoal">{o.customerName}</p>

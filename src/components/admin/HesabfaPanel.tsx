@@ -25,20 +25,24 @@ interface Props {
 export default function HesabfaPanel({ configured, hookUrl, appWebhookUrl }: Props) {
   const [pending, startTransition] = useTransition();
   const [lastMessage, setLastMessage] = useState<string | null>(null);
+  const [lastInvoices, setLastInvoices] = useState<Record<number, { created: number; updated: number; skipped: number }> | null>(null);
   const notify = useCartUI((s) => s.notify);
 
   function runSync() {
     setLastMessage(null);
+    setLastInvoices(null);
     startTransition(async () => {
       const res = await forceSyncHesabfa();
       if (res.ok) {
-        const { categories, products, contacts, stockUpdated } = res.data;
+        const { categories, products, contacts, invoices, stockUpdated } = res.data;
         const msg =
           `همگام‌سازی کامل شد — دسته‌بندی: ${fa(categories.created)} جدید / ${fa(categories.updated)} به‌روزرسانی، ` +
           `کالا: ${fa(products.created)} جدید / ${fa(products.updated)} به‌روزرسانی / ${fa(products.deleted)} حذف‌شده، ` +
           `موجودی: ${fa(stockUpdated)} بازخوانی‌شده، ` +
-          `اشخاص: ${fa(contacts.created)} جدید / ${fa(contacts.updated)} به‌روزرسانی / ${fa(contacts.skipped)} ردشده`;
+          `اشخاص: ${fa(contacts.created)} جدید / ${fa(contacts.updated)} به‌روزرسانی / ${fa(contacts.skipped)} ردشده، ` +
+          `فاکتورها: ${fa(invoices.created)} جدید / ${fa(invoices.updated)} به‌روزرسانی / ${fa(invoices.skipped)} ردشده`;
         setLastMessage(msg);
+        setLastInvoices(invoices.byType);
         notify({ variant: 'success', title: 'همگام‌سازی حسابفا', description: msg });
       } else {
         setLastMessage(res.error);
@@ -49,6 +53,7 @@ export default function HesabfaPanel({ configured, hookUrl, appWebhookUrl }: Pro
 
   function registerHook() {
     setLastMessage(null);
+    setLastInvoices(null);
     startTransition(async () => {
       const res = await registerHesabfaWebhook();
       if (res.ok) {
@@ -127,6 +132,16 @@ export default function HesabfaPanel({ configured, hookUrl, appWebhookUrl }: Pro
             <p className="text-xs leading-7 rounded-xl px-4 py-3 bg-gray-50 text-gray-700 border border-gray-100">
               {lastMessage}
             </p>
+          )}
+          {lastInvoices && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2" dir="ltr">
+              {(['Sales', 'Purchase', 'Sales Return', 'Purchase Return'] as const).map((label, type) => (
+                <div key={label} className="rounded-xl border border-gray-100 bg-gray-50 p-3 text-xs">
+                  <b className="block mb-1">{label}</b>
+                  <span>{fa(lastInvoices[type]?.created ?? 0)} new / {fa(lastInvoices[type]?.updated ?? 0)} updated / {fa(lastInvoices[type]?.skipped ?? 0)} skipped</span>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </Card>

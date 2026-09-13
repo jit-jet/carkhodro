@@ -561,6 +561,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   addressId: 'addressId',
   shippingOptionId: 'shippingOptionId',
   status: 'status',
+  source: 'source',
+  invoiceType: 'invoiceType',
   paymentMethod: 'paymentMethod',
   paymentStatus: 'paymentStatus',
   paymentTerms: 'paymentTerms',
@@ -730,6 +732,11 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
   CANCELLED_BY_CUSTOMER: 'CANCELLED_BY_CUSTOMER',
   CANCELLED_BY_MANAGER: 'CANCELLED_BY_MANAGER',
   ARCHIVED: 'ARCHIVED'
+};
+
+exports.OrderSource = exports.$Enums.OrderSource = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE'
 };
 
 exports.PaymentMethod = exports.$Enums.PaymentMethod = {

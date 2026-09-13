@@ -1,6 +1,5 @@
 /**
- * Invoice sync: site orders ↔ Hesabfa sales invoices.
- * Hesabfa → site only updates orders that already have a `hesabfaCode`.
+ * Invoice sync: site orders ↔ all four Hesabfa invoice types.
  */
 
 import type { Prisma } from '@/generated/prisma_client';
@@ -10,12 +9,16 @@ import {
   changeInvoicePaidStatus,
   changeInvoiceSentStatus,
   getInvoicesById,
+  getInvoiceByNumber,
+  getAllInvoices,
+  getContactByCode,
+  getContactsByMobiles,
   isHesabfaConfigured,
   saveInvoice,
   saveInvoicePayment,
 } from './client';
-import { getRetailInvoiceContactCode, pushContactToHesabfa } from './contacts';
-import { tomanToRial } from './currency';
+import { getRetailInvoiceContactCode, pushContactToHesabfa, syncContactsFromHesabfa } from './contacts';
+import { rialToToman, tomanToRial } from './currency';
 import {
   HESABFA_INVOICE_NOTE,
   HESABFA_INVOICE_TYPE_SALE,
@@ -23,13 +26,18 @@ import {
   type HesabfaInvoice,
 } from './types';
 import { getSystemConfig } from '@/src/lib/system-settings';
-import { planInvoiceIdentitySync } from './invoice-identity';
 import { mapHesabfaToLocalStatus } from './invoice-status';
 import { hesabfaInvoiceStatusForRole } from './invoice-approval';
+import { normalizeIranMobile } from './phone';
+import { INVOICE_TYPES, isInvoiceType } from './invoice-type';
+import { planInvoiceIdentitySync } from './invoice-identity';
+import { displayName } from './contact-name';
 
 export interface InvoiceSyncStats {
+  created: number;
   updated: number;
   skipped: number;
+  byType: Record<number, { created: number; updated: number; skipped: number }>;
 }
 
 type OrderWithItems = Prisma.OrderGetPayload<{
@@ -347,23 +355,24 @@ export async function syncOrderStatusToHesabfa(orderId: string): Promise<void> {
   }
 
   const number = order.hesabfaCode;
-  const isPaid =
-    order.paymentStatus === 'PAID' ||
-    order.status === 'PAID' ||
-    order.status === 'SHIPPED' ||
-    order.status === 'COMPLETED';
+  const isPaid = order.source === 'OFFLINE'
+    ? order.paymentStatus === 'PAID'
+    : order.paymentStatus === 'PAID' ||
+      order.status === 'PAID' ||
+      order.status === 'SHIPPED' ||
+      order.status === 'COMPLETED';
   const isSent = order.status === 'SHIPPED' || order.status === 'COMPLETED';
 
   try {
     if (isPaid) {
-      await changeInvoicePaidStatus(number, true);
+      await changeInvoicePaidStatus(number, true, order.invoiceType);
     }
   } catch (err) {
     console.error('[hesabfa:changePaidStatus]', err);
   }
 
   try {
-    await changeInvoiceSentStatus(number, isSent);
+    await changeInvoiceSentStatus(number, isSent, order.invoiceType);
   } catch (err) {
     console.error('[hesabfa:changeSentStatus]', err);
   }
@@ -374,69 +383,268 @@ export async function syncOrderStatusToHesabfa(orderId: string): Promise<void> {
   });
 }
 
-/**
- * Apply Hesabfa invoice changes to existing local orders only.
- * Unknown invoices (no local hesabfaCode / hesabfaId match) are skipped.
- */
-export async function syncInvoicesFromHesabfa(
-  invoices: HesabfaInvoice[],
-): Promise<InvoiceSyncStats> {
-  const stats: InvoiceSyncStats = { updated: 0, skipped: 0 };
-  if (invoices.length === 0) return stats;
+function emptyStats(): InvoiceSyncStats {
+  return {
+    created: 0, updated: 0, skipped: 0,
+    byType: Object.fromEntries(INVOICE_TYPES.map((type) => [type, { created: 0, updated: 0, skipped: 0 }])),
+  };
+}
 
-  const prepared = invoices.map((invoice) => ({
-    invoice,
-    number: invoiceNumber(invoice),
-    hesabfaId: typeof invoice.Id === 'number' ? invoice.Id : undefined,
-    invoiceType: typeof invoice.InvoiceType === 'number' ? invoice.InvoiceType : undefined,
-  }));
-  const numbers = prepared.map((row) => row.number).filter(Boolean);
-  const hesabfaIds = prepared
-    .map((row) => row.hesabfaId)
-    .filter((id): id is number => id != null);
-  const orders = await prisma.order.findMany({
-    where: {
-      OR: [
-        ...(numbers.length > 0 ? [{ hesabfaCode: { in: numbers } }] : []),
-        ...(hesabfaIds.length > 0 ? [{ hesabfaId: { in: hesabfaIds } }] : []),
-      ],
-    },
-    select: { id: true, hesabfaCode: true, hesabfaId: true },
-  });
-  const identityPlan = planInvoiceIdentitySync(prepared, orders);
-  stats.skipped = identityPlan.skipped;
+function addStats(target: InvoiceSyncStats, source: InvoiceSyncStats): void {
+  target.created += source.created;
+  target.updated += source.updated;
+  target.skipped += source.skipped;
+  for (const type of INVOICE_TYPES) {
+    for (const key of ['created', 'updated', 'skipped'] as const) {
+      target.byType[type]![key] += source.byType[type]![key];
+    }
+  }
+}
 
-  if (identityPlan.hesabfaIdsToRelease.length > 0) {
-    await prisma.$transaction(
-      identityPlan.hesabfaIdsToRelease.map(({ orderId, hesabfaId }) =>
-        prisma.order.updateMany({
-          where: { id: orderId, hesabfaId },
-          data: { hesabfaId: null },
-        }),
-      ),
-    );
+/** Resolve the invoice contact without assigning someone else's orders by name. */
+async function resolveInvoiceUser(inv: HesabfaInvoice): Promise<string> {
+  const code = String(inv.ContactCode ?? inv.Contact?.Code ?? '').trim();
+  if (code) {
+    const linked = await prisma.user.findUnique({ where: { hesabfaCode: code }, select: { id: true } });
+    if (linked) return linked.id;
   }
 
-  for (const { orderId, invoice: preparedInvoice } of identityPlan.matches) {
-    const { invoice: inv, number, hesabfaId } = preparedInvoice;
-    const patch = mapHesabfaToLocalStatus(inv);
+  const contact = inv.Contact?.Code != null ? inv.Contact : code ? await getContactByCode(code) : null;
+  const mobile = normalizeIranMobile(contact?.Mobile);
+  if (contact && mobile) {
+    const local = await prisma.user.findUnique({
+      where: { phoneNumber: mobile }, select: { id: true, role: true, hesabfaCode: true },
+    });
+    if (!local?.hesabfaCode || local.hesabfaCode === code) {
+      const localPart = mobile.slice(1);
+      const candidates = await getContactsByMobiles([
+        contact.Mobile?.trim() ?? '', mobile, localPart,
+        `98${localPart}`, `+98${localPart}`, `0098${localPart}`,
+      ]);
+      const matchingCodes = new Set(candidates.filter((row) => normalizeIranMobile(row.Mobile) === mobile)
+        .map((row) => String(row.Code).trim()));
+      matchingCodes.add(code);
+      if (matchingCodes.size === 1) {
+        if (local?.role === 'RETAIL') return local.id;
+        await syncContactsFromHesabfa([contact]);
+        const linked = await prisma.user.findUnique({ where: { hesabfaCode: code }, select: { id: true } });
+        if (linked) return linked.id;
+      }
+    }
+  }
 
+  // A supplier or offline customer may have no mobile. Keep a deterministic
+  // account with a non-login phone so the invoice is represented and later
+  // contact sync can attach a real mobile to the same code.
+  const identity = code || 'unassigned';
+  const placeholderPhone = `hesabfa:${identity}`;
+  const name = contact ? displayName(contact) : {
+    firstName: inv.ContactTitle?.trim() || 'Offline', lastName: '',
+  };
+  const user = code
+    ? await prisma.user.upsert({
+        where: { hesabfaCode: code }, update: {},
+        create: {
+          phoneNumber: placeholderPhone,
+          firstName: name.firstName,
+          lastName: name.lastName, role: 'WHOLESALE', isActive: contact?.Active !== false, hesabfaCode: code,
+        },
+        select: { id: true },
+      })
+    : await prisma.user.upsert({
+        where: { phoneNumber: placeholderPhone }, update: {},
+        create: { phoneNumber: placeholderPhone, firstName: 'Offline', lastName: 'Order', role: 'WHOLESALE', isActive: false },
+        select: { id: true },
+      });
+  return user.id;
+}
+
+function invoiceDate(value: string | undefined): Date {
+  const parsed = value ? new Date(value.replace(' ', 'T')) : new Date();
+  return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+}
+
+async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated' | 'skipped'> {
+  const type = inv.InvoiceType;
+  const number = invoiceNumber(inv);
+  if (!isInvoiceType(type) || !number || number === '0') return 'skipped';
+  const id = typeof inv.Id === 'number' ? inv.Id : null;
+  const byNumber = await prisma.order.findUnique({
+    where: { hesabfaCode_invoiceType: { hesabfaCode: number, invoiceType: type } },
+    select: { id: true, source: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true },
+  });
+  const byId = id != null ? await prisma.order.findUnique({
+    where: { hesabfaId: id }, select: { id: true, source: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true },
+  }) : null;
+  const tagOrderId = type === 0 && inv.Tag?.startsWith(`${HESABFA_TAG}:`)
+    ? inv.Tag.slice(HESABFA_TAG.length + 1) : null;
+  const byTag = tagOrderId ? await prisma.order.findUnique({
+    where: { id: tagOrderId },
+    select: { id: true, source: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true },
+  }) : null;
+  const candidates = [byNumber, byId, byTag].filter((row): row is NonNullable<typeof row> => row != null);
+  const plan = planInvoiceIdentitySync(
+    [{ number, hesabfaId: id ?? undefined, invoiceType: type }],
+    candidates,
+  );
+  const matchedId = plan.matches[0]?.orderId;
+  const existing = byTag ?? candidates.find((row) => row.id === matchedId);
+  if (byTag && byNumber && byTag.id !== byNumber.id) return 'skipped';
+
+  // A site invoice can arrive before its order transaction commits. Its tag
+  // identifies it unambiguously; the next webhook/full sync links it then.
+  if (!existing && type === 0 && inv.Tag?.startsWith(`${HESABFA_TAG}:`)) return 'skipped';
+
+  for (const release of plan.hesabfaIdsToRelease) {
+    await prisma.order.updateMany({ where: { id: release.orderId, hesabfaId: release.hesabfaId }, data: { hesabfaId: null } });
+  }
+  if (id != null && byTag && byId && byTag.id !== byId.id) {
+    await prisma.order.updateMany({ where: { id: byId.id, hesabfaId: id }, data: { hesabfaId: null } });
+  }
+
+  if (existing?.source === 'ONLINE') {
     await prisma.order.update({
-      where: { id: orderId },
+      where: { id: existing.id },
       data: {
-        ...patch,
-        hesabfaCode: number || undefined,
-        ...(hesabfaId != null ? { hesabfaId } : {}),
+        ...mapHesabfaToLocalStatus(inv),
+        hesabfaCode: number,
+        invoiceType: type,
+        ...(id != null ? { hesabfaId: id } : {}),
         hesabfaSyncedAt: new Date(),
       },
     });
-    stats.updated++;
+    return 'updated';
   }
 
+  // Full-list rows have no InvoiceItems. Never replace line snapshots from a
+  // summary; callers hydrate each invoice before reaching this point.
+  if (!Array.isArray(inv.InvoiceItems)) return 'skipped';
+  const userId = await resolveInvoiceUser(inv);
+  const itemCodes = [...new Set(inv.InvoiceItems.map((line) =>
+    String(line.ItemCode ?? line.Item?.Code ?? '').trim()).filter(Boolean))];
+  const itemIds = inv.InvoiceItems.map((line) => line.Item?.Id).filter((value): value is number => typeof value === 'number');
+  const products = await prisma.product.findMany({
+    where: { OR: [{ hesabfaCode: { in: itemCodes } }, { sku: { in: itemCodes } }, { hesabfaId: { in: itemIds } }] },
+    select: { id: true, sku: true, name: true, hesabfaCode: true, hesabfaId: true },
+  });
+  const byCode = new Map(products.filter((p) => p.hesabfaCode).map((p) => [p.hesabfaCode!, p]));
+  const bySku = new Map(products.map((p) => [p.sku, p]));
+  const byItemId = new Map(products.filter((p) => p.hesabfaId != null).map((p) => [p.hesabfaId!, p]));
+  const lines = inv.InvoiceItems.map((line) => {
+    const code = String(line.ItemCode ?? line.Item?.Code ?? '').trim();
+    const product = byCode.get(code) ?? bySku.get(code) ?? (line.Item?.Id != null ? byItemId.get(line.Item.Id) : undefined);
+    const quantity = Math.max(1, Math.round(Number(line.Quantity) || 1));
+    const priceAtPurchase = rialToToman(line.UnitPrice);
+    const grossRial = Number(line.UnitPrice ?? 0) * quantity;
+    const discountPct = grossRial > 0 ? Math.min(100, Math.max(0, Number(line.Discount ?? 0) / grossRial * 100)) : 0;
+    return {
+      productId: product?.id ?? null,
+      productSku: product?.sku ?? code,
+      productName: line.Description?.trim() || product?.name || line.Item?.Name?.trim() || code || 'Item',
+      priceAtPurchase,
+      discountPct,
+      taxAmount: rialToToman(line.Tax),
+      quantity,
+    };
+  });
+  const shippingCost = rialToToman(inv.Freight);
+  const taxAmount = lines.reduce((sum, line) => sum + line.taxAmount, BigInt(0));
+  const totalAmount = rialToToman(inv.Payable ?? inv.Sum);
+  const subtotal = totalAmount > shippingCost + taxAmount ? totalAmount - shippingCost - taxAmount : BigInt(0);
+  const paid = inv.Rest != null ? Number(inv.Rest) <= 0 : Number(inv.Paid ?? 0) > 0;
+  const now = new Date();
+  const data = {
+    userId,
+    source: 'OFFLINE' as const,
+    invoiceType: type,
+    status: inv.Sent ? 'SHIPPED' as const : paid ? 'PAID' as const : 'NEW' as const,
+    paymentMethod: 'COD' as const,
+    paymentStatus: paid ? 'PAID' as const : 'PENDING' as const,
+    paidAt: paid ? existing?.paidAt ?? now : null,
+    shippedAt: inv.Sent ? existing?.shippedAt ?? now : null,
+    snapshotProvince: contactState(inv),
+    snapshotCity: inv.Contact?.City?.trim() ?? '',
+    snapshotStreet: inv.Contact?.Address?.trim() ?? '',
+    snapshotPostalCode: inv.Contact?.PostalCode?.trim() ?? '',
+    subtotal, shippingCost, taxAmount, totalAmount,
+    notes: inv.Note?.trim() || null,
+    hesabfaCode: number, hesabfaId: id, hesabfaSyncedAt: now,
+  };
+
+  const result = await prisma.$transaction(async (tx) => {
+    let orderId = existing?.id;
+    let created = false;
+    if (!orderId) {
+      const inserted = await tx.order.createMany({
+        data: [{ ...data, createdAt: invoiceDate(inv.Date) }], skipDuplicates: true,
+      });
+      created = inserted.count > 0;
+      const row = await tx.order.findUnique({
+        where: { hesabfaCode_invoiceType: { hesabfaCode: number, invoiceType: type } },
+        select: { id: true, source: true },
+      });
+      if (!row) throw new Error(`Could not link Hesabfa invoice ${type}/${number}`);
+      orderId = row.id;
+      if (row.source === 'ONLINE') return 'updated' as const;
+      if (!created) await tx.order.update({ where: { id: orderId }, data });
+    } else {
+      await tx.order.update({ where: { id: orderId }, data });
+    }
+    const currentLines = await tx.orderItem.findMany({ where: { orderId } });
+    const key = (line: Omit<typeof lines[number], 'discountPct'> & { discountPct: number | Prisma.Decimal }) => JSON.stringify([
+      line.productId, line.productSku, line.productName, String(line.priceAtPurchase),
+      Number(line.discountPct), String(line.taxAmount), line.quantity,
+    ]);
+    const currentKeys = currentLines.map(key).sort();
+    const incomingKeys = lines.map(key).sort();
+    if (JSON.stringify(currentKeys) !== JSON.stringify(incomingKeys)) {
+      await tx.orderItem.deleteMany({ where: { orderId } });
+      if (lines.length > 0) await tx.orderItem.createMany({ data: lines.map((line) => ({ ...line, orderId })) });
+    }
+    return created ? 'created' as const : 'updated' as const;
+  });
+  return result;
+}
+
+function contactState(inv: HesabfaInvoice): string {
+  return inv.Contact?.State?.trim() ?? '';
+}
+
+/** Idempotent importer shared by webhooks and manual full synchronization. */
+export async function syncInvoicesFromHesabfa(invoices: HesabfaInvoice[]): Promise<InvoiceSyncStats> {
+  const stats = emptyStats();
+  const seen = new Set<string>();
+  for (const invoice of invoices) {
+    const type = invoice.InvoiceType;
+    const key = `${type}:${invoiceNumber(invoice)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const outcome = await importInvoice(invoice);
+    stats[outcome]++;
+    if (isInvoiceType(type)) stats.byType[type]![outcome]++;
+  }
   return stats;
 }
 
 export async function syncInvoicesByIds(ids: number[]): Promise<InvoiceSyncStats> {
-  const invoices = await getInvoicesById(ids);
-  return syncInvoicesFromHesabfa(invoices);
+  return syncInvoicesFromHesabfa(await getInvoicesById(ids));
+}
+
+/** Fetch every type, then hydrate each list row through invoice/get. */
+export async function fullSyncInvoices(): Promise<InvoiceSyncStats> {
+  const summary = emptyStats();
+  for (const type of INVOICE_TYPES) {
+    const listed = await getAllInvoices(type);
+    for (let offset = 0; offset < listed.length; offset += 20) {
+      const batch = listed.slice(offset, offset + 20);
+      const detailed = await Promise.all(batch.map((row) => getInvoiceByNumber(row.Number, type)));
+      const available = detailed.filter((row): row is HesabfaInvoice => row != null)
+        .map((row) => ({ ...row, InvoiceType: row.InvoiceType ?? type }));
+      addStats(summary, await syncInvoicesFromHesabfa(available));
+      const missing = batch.length - available.length;
+      summary.skipped += missing;
+      summary.byType[type]!.skipped += missing;
+    }
+  }
+  return summary;
 }

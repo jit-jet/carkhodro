@@ -26,8 +26,9 @@ import type {
   InvoiceVM,
   InvoiceLineVM,
 } from '@/src/lib/dashboard-types';
-import { netLineTotalForRole } from '@/src/lib/pricing';
+import { netLineTotalForOrder } from '@/src/lib/pricing';
 import { normalizeInvoiceNumber } from '@/src/lib/invoice-number';
+import { orderSourceTypeLabel } from '@/src/lib/hesabfa/invoice-type';
 
 export interface OrdersQuery {
   status?: OrderStatus;
@@ -78,6 +79,8 @@ export async function getOrdersPage(query: OrdersQuery = {}): Promise<OrdersPage
 
       const items: OrderListItemVM[] = rows.map((o) => ({
         id: o.id,
+        isOffline: o.source === 'OFFLINE',
+        sourceTypeLabel: orderSourceTypeLabel(o.source, o.invoiceType),
         invoiceNumber: o.hesabfaCode,
         status: o.status,
         statusLabel: ORDER_STATUS_FA[o.status],
@@ -113,7 +116,7 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
         const unit = Number(it.priceAtPurchase);
         const discountPct = Number(it.discountPct);
         const gross = unit * it.quantity;
-        const net = netLineTotalForRole(unit, it.quantity, discountPct, user.role);
+        const net = netLineTotalForOrder(unit, it.quantity, discountPct, user.role, order.source === 'OFFLINE');
         return {
           rowNo: index + 1,
           sku: it.productSku,
@@ -131,6 +134,8 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
 
       return {
         id: order.id,
+        isOffline: order.source === 'OFFLINE',
+        sourceTypeLabel: orderSourceTypeLabel(order.source, order.invoiceType),
         invoiceNumber: order.hesabfaCode,
         status: order.status,
         statusLabel: ORDER_STATUS_FA[order.status],

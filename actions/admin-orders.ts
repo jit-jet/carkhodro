@@ -34,8 +34,9 @@ import type {
   Prisma,
 } from '@/generated/prisma_client';
 import type { InvoiceVM, InvoiceLineVM } from '@/src/lib/dashboard-types';
-import { netLineTotalForRole } from '@/src/lib/pricing';
+import { netLineTotalForOrder } from '@/src/lib/pricing';
 import { normalizeInvoiceNumber } from '@/src/lib/invoice-number';
+import { orderSourceTypeLabel } from '@/src/lib/hesabfa/invoice-type';
 
 export type AdminOrderSortBy =
   | 'orderNumber'
@@ -50,6 +51,8 @@ export type AdminOrderSortDir = 'asc' | 'desc';
 
 export interface AdminOrderListItemVM {
   id: string;
+  isOffline: boolean;
+  sourceTypeLabel: string;
   invoiceNumber: string | null;
   customerName: string;
   phoneNumber: string;
@@ -232,6 +235,8 @@ export async function getOrdersAdmin(
       return {
         items: rows.map((o) => ({
           id: o.id,
+          isOffline: o.source === 'OFFLINE',
+          sourceTypeLabel: orderSourceTypeLabel(o.source, o.invoiceType),
           invoiceNumber: o.hesabfaCode,
           customerName:
             `${o.user.firstName} ${o.user.lastName}`.trim() ||
@@ -331,7 +336,7 @@ export async function getInvoiceAdmin(id: string): Promise<InvoiceVM | null> {
         const unit = Number(it.priceAtPurchase);
         const discountPct = Number(it.discountPct);
         const gross = unit * it.quantity;
-        const net = netLineTotalForRole(unit, it.quantity, discountPct, order.user.role);
+        const net = netLineTotalForOrder(unit, it.quantity, discountPct, order.user.role, order.source === 'OFFLINE');
         return {
           rowNo: index + 1,
           sku: it.productSku,
@@ -348,6 +353,8 @@ export async function getInvoiceAdmin(id: string): Promise<InvoiceVM | null> {
 
       return {
         id: order.id,
+        isOffline: order.source === 'OFFLINE',
+        sourceTypeLabel: orderSourceTypeLabel(order.source, order.invoiceType),
         invoiceNumber: order.hesabfaCode,
         status: order.status,
         statusLabel: ORDER_STATUS_FA[order.status],

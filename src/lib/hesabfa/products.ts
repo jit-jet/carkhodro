@@ -125,6 +125,7 @@ function invalidate(productIds: string[]): void {
 
 const UPDATE_CONCURRENCY = 25;
 const CREATE_CHUNK = 100;
+const RELEASE_CHUNK = 100;
 
 interface PreparedItem {
   code: string;
@@ -210,15 +211,14 @@ export async function syncProductsFromHesabfa(items: HesabfaItem[]): Promise<Pro
   // Hesabfa can recycle a deleted item's numeric Id. Release stale owners
   // before assigning those Ids to the current code owners, otherwise the
   // unique `hesabfa_id` constraint aborts the entire sync with P2002.
-  if (hesabfaIdsToRelease.length > 0) {
-    await prisma.$transaction(
-      hesabfaIdsToRelease.map(({ productId, hesabfaId }) =>
-        prisma.product.updateMany({
-          where: { id: productId, hesabfaId },
-          data: { hesabfaId: null },
-        }),
-      ),
-    );
+  // One statement per chunk avoids the 5-second interactive transaction limit
+  // when a full sync needs to release many recycled Ids.
+  for (let i = 0; i < hesabfaIdsToRelease.length; i += RELEASE_CHUNK) {
+    const chunk = hesabfaIdsToRelease.slice(i, i + RELEASE_CHUNK);
+    await prisma.product.updateMany({
+      where: { OR: chunk.map(({ productId, hesabfaId }) => ({ id: productId, hesabfaId })) },
+      data: { hesabfaId: null },
+    });
   }
 
   // 3) Concurrent updates (bounded) — including category from NodeFamily.

@@ -8,6 +8,7 @@ export interface LocalOrderIdentity {
   id: string;
   hesabfaCode: string | null;
   hesabfaId: number | null;
+  invoiceType: number;
 }
 
 export interface InvoiceIdRelease {
@@ -16,42 +17,50 @@ export interface InvoiceIdRelease {
 }
 
 /**
- * Resolve Hesabfa sales invoices to existing orders only. This function never
- * produces creates: invoices unknown to the site are counted as skipped.
+ * Match by number within type, falling back to the internal id for renumbered
+ * invoices. Unmatched invoices are imports. A recycled id is released.
  */
 export function planInvoiceIdentitySync<T extends HesabfaInvoiceIdentity>(
   invoices: readonly T[],
   orders: readonly LocalOrderIdentity[],
 ): {
   matches: Array<{ orderId: string; invoice: T }>;
+  toCreate: T[];
   hesabfaIdsToRelease: InvoiceIdRelease[];
   skipped: number;
 } {
   const byNumber = new Map<string, LocalOrderIdentity>();
   const byHesabfaId = new Map<number, LocalOrderIdentity>();
   for (const order of orders) {
-    if (order.hesabfaCode) byNumber.set(order.hesabfaCode.trim(), order);
+    if (order.hesabfaCode) byNumber.set(`${order.invoiceType}:${order.hesabfaCode.trim()}`, order);
     if (order.hesabfaId != null) byHesabfaId.set(order.hesabfaId, order);
   }
 
   const matches: Array<{ orderId: string; invoice: T }> = [];
+  const toCreate: T[] = [];
   const releases = new Map<number, InvoiceIdRelease>();
   const claimedOrders = new Set<string>();
   let skipped = 0;
 
   for (const invoice of invoices) {
-    // Site orders correspond only to Hesabfa sales invoices (InvoiceType 0).
-    if (invoice.invoiceType != null && invoice.invoiceType !== 0) {
+    if (!invoice.number || invoice.invoiceType == null || ![0, 1, 2, 3].includes(invoice.invoiceType)) {
       skipped++;
       continue;
     }
 
-    const numberMatch = invoice.number ? byNumber.get(invoice.number) : undefined;
+    const numberMatch = byNumber.get(`${invoice.invoiceType}:${invoice.number}`);
     const idMatch =
       invoice.hesabfaId != null ? byHesabfaId.get(invoice.hesabfaId) : undefined;
-    const canonical = numberMatch ?? idMatch;
+    const canonical = numberMatch ?? (idMatch?.invoiceType === invoice.invoiceType ? idMatch : undefined);
 
-    if (!canonical || claimedOrders.has(canonical.id)) {
+    if (!canonical) {
+      toCreate.push(invoice);
+      if (invoice.hesabfaId != null && idMatch) releases.set(invoice.hesabfaId, {
+        orderId: idMatch.id, hesabfaId: invoice.hesabfaId,
+      });
+      continue;
+    }
+    if (claimedOrders.has(canonical.id)) {
       skipped++;
       continue;
     }
@@ -69,6 +78,7 @@ export function planInvoiceIdentitySync<T extends HesabfaInvoiceIdentity>(
 
   return {
     matches,
+    toCreate,
     hesabfaIdsToRelease: [...releases.values()],
     skipped,
   };
