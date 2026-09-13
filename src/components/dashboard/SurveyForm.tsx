@@ -12,7 +12,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { submitSurvey } from '@/actions/surveys';
 import { POSITIVE_POINTS, NEGATIVE_POINTS } from '@/src/lib/survey-options';
-import { formatNumberFa } from '@/src/lib/format';
+import { formatInvoiceNumber } from '@/src/lib/invoice-number';
 import type { SurveyVM } from '@/src/lib/dashboard-types';
 
 export default function SurveyForm({ survey }: { survey: SurveyVM }) {
@@ -60,7 +60,7 @@ export default function SurveyForm({ survey }: { survey: SurveyVM }) {
     <form onSubmit={submit} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-7 space-y-7">
       <div>
         <h1 className="text-lg font-extrabold text-charcoal">
-          نظرسنجی برای فاکتور {formatNumberFa(survey.orderNumber)}
+          نظرسنجی برای فاکتور {formatInvoiceNumber(survey.invoiceNumber)}
         </h1>
         {survey.submittedAt && (
           <p className="text-xs text-gray-400 mt-1">آخرین ثبت: {survey.submittedAt}</p>

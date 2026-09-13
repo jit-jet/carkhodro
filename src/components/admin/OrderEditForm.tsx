@@ -30,6 +30,7 @@ import {
   tableHeadClass,
 } from "@/src/components/admin/AdminUI";
 import { formatToman, noFormatNumberFa } from "@/src/lib/format";
+import { formatInvoiceNumber } from "@/src/lib/invoice-number";
 import type { OrderStatus, PaymentMethod, PaymentStatus } from "@/generated/prisma_client";
 
 export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) {
@@ -98,7 +99,7 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
 
       <Card className="overflow-hidden">
         <CardHeader
-          title={`سفارش #${noFormatNumberFa(order.orderNumber)}`}
+          title={`سفارش - فاکتور ${formatInvoiceNumber(order.invoiceNumber)}`}
           action={<p className="text-xs text-gray-400">{order.createdAtLabel}</p>}
         />
         <div className="p-5 sm:p-6 space-y-4">

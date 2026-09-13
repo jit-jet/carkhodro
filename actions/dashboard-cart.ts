@@ -364,7 +364,7 @@ export async function submitInvoice(input: {
   paymentTerms: string;
   notes?: string;
   discountCode?: string | null;
-}): Promise<ActionResult<{ id: string; orderNumber: number }>> {
+}): Promise<ActionResult<{ id: string; invoiceNumber: string }>> {
   return runMutation('submitInvoice', async () => {
     const user = await getCurrentUser();
     if (!user) return fail('برای ثبت فاکتور وارد شوید.');
@@ -487,8 +487,7 @@ export async function submitInvoice(input: {
     const totalAmount = subtotal - discountAmount;
     if (totalAmount < BigInt(0)) return fail('مبلغ نهایی فاکتور نامعتبر است.');
 
-    // Reserve only the local display number. The Hesabfa invoice Number is
-    // deliberately omitted from the payload so Hesabfa assigns it.
+    // Reserve an internal order reference. Hesabfa assigns the displayed invoice Number.
     const [reserved] = await prisma.$queryRaw<Array<{ orderNumber: number }>>`
       SELECT nextval(pg_get_serial_sequence('orders', 'order_number'))::integer AS "orderNumber"
     `;
@@ -555,7 +554,7 @@ export async function submitInvoice(input: {
       return fail(LOCAL_ORDER_ERROR);
     }
 
-    let order: { id: string; orderNumber: number };
+    let order: { id: string };
     try {
       order = await prisma.$transaction(async (tx) => {
         const created = await tx.order.create({
@@ -585,7 +584,7 @@ export async function submitInvoice(input: {
             hesabfaSyncedAt: new Date(),
             items: { create: lineItems },
           },
-          select: { id: true, orderNumber: true },
+          select: { id: true },
         });
 
         if (applied) {
@@ -622,6 +621,6 @@ export async function submitInvoice(input: {
     revalidatePath('/dashboard/orders');
     revalidatePath('/dashboard');
     queueAdminOrderNotification(order.id, 'WHOLESALE_INVOICE');
-    return ok(order);
+    return ok({ id: order.id, invoiceNumber: hesabfaInvoice.code });
   });
 }

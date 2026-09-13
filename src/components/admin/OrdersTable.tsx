@@ -18,6 +18,7 @@ import {
 import { buildOrdersHref, type OrdersTableFilters } from "@/src/lib/admin-orders-query";
 import { Input, Select, TableShell, Toolbar, tableBodyClass, tableHeadClass, tableRowClass } from "@/src/components/admin/AdminUI";
 import { formatToman, noFormatNumberFa } from "@/src/lib/format";
+import { formatInvoiceNumber } from "@/src/lib/invoice-number";
 import { useCartUI } from "@/src/store/cart-ui";
 import type { OrderStatus, PaymentStatus } from "@/generated/prisma_client";
 
@@ -275,7 +276,7 @@ export default function OrdersTable({
                 return (
                   <tr key={o.id} className={tableRowClass}>
                     <td className="px-4 py-3 font-mono font-semibold text-charcoal text-right" dir="ltr">
-                      #{noFormatNumberFa(o.orderNumber)}
+                      {formatInvoiceNumber(o.invoiceNumber)}
                     </td>
                     <td className="px-4 py-3">
                       <p className="font-semibold text-charcoal">{o.customerName}</p>

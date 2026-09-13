@@ -8,6 +8,7 @@ import OrderEditForm from "@/src/components/admin/OrderEditForm";
 import InvoicePrint from "@/src/components/dashboard/InvoicePrint";
 import PrintButton from "@/src/components/dashboard/PrintButton";
 import { getInvoiceSeller } from "@/src/lib/invoice-seller";
+import { formatInvoiceNumber } from "@/src/lib/invoice-number";
 
 export const metadata: Metadata = { title: "جزئیات سفارش | پنل مدیریت" };
 
@@ -36,7 +37,7 @@ async function OrderDetailContent({ params }: Props) {
     <div className="space-y-6">
       <div className="no-print">
         <PageHeader
-          title={`جزئیات سفارش #${order.orderNumber.toLocaleString("fa-IR")}`}
+          title={`جزئیات سفارش - فاکتور ${formatInvoiceNumber(order.invoiceNumber)}`}
           description={order.createdAtLabel}
           action={
             <div className="flex items-center gap-2 flex-wrap">

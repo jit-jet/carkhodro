@@ -78,7 +78,7 @@ export default function OrdersFilterBar({ status, perPage, orderNumber }: Props)
         >
           <input
             value={number}
-            onChange={(e) => setNumber(e.target.value.replace(/\D/g, ''))}
+            onChange={(e) => setNumber(e.target.value)}
             inputMode="numeric"
             dir="ltr"
             placeholder="کد پیگیری (شماره فاکتور)"

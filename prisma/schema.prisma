@@ -924,8 +924,8 @@ model ShippingOption {
 
 model Order {
   id               String        @id @default(cuid())
-  /// Human-facing, sequential invoice number («شماره فاکتور») shown on the
-  /// partner's orders list and printable invoice — distinct from the cuid `id`.
+  /// Internal sequential order reference sent as Hesabfa `Reference`.
+  /// The displayed invoice number comes from `hesabfaCode` instead.
   orderNumber      Int           @unique @default(autoincrement()) @map("order_number")
   userId           String        @map("user_id")
   /// Optional for wholesale invoices, which may be registered before delivery

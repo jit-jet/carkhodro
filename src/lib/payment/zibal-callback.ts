@@ -8,7 +8,6 @@ import { prisma } from '@/src/lib/prisma';
 import { RIAL_PER_TOMAN } from '@/src/lib/format';
 import { clearUserCart } from '@/src/lib/clear-user-cart';
 import { pushPaidRetailInvoice } from '@/src/lib/hesabfa/invoices';
-import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
 import { queueAdminOrderNotification } from '@/src/lib/order-notification';
 import { dispatchStockNotificationsForProducts } from '@/src/lib/stock-notification';
 import { zibalVerifyPayment } from '@/src/lib/zibal/client';
@@ -98,8 +97,14 @@ async function confirmPaidOrder(
     },
   });
   await clearUserCart(order.userId);
-  runHesabfaBackground('pushPaidRetailInvoice', () => pushPaidRetailInvoice(orderId));
   queueAdminOrderNotification(orderId, 'RETAIL_PAYMENT');
+  // Save Hesabfa's assigned Number before showing the success page.
+  // Payment stays successful even if the accounting API is temporarily unavailable.
+  try {
+    await pushPaidRetailInvoice(orderId);
+  } catch (err) {
+    console.error('[hesabfa:pushPaidRetailInvoice]', err);
+  }
 }
 
 /**

@@ -34,14 +34,14 @@ export async function getSurvey(orderId: string): Promise<SurveyVM | null> {
     async () => {
       const order = await prisma.order.findFirst({
         where: { id: orderId, userId: user.id },
-        select: { id: true, orderNumber: true, survey: true },
+        select: { id: true, hesabfaCode: true, survey: true },
       });
       if (!order) return null;
 
       const s = order.survey;
       return {
         orderId: order.id,
-        orderNumber: order.orderNumber,
+        invoiceNumber: order.hesabfaCode,
         rating: s?.rating ?? 0,
         positivePoints: s?.positivePoints ?? [],
         negativePoints: s?.negativePoints ?? [],

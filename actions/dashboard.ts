@@ -52,9 +52,9 @@ export async function getDashboardStats(): Promise<DashboardStatsVM | null> {
         }),
         prisma.wishlistItem.count({ where: { userId: user.id } }),
         prisma.order.findFirst({
-          where: { userId: user.id },
+          where: { userId: user.id, hesabfaCode: { not: null } },
           orderBy: { createdAt: 'desc' },
-          select: { id: true, orderNumber: true, createdAt: true },
+          select: { id: true, hesabfaCode: true, createdAt: true },
         }),
       ]);
 
@@ -72,7 +72,7 @@ export async function getDashboardStats(): Promise<DashboardStatsVM | null> {
         lastInvoice: lastOrder
           ? {
               id: lastOrder.id,
-              orderNumber: lastOrder.orderNumber,
+              invoiceNumber: lastOrder.hesabfaCode,
               date: formatJalaliDate(lastOrder.createdAt),
             }
           : null,

@@ -26,7 +26,7 @@ export interface DashboardStatsVM {
   totalOrders: number;
   cartItemCount: number;
   favoritesCount: number;
-  lastInvoice: { id: string; orderNumber: number; date: string } | null;
+  lastInvoice: { id: string; invoiceNumber: string | null; date: string } | null;
 }
 
 // ── Dashboard cart / invoice builder ─────────────────────────────────────────
@@ -67,7 +67,7 @@ export interface InvoiceSearchResultVM {
 
 export interface OrderListItemVM {
   id: string;
-  orderNumber: number;
+  invoiceNumber: string | null;
   status: OrderStatus;
   statusLabel: string;
   dateFull: string; // weekday + Jalali date + time
@@ -97,7 +97,7 @@ export interface InvoiceLineVM {
 
 export interface InvoiceVM {
   id: string;
-  orderNumber: number;
+  invoiceNumber: string | null;
   status: OrderStatus;
   statusLabel: string;
   date: string; // Jalali date (long)
@@ -128,7 +128,7 @@ export interface InvoiceVM {
 
 export interface SurveyVM {
   orderId: string;
-  orderNumber: number;
+  invoiceNumber: string | null;
   rating: number;
   positivePoints: string[]; // selected option keys
   negativePoints: string[];

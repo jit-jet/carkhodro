@@ -12,6 +12,7 @@ import type { Metadata } from 'next';
 import { getOrdersPage } from '@/actions/dashboard-orders';
 import { ORDER_STATUS_FA, ORDER_STATUS_STYLE } from '@/src/lib/order-labels';
 import { formatNumberFa, formatRial, noFormatNumberFa } from '@/src/lib/format';
+import { formatInvoiceNumber } from '@/src/lib/invoice-number';
 import OrdersFilterBar from '@/src/components/dashboard/OrdersFilterBar';
 import type { OrderStatus } from '@/generated/prisma_client';
 
@@ -95,7 +96,7 @@ async function OrdersContent({ searchParams }: Props) {
                       {noFormatNumberFa((data.page - 1) * data.perPage + index + 1)}
                     </td>
                     <td className="py-3 px-3 text-right font-mono font-semibold">
-                      {noFormatNumberFa(order.orderNumber)}
+                      {formatInvoiceNumber(order.invoiceNumber)}
                     </td>
                     <td className="py-3 px-3 text-center">
                       <span

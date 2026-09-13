@@ -27,6 +27,7 @@ import type {
   InvoiceLineVM,
 } from '@/src/lib/dashboard-types';
 import { netLineTotalForRole } from '@/src/lib/pricing';
+import { normalizeInvoiceNumber } from '@/src/lib/invoice-number';
 
 export interface OrdersQuery {
   status?: OrderStatus;
@@ -54,8 +55,8 @@ export async function getOrdersPage(query: OrdersQuery = {}): Promise<OrdersPage
 
   const where: Prisma.OrderWhereInput = { userId: user.id };
   if (query.status) where.status = query.status;
-  const parsedNumber = query.orderNumber ? Number(query.orderNumber.replace(/\D/g, '')) : NaN;
-  if (Number.isFinite(parsedNumber) && parsedNumber > 0) where.orderNumber = parsedNumber;
+  const invoiceNumber = normalizeInvoiceNumber(query.orderNumber ?? '');
+  if (invoiceNumber) where.hesabfaCode = invoiceNumber;
 
   return safeQuery(
     'getOrdersPage',
@@ -77,7 +78,7 @@ export async function getOrdersPage(query: OrdersQuery = {}): Promise<OrdersPage
 
       const items: OrderListItemVM[] = rows.map((o) => ({
         id: o.id,
-        orderNumber: o.orderNumber,
+        invoiceNumber: o.hesabfaCode,
         status: o.status,
         statusLabel: ORDER_STATUS_FA[o.status],
         dateFull: `${formatJalaliWithWeekday(o.createdAt)} - ${formatTimeFa(o.createdAt)}`,
@@ -130,7 +131,7 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
 
       return {
         id: order.id,
-        orderNumber: order.orderNumber,
+        invoiceNumber: order.hesabfaCode,
         status: order.status,
         statusLabel: ORDER_STATUS_FA[order.status],
         date: formatJalaliDate(order.createdAt),

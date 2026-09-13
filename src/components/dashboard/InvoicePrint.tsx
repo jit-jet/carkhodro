@@ -3,10 +3,10 @@ import type { InvoiceVM } from '@/src/lib/dashboard-types';
 import type { InvoiceSeller } from '@/src/lib/invoice-seller-types';
 import {
   formatNumberFa,
-  noFormatNumberFa,
   rialInWords,
   RIAL_PER_TOMAN,
 } from '@/src/lib/format';
+import { formatInvoiceNumber } from '@/src/lib/invoice-number';
 
 interface Props {
   invoice: InvoiceVM;
@@ -54,7 +54,7 @@ export default function InvoicePrint({ invoice, seller: s }: Props) {
 
         <div className="inv-header-meta">
           <p>
-            <span>شماره</span> <b>{noFormatNumberFa(invoice.orderNumber)}</b>
+            <span>شماره</span> <b>{formatInvoiceNumber(invoice.invoiceNumber)}</b>
           </p>
           <p>
             <span>تاریخ</span> <b>{invoice.dateSlash}</b>

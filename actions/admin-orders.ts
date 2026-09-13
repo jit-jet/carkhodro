@@ -35,6 +35,7 @@ import type {
 } from '@/generated/prisma_client';
 import type { InvoiceVM, InvoiceLineVM } from '@/src/lib/dashboard-types';
 import { netLineTotalForRole } from '@/src/lib/pricing';
+import { normalizeInvoiceNumber } from '@/src/lib/invoice-number';
 
 export type AdminOrderSortBy =
   | 'orderNumber'
@@ -49,7 +50,7 @@ export type AdminOrderSortDir = 'asc' | 'desc';
 
 export interface AdminOrderListItemVM {
   id: string;
-  orderNumber: number;
+  invoiceNumber: string | null;
   customerName: string;
   phoneNumber: string;
   status: OrderStatus;
@@ -87,7 +88,7 @@ export interface AdminOrderPage {
 
 export interface AdminOrderDetailVM {
   id: string;
-  orderNumber: number;
+  invoiceNumber: string | null;
   status: OrderStatus;
   paymentStatus: PaymentStatus;
   paymentMethod: PaymentMethod;
@@ -145,7 +146,7 @@ function adminOrderOrderBy(
   const dir = sortDir === 'asc' ? ('asc' as const) : ('desc' as const);
   switch (sortBy) {
     case 'orderNumber':
-      return { orderNumber: dir };
+      return { hesabfaCode: dir };
     case 'customer':
       return [{ user: { firstName: dir } }, { user: { lastName: dir } }];
     case 'phone':
@@ -174,13 +175,11 @@ export async function getOrdersAdmin(
     async () => {
       const customer = filters.customer?.trim();
       const phone = filters.phone?.trim();
-      const parsedNumber = filters.orderNumber
-        ? Number(filters.orderNumber.replace(/\D/g, ''))
-        : NaN;
+      const invoiceNumber = normalizeInvoiceNumber(filters.orderNumber ?? '');
 
       const where: Prisma.OrderWhereInput = {
-        ...(Number.isFinite(parsedNumber) && parsedNumber > 0
-          ? { orderNumber: parsedNumber }
+        ...(invoiceNumber
+          ? { hesabfaCode: invoiceNumber }
           : {}),
         ...(filters.userId ? { userId: filters.userId } : {}),
         ...(filters.status === 'pending'
@@ -233,7 +232,7 @@ export async function getOrdersAdmin(
       return {
         items: rows.map((o) => ({
           id: o.id,
-          orderNumber: o.orderNumber,
+          invoiceNumber: o.hesabfaCode,
           customerName:
             `${o.user.firstName} ${o.user.lastName}`.trim() ||
             o.user.shopName ||
@@ -275,7 +274,7 @@ export async function getOrderAdminById(id: string): Promise<AdminOrderDetailVM 
 
       return {
         id: o.id,
-        orderNumber: o.orderNumber,
+        invoiceNumber: o.hesabfaCode,
         status: o.status,
         paymentStatus: o.paymentStatus,
         paymentMethod: o.paymentMethod,
@@ -349,7 +348,7 @@ export async function getInvoiceAdmin(id: string): Promise<InvoiceVM | null> {
 
       return {
         id: order.id,
-        orderNumber: order.orderNumber,
+        invoiceNumber: order.hesabfaCode,
         status: order.status,
         statusLabel: ORDER_STATUS_FA[order.status],
         date: formatJalaliDate(order.createdAt),

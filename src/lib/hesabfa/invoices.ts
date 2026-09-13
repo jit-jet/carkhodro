@@ -215,7 +215,9 @@ export async function saveNewWholesaleInvoice(
 
 async function persistInvoiceLink(orderId: string, saved: HesabfaInvoice): Promise<void> {
   const number = invoiceNumber(saved);
-  if (!number) return;
+  if (!number || number === '0') {
+    throw new Error('Hesabfa returned an invalid invoice number');
+  }
   await prisma.order.update({
     where: { id: orderId },
     data: {
@@ -262,7 +264,6 @@ export async function pushPaidRetailInvoice(orderId: string): Promise<void> {
   if (!(await isHesabfaConfigured())) return;
 
   const order = await loadOrder(orderId);
-  console.log('order', order);
   if (!order) return;
   if (order.hesabfaCode) {
     // Already linked — refresh paid status.
