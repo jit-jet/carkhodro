@@ -23,7 +23,7 @@ export interface PatternSendBody {
   recipient: string;
   attributes?: Record<string, string>;
   line_number: string;
-  number_format: 'english' | 'persian';
+  number_format: 'english ' | 'persian';
   schedule?: string | null;
 }
 

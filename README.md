@@ -73,21 +73,6 @@ for emulator-only development it can be explicitly enabled with
 `CAPACITOR_ALLOW_CLEARTEXT=1` (Android emulator normally uses
 `http://10.0.2.2:3000`).
 
-Login uses a single four-digit code input with `autocomplete="one-time-code"`.
-The existing FarazSMS OTP pattern remains:
-
-```text
-کد ورود شما: %code%
-فروشگاه اینترنتی کارخودرو
-```
-
-On the website, the input allows any code suggestion the browser or keyboard
-offers, but the existing SMS format does not support WebOTP's automatic SMS
-capture. The Android app uses Google Play services SMS User Consent to fill the
-four-digit code after the user approves the one-message prompt, without broad
-SMS permissions. Rebuild the Android APK to include the native bridge. Manual
-code entry remains available everywhere.
-
 Before release, replace the generated placeholder launcher/splash art, confirm
 the production URL, configure signing, and test payment return/deep links on
 physical Android and iOS devices.
