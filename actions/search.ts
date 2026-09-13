@@ -32,17 +32,17 @@ const MAX_RESULTS = 200;
  *
  * The query is normalized and split into tokens; a product matches if *any*
  * token is trigram-word-similar to its document. Matching stays broad, while
- * ordering gives product-name relevance strict priority over document-level
- * fuzzy relevance within each stock group. In-stock products always come
- * before out-of-stock products, then each group is ranked by:
+ * ordering first rewards matching more query tokens, then exact token matches.
+ * Stock only breaks ties at that relevance level, so an out-of-stock product
+ * matching the whole query stays ahead of an in-stock partial match. Within
+ * each relevance/stock group, product names are ranked by:
  *   • exact full name
  *   • exact word/phrase in the name (start before middle/end)
  *   • exact substring in the name (earlier before later)
  *   • fuzzy name similarity
  *   • fuzzy similarity across the full search document
  *
- * The discrete exact-match tiers ensure a fuzzy result can never outrank a
- * strong exact name match. The existing document search still handles:
+ * The existing document search still handles:
  *   • misspellings           → trigram similarity is fuzzy by nature
  *   • merged / spaced words  → normalization + trigrams are spacing-agnostic
  *   • multi-word queries     → per-token scoring rewards matching more tokens
@@ -68,6 +68,14 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
       tokens.map((t) => Prisma.sql`p.search_text %> ${t}`),
       ' OR ',
     );
+    const matchedTokenCount = Prisma.join(
+      tokens.map((t) => Prisma.sql`(p.search_text %> ${t})::int`),
+      ' + ',
+    );
+    const exactTokenCount = Prisma.join(
+      tokens.map((t) => Prisma.sql`(strpos(' ' || p.search_text || ' ', ' ' || ${t} || ' ') > 0)::int`),
+      ' + ',
+    );
     const documentFuzzyScore = Prisma.join(
       tokens.map((t) => Prisma.sql`word_similarity(${t}, c.search_text)`),
       ' + ',
@@ -89,6 +97,8 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
             p.stock,
             p.sale_count,
             p.search_text,
+            (${matchedTokenCount}) AS matched_token_count,
+            (${exactTokenCount}) AS exact_token_count,
             fts_normalize(p.name) AS normalized_name
           FROM products p
           WHERE p.is_active = true AND (${conditions})
@@ -96,6 +106,8 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
         SELECT c.id
         FROM candidates c
         ORDER BY
+          c.matched_token_count DESC,
+          c.exact_token_count DESC,
           (c.stock > 0) DESC,
           CASE
             WHEN c.normalized_name = ${normalized} THEN 4

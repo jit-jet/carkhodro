@@ -32,7 +32,7 @@ function stockFirst(a: Product, b: Product): number {
 function applySorting(products: Product[], sort: SortOption): Product[] {
   const arr = [...products];
   switch (sort) {
-    case 'relevance':    return arr.sort(stockFirst);
+    case 'relevance':    return arr; // Keep the server's relevance tiers and stock order.
     case 'newest':       return arr.sort((a, b) => stockFirst(a, b) || b.createdDate.localeCompare(a.createdDate));
     case 'oldest':       return arr.sort((a, b) => stockFirst(a, b) || a.createdDate.localeCompare(b.createdDate));
     case 'best_selling': return arr.sort((a, b) => stockFirst(a, b) || b.salesCount - a.salesCount);
