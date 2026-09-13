@@ -7,14 +7,16 @@
  */
 
 import { Suspense } from 'react';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import AuthCard from '@/src/components/auth/AuthCard';
+import AppUnavailableLogout from '@/src/components/auth/AppUnavailableLogout';
 import LoginFlow from '@/src/components/auth/LoginFlow';
 import { getPublicSiteSettings } from '@/actions/site-settings';
 import { getCurrentUser, SESSION_COOKIE } from '@/src/lib/session';
 import { safeInternalPath } from '@/src/lib/safe-internal-path';
 import { resolvedLogoUrl, resolvedSiteName } from '@/src/lib/site-branding';
+import { isAndroidAppUserAgent } from '@/src/lib/native-app';
 
 interface Props {
   searchParams: Promise<{ redirect?: string }>;
@@ -43,11 +45,29 @@ async function LoginGate({ searchParams }: Props) {
   const { redirect: redirectParam } = await searchParams;
   const redirectTo = safeInternalPath(redirectParam, '/dashboard');
 
-  const [user, settings] = await Promise.all([
+  const [user, settings, requestHeaders] = await Promise.all([
     getCurrentUser(),
     getPublicSiteSettings(),
+    headers(),
   ]);
-  if (user) redirect(redirectTo);
+  const androidApp = isAndroidAppUserAgent(requestHeaders.get('user-agent'));
+  if (user) {
+    if (androidApp && user.role !== 'WHOLESALE') {
+      return (
+        <AuthCard title="دسترسی به اپلیکیشن فعال نیست">
+          <p className="mb-6 text-center text-sm leading-7 text-gray-600">
+            به اپلیکیشن کارخودرو خوش آمدید
+            <br />
+            این اپلیکیشن ویژه همکاران گرامی طراحی شده است.
+            <br />
+            برای فعال‌سازی دسترسی و مشاهده قیمت‌های همکاری، با پشتیبانی تماس بگیرید.
+          </p>
+          <AppUnavailableLogout />
+        </AuthCard>
+      );
+    }
+    redirect(androidApp ? '/dashboard' : redirectTo);
+  }
 
   // Session row gone / user inactive, but httpOnly cookie still present.
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
@@ -60,6 +80,7 @@ async function LoginGate({ searchParams }: Props) {
     <LoginFlow
       logoUrl={resolvedLogoUrl(settings)}
       siteName={resolvedSiteName(settings)}
+      androidApp={androidApp}
     />
   );
 }

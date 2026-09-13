@@ -25,7 +25,7 @@
  * wrong guesses before the code is burned.
  */
 
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { prisma } from '@/src/lib/prisma';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { createSession, destroySession } from '@/src/lib/session';
@@ -41,6 +41,7 @@ import { signToken, verifyToken } from '@/src/lib/auth-tokens';
 import { mergeGuestCartIntoUser } from '@/src/lib/guest-cart';
 import { resolveLocation } from '@/src/lib/resolve-location';
 import { sendOtpSms } from '@/src/lib/sms-gateway';
+import { isAndroidAppUserAgent } from '@/src/lib/native-app';
 
 const PHONE_RE = /^09\d{9}$/;
 const VERIFIED_PHONE_COOKIE = 'verified_phone';
@@ -75,6 +76,12 @@ export interface RegisterInput {
 
 const ACCOUNT_DEACTIVATED_MESSAGE =
   'حساب کاربری شما غیرفعال شده است. لطفاً با ادمین در ارتباط باشید.';
+const APP_PARTNER_ONLY_MESSAGE =
+  'این اپلیکیشن ویژه همکاران است. برای فعال‌سازی دسترسی با پشتیبانی تماس بگیرید.';
+
+async function isAndroidAppRequest(): Promise<boolean> {
+  return isAndroidAppUserAgent((await headers()).get('user-agent'));
+}
 
 export async function requestOtp(
   phoneNumber: string,
@@ -87,10 +94,13 @@ export async function requestOtp(
 
     const existingUser = await prisma.user.findUnique({
       where: { phoneNumber: phone },
-      select: { isActive: true },
+      select: { isActive: true, role: true },
     });
     if (existingUser && !existingUser.isActive) {
       return fail(ACCOUNT_DEACTIVATED_MESSAGE);
+    }
+    if (await isAndroidAppRequest() && existingUser?.role !== 'WHOLESALE') {
+      return fail(APP_PARTNER_ONLY_MESSAGE);
     }
 
     // Rate-limit: block a resend that arrives inside the cooldown window.
@@ -166,6 +176,10 @@ export async function verifyOtp(
 
     const user = await prisma.user.findUnique({ where: { phoneNumber: phone } });
 
+    if (await isAndroidAppRequest() && user?.role !== 'WHOLESALE') {
+      return fail(APP_PARTNER_ONLY_MESSAGE);
+    }
+
     if (user) {
       if (!user.isActive) {
         return fail(ACCOUNT_DEACTIVATED_MESSAGE);
@@ -201,6 +215,7 @@ export async function registerUser(
   input: RegisterInput,
 ): Promise<ActionResult<{ id: string }>> {
   return runMutation('registerUser', async () => {
+    if (await isAndroidAppRequest()) return fail(APP_PARTNER_ONLY_MESSAGE);
     const phone = input.phoneNumber.trim();
 
     // The phone must have been OTP-verified within the last 15 minutes.

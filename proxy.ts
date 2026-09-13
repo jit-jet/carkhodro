@@ -1,10 +1,10 @@
 /**
  * Proxy (this Next.js version's renamed `middleware`).
  * ────────────────────────────────────────────────────
- * Optimistic auth gate: bounces signed-out visitors away from account-only
- * routes before they render. It only checks for the *presence* of the session
- * cookie — fast, and runs on every matched request including prefetches — so it
- * deliberately does NOT hit the database. It does NOT bounce cookie-holders
+ * Optimistic web auth gate: bounces signed-out visitors away from account-only
+ * routes before they render. Web requests only check for the *presence* of the
+ * session cookie. Android app requests also validate the session and partner
+ * role before serving a route. The web gate does NOT bounce cookie-holders
  * away from /login|/signup|/admin/login: a revoked session still leaves an
  * httpOnly cookie, and optimistic redirects caused a refresh loop with
  * page-level `redirect('/login')`. Those pages validate the DB session and
@@ -14,6 +14,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { prisma } from '@/src/lib/prisma';
+import { androidAppRedirect, isAndroidAppUserAgent } from '@/src/lib/native-app';
 
 // Inlined (not imported from `src/lib/session`) so the proxy bundle stays free
 // of Prisma/`pg` — per the Proxy guidance to avoid shared modules. Keep in sync
@@ -34,6 +35,26 @@ const AUTH_PAGES = ['/login', '/signup'];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (isAndroidAppUserAgent(request.headers.get('user-agent'))) {
+    const token = request.cookies.get(SESSION_COOKIE)?.value;
+    let role: 'WHOLESALE' | 'RETAIL' | 'ADMIN' | 'SUPPORT' | null = null;
+    if (token) {
+      try {
+        const session = await prisma.session.findUnique({
+          where: { token },
+          select: { expiresAt: true, user: { select: { role: true, isActive: true } } },
+        });
+        if (session && session.expiresAt.getTime() >= Date.now() && session.user.isActive) {
+          role = session.user.role;
+        }
+      } catch (error) {
+        console.error('[native-app:session]', error);
+      }
+    }
+    const destination = androidAppRedirect(pathname, role);
+    if (destination) return NextResponse.redirect(new URL(destination, request.url));
+  }
 
   // Deliberately public Hesabfa test receiver/page. It must accept server-to-
   // server POSTs without an admin session; see app/admin/hook/route.ts.

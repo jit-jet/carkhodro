@@ -20,13 +20,17 @@ type Step = 'phone' | 'otp';
 export default function LoginFlow({
   logoUrl,
   siteName,
+  androidApp = false,
 }: {
   logoUrl?: string;
   siteName?: string;
+  androidApp?: boolean;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = safeInternalPath(searchParams.get('redirect'), '/dashboard');
+  const redirectTo = androidApp
+    ? '/dashboard'
+    : safeInternalPath(searchParams.get('redirect'), '/dashboard');
 
   const [step, setStep] = useState<Step>('phone');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -107,6 +111,13 @@ export default function LoginFlow({
 
   return (
     <AuthCard {...cardProps} logoUrl={logoUrl} siteName={siteName}>
+      {androidApp && (
+        <div className="mb-6 rounded-2xl bg-amber-50 px-4 py-4 text-center text-sm leading-7 text-charcoal">
+          <p className="font-bold">به اپلیکیشن کارخودرو خوش آمدید</p>
+          <p className="mt-3">این اپلیکیشن ویژه همکاران گرامی طراحی شده است.</p>
+          <p>برای فعال‌سازی دسترسی و مشاهده قیمت‌های همکاری، با پشتیبانی تماس بگیرید.</p>
+        </div>
+      )}
       {step === 'phone' ? (
         <PhoneStep onSubmit={handleSendOtp} loading={loading} error={error} />
       ) : (
