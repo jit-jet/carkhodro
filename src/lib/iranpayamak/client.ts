@@ -96,7 +96,8 @@ export async function sendPatternOtp(
     recipient,
     attributes: { [config.otpPatternAttr]: code },
     line_number: config.lineNumber,
-    number_format: 'persian',
+    // ASCII digits make the four-digit code detectable by Android SMS User Consent.
+    number_format: 'english',
     schedule: null,
   };
 

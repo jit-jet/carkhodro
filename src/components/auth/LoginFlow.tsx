@@ -6,7 +6,7 @@
  * stale cookie after account deactivation cannot bounce with the proxy.
  */
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AuthCard from '@/src/components/auth/AuthCard';
 import PhoneStep from '@/src/components/auth/PhoneStep';
@@ -14,6 +14,7 @@ import OtpStep from '@/src/components/auth/OtpStep';
 import { requestOtp, verifyOtp } from '@/actions/auth';
 import { refreshClientUI } from '@/src/store/refresh-client-ui';
 import { safeInternalPath } from '@/src/lib/safe-internal-path';
+import { startSmsCodeCapture } from '@/src/lib/otp-autofill';
 
 type Step = 'phone' | 'otp';
 
@@ -36,6 +37,24 @@ export default function LoginFlow({
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const captureRef = useRef<ReturnType<typeof startSmsCodeCapture> | null>(null);
+
+  useEffect(() => () => { void captureRef.current?.stop(); }, []);
+
+  async function beginSmsCapture(): Promise<boolean> {
+    await captureRef.current?.stop();
+    setOtpCode('');
+    const capture = startSmsCodeCapture(setOtpCode);
+    captureRef.current = capture;
+    await capture.ready;
+    return captureRef.current === capture;
+  }
+
+  function stopSmsCapture() {
+    void captureRef.current?.stop();
+    captureRef.current = null;
+  }
 
   function withLoading(fn: () => Promise<void>) {
     return async () => {
@@ -44,6 +63,7 @@ export default function LoginFlow({
       try {
         await fn();
       } catch {
+        stopSmsCapture();
         setError('خطا در اتصال. لطفاً دوباره تلاش کنید.');
       } finally {
         setLoading(false);
@@ -62,8 +82,10 @@ export default function LoginFlow({
 
   async function handleSendOtp(phone: string) {
     await withLoading(async () => {
+      if (!await beginSmsCapture()) return;
       const res = await requestOtp(phone);
       if (!res.ok) {
+        stopSmsCapture();
         setError(res.error);
         return;
       }
@@ -75,6 +97,7 @@ export default function LoginFlow({
 
   async function handleVerifyOtp(code: string) {
     await withLoading(async () => {
+      stopSmsCapture();
       const res = await verifyOtp(phoneNumber, code);
       if (!res.ok) {
         setError(res.error);
@@ -95,8 +118,10 @@ export default function LoginFlow({
 
   async function handleResend() {
     await withLoading(async () => {
+      if (!await beginSmsCapture()) return;
       const res = await requestOtp(phoneNumber);
       if (!res.ok) {
+        stopSmsCapture();
         setError(res.error);
         return;
       }
@@ -123,9 +148,13 @@ export default function LoginFlow({
       ) : (
         <OtpStep
           phoneNumber={phoneNumber}
+          code={otpCode}
+          onCodeChange={setOtpCode}
           onVerify={handleVerifyOtp}
           onResend={handleResend}
           onBack={() => {
+            stopSmsCapture();
+            setOtpCode('');
             setStep('phone');
             setError('');
           }}
