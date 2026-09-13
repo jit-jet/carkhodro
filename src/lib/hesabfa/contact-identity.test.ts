@@ -4,6 +4,7 @@ import {
   planContactIdentitySync,
   type LocalContactIdentity,
 } from './contact-identity';
+import { contactPrimaryMobile } from './phone';
 
 function user(
   id: string,
@@ -66,4 +67,52 @@ test('keeps the code owner and releases a recycled numeric id', () => {
   assert.deepEqual(plan.hesabfaIdsToRelease, [
     { userId: 'stale-id-owner', hesabfaId: 5 },
   ]);
+});
+
+test('phone fallback matches the same wholesale account without creating another', () => {
+  const mobile = contactPrimaryMobile({ Mobile: null, Phone: '+98 912 123 4567' });
+  assert.equal(mobile, '09121234567');
+  const contact = { code: '10', mobile, hesabfaId: 5 };
+  const plan = planContactIdentitySync(
+    [contact],
+    [user('existing', '09121234567')],
+  );
+  assert.deepEqual(plan.toUpdate, [{ id: 'existing', contact }]);
+  assert.deepEqual(plan.toCreate, []);
+});
+
+test('phone fallback upgrades an invoice placeholder linked by Hesabfa code', () => {
+  const mobile = contactPrimaryMobile({ Mobile: '', Phone: '09121234567' });
+  assert.equal(mobile, '09121234567');
+  const contact = { code: '10', mobile, hesabfaId: 5 };
+  const plan = planContactIdentitySync(
+    [contact],
+    [user('invoice-owner', 'hesabfa:10', 'WHOLESALE', '10')],
+  );
+  assert.deepEqual(plan.toUpdate, [{ id: 'invoice-owner', contact }]);
+  assert.deepEqual(plan.toCreate, []);
+});
+
+test('phone fallback cannot take a retail account mobile', () => {
+  const mobile = contactPrimaryMobile({ Mobile: null, Phone: '09121234567' });
+  assert.equal(mobile, '09121234567');
+  const plan = planContactIdentitySync(
+    [{ code: '10', mobile, hesabfaId: 5 }],
+    [user('retail-owner', mobile, 'RETAIL')],
+  );
+  assert.equal(plan.skipped, 1);
+  assert.deepEqual(plan.toCreate, []);
+  assert.deepEqual(plan.toUpdate, []);
+});
+
+test('mobile and phone fallback sharing one number are ambiguous', () => {
+  const mobile = contactPrimaryMobile({ Mobile: '09121234567', Phone: null });
+  const fallback = contactPrimaryMobile({ Mobile: '', Phone: '۹۱۲۱۲۳۴۵۶۷' });
+  assert.equal(mobile, fallback);
+  const plan = planContactIdentitySync([
+    { code: '10', mobile: mobile!, hesabfaId: 5 },
+    { code: '11', mobile: fallback!, hesabfaId: 6 },
+  ], []);
+  assert.equal(plan.skipped, 2);
+  assert.deepEqual(plan.toCreate, []);
 });

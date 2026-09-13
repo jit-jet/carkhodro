@@ -17,6 +17,7 @@ import type {
   HesabfaResponse,
 } from './types';
 import { extractTopLevelCategories, isHesabfaRootCategoryName } from './category-path';
+import { contactPrimaryMobile } from './phone';
 
 const DEFAULT_BASE_URL = 'https://api.hesabfa.com/v1';
 const PAGE_SIZE = 200;
@@ -298,6 +299,26 @@ export async function getContactsByMobiles(mobiles: string[]): Promise<HesabfaCo
   return getAllPages<HesabfaContact>('contact/getContacts', {}, 'Code', [
     { property: 'Mobile', operator: 'in', value: values },
   ]);
+}
+
+/** Find owners of primary mobile numbers in either Hesabfa contact field. */
+export async function getContactsByPrimaryMobiles(values: string[], mobiles: string[]): Promise<HesabfaContact[]> {
+  const variants = [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+  if (variants.length === 0) return [];
+  const [byMobile, byPhone] = await Promise.all([
+    getContactsByMobiles(variants),
+    getAllPages<HesabfaContact>('contact/getContacts', {}, 'Code', [
+      { property: 'Phone', operator: 'in', value: variants },
+    ]),
+  ]);
+  const wanted = new Set(mobiles);
+  const byCode = new Map<string, HesabfaContact>();
+  for (const contact of [...byMobile, ...byPhone]) {
+    if (wanted.has(contactPrimaryMobile(contact) ?? '')) {
+      byCode.set(String(contact.Code).trim(), contact);
+    }
+  }
+  return [...byCode.values()];
 }
 
 export async function saveContact(

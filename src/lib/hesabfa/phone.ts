@@ -3,6 +3,8 @@
  * Returns null when the value is missing or not a usable mobile.
  */
 
+import type { HesabfaContact } from './types';
+
 const PERSIAN_DIGITS = '۰۱۲۳۴۵۶۷۸۹';
 const ARABIC_DIGITS = '٠١٢٣٤٥٦٧٨٩';
 
@@ -27,4 +29,17 @@ export function normalizeIranMobile(raw: string | null | undefined): string | nu
   else if (s.startsWith('9') && s.length === 10) s = `0${s}`;
   if (!/^09\d{9}$/.test(s)) return null;
   return s;
+}
+
+/** Hesabfa's Phone is a mobile source only when Mobile is absent. */
+export function contactPrimaryMobile(contact: Pick<HesabfaContact, 'Mobile' | 'Phone'>): string | null {
+  return contact.Mobile?.trim()
+    ? normalizeIranMobile(contact.Mobile)
+    : normalizeIranMobile(contact.Phone);
+}
+
+/** Common spellings used by Hesabfa's exact-value contact filters. */
+export function mobileLookupVariants(mobile: string, raw?: string | null): string[] {
+  const local = mobile.slice(1);
+  return [raw?.trim() ?? '', mobile, local, `98${local}`, `+98${local}`, `0098${local}`];
 }

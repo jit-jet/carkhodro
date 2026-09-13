@@ -1,18 +1,18 @@
 /**
  * Two-way contact sync: local WHOLESALE User ↔ Hesabfa Contact.
- * Inbound persons with a unique, usable Mobile create or update wholesale
- * accounts; missing or duplicate mobiles are ignored.
+ * Inbound persons with a unique, usable primary mobile create or update
+ * wholesale accounts; missing or duplicate mobiles are ignored.
  */
 
 import { prisma } from '@/src/lib/prisma';
 import {
   getAllContacts,
-  getContactsByMobiles,
+  getContactsByPrimaryMobiles,
   getContactsById,
   isHesabfaConfigured,
   saveContact,
 } from './client';
-import { normalizeIranMobile } from './phone';
+import { contactPrimaryMobile, mobileLookupVariants, normalizeIranMobile } from './phone';
 import {
   HESABFA_CONTACT_NODE_FAMILY,
   HESABFA_CONTACT_TYPE_CUSTOMER,
@@ -126,7 +126,7 @@ interface PreparedContact {
 
 function prepareContact(contact: HesabfaContact): PreparedContact | null {
   const code = codeOf(contact);
-  const mobile = normalizeIranMobile(contact.Mobile);
+  const mobile = contactPrimaryMobile(contact);
   if (!code || !mobile) return null;
 
   const { firstName, lastName } = displayName(contact);
@@ -313,15 +313,15 @@ export async function syncContactsFromHesabfa(
 export async function syncContactsByIds(ids: number[]): Promise<ContactSyncStats> {
   const contacts = await getContactsById(ids);
   const mobileVariants = contacts.flatMap((contact) => {
-    const normalized = normalizeIranMobile(contact.Mobile);
+    const normalized = contactPrimaryMobile(contact);
     if (!normalized) return [];
-    const local = normalized.slice(1);
-    return [contact.Mobile?.trim() ?? '', normalized, local, `98${local}`, `+98${local}`, `0098${local}`];
+    return mobileLookupVariants(normalized, contact.Mobile?.trim() ? contact.Mobile : contact.Phone);
   });
-  const matchingContacts = await getContactsByMobiles(mobileVariants);
+  const mobiles = contacts.map(contactPrimaryMobile).filter((mobile): mobile is string => mobile !== null);
+  const matchingContacts = await getContactsByPrimaryMobiles(mobileVariants, mobiles);
   const mobileCounts = new Map<string, number>();
   for (const contact of matchingContacts) {
-    const mobile = normalizeIranMobile(contact.Mobile);
+    const mobile = contactPrimaryMobile(contact);
     if (mobile) mobileCounts.set(mobile, (mobileCounts.get(mobile) ?? 0) + 1);
   }
   const duplicateMobiles = new Set(
@@ -401,7 +401,7 @@ async function pushContactToHesabfaUnlocked(userId: string): Promise<void> {
   if (!mobile) return;
 
   const matches = (await getAllContacts()).filter(
-    (contact) => normalizeIranMobile(contact.Mobile) === mobile && codeOf(contact),
+    (contact) => contactPrimaryMobile(contact) === mobile && codeOf(contact),
   );
   if (matches.length > 1) {
     console.warn('[hesabfa:contact] duplicate mobile ignored', { userId, mobile });

@@ -12,7 +12,7 @@ import {
   getInvoiceByNumber,
   getAllInvoices,
   getContactByCode,
-  getContactsByMobiles,
+  getContactsByPrimaryMobiles,
   isHesabfaConfigured,
   saveInvoice,
   saveInvoicePayment,
@@ -28,7 +28,7 @@ import {
 import { getSystemConfig } from '@/src/lib/system-settings';
 import { mapHesabfaToLocalStatus } from './invoice-status';
 import { hesabfaInvoiceStatusForRole } from './invoice-approval';
-import { normalizeIranMobile } from './phone';
+import { contactPrimaryMobile, mobileLookupVariants } from './phone';
 import { INVOICE_TYPES, isInvoiceType } from './invoice-type';
 import { planInvoiceIdentitySync } from './invoice-identity';
 import { displayName } from './contact-name';
@@ -413,18 +413,17 @@ async function resolveInvoiceUser(inv: HesabfaInvoice): Promise<string> {
   }
 
   const contact = inv.Contact?.Code != null ? inv.Contact : code ? await getContactByCode(code) : null;
-  const mobile = normalizeIranMobile(contact?.Mobile);
+  const mobile = contact ? contactPrimaryMobile(contact) : null;
   if (contact && mobile) {
     const local = await prisma.user.findUnique({
       where: { phoneNumber: mobile }, select: { id: true, role: true, hesabfaCode: true },
     });
     if (!local?.hesabfaCode || local.hesabfaCode === code) {
-      const localPart = mobile.slice(1);
-      const candidates = await getContactsByMobiles([
-        contact.Mobile?.trim() ?? '', mobile, localPart,
-        `98${localPart}`, `+98${localPart}`, `0098${localPart}`,
-      ]);
-      const matchingCodes = new Set(candidates.filter((row) => normalizeIranMobile(row.Mobile) === mobile)
+      const candidates = await getContactsByPrimaryMobiles(
+        mobileLookupVariants(mobile, contact.Mobile?.trim() ? contact.Mobile : contact.Phone),
+        [mobile],
+      );
+      const matchingCodes = new Set(candidates.filter((row) => contactPrimaryMobile(row) === mobile)
         .map((row) => String(row.Code).trim()));
       matchingCodes.add(code);
       if (matchingCodes.size === 1) {
