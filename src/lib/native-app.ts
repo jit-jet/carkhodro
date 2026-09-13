@@ -10,7 +10,7 @@ export function isAndroidAppUserAgent(userAgent: string | null): boolean {
 /** Return a route only when the Android app must leave the requested page. */
 export function androidAppRedirect(pathname: string, role: UserRole | null): string | null {
   if (role === 'WHOLESALE') {
-    return ['/', '/login', '/signup'].includes(pathname)
+    return ['/login', '/signup'].includes(pathname)
       ? '/dashboard'
       : null;
   }
@@ -18,4 +18,13 @@ export function androidAppRedirect(pathname: string, role: UserRole | null): str
   if (pathname === '/login') return null;
   if (!role && pathname === '/api/auth/clear-session') return null;
   return '/login';
+}
+
+/** The start page changes only on a fresh Android WebView launch. */
+export function shouldOpenAndroidDashboard(
+  pathname: string,
+  firstLoad: boolean,
+  hasDeepLink: boolean,
+): boolean {
+  return pathname === '/' && firstLoad && !hasDeepLink;
 }
