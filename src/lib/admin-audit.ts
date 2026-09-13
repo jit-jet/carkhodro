@@ -29,7 +29,8 @@ export const AUDITED_ADMIN_ACTIONS = new Set([
   'createSocialLink', 'updateSocialLink', 'deleteSocialLink', 'reorderSocialLinks',
   'updateSystemSettings', 'uploadAdminImage',
   'updateUser', 'setUserActive', 'updateUserRole',
-  'forceSyncHesabfa', 'registerHesabfaWebhook',
+  'syncHesabfaProducts', 'syncHesabfaContacts', 'syncHesabfaInvoices',
+  'registerHesabfaWebhook',
 ]);
 
 interface RequestSnapshot {

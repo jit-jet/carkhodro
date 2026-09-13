@@ -32,6 +32,7 @@ import { normalizeIranMobile } from './phone';
 import { INVOICE_TYPES, isInvoiceType } from './invoice-type';
 import { planInvoiceIdentitySync } from './invoice-identity';
 import { displayName } from './contact-name';
+import { hydrateInvoiceBatch } from './invoice-hydration';
 
 export interface InvoiceSyncStats {
   created: number;
@@ -39,6 +40,8 @@ export interface InvoiceSyncStats {
   skipped: number;
   byType: Record<number, { created: number; updated: number; skipped: number }>;
 }
+
+const INVOICE_BATCH_SIZE = 20;
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
@@ -469,19 +472,17 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
   const number = invoiceNumber(inv);
   if (!isInvoiceType(type) || !number || number === '0') return 'skipped';
   const id = typeof inv.Id === 'number' ? inv.Id : null;
-  const byNumber = await prisma.order.findUnique({
-    where: { hesabfaCode_invoiceType: { hesabfaCode: number, invoiceType: type } },
-    select: { id: true, source: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true },
-  });
-  const byId = id != null ? await prisma.order.findUnique({
-    where: { hesabfaId: id }, select: { id: true, source: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true },
-  }) : null;
   const tagOrderId = type === 0 && inv.Tag?.startsWith(`${HESABFA_TAG}:`)
     ? inv.Tag.slice(HESABFA_TAG.length + 1) : null;
-  const byTag = tagOrderId ? await prisma.order.findUnique({
-    where: { id: tagOrderId },
-    select: { id: true, source: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true },
-  }) : null;
+  const orderSelect = { id: true, source: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true } as const;
+  const [byNumber, byId, byTag] = await Promise.all([
+    prisma.order.findUnique({
+      where: { hesabfaCode_invoiceType: { hesabfaCode: number, invoiceType: type } },
+      select: orderSelect,
+    }),
+    id != null ? prisma.order.findUnique({ where: { hesabfaId: id }, select: orderSelect }) : null,
+    tagOrderId ? prisma.order.findUnique({ where: { id: tagOrderId }, select: orderSelect }) : null,
+  ]);
   const candidates = [byNumber, byId, byTag].filter((row): row is NonNullable<typeof row> => row != null);
   const plan = planInvoiceIdentitySync(
     [{ number, hesabfaId: id ?? undefined, invoiceType: type }],
@@ -519,14 +520,16 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
   // Full-list rows have no InvoiceItems. Never replace line snapshots from a
   // summary; callers hydrate each invoice before reaching this point.
   if (!Array.isArray(inv.InvoiceItems)) return 'skipped';
-  const userId = await resolveInvoiceUser(inv);
   const itemCodes = [...new Set(inv.InvoiceItems.map((line) =>
     String(line.ItemCode ?? line.Item?.Code ?? '').trim()).filter(Boolean))];
   const itemIds = inv.InvoiceItems.map((line) => line.Item?.Id).filter((value): value is number => typeof value === 'number');
-  const products = await prisma.product.findMany({
-    where: { OR: [{ hesabfaCode: { in: itemCodes } }, { sku: { in: itemCodes } }, { hesabfaId: { in: itemIds } }] },
-    select: { id: true, sku: true, name: true, hesabfaCode: true, hesabfaId: true },
-  });
+  const [userId, products] = await Promise.all([
+    resolveInvoiceUser(inv),
+    prisma.product.findMany({
+      where: { OR: [{ hesabfaCode: { in: itemCodes } }, { sku: { in: itemCodes } }, { hesabfaId: { in: itemIds } }] },
+      select: { id: true, sku: true, name: true, hesabfaCode: true, hesabfaId: true },
+    }),
+  ]);
   const byCode = new Map(products.filter((p) => p.hesabfaCode).map((p) => [p.hesabfaCode!, p]));
   const bySku = new Map(products.map((p) => [p.sku, p]));
   const byItemId = new Map(products.filter((p) => p.hesabfaId != null).map((p) => [p.hesabfaId!, p]));
@@ -630,14 +633,33 @@ export async function syncInvoicesByIds(ids: number[]): Promise<InvoiceSyncStats
   return syncInvoicesFromHesabfa(await getInvoicesById(ids));
 }
 
-/** Fetch every type, then hydrate each list row through invoice/get. */
+/** Fetch every type, then hydrate each batch by ID with per-number fallback. */
 export async function fullSyncInvoices(): Promise<InvoiceSyncStats> {
   const summary = emptyStats();
   for (const type of INVOICE_TYPES) {
     const listed = await getAllInvoices(type);
-    for (let offset = 0; offset < listed.length; offset += 20) {
-      const batch = listed.slice(offset, offset + 20);
-      const detailed = await Promise.all(batch.map((row) => getInvoiceByNumber(row.Number, type)));
+    if (listed.length === 0) continue;
+
+    // Start the next API batch while the current batch is being written. The
+    // wrapped promise cannot reject unobserved if an import fails meanwhile.
+    const fetchBatch = async (offset: number) => {
+      try {
+        const detailed = await hydrateInvoiceBatch(listed.slice(offset, offset + INVOICE_BATCH_SIZE), type, {
+          getByIds: getInvoicesById,
+          getByNumber: getInvoiceByNumber,
+        });
+        return { ok: true as const, detailed };
+      } catch (error) {
+        return { ok: false as const, error };
+      }
+    };
+    let pendingBatch = fetchBatch(0);
+    for (let offset = 0; offset < listed.length; offset += INVOICE_BATCH_SIZE) {
+      const batch = listed.slice(offset, offset + INVOICE_BATCH_SIZE);
+      const fetched = await pendingBatch;
+      if (!fetched.ok) throw fetched.error;
+      if (offset + INVOICE_BATCH_SIZE < listed.length) pendingBatch = fetchBatch(offset + INVOICE_BATCH_SIZE);
+      const detailed = fetched.detailed;
       const available = detailed.filter((row): row is HesabfaInvoice => row != null)
         .map((row) => ({ ...row, InvoiceType: row.InvoiceType ?? type }));
       addStats(summary, await syncInvoicesFromHesabfa(available));

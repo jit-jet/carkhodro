@@ -94,14 +94,14 @@ async function persistStockByCode(stockByCode: Map<string, number>): Promise<num
     productIdsByStock.set(stock, productIds);
   }
 
-  await prisma.$transaction(
-    [...productIdsByStock].map(([stock, productIds]) =>
-      prisma.product.updateMany({
-        where: { id: { in: productIds } },
-        data: { stock, lastSyncedAt: now },
-      }),
-    ),
-  );
+  // Each stock value is independent. Avoid one long transaction for the full
+  // catalogue, which can exceed Prisma's default transaction timeout.
+  for (const [stock, productIds] of productIdsByStock) {
+    await prisma.product.updateMany({
+      where: { id: { in: productIds } },
+      data: { stock, lastSyncedAt: now },
+    });
+  }
 
   const productIds = [...productIdsByStock.values()].flat();
   invalidateStock(productIds);

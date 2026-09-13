@@ -1,13 +1,15 @@
 'use server';
 
 /**
- * Hesabfa admin Server Actions — manual full sync + webhook registration.
+ * Hesabfa admin Server Actions — manual syncs + webhook registration.
  */
 
 import { getCurrentAdmin } from '@/src/lib/admin-session';
 import { getChangeHook, isHesabfaConfigured, setChangeHook } from '@/src/lib/hesabfa/client';
 import { getHesabfaHookPassword } from '@/src/lib/hesabfa/env';
-import { fullSyncHesabfa, type FullSyncSummary } from '@/src/lib/hesabfa/sync';
+import { fullSyncContacts, type ContactSyncStats } from '@/src/lib/hesabfa/contacts';
+import { fullSyncInvoices, type InvoiceSyncStats } from '@/src/lib/hesabfa/invoices';
+import { syncHesabfaProducts, type ProductSyncSummary } from '@/src/lib/hesabfa/sync';
 import { fail, ok, runMutation, type ActionResult } from '@/src/lib/result';
 
 export async function getHesabfaIntegrationStatus(): Promise<{
@@ -35,9 +37,9 @@ export async function getHesabfaIntegrationStatus(): Promise<{
   }
 }
 
-/** Full sync including every supported invoice type. Admin only. */
-export async function forceSyncHesabfa(): Promise<ActionResult<FullSyncSummary>> {
-  return runMutation('forceSyncHesabfa', async () => {
+/** Pull categories, products, and stock. Admin only. */
+export async function syncHesabfaProductsAction(): Promise<ActionResult<ProductSyncSummary>> {
+  return runMutation('syncHesabfaProducts', async () => {
     const admin = await getCurrentAdmin();
     if (!admin) return fail('دسترسی غیرمجاز.');
 
@@ -45,8 +47,36 @@ export async function forceSyncHesabfa(): Promise<ActionResult<FullSyncSummary>>
       return fail('حسابفا در تنظیمات سیستم پیکربندی نشده است.');
     }
 
-    const summary = await fullSyncHesabfa();
+    const summary = await syncHesabfaProducts();
     return ok(summary);
+  });
+}
+
+/** Pull Hesabfa contacts into local wholesale users. Admin only. */
+export async function syncHesabfaContactsAction(): Promise<ActionResult<ContactSyncStats>> {
+  return runMutation('syncHesabfaContacts', async () => {
+    const admin = await getCurrentAdmin();
+    if (!admin) return fail('دسترسی غیرمجاز.');
+
+    if (!(await isHesabfaConfigured())) {
+      return fail('حسابفا در تنظیمات سیستم پیکربندی نشده است.');
+    }
+
+    return ok(await fullSyncContacts());
+  });
+}
+
+/** Pull all four invoice types. Admin only. */
+export async function syncHesabfaInvoicesAction(): Promise<ActionResult<InvoiceSyncStats>> {
+  return runMutation('syncHesabfaInvoices', async () => {
+    const admin = await getCurrentAdmin();
+    if (!admin) return fail('دسترسی غیرمجاز.');
+
+    if (!(await isHesabfaConfigured())) {
+      return fail('حسابفا در تنظیمات سیستم پیکربندی نشده است.');
+    }
+
+    return ok(await fullSyncInvoices());
   });
 }
 

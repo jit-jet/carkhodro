@@ -1,5 +1,5 @@
 /**
- * Orchestrates full manual sync and webhook handling for Hesabfa.
+ * Orchestrates manual product sync and webhook handling for Hesabfa.
  */
 
 import { after } from 'next/server';
@@ -9,12 +9,10 @@ import {
 } from './categories';
 import {
   deactivateUsersByHesabfaIds,
-  fullSyncContacts,
   syncContactsByIds,
-  type ContactSyncStats,
 } from './contacts';
 import { getInvoicesById, isHesabfaConfigured } from './client';
-import { fullSyncInvoices, syncInvoicesFromHesabfa, type InvoiceSyncStats } from './invoices';
+import { syncInvoicesFromHesabfa, type InvoiceSyncStats } from './invoices';
 import {
   deleteProductsByHesabfaIds,
   fullSyncProducts,
@@ -29,16 +27,14 @@ import { type HesabfaWebhookPayload } from './types';
 import { classifyHesabfaWebhookAction } from './webhook-actions';
 import { itemCodesFromInvoices } from './invoice-stock';
 
-export interface FullSyncSummary {
+export interface ProductSyncSummary {
   categories: CategorySyncStats;
   products: ProductSyncStats;
-  contacts: ContactSyncStats;
-  invoices: InvoiceSyncStats;
   stockUpdated: number;
 }
 
-/** Run a full sync (pull categories/products/contacts/all invoice types). */
-export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
+/** Pull categories, products, and authoritative stock from Hesabfa. */
+export async function syncHesabfaProducts(): Promise<ProductSyncSummary> {
   if (!(await isHesabfaConfigured())) {
     throw new Error('حسابفا پیکربندی نشده است.');
   }
@@ -46,16 +42,12 @@ export async function fullSyncHesabfa(): Promise<FullSyncSummary> {
   const categories = await fullSyncCategories();
   const products = await fullSyncProducts();
   // Re-read every quantity from Hesabfa's dedicated inventory endpoint after
-  // product upserts so a full sync verifies stock as well as item metadata.
+  // product upserts so this sync verifies stock as well as item metadata.
   const stockUpdated = await refreshAllLocalStockFromHesabfa();
-  const contacts = await fullSyncContacts();
-  const invoices = await fullSyncInvoices();
 
   return {
     categories,
     products,
-    contacts,
-    invoices,
     stockUpdated,
   };
 }
