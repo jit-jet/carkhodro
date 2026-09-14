@@ -92,6 +92,17 @@ html.capacitor-native body {
   -webkit-touch-callout: none;
 }
 
+/* Keep the Android status-bar backdrop visible as the page scrolls. */
+html.capacitor-native.capacitor-android body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  background: #fff;
+  pointer-events: none;
+  z-index: 2147483647;
+}
+
 html.capacitor-native.capacitor-keyboard-open body {
   min-height: calc(100dvh - var(--app-keyboard-height, 0px));
 }
