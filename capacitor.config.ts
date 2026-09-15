@@ -30,6 +30,10 @@ const config: CapacitorConfig = {
   server: serverUrl
     ? {
         url: serverUrl.toString().replace(/\/$/, ''),
+        // Open the authenticated app area as the WebView's very first request.
+        // Guests are redirected to /login by the server-side auth gate, while
+        // the website's normal `/` route remains unchanged.
+        appStartPath: '/dashboard',
         cleartext: serverUrl.protocol === 'http:',
         // The payment flow must stay in this WebView so its callback has the
         // same authenticated cookie jar. Other external URLs open separately.

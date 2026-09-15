@@ -8,10 +8,8 @@ import { AppLauncher } from '@capacitor/app-launcher';
 import { Browser } from '@capacitor/browser';
 import { Keyboard } from '@capacitor/keyboard';
 import { resolveNativeBackAction } from '@/src/lib/native-back';
-import { shouldOpenAndroidDashboard } from '@/src/lib/native-app';
 
 const NATIVE_WEBVIEW_HOSTS = new Set(['gateway.zibal.ir']);
-const ANDROID_LAUNCH_HANDLED_KEY = 'carkhodro.android.launchHandled';
 
 function internalPathFromUrl(rawUrl: string): string | null {
   try {
@@ -40,12 +38,10 @@ export default function NativeRuntime() {
     root.classList.add('capacitor-native', `capacitor-${Capacitor.getPlatform()}`);
     const handles: PluginListenerHandle[] = [];
     let disposed = false;
-    let handledDeepLink = false;
 
     const routeDeepLink = (rawUrl: string) => {
       const path = internalPathFromUrl(rawUrl);
       if (!path) return;
-      handledDeepLink = true;
       void Browser.close().catch(() => undefined);
       router.push(path);
       router.refresh();
@@ -121,20 +117,13 @@ export default function NativeRuntime() {
       else handles.push(...registered);
     });
 
-    void App.getLaunchUrl().catch(() => ({ url: undefined })).then((launch) => {
-      if (disposed) return;
-      if (Capacitor.getPlatform() !== 'android') {
-        if (launch?.url) routeDeepLink(launch.url);
-        return;
-      }
-
-      const firstLoad = sessionStorage.getItem(ANDROID_LAUNCH_HANDLED_KEY) !== '1';
-      sessionStorage.setItem(ANDROID_LAUNCH_HANDLED_KEY, '1');
-      if (launch?.url) routeDeepLink(launch.url);
-      else if (shouldOpenAndroidDashboard(window.location.pathname, firstLoad, handledDeepLink)) {
-        router.replace('/dashboard');
-      }
-    });
+    // The normal app start path is configured natively through
+    // `server.appStartPath`; this client hook is only for real deep links.
+    void App.getLaunchUrl()
+      .catch(() => ({ url: undefined }))
+      .then((launch) => {
+        if (!disposed && launch?.url) routeDeepLink(launch.url);
+      });
 
     return () => {
       disposed = true;

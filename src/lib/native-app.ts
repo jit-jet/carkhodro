@@ -19,12 +19,3 @@ export function androidAppRedirect(pathname: string, role: UserRole | null): str
   if (!role && pathname === '/api/auth/clear-session') return null;
   return '/login';
 }
-
-/** The start page changes only on a fresh Android WebView launch. */
-export function shouldOpenAndroidDashboard(
-  pathname: string,
-  firstLoad: boolean,
-  hasDeepLink: boolean,
-): boolean {
-  return pathname === '/' && firstLoad && !hasDeepLink;
-}
