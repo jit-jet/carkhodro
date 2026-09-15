@@ -7,6 +7,7 @@ import { App } from '@capacitor/app';
 import { AppLauncher } from '@capacitor/app-launcher';
 import { Browser } from '@capacitor/browser';
 import { Keyboard } from '@capacitor/keyboard';
+import { SplashScreen } from '@capacitor/splash-screen';
 import { resolveNativeBackAction } from '@/src/lib/native-back';
 
 const NATIVE_WEBVIEW_HOSTS = new Set(['gateway.zibal.ir']);
@@ -36,6 +37,10 @@ export default function NativeRuntime() {
 
     const root = document.documentElement;
     root.classList.add('capacitor-native', `capacitor-${Capacitor.getPlatform()}`);
+    // The first native page has mounted, so replace the launch/loading screen
+    // with the actual dashboard or the server-selected login page.
+    void SplashScreen.hide({ fadeOutDuration: 200 }).catch(() => undefined);
+
     const handles: PluginListenerHandle[] = [];
     let disposed = false;
 

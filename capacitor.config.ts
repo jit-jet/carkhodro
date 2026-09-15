@@ -48,6 +48,19 @@ const config: CapacitorConfig = {
         errorPath: 'error.html',
       },
   plugins: {
+    SplashScreen: {
+      // Keep the native loading screen visible while the remote first page is
+      // loading. NativeRuntime hides it as soon as React is ready; auto-hide is
+      // a safety net for network or JavaScript failures.
+      launchAutoHide: true,
+      launchShowDuration: 10_000,
+      launchFadeOutDuration: 200,
+      backgroundColor: '#FCF8F0',
+      showSpinner: true,
+      spinnerColor: '#D89B1F',
+      androidSpinnerStyle: 'large',
+      iosSpinnerStyle: 'large',
+    },
     Keyboard: {
       resize: KeyboardResize.Body,
       resizeOnFullScreen: true,
