@@ -1,12 +1,27 @@
+import { Suspense } from "react";
 import HeroBanner from "@/src/components/home/HeroBanner";
 import CarModelsSlider from "@/src/components/home/CarModelsSlider";
 import BrandsSlider from "@/src/components/home/BrandsSlider";
 import NewArrivalsSlider from "@/src/components/home/NewArrivalsSlider";
 import SpecialOffersSlider from "@/src/components/home/SpecialOffersSlider";
 import CategoriesSlider from "@/src/components/home/CategoriesSlider";
+import AndroidAppDownload from "@/src/components/home/AndroidAppDownload";
 import AnimatedSection from "@/src/components/ui/AnimatedSection";
 import { getCarBrands, getCarModels, getPartsBrandsHome } from "@/actions/brands";
 import { getHeroBanners, getHeroContent } from "@/actions/hero-banners";
+import { getCurrentUser } from "@/src/lib/session";
+import { isWholesaleUser } from "@/src/lib/user-role";
+
+async function WholesaleAndroidAppDownload() {
+  const user = await getCurrentUser();
+  if (!isWholesaleUser(user?.role ?? null)) return null;
+
+  return (
+    <AnimatedSection delay={40}>
+      <AndroidAppDownload />
+    </AnimatedSection>
+  );
+}
 
 export default async function HomePage() {
   const [spareBrands, carModels, partsBrands, heroContent, heroImages] = await Promise.all([
@@ -37,6 +52,10 @@ export default async function HomePage() {
       <AnimatedSection delay={40}>
         <SpecialOffersSlider />
       </AnimatedSection>
+
+      <Suspense fallback={null}>
+        <WholesaleAndroidAppDownload />
+      </Suspense>
 
       <AnimatedSection delay={60}>
         <CategoriesSlider />

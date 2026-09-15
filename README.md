@@ -49,6 +49,9 @@ WebView; `native-shell/` is only the offline/configuration fallback.
    # debug APK: android/app/build/outputs/apk/debug/app-debug.apk
    ```
 
+   همکاران واردشده به سایت می‌توانند همین خروجی را از مسیر محافظت‌شده‌ی
+   `/downloads/android` دریافت کنند؛ با هر ساخت جدید APK، لینک ثابت سایت نیز فایل جدید را تحویل می‌دهد.
+
 4. Build iOS on macOS with current Xcode:
 
    ```bash
