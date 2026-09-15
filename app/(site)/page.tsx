@@ -36,6 +36,10 @@ export default async function HomePage() {
     <>
       {/* Hero runs its own CSS entrance — no wrapper needed */}
       <HeroBanner content={heroContent} images={heroImages} />
+      
+      <Suspense fallback={null}>
+        <WholesaleAndroidAppDownload />
+      </Suspense>
 
       <AnimatedSection>
         <CarModelsSlider spareBrands={spareBrands} carModels={carModels} />
@@ -52,10 +56,6 @@ export default async function HomePage() {
       <AnimatedSection delay={40}>
         <SpecialOffersSlider />
       </AnimatedSection>
-
-      <Suspense fallback={null}>
-        <WholesaleAndroidAppDownload />
-      </Suspense>
 
       <AnimatedSection delay={60}>
         <CategoriesSlider />
