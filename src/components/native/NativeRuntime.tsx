@@ -87,14 +87,7 @@ export default function NativeRuntime() {
       }
     };
 
-    const onFocusIn = (event: FocusEvent) => {
-      const target = event.target;
-      if (!(target instanceof HTMLElement) || !target.matches('input, textarea, select, [contenteditable="true"]')) return;
-      window.setTimeout(() => target.scrollIntoView({ block: 'center', behavior: 'smooth' }), 250);
-    };
-
     document.addEventListener('click', onDocumentClick, true);
-    document.addEventListener('focusin', onFocusIn);
 
     void Promise.all([
       App.addListener('appUrlOpen', ({ url }) => routeDeepLink(url)),
@@ -128,7 +121,6 @@ export default function NativeRuntime() {
     return () => {
       disposed = true;
       document.removeEventListener('click', onDocumentClick, true);
-      document.removeEventListener('focusin', onFocusIn);
       root.classList.remove('capacitor-native', 'capacitor-android', 'capacitor-ios', 'capacitor-keyboard-open');
       root.style.removeProperty('--app-keyboard-height');
       handles.forEach((handle) => void handle.remove());
