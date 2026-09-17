@@ -111,7 +111,6 @@ export default function AndroidAppDownload() {
             <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
               <a
                 href="/downloads/android"
-                download
                 className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-sm font-black text-charcoal shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:bg-accent-dark focus-visible:outline-white sm:w-auto"
               >
                 <svg
