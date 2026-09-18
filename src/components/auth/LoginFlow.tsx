@@ -115,7 +115,7 @@ export default function LoginFlow({
         <div className="mb-6 rounded-2xl bg-amber-50 px-4 py-4 text-center text-sm leading-7 text-charcoal">
           <p className="font-bold">به اپلیکیشن کارخودرو خوش آمدید</p>
           <p className="mt-3">این اپلیکیشن ویژه همکاران گرامی طراحی شده است.</p>
-          <p>برای فعال‌سازی دسترسی و مشاهده قیمت‌های همکاری، با پشتیبانی تماس بگیرید.</p>
+          <p>برای فعال‌سازی دسترسی و مشاهده قیمت‌های همکاری، با شماره 09152051425 تماس بگیرید.</p>
         </div>
       )}
       {step === 'phone' ? (
