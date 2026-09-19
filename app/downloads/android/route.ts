@@ -3,16 +3,9 @@ import path from 'node:path';
 import { getCurrentUser } from '@/src/lib/session';
 import { isWholesaleUser } from '@/src/lib/user-role';
 
-const APK_PATH = path.join(
-  process.cwd(),
-  'android',
-  'app',
-  'build',
-  'outputs',
-  'apk',
-  'debug',
-  'app-debug.apk',
-);
+const APK_DIRECTORY = path.join(process.cwd(), 'android', 'app', 'build', 'outputs', 'apk');
+const RELEASE_APK_PATH = path.join(APK_DIRECTORY, 'release', 'app-release.apk');
+const DEBUG_APK_PATH = path.join(APK_DIRECTORY, 'debug', 'app-debug.apk');
 
 export async function GET() {
   const user = await getCurrentUser();
@@ -26,7 +19,13 @@ export async function GET() {
   }
 
   try {
-    const apk = await readFile(APK_PATH);
+    let apk;
+    try {
+      apk = await readFile(RELEASE_APK_PATH);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+      apk = await readFile(DEBUG_APK_PATH);
+    }
 
     return new Response(apk, {
       headers: {
