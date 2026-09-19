@@ -18,14 +18,12 @@ export default async function SiteFooter() {
   ]);
 
   const quickLinks = footerLinks.filter((link) => link.group === 'QUICK');
-  const categoryLinks = footerLinks.filter((link) => link.group === 'CATEGORY');
 
   return (
     <Footer
       settings={settings}
       socialLinks={socialLinks}
       quickLinks={quickLinks}
-      categoryLinks={categoryLinks}
       viewerRole={pricingRoleFromUser(user?.role)}
     />
   );

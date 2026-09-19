@@ -17,6 +17,9 @@ const infoLinks = [
   { href: "/blog", label: "وبلاگ" },
 ];
 
+const enamadUrl = "https://trustseal.enamad.ir/?id=601063&Code=bcfmiilnuTwUwh5VpFGP6KiZigacjnrj";
+const enamadLogoUrl = "https://trustseal.enamad.ir/logo.aspx?id=601063&Code=bcfmiilnuTwUwh5VpFGP6KiZigacjnrj";
+
 function PhoneIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 flex-shrink-0">
@@ -56,13 +59,11 @@ export default function Footer({
   settings,
   socialLinks,
   quickLinks,
-  categoryLinks,
   viewerRole = null,
 }: {
   settings: PublicSiteSettingsVM;
   socialLinks: SocialLinkVM[];
   quickLinks: FooterLinkVM[];
-  categoryLinks: FooterLinkVM[];
   viewerRole?: PricingRole;
 }) {
   const phoneLines = contactPhonesForRole(settings, viewerRole);
@@ -102,6 +103,30 @@ export default function Footer({
             {isWholesaleUser(viewerRole) && <SocialLinksRow links={socialLinks} />}
           </div>
 
+          {/* Enamad trust seal */}
+          <div>
+            <a
+              href={enamadUrl}
+              target="_blank"
+              rel="noopener"
+              referrerPolicy="origin"
+              aria-label="مشاهده اعتبار نماد اعتماد الکترونیکی فروشگاه"
+              className="inline-flex h-24 w-24 shrink-0 items-center justify-center rounded-xl bg-white p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              {/* The trust seal must load directly from Enamad with the visitor's origin. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={enamadLogoUrl}
+                alt="نماد اعتماد الکترونیکی"
+                referrerPolicy="origin"
+                loading="lazy"
+                width={80}
+                height={80}
+                className="h-20 w-20 object-contain"
+              />
+            </a>
+          </div>
+
           {/* Quick links */}
           <div>
             <h3 className="font-bold text-base mb-4 flex items-center gap-2">
@@ -110,24 +135,6 @@ export default function Footer({
             </h3>
             <ul className="space-y-2.5">
               {quickLinks.map((link) => (
-                <li key={`${link.id}-${link.href}`}>
-                  <Link href={link.href} className="text-sm text-gray-400 hover:text-accent transition-colors flex items-center gap-2">
-                    <span className="text-accent">‹</span>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Categories */}
-          <div>
-            <h3 className="font-bold text-base mb-4 flex items-center gap-2">
-              <span className="w-1 h-5 bg-accent rounded-full inline-block" />
-              دسته‌بندی‌ها
-            </h3>
-            <ul className="space-y-2.5">
-              {categoryLinks.map((link) => (
                 <li key={`${link.id}-${link.href}`}>
                   <Link href={link.href} className="text-sm text-gray-400 hover:text-accent transition-colors flex items-center gap-2">
                     <span className="text-accent">‹</span>
