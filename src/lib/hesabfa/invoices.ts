@@ -33,6 +33,8 @@ import { INVOICE_TYPES, isInvoiceType } from './invoice-type';
 import { planInvoiceIdentitySync } from './invoice-identity';
 import { displayName } from './contact-name';
 import { hydrateInvoiceBatch } from './invoice-hydration';
+import { queueCustomerNotification } from '@/src/lib/customer-notification';
+import { isWholesaleApprovalTransition } from '@/src/lib/customer-notification-message';
 
 export interface InvoiceSyncStats {
   created: number;
@@ -503,10 +505,23 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
   }
 
   if (existing?.source === 'ONLINE') {
+    const patch = mapHesabfaToLocalStatus(inv, existing.user.role, existing.status);
+    const approvalTransition = patch.status != null
+      && isWholesaleApprovalTransition(existing.user.role, existing.status, patch.status);
+    if (approvalTransition) {
+      const changed = await prisma.order.updateMany({
+        where: { id: existing.id, status: existing.status },
+        data: { status: 'CONFIRMED_AWAITING_PAYMENT' },
+      });
+      delete patch.status;
+      if (changed.count > 0) {
+        queueCustomerNotification('WHOLESALE_INVOICE_APPROVED', existing.id);
+      }
+    }
     await prisma.order.update({
       where: { id: existing.id },
       data: {
-        ...mapHesabfaToLocalStatus(inv, existing.user.role, existing.status),
+        ...patch,
         hesabfaCode: number,
         invoiceType: type,
         ...(id != null ? { hesabfaId: id } : {}),
@@ -573,6 +588,7 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
     hesabfaCode: number, hesabfaId: id, hesabfaSyncedAt: now,
   };
 
+  let approvedOrderId: string | null = null;
   const result = await prisma.$transaction(async (tx) => {
     let orderId = existing?.id;
     let created = false;
@@ -590,7 +606,22 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
       if (row.source === 'ONLINE') return 'updated' as const;
       if (!created) await tx.order.update({ where: { id: orderId }, data });
     } else {
-      await tx.order.update({ where: { id: orderId }, data });
+      if (existing && isWholesaleApprovalTransition(
+        existing.user.role,
+        existing.status,
+        hesabfaApprovalOrderStatus(inv.Status) ?? data.status,
+      )) {
+        const changed = await tx.order.updateMany({
+          where: { id: orderId, status: existing.status },
+          data: { status: data.status },
+        });
+        if (changed.count > 0) approvedOrderId = orderId;
+        const rest: Partial<typeof data> = { ...data };
+        delete rest.status;
+        await tx.order.update({ where: { id: orderId }, data: rest });
+      } else {
+        await tx.order.update({ where: { id: orderId }, data });
+      }
     }
     const currentLines = await tx.orderItem.findMany({ where: { orderId } });
     const key = (line: Omit<typeof lines[number], 'discountPct'> & { discountPct: number | Prisma.Decimal }) => JSON.stringify([
@@ -605,6 +636,7 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
     }
     return created ? 'created' as const : 'updated' as const;
   });
+  if (approvedOrderId) queueCustomerNotification('WHOLESALE_INVOICE_APPROVED', approvedOrderId);
   return result;
 }
 

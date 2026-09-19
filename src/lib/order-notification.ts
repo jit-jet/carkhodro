@@ -24,6 +24,7 @@ async function sendAdminOrderNotification(
     where: { id: orderId },
     select: {
       totalAmount: true,
+      snapshotCity: true,
       user: {
         select: { firstName: true, lastName: true, role: true },
       },
@@ -44,6 +45,7 @@ async function sendAdminOrderNotification(
   const body = buildAdminOrderNotificationMessage({
     kind,
     buyerFullName,
+    city: order.snapshotCity,
     amountToman: order.totalAmount,
     invoiceUrl,
   });

@@ -13,6 +13,8 @@ import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/r
 import { getCurrentAdmin } from '@/src/lib/admin-session';
 import { syncOrderStatusToHesabfa } from '@/src/lib/hesabfa/invoices';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
+import { queueCustomerNotification } from '@/src/lib/customer-notification';
+import { isWholesaleApprovalTransition } from '@/src/lib/customer-notification-message';
 import {
   PENDING_ADMIN_ORDER_STATUSES,
   ORDER_STATUS_FA,
@@ -407,13 +409,13 @@ export async function updateOrderStatusAdmin(
 
     const existing = await prisma.order.findUnique({
       where: { id: orderId },
-      select: { id: true },
+      select: { id: true, status: true, user: { select: { role: true } } },
     });
     if (!existing) return fail('سفارش پیدا نشد.');
 
     const now = new Date();
-    await prisma.order.update({
-      where: { id: orderId },
+    const updated = await prisma.order.updateMany({
+      where: { id: orderId, status: existing.status },
       data: {
         status,
         ...(status === 'PAID' ? { paidAt: now } : {}),
@@ -421,6 +423,10 @@ export async function updateOrderStatusAdmin(
         ...(status === 'COMPLETED' ? { deliveredAt: now } : {}),
       },
     });
+    if (updated.count === 0) return fail('وضعیت سفارش هم‌زمان تغییر کرده است. صفحه را تازه‌سازی کنید.');
+    if (isWholesaleApprovalTransition(existing.user.role, existing.status, status)) {
+      queueCustomerNotification('WHOLESALE_INVOICE_APPROVED', orderId);
+    }
     runHesabfaBackground('syncOrderStatus', () => syncOrderStatusToHesabfa(orderId));
     return ok(undefined);
   });
@@ -436,7 +442,7 @@ export async function updateOrderAdmin(
 
     const order = await prisma.order.findUnique({
       where: { id: orderId },
-      select: { id: true, userId: true, status: true },
+      select: { id: true, userId: true, status: true, user: { select: { role: true } } },
     });
     if (!order) return fail('سفارش پیدا نشد.');
 
@@ -447,9 +453,9 @@ export async function updateOrderAdmin(
     const now = new Date();
     const statusChanged = input.status !== order.status;
 
-    await prisma.$transaction([
-      prisma.order.update({
-        where: { id: orderId },
+    const updated = await prisma.$transaction(async (tx) => {
+      const result = await tx.order.updateMany({
+        where: { id: orderId, status: order.status },
         data: {
           status: input.status,
           paymentStatus: input.paymentStatus,
@@ -465,16 +471,23 @@ export async function updateOrderAdmin(
           ...(statusChanged && input.status === 'SHIPPED' ? { shippedAt: now } : {}),
           ...(statusChanged && input.status === 'COMPLETED' ? { deliveredAt: now } : {}),
         },
-      }),
-      prisma.user.update({
+      });
+      if (result.count === 0) return false;
+      await tx.user.update({
         where: { id: order.userId },
         data: {
           firstName: input.customerFirstName.trim(),
           lastName: input.customerLastName.trim(),
           shopName: input.customerShopName?.trim() || null,
         },
-      }),
-    ]);
+      });
+      return true;
+    });
+    if (!updated) return fail('وضعیت سفارش هم‌زمان تغییر کرده است. صفحه را تازه‌سازی کنید.');
+
+    if (isWholesaleApprovalTransition(order.user.role, order.status, input.status)) {
+      queueCustomerNotification('WHOLESALE_INVOICE_APPROVED', orderId);
+    }
 
     runHesabfaBackground('syncOrderStatus:adminUpdate', () =>
       syncOrderStatusToHesabfa(orderId),

@@ -16,12 +16,14 @@ test('retail notification contains buyer, amount, and invoice link', () => {
   const body = buildAdminOrderNotificationMessage({
     kind: 'RETAIL_PAYMENT',
     buyerFullName: 'علی رضایی',
+    city: 'تهران',
     amountToman: BigInt(1250000),
     invoiceUrl: 'https://carkhodro.com/admin/orders/order-۱۲٣',
   });
 
   assert.match(body, /پرداخت آنلاین جدید/);
   assert.match(body, /خریدار: علی رضایی/);
+  assert.match(body, /شهر: تهران/);
   assert.match(body, /۱٬۲۵۰٬۰۰۰ تومان/);
   assert.match(
     body,
@@ -33,15 +35,29 @@ test('wholesale notification uses the invoice-created title', () => {
   const body = buildAdminOrderNotificationMessage({
     kind: 'WHOLESALE_INVOICE',
     buyerFullName: 'مریم احمدی',
+    city: 'اصفهان',
     amountToman: BigInt(800000),
     invoiceUrl: 'https://carkhodro.com/admin/orders/order-456',
   });
 
   assert.match(body, /فاکتور همکاری جدید/);
   assert.match(body, /خریدار: مریم احمدی/);
+  assert.match(body, /شهر: اصفهان/);
   assert.match(body, /۸۰۰٬۰۰۰ تومان/);
   assert.match(
     body,
     /مشاهده سفارش:\nhttps:\/\/carkhodro\.com\/admin\/orders\/order-456/,
   );
+});
+
+test('omits the city line when the order has no address city', () => {
+  const body = buildAdminOrderNotificationMessage({
+    kind: 'WHOLESALE_INVOICE',
+    buyerFullName: 'مریم احمدی',
+    city: '  ',
+    amountToman: BigInt(800000),
+    invoiceUrl: 'https://carkhodro.com/admin/orders/order-456',
+  });
+
+  assert.doesNotMatch(body, /شهر:/);
 });

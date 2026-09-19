@@ -9,6 +9,7 @@ import { RIAL_PER_TOMAN } from '@/src/lib/format';
 import { clearUserCart } from '@/src/lib/clear-user-cart';
 import { pushPaidRetailInvoice } from '@/src/lib/hesabfa/invoices';
 import { queueAdminOrderNotification } from '@/src/lib/order-notification';
+import { queueCustomerNotification } from '@/src/lib/customer-notification';
 import { dispatchStockNotificationsForProducts } from '@/src/lib/stock-notification';
 import { zibalVerifyPayment } from '@/src/lib/zibal/client';
 import { zibalStatusMessage } from '@/src/lib/zibal/status-messages';
@@ -86,8 +87,8 @@ async function confirmPaidOrder(
   if (!order) return;
   if (order.paymentStatus === 'PAID') return;
 
-  await prisma.order.update({
-    where: { id: orderId },
+  const updated = await prisma.order.updateMany({
+    where: { id: orderId, paymentStatus: { not: 'PAID' } },
     data: {
       paymentStatus: 'PAID',
       status: 'PAID',
@@ -96,8 +97,10 @@ async function confirmPaidOrder(
       paymentRefNumber: refNumber != null ? String(refNumber) : null,
     },
   });
-  await clearUserCart(order.userId);
+  if (updated.count === 0) return;
   queueAdminOrderNotification(orderId, 'RETAIL_PAYMENT');
+  queueCustomerNotification('RETAIL_PURCHASE_PAID', orderId);
+  await clearUserCart(order.userId);
   // Save Hesabfa's assigned Number before showing the success page.
   // Payment stays successful even if the accounting API is temporarily unavailable.
   try {

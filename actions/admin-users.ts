@@ -21,6 +21,7 @@ import { resolveLocation } from '@/src/lib/resolve-location';
 import type { UserRole } from '@/generated/prisma_client';
 import { pushContactToHesabfa } from '@/src/lib/hesabfa/contacts';
 import { runHesabfaBackground } from '@/src/lib/hesabfa/sync';
+import { queueCustomerNotification } from '@/src/lib/customer-notification';
 
 export interface AdminUserListItemVM {
   id: string;
@@ -254,9 +255,9 @@ export async function updateUser(
 
     const deactivating = target.isActive && !input.isActive;
 
-    await prisma.$transaction(async (tx) => {
-      await tx.user.update({
-        where: { id: userId },
+    const updated = await prisma.$transaction(async (tx) => {
+      const changed = await tx.user.updateMany({
+        where: { id: userId, role: target.role },
         data: {
           firstName: input.firstName.trim(),
           lastName: input.lastName.trim(),
@@ -270,6 +271,7 @@ export async function updateUser(
             : {}),
         },
       });
+      if (changed.count === 0) return false;
 
       if (deactivating) {
         await tx.session.deleteMany({ where: { userId } });
@@ -295,12 +297,17 @@ export async function updateUser(
         // Clear address when admin empties all address fields.
         await tx.address.deleteMany({ where: { userId } });
       }
+      return true;
     });
+    if (!updated) return fail('نقش کاربر هم‌زمان تغییر کرده است. صفحه را تازه‌سازی کنید.');
 
     // Every mapped admin edit to a wholesale account is mirrored to Hesabfa.
     // The contact helper itself rejects RETAIL users as a second line of defence.
     if (input.role === 'WHOLESALE') {
       runHesabfaBackground('pushContact:adminUpdate', () => pushContactToHesabfa(userId));
+      if (target.role === 'RETAIL') {
+        queueCustomerNotification('WHOLESALE_ACTIVATED', userId);
+      }
     }
     return ok(undefined);
   });
@@ -355,9 +362,16 @@ export async function updateUserRole(
       return fail('نقش مدیران از این بخش قابل تغییر نیست.');
     }
 
-    await prisma.user.update({ where: { id: userId }, data: { role } });
+    const updated = await prisma.user.updateMany({
+      where: { id: userId, role: target.role },
+      data: { role },
+    });
+    if (updated.count === 0) return fail('نقش کاربر هم‌زمان تغییر کرده است. صفحه را تازه‌سازی کنید.');
     if (role === 'WHOLESALE') {
       runHesabfaBackground('pushContact:adminRole', () => pushContactToHesabfa(userId));
+      if (target.role === 'RETAIL') {
+        queueCustomerNotification('WHOLESALE_ACTIVATED', userId);
+      }
     }
     return ok(undefined);
   });

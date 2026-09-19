@@ -5,6 +5,7 @@ export type AdminOrderNotificationKind = 'RETAIL_PAYMENT' | 'WHOLESALE_INVOICE';
 export interface AdminOrderNotificationMessageInput {
   kind: AdminOrderNotificationKind;
   buyerFullName: string;
+  city?: string | null;
   amountToman: bigint;
   invoiceUrl: string;
 }
@@ -28,6 +29,7 @@ export function buildAdminOrderNotificationMessage(
   return [
     title,
     `خریدار: ${input.buyerFullName}`,
+    ...(input.city?.trim() ? [`شهر: ${input.city.trim()}`] : []),
     `مبلغ: ${input.amountToman.toLocaleString('fa-IR')} تومان`,
     'مشاهده سفارش:',
     toEnglishDigits(input.invoiceUrl),
