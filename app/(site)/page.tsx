@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { headers } from "next/headers";
 import HeroBanner from "@/src/components/home/HeroBanner";
 import CarModelsSlider from "@/src/components/home/CarModelsSlider";
 import BrandsSlider from "@/src/components/home/BrandsSlider";
@@ -10,9 +11,12 @@ import AnimatedSection from "@/src/components/ui/AnimatedSection";
 import { getCarBrands, getCarModels, getPartsBrandsHome } from "@/actions/brands";
 import { getHeroBanners, getHeroContent } from "@/actions/hero-banners";
 import { getCurrentUser } from "@/src/lib/session";
+import { isAndroidAppUserAgent } from "@/src/lib/native-app";
 import { isWholesaleUser } from "@/src/lib/user-role";
 
 async function WholesaleAndroidAppDownload() {
+  if (isAndroidAppUserAgent((await headers()).get("user-agent"))) return null;
+
   const user = await getCurrentUser();
   if (!isWholesaleUser(user?.role ?? null)) return null;
 
