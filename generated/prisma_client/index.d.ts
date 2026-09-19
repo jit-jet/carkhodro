@@ -92,6 +92,11 @@ export type StockNotification = $Result.DefaultSelection<Prisma.$StockNotificati
  */
 export type ProductVisit = $Result.DefaultSelection<Prisma.$ProductVisitPayload>
 /**
+ * Model MobileNavItem
+ * Admin-managed mobile storefront navigation. Empty by default.
+ */
+export type MobileNavItem = $Result.DefaultSelection<Prisma.$MobileNavItemPayload>
+/**
  * Model ProductImage
  * 
  */
@@ -702,6 +707,16 @@ export class PrismaClient<
     * ```
     */
   get productVisit(): Prisma.ProductVisitDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.mobileNavItem`: Exposes CRUD operations for the **MobileNavItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MobileNavItems
+    * const mobileNavItems = await prisma.mobileNavItem.findMany()
+    * ```
+    */
+  get mobileNavItem(): Prisma.MobileNavItemDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.productImage`: Exposes CRUD operations for the **ProductImage** model.
@@ -1444,6 +1459,7 @@ export namespace Prisma {
     Product: 'Product',
     StockNotification: 'StockNotification',
     ProductVisit: 'ProductVisit',
+    MobileNavItem: 'MobileNavItem',
     ProductImage: 'ProductImage',
     ProductCompatibility: 'ProductCompatibility',
     Review: 'Review',
@@ -1487,7 +1503,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "stockNotification" | "productVisit" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "seoRedirect" | "staticPageSeo" | "adminActivityLog" | "systemSetting" | "rulesContent" | "returnContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
+      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "stockNotification" | "productVisit" | "mobileNavItem" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "seoRedirect" | "staticPageSeo" | "adminActivityLog" | "systemSetting" | "rulesContent" | "returnContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2598,6 +2614,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ProductVisitCountArgs<ExtArgs>
             result: $Utils.Optional<ProductVisitCountAggregateOutputType> | number
+          }
+        }
+      }
+      MobileNavItem: {
+        payload: Prisma.$MobileNavItemPayload<ExtArgs>
+        fields: Prisma.MobileNavItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MobileNavItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MobileNavItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload>
+          }
+          findFirst: {
+            args: Prisma.MobileNavItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MobileNavItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload>
+          }
+          findMany: {
+            args: Prisma.MobileNavItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload>[]
+          }
+          create: {
+            args: Prisma.MobileNavItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload>
+          }
+          createMany: {
+            args: Prisma.MobileNavItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MobileNavItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload>[]
+          }
+          delete: {
+            args: Prisma.MobileNavItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload>
+          }
+          update: {
+            args: Prisma.MobileNavItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.MobileNavItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MobileNavItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MobileNavItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.MobileNavItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MobileNavItemPayload>
+          }
+          aggregate: {
+            args: Prisma.MobileNavItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMobileNavItem>
+          }
+          groupBy: {
+            args: Prisma.MobileNavItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MobileNavItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MobileNavItemCountArgs<ExtArgs>
+            result: $Utils.Optional<MobileNavItemCountAggregateOutputType> | number
           }
         }
       }
@@ -4811,6 +4901,7 @@ export namespace Prisma {
     product?: ProductOmit
     stockNotification?: StockNotificationOmit
     productVisit?: ProductVisitOmit
+    mobileNavItem?: MobileNavItemOmit
     productImage?: ProductImageOmit
     productCompatibility?: ProductCompatibilityOmit
     review?: ReviewOmit
@@ -23629,6 +23720,1083 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProductVisitInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MobileNavItem
+   */
+
+  export type AggregateMobileNavItem = {
+    _count: MobileNavItemCountAggregateOutputType | null
+    _avg: MobileNavItemAvgAggregateOutputType | null
+    _sum: MobileNavItemSumAggregateOutputType | null
+    _min: MobileNavItemMinAggregateOutputType | null
+    _max: MobileNavItemMaxAggregateOutputType | null
+  }
+
+  export type MobileNavItemAvgAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type MobileNavItemSumAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+  }
+
+  export type MobileNavItemMinAggregateOutputType = {
+    id: number | null
+    href: string | null
+    label: string | null
+    iconUrl: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MobileNavItemMaxAggregateOutputType = {
+    id: number | null
+    href: string | null
+    label: string | null
+    iconUrl: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MobileNavItemCountAggregateOutputType = {
+    id: number
+    href: number
+    label: number
+    iconUrl: number
+    sortOrder: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type MobileNavItemAvgAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type MobileNavItemSumAggregateInputType = {
+    id?: true
+    sortOrder?: true
+  }
+
+  export type MobileNavItemMinAggregateInputType = {
+    id?: true
+    href?: true
+    label?: true
+    iconUrl?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MobileNavItemMaxAggregateInputType = {
+    id?: true
+    href?: true
+    label?: true
+    iconUrl?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MobileNavItemCountAggregateInputType = {
+    id?: true
+    href?: true
+    label?: true
+    iconUrl?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type MobileNavItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MobileNavItem to aggregate.
+     */
+    where?: MobileNavItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MobileNavItems to fetch.
+     */
+    orderBy?: MobileNavItemOrderByWithRelationInput | MobileNavItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MobileNavItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MobileNavItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MobileNavItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MobileNavItems
+    **/
+    _count?: true | MobileNavItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MobileNavItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MobileNavItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MobileNavItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MobileNavItemMaxAggregateInputType
+  }
+
+  export type GetMobileNavItemAggregateType<T extends MobileNavItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateMobileNavItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMobileNavItem[P]>
+      : GetScalarType<T[P], AggregateMobileNavItem[P]>
+  }
+
+
+
+
+  export type MobileNavItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MobileNavItemWhereInput
+    orderBy?: MobileNavItemOrderByWithAggregationInput | MobileNavItemOrderByWithAggregationInput[]
+    by: MobileNavItemScalarFieldEnum[] | MobileNavItemScalarFieldEnum
+    having?: MobileNavItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MobileNavItemCountAggregateInputType | true
+    _avg?: MobileNavItemAvgAggregateInputType
+    _sum?: MobileNavItemSumAggregateInputType
+    _min?: MobileNavItemMinAggregateInputType
+    _max?: MobileNavItemMaxAggregateInputType
+  }
+
+  export type MobileNavItemGroupByOutputType = {
+    id: number
+    href: string
+    label: string
+    iconUrl: string
+    sortOrder: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: MobileNavItemCountAggregateOutputType | null
+    _avg: MobileNavItemAvgAggregateOutputType | null
+    _sum: MobileNavItemSumAggregateOutputType | null
+    _min: MobileNavItemMinAggregateOutputType | null
+    _max: MobileNavItemMaxAggregateOutputType | null
+  }
+
+  type GetMobileNavItemGroupByPayload<T extends MobileNavItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MobileNavItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MobileNavItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MobileNavItemGroupByOutputType[P]>
+            : GetScalarType<T[P], MobileNavItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MobileNavItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    href?: boolean
+    label?: boolean
+    iconUrl?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["mobileNavItem"]>
+
+  export type MobileNavItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    href?: boolean
+    label?: boolean
+    iconUrl?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["mobileNavItem"]>
+
+  export type MobileNavItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    href?: boolean
+    label?: boolean
+    iconUrl?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["mobileNavItem"]>
+
+  export type MobileNavItemSelectScalar = {
+    id?: boolean
+    href?: boolean
+    label?: boolean
+    iconUrl?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type MobileNavItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "href" | "label" | "iconUrl" | "sortOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["mobileNavItem"]>
+
+  export type $MobileNavItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MobileNavItem"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      href: string
+      label: string
+      iconUrl: string
+      sortOrder: number
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["mobileNavItem"]>
+    composites: {}
+  }
+
+  type MobileNavItemGetPayload<S extends boolean | null | undefined | MobileNavItemDefaultArgs> = $Result.GetResult<Prisma.$MobileNavItemPayload, S>
+
+  type MobileNavItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MobileNavItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MobileNavItemCountAggregateInputType | true
+    }
+
+  export interface MobileNavItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MobileNavItem'], meta: { name: 'MobileNavItem' } }
+    /**
+     * Find zero or one MobileNavItem that matches the filter.
+     * @param {MobileNavItemFindUniqueArgs} args - Arguments to find a MobileNavItem
+     * @example
+     * // Get one MobileNavItem
+     * const mobileNavItem = await prisma.mobileNavItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MobileNavItemFindUniqueArgs>(args: SelectSubset<T, MobileNavItemFindUniqueArgs<ExtArgs>>): Prisma__MobileNavItemClient<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MobileNavItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MobileNavItemFindUniqueOrThrowArgs} args - Arguments to find a MobileNavItem
+     * @example
+     * // Get one MobileNavItem
+     * const mobileNavItem = await prisma.mobileNavItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MobileNavItemFindUniqueOrThrowArgs>(args: SelectSubset<T, MobileNavItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MobileNavItemClient<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MobileNavItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MobileNavItemFindFirstArgs} args - Arguments to find a MobileNavItem
+     * @example
+     * // Get one MobileNavItem
+     * const mobileNavItem = await prisma.mobileNavItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MobileNavItemFindFirstArgs>(args?: SelectSubset<T, MobileNavItemFindFirstArgs<ExtArgs>>): Prisma__MobileNavItemClient<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MobileNavItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MobileNavItemFindFirstOrThrowArgs} args - Arguments to find a MobileNavItem
+     * @example
+     * // Get one MobileNavItem
+     * const mobileNavItem = await prisma.mobileNavItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MobileNavItemFindFirstOrThrowArgs>(args?: SelectSubset<T, MobileNavItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__MobileNavItemClient<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MobileNavItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MobileNavItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MobileNavItems
+     * const mobileNavItems = await prisma.mobileNavItem.findMany()
+     * 
+     * // Get first 10 MobileNavItems
+     * const mobileNavItems = await prisma.mobileNavItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const mobileNavItemWithIdOnly = await prisma.mobileNavItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MobileNavItemFindManyArgs>(args?: SelectSubset<T, MobileNavItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MobileNavItem.
+     * @param {MobileNavItemCreateArgs} args - Arguments to create a MobileNavItem.
+     * @example
+     * // Create one MobileNavItem
+     * const MobileNavItem = await prisma.mobileNavItem.create({
+     *   data: {
+     *     // ... data to create a MobileNavItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends MobileNavItemCreateArgs>(args: SelectSubset<T, MobileNavItemCreateArgs<ExtArgs>>): Prisma__MobileNavItemClient<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MobileNavItems.
+     * @param {MobileNavItemCreateManyArgs} args - Arguments to create many MobileNavItems.
+     * @example
+     * // Create many MobileNavItems
+     * const mobileNavItem = await prisma.mobileNavItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MobileNavItemCreateManyArgs>(args?: SelectSubset<T, MobileNavItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MobileNavItems and returns the data saved in the database.
+     * @param {MobileNavItemCreateManyAndReturnArgs} args - Arguments to create many MobileNavItems.
+     * @example
+     * // Create many MobileNavItems
+     * const mobileNavItem = await prisma.mobileNavItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MobileNavItems and only return the `id`
+     * const mobileNavItemWithIdOnly = await prisma.mobileNavItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MobileNavItemCreateManyAndReturnArgs>(args?: SelectSubset<T, MobileNavItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MobileNavItem.
+     * @param {MobileNavItemDeleteArgs} args - Arguments to delete one MobileNavItem.
+     * @example
+     * // Delete one MobileNavItem
+     * const MobileNavItem = await prisma.mobileNavItem.delete({
+     *   where: {
+     *     // ... filter to delete one MobileNavItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MobileNavItemDeleteArgs>(args: SelectSubset<T, MobileNavItemDeleteArgs<ExtArgs>>): Prisma__MobileNavItemClient<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MobileNavItem.
+     * @param {MobileNavItemUpdateArgs} args - Arguments to update one MobileNavItem.
+     * @example
+     * // Update one MobileNavItem
+     * const mobileNavItem = await prisma.mobileNavItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MobileNavItemUpdateArgs>(args: SelectSubset<T, MobileNavItemUpdateArgs<ExtArgs>>): Prisma__MobileNavItemClient<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MobileNavItems.
+     * @param {MobileNavItemDeleteManyArgs} args - Arguments to filter MobileNavItems to delete.
+     * @example
+     * // Delete a few MobileNavItems
+     * const { count } = await prisma.mobileNavItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MobileNavItemDeleteManyArgs>(args?: SelectSubset<T, MobileNavItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MobileNavItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MobileNavItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MobileNavItems
+     * const mobileNavItem = await prisma.mobileNavItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MobileNavItemUpdateManyArgs>(args: SelectSubset<T, MobileNavItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MobileNavItems and returns the data updated in the database.
+     * @param {MobileNavItemUpdateManyAndReturnArgs} args - Arguments to update many MobileNavItems.
+     * @example
+     * // Update many MobileNavItems
+     * const mobileNavItem = await prisma.mobileNavItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MobileNavItems and only return the `id`
+     * const mobileNavItemWithIdOnly = await prisma.mobileNavItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MobileNavItemUpdateManyAndReturnArgs>(args: SelectSubset<T, MobileNavItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MobileNavItem.
+     * @param {MobileNavItemUpsertArgs} args - Arguments to update or create a MobileNavItem.
+     * @example
+     * // Update or create a MobileNavItem
+     * const mobileNavItem = await prisma.mobileNavItem.upsert({
+     *   create: {
+     *     // ... data to create a MobileNavItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MobileNavItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MobileNavItemUpsertArgs>(args: SelectSubset<T, MobileNavItemUpsertArgs<ExtArgs>>): Prisma__MobileNavItemClient<$Result.GetResult<Prisma.$MobileNavItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MobileNavItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MobileNavItemCountArgs} args - Arguments to filter MobileNavItems to count.
+     * @example
+     * // Count the number of MobileNavItems
+     * const count = await prisma.mobileNavItem.count({
+     *   where: {
+     *     // ... the filter for the MobileNavItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends MobileNavItemCountArgs>(
+      args?: Subset<T, MobileNavItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MobileNavItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MobileNavItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MobileNavItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MobileNavItemAggregateArgs>(args: Subset<T, MobileNavItemAggregateArgs>): Prisma.PrismaPromise<GetMobileNavItemAggregateType<T>>
+
+    /**
+     * Group by MobileNavItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MobileNavItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MobileNavItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MobileNavItemGroupByArgs['orderBy'] }
+        : { orderBy?: MobileNavItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MobileNavItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMobileNavItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MobileNavItem model
+   */
+  readonly fields: MobileNavItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MobileNavItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MobileNavItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MobileNavItem model
+   */
+  interface MobileNavItemFieldRefs {
+    readonly id: FieldRef<"MobileNavItem", 'Int'>
+    readonly href: FieldRef<"MobileNavItem", 'String'>
+    readonly label: FieldRef<"MobileNavItem", 'String'>
+    readonly iconUrl: FieldRef<"MobileNavItem", 'String'>
+    readonly sortOrder: FieldRef<"MobileNavItem", 'Int'>
+    readonly isActive: FieldRef<"MobileNavItem", 'Boolean'>
+    readonly createdAt: FieldRef<"MobileNavItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"MobileNavItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MobileNavItem findUnique
+   */
+  export type MobileNavItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * Filter, which MobileNavItem to fetch.
+     */
+    where: MobileNavItemWhereUniqueInput
+  }
+
+  /**
+   * MobileNavItem findUniqueOrThrow
+   */
+  export type MobileNavItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * Filter, which MobileNavItem to fetch.
+     */
+    where: MobileNavItemWhereUniqueInput
+  }
+
+  /**
+   * MobileNavItem findFirst
+   */
+  export type MobileNavItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * Filter, which MobileNavItem to fetch.
+     */
+    where?: MobileNavItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MobileNavItems to fetch.
+     */
+    orderBy?: MobileNavItemOrderByWithRelationInput | MobileNavItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MobileNavItems.
+     */
+    cursor?: MobileNavItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MobileNavItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MobileNavItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MobileNavItems.
+     */
+    distinct?: MobileNavItemScalarFieldEnum | MobileNavItemScalarFieldEnum[]
+  }
+
+  /**
+   * MobileNavItem findFirstOrThrow
+   */
+  export type MobileNavItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * Filter, which MobileNavItem to fetch.
+     */
+    where?: MobileNavItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MobileNavItems to fetch.
+     */
+    orderBy?: MobileNavItemOrderByWithRelationInput | MobileNavItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MobileNavItems.
+     */
+    cursor?: MobileNavItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MobileNavItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MobileNavItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MobileNavItems.
+     */
+    distinct?: MobileNavItemScalarFieldEnum | MobileNavItemScalarFieldEnum[]
+  }
+
+  /**
+   * MobileNavItem findMany
+   */
+  export type MobileNavItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * Filter, which MobileNavItems to fetch.
+     */
+    where?: MobileNavItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MobileNavItems to fetch.
+     */
+    orderBy?: MobileNavItemOrderByWithRelationInput | MobileNavItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MobileNavItems.
+     */
+    cursor?: MobileNavItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MobileNavItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MobileNavItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MobileNavItems.
+     */
+    distinct?: MobileNavItemScalarFieldEnum | MobileNavItemScalarFieldEnum[]
+  }
+
+  /**
+   * MobileNavItem create
+   */
+  export type MobileNavItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * The data needed to create a MobileNavItem.
+     */
+    data: XOR<MobileNavItemCreateInput, MobileNavItemUncheckedCreateInput>
+  }
+
+  /**
+   * MobileNavItem createMany
+   */
+  export type MobileNavItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MobileNavItems.
+     */
+    data: MobileNavItemCreateManyInput | MobileNavItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MobileNavItem createManyAndReturn
+   */
+  export type MobileNavItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many MobileNavItems.
+     */
+    data: MobileNavItemCreateManyInput | MobileNavItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MobileNavItem update
+   */
+  export type MobileNavItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * The data needed to update a MobileNavItem.
+     */
+    data: XOR<MobileNavItemUpdateInput, MobileNavItemUncheckedUpdateInput>
+    /**
+     * Choose, which MobileNavItem to update.
+     */
+    where: MobileNavItemWhereUniqueInput
+  }
+
+  /**
+   * MobileNavItem updateMany
+   */
+  export type MobileNavItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MobileNavItems.
+     */
+    data: XOR<MobileNavItemUpdateManyMutationInput, MobileNavItemUncheckedUpdateManyInput>
+    /**
+     * Filter which MobileNavItems to update
+     */
+    where?: MobileNavItemWhereInput
+    /**
+     * Limit how many MobileNavItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MobileNavItem updateManyAndReturn
+   */
+  export type MobileNavItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * The data used to update MobileNavItems.
+     */
+    data: XOR<MobileNavItemUpdateManyMutationInput, MobileNavItemUncheckedUpdateManyInput>
+    /**
+     * Filter which MobileNavItems to update
+     */
+    where?: MobileNavItemWhereInput
+    /**
+     * Limit how many MobileNavItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MobileNavItem upsert
+   */
+  export type MobileNavItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * The filter to search for the MobileNavItem to update in case it exists.
+     */
+    where: MobileNavItemWhereUniqueInput
+    /**
+     * In case the MobileNavItem found by the `where` argument doesn't exist, create a new MobileNavItem with this data.
+     */
+    create: XOR<MobileNavItemCreateInput, MobileNavItemUncheckedCreateInput>
+    /**
+     * In case the MobileNavItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MobileNavItemUpdateInput, MobileNavItemUncheckedUpdateInput>
+  }
+
+  /**
+   * MobileNavItem delete
+   */
+  export type MobileNavItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
+    /**
+     * Filter which MobileNavItem to delete.
+     */
+    where: MobileNavItemWhereUniqueInput
+  }
+
+  /**
+   * MobileNavItem deleteMany
+   */
+  export type MobileNavItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MobileNavItems to delete
+     */
+    where?: MobileNavItemWhereInput
+    /**
+     * Limit how many MobileNavItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MobileNavItem without action
+   */
+  export type MobileNavItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MobileNavItem
+     */
+    select?: MobileNavItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MobileNavItem
+     */
+    omit?: MobileNavItemOmit<ExtArgs> | null
   }
 
 
@@ -56219,6 +57387,20 @@ export namespace Prisma {
   export type ProductVisitScalarFieldEnum = (typeof ProductVisitScalarFieldEnum)[keyof typeof ProductVisitScalarFieldEnum]
 
 
+  export const MobileNavItemScalarFieldEnum: {
+    id: 'id',
+    href: 'href',
+    label: 'label',
+    iconUrl: 'iconUrl',
+    sortOrder: 'sortOrder',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type MobileNavItemScalarFieldEnum = (typeof MobileNavItemScalarFieldEnum)[keyof typeof MobileNavItemScalarFieldEnum]
+
+
   export const ProductImageScalarFieldEnum: {
     id: 'id',
     productId: 'productId',
@@ -58274,6 +59456,75 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"ProductVisit"> | string
     productId?: StringWithAggregatesFilter<"ProductVisit"> | string
     viewedAt?: DateTimeWithAggregatesFilter<"ProductVisit"> | Date | string
+  }
+
+  export type MobileNavItemWhereInput = {
+    AND?: MobileNavItemWhereInput | MobileNavItemWhereInput[]
+    OR?: MobileNavItemWhereInput[]
+    NOT?: MobileNavItemWhereInput | MobileNavItemWhereInput[]
+    id?: IntFilter<"MobileNavItem"> | number
+    href?: StringFilter<"MobileNavItem"> | string
+    label?: StringFilter<"MobileNavItem"> | string
+    iconUrl?: StringFilter<"MobileNavItem"> | string
+    sortOrder?: IntFilter<"MobileNavItem"> | number
+    isActive?: BoolFilter<"MobileNavItem"> | boolean
+    createdAt?: DateTimeFilter<"MobileNavItem"> | Date | string
+    updatedAt?: DateTimeFilter<"MobileNavItem"> | Date | string
+  }
+
+  export type MobileNavItemOrderByWithRelationInput = {
+    id?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    iconUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MobileNavItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: MobileNavItemWhereInput | MobileNavItemWhereInput[]
+    OR?: MobileNavItemWhereInput[]
+    NOT?: MobileNavItemWhereInput | MobileNavItemWhereInput[]
+    href?: StringFilter<"MobileNavItem"> | string
+    label?: StringFilter<"MobileNavItem"> | string
+    iconUrl?: StringFilter<"MobileNavItem"> | string
+    sortOrder?: IntFilter<"MobileNavItem"> | number
+    isActive?: BoolFilter<"MobileNavItem"> | boolean
+    createdAt?: DateTimeFilter<"MobileNavItem"> | Date | string
+    updatedAt?: DateTimeFilter<"MobileNavItem"> | Date | string
+  }, "id">
+
+  export type MobileNavItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    iconUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: MobileNavItemCountOrderByAggregateInput
+    _avg?: MobileNavItemAvgOrderByAggregateInput
+    _max?: MobileNavItemMaxOrderByAggregateInput
+    _min?: MobileNavItemMinOrderByAggregateInput
+    _sum?: MobileNavItemSumOrderByAggregateInput
+  }
+
+  export type MobileNavItemScalarWhereWithAggregatesInput = {
+    AND?: MobileNavItemScalarWhereWithAggregatesInput | MobileNavItemScalarWhereWithAggregatesInput[]
+    OR?: MobileNavItemScalarWhereWithAggregatesInput[]
+    NOT?: MobileNavItemScalarWhereWithAggregatesInput | MobileNavItemScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MobileNavItem"> | number
+    href?: StringWithAggregatesFilter<"MobileNavItem"> | string
+    label?: StringWithAggregatesFilter<"MobileNavItem"> | string
+    iconUrl?: StringWithAggregatesFilter<"MobileNavItem"> | string
+    sortOrder?: IntWithAggregatesFilter<"MobileNavItem"> | number
+    isActive?: BoolWithAggregatesFilter<"MobileNavItem"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"MobileNavItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"MobileNavItem"> | Date | string
   }
 
   export type ProductImageWhereInput = {
@@ -61982,6 +63233,80 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MobileNavItemCreateInput = {
+    href: string
+    label: string
+    iconUrl: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MobileNavItemUncheckedCreateInput = {
+    id?: number
+    href: string
+    label: string
+    iconUrl: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MobileNavItemUpdateInput = {
+    href?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    iconUrl?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MobileNavItemUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    href?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    iconUrl?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MobileNavItemCreateManyInput = {
+    id?: number
+    href: string
+    label: string
+    iconUrl: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MobileNavItemUpdateManyMutationInput = {
+    href?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    iconUrl?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MobileNavItemUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    href?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    iconUrl?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductImageCreateInput = {
@@ -65788,6 +67113,49 @@ export namespace Prisma {
     userId?: SortOrder
     productId?: SortOrder
     viewedAt?: SortOrder
+  }
+
+  export type MobileNavItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    iconUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MobileNavItemAvgOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type MobileNavItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    iconUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MobileNavItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    href?: SortOrder
+    label?: SortOrder
+    iconUrl?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MobileNavItemSumOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type ProductImageCountOrderByAggregateInput = {

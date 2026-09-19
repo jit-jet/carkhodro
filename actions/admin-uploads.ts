@@ -8,6 +8,7 @@
 import crypto from 'node:crypto';
 import { ok, fail, runMutation, type ActionResult } from '@/src/lib/result';
 import { saveFile, type StorageFolder } from '@/src/lib/storage';
+import { getCurrentAdmin } from '@/src/lib/admin-session';
 
 const ALLOWED_IMAGE_TYPES: Record<string, string> = {
   'image/jpeg': 'jpg',
@@ -29,6 +30,7 @@ export async function uploadAdminImage(
   formData: FormData,
 ): Promise<ActionResult<{ url: string }>> {
   return runMutation('uploadAdminImage', async () => {
+    if (!await getCurrentAdmin()) return fail('دسترسی مدیریت لازم است.');
     if (!isTaxonomyFolder(folder)) return fail('پوشه آپلود نامعتبر است.');
 
     const file = formData.get('image');

@@ -309,6 +309,17 @@ exports.Prisma.ProductVisitScalarFieldEnum = {
   viewedAt: 'viewedAt'
 };
 
+exports.Prisma.MobileNavItemScalarFieldEnum = {
+  id: 'id',
+  href: 'href',
+  label: 'label',
+  iconUrl: 'iconUrl',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ProductImageScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -800,6 +811,7 @@ exports.Prisma.ModelName = {
   Product: 'Product',
   StockNotification: 'StockNotification',
   ProductVisit: 'ProductVisit',
+  MobileNavItem: 'MobileNavItem',
   ProductImage: 'ProductImage',
   ProductCompatibility: 'ProductCompatibility',
   Review: 'Review',

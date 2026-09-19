@@ -14,6 +14,7 @@ export const tags = {
   provinces: 'provinces',
   navLinks: 'nav-links',
   footerLinks: 'footer-links',
+  mobileNav: 'mobile-nav',
   shipping: 'shipping-options',
   reviews: (productId: string) => `reviews:${productId}`,
   faqs: 'faqs',

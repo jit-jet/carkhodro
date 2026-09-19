@@ -18,11 +18,13 @@ function supportsCurrentSchema(client: PrismaClient | undefined): boolean {
     adminActivityLog?: { count?: unknown }
     systemSetting?: { findUnique?: unknown }
     productVisit?: { findFirst?: unknown }
+    mobileNavItem?: { findMany?: unknown }
   }
   return (
     typeof delegates.adminActivityLog?.count === 'function' &&
     typeof delegates.systemSetting?.findUnique === 'function' &&
     typeof delegates.productVisit?.findFirst === 'function'
+    && typeof delegates.mobileNavItem?.findMany === 'function'
   )
 }
 

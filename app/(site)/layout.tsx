@@ -12,6 +12,7 @@ import SiteHeader from "@/src/components/layout/SiteHeader";
 import HeaderFallback from "@/src/components/layout/HeaderFallback";
 import SiteFooter from "@/src/components/layout/SiteFooter";
 import FooterFallback from "@/src/components/layout/FooterFallback";
+import SiteMobileNav from "@/src/components/layout/SiteMobileNav";
 import { getPublicSiteSettings } from '@/actions/site-settings';
 import { ProductWatermarkProvider } from '@/src/components/product/ProductImageWatermark';
 
@@ -30,6 +31,9 @@ export default async function SiteLayout({
       <main className="flex-1">{children}</main>
       <Suspense fallback={<FooterFallback />}>
         <SiteFooter />
+      </Suspense>
+      <Suspense fallback={null}>
+        <SiteMobileNav />
       </Suspense>
     </div>
     </ProductWatermarkProvider>

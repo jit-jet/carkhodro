@@ -100,6 +100,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/admin/hero-banners", label: "بنرهای صفحه اصلی", icon: "banner" },
       { href: "/admin/navigation", label: "منوی سایت", icon: "menu" },
       { href: "/admin/footer-links", label: "لینک‌های فوتر", icon: "menu" },
+      { href: "/admin/mobile-nav", label: "منوی پایین موبایل", icon: "menu" },
       { href: "/admin/social-links", label: "شبکه‌های اجتماعی", icon: "social" },
       { href: "/admin/trust-badges", label: "نشان‌های اعتماد فوتر", icon: "trust" },
       { href: "/admin/faq", label: "سوالات متداول", icon: "faq" },

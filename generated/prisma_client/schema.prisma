@@ -512,6 +512,21 @@ model ProductVisit {
   @@map("product_visits")
 }
 
+/// Admin-managed mobile storefront navigation. Empty by default.
+model MobileNavItem {
+  id        Int      @id @default(autoincrement())
+  href      String
+  label     String
+  iconUrl   String   @map("icon_url")
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, sortOrder])
+  @@map("mobile_nav_items")
+}
+
 model ProductImage {
   id        String  @id @default(cuid())
   productId String  @map("product_id")
