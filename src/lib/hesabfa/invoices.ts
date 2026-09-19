@@ -26,7 +26,7 @@ import {
   type HesabfaInvoice,
 } from './types';
 import { getSystemConfig } from '@/src/lib/system-settings';
-import { mapHesabfaToLocalStatus } from './invoice-status';
+import { hesabfaApprovalOrderStatus, mapHesabfaToLocalStatus } from './invoice-status';
 import { hesabfaInvoiceStatusForRole } from './invoice-approval';
 import { contactPrimaryMobile, mobileLookupVariants } from './phone';
 import { INVOICE_TYPES, isInvoiceType } from './invoice-type';
@@ -473,7 +473,7 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
   const id = typeof inv.Id === 'number' ? inv.Id : null;
   const tagOrderId = type === 0 && inv.Tag?.startsWith(`${HESABFA_TAG}:`)
     ? inv.Tag.slice(HESABFA_TAG.length + 1) : null;
-  const orderSelect = { id: true, source: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true } as const;
+  const orderSelect = { id: true, source: true, status: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true, user: { select: { role: true } } } as const;
   const [byNumber, byId, byTag] = await Promise.all([
     prisma.order.findUnique({
       where: { hesabfaCode_invoiceType: { hesabfaCode: number, invoiceType: type } },
@@ -506,7 +506,7 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
     await prisma.order.update({
       where: { id: existing.id },
       data: {
-        ...mapHesabfaToLocalStatus(inv),
+        ...mapHesabfaToLocalStatus(inv, existing.user.role, existing.status),
         hesabfaCode: number,
         invoiceType: type,
         ...(id != null ? { hesabfaId: id } : {}),
@@ -559,7 +559,7 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
     userId,
     source: 'OFFLINE' as const,
     invoiceType: type,
-    status: inv.Sent ? 'SHIPPED' as const : paid ? 'PAID' as const : 'NEW' as const,
+    status: inv.Sent ? 'SHIPPED' as const : paid ? 'PAID' as const : hesabfaApprovalOrderStatus(inv.Status) ?? 'NEW',
     paymentMethod: 'COD' as const,
     paymentStatus: paid ? 'PAID' as const : 'PENDING' as const,
     paidAt: paid ? existing?.paidAt ?? now : null,

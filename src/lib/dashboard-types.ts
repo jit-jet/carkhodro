@@ -72,6 +72,7 @@ export interface OrderListItemVM {
   invoiceNumber: string | null;
   status: OrderStatus;
   statusLabel: string;
+  statusStyle: string;
   dateFull: string; // weekday + Jalali date + time
   totalToman: number;
   itemCount: number;
@@ -80,6 +81,7 @@ export interface OrderListItemVM {
 
 export interface OrdersPageVM {
   items: OrderListItemVM[];
+  isWholesale: boolean;
   total: number;
   page: number;
   perPage: number;

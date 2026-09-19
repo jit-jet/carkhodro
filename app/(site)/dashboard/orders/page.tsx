@@ -10,7 +10,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getOrdersPage } from '@/actions/dashboard-orders';
-import { ORDER_STATUS_FA, ORDER_STATUS_STYLE } from '@/src/lib/order-labels';
+import { ORDER_STATUS_FA } from '@/src/lib/order-labels';
 import { formatNumberFa, formatRial, noFormatNumberFa } from '@/src/lib/format';
 import { formatInvoiceNumber } from '@/src/lib/invoice-number';
 import OrdersFilterBar from '@/src/components/dashboard/OrdersFilterBar';
@@ -66,7 +66,7 @@ async function OrdersContent({ searchParams }: Props) {
           </svg>
           لیست سفارشات کارخودرو
         </h1>
-        <OrdersFilterBar status={status} perPage={data.perPage} orderNumber={orderNumber} />
+        <OrdersFilterBar status={status} perPage={data.perPage} orderNumber={orderNumber} isWholesale={data.isWholesale} />
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -106,7 +106,7 @@ async function OrdersContent({ searchParams }: Props) {
                       <span
                         className={[
                           'inline-block text-[11px] font-bold px-2.5 py-1 rounded-full border whitespace-nowrap',
-                          ORDER_STATUS_STYLE[order.status],
+                          order.statusStyle,
                         ].join(' ')}
                       >
                         {order.statusLabel}

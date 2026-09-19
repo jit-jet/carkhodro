@@ -11,6 +11,7 @@ import {
 import {
   ORDER_STATUS_FA,
   ORDER_STATUS_ORDER,
+  wholesaleInvoiceStatusDisplay,
   PAYMENT_METHOD_FA,
   PAYMENT_STATUS_FA,
 } from "@/src/lib/order-labels";
@@ -110,7 +111,9 @@ export default function OrderEditForm({ order }: { order: AdminOrderDetailVM }) 
             <Select value={status} onChange={(e) => setStatus(e.target.value as OrderStatus)}>
               {ORDER_STATUS_ORDER.map((s) => (
                 <option key={s} value={s}>
-                  {ORDER_STATUS_FA[s]}
+                  {order.user.isWholesale
+                    ? wholesaleInvoiceStatusDisplay(s).label
+                    : ORDER_STATUS_FA[s]}
                 </option>
               ))}
             </Select>

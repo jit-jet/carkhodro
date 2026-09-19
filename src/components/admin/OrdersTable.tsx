@@ -13,6 +13,7 @@ import {
   ORDER_STATUS_FA,
   ORDER_STATUS_ORDER,
   ORDER_STATUS_STYLE,
+  wholesaleInvoiceStatusDisplay,
   PAYMENT_STATUS_FA,
 } from "@/src/lib/order-labels";
 import { buildOrdersHref, type OrdersTableFilters } from "@/src/lib/admin-orders-query";
@@ -297,12 +298,16 @@ export default function OrdersTable({
                         disabled={pending && pendingId === o.id}
                         className={[
                           "!py-1.5 !text-xs w-auto min-w-[160px] border",
-                          ORDER_STATUS_STYLE[status],
+                           o.isWholesale
+                             ? wholesaleInvoiceStatusDisplay(status).style
+                             : ORDER_STATUS_STYLE[status],
                         ].join(" ")}
                       >
                         {ORDER_STATUS_ORDER.map((s) => (
                           <option key={s} value={s}>
-                            {ORDER_STATUS_FA[s]}
+                             {o.isWholesale
+                               ? wholesaleInvoiceStatusDisplay(s).label
+                               : ORDER_STATUS_FA[s]}
                           </option>
                         ))}
                       </Select>

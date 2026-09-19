@@ -12,6 +12,7 @@ import { getInvoice } from '@/actions/dashboard-orders';
 import PrintButton from '@/src/components/dashboard/PrintButton';
 import InvoicePrint from '@/src/components/dashboard/InvoicePrint';
 import { getInvoiceSeller } from '@/src/lib/invoice-seller';
+import { ORDER_STATUS_STYLE, wholesaleInvoiceStatusDisplay } from '@/src/lib/order-labels';
 
 export const metadata: Metadata = {
   title: 'فاکتور | فروشگاه اینترنتی کارخودرو',
@@ -32,7 +33,15 @@ async function InvoiceContent({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div className="space-y-4">
-      <div className="text-xs font-normal text-gray-600">{invoice.sourceTypeLabel}</div>
+      <div className="no-print flex items-center gap-2 text-xs font-normal text-gray-600">
+        <span>{invoice.sourceTypeLabel}</span>
+        <span className={[
+          'rounded-full border px-2.5 py-1 font-bold',
+          invoice.isRetail
+            ? ORDER_STATUS_STYLE[invoice.status]
+            : wholesaleInvoiceStatusDisplay(invoice.status).style,
+        ].join(' ')}>{invoice.statusLabel}</span>
+      </div>
       <div className="no-print flex items-center justify-between gap-3 flex-wrap">
         <Link
           href="/dashboard/orders"

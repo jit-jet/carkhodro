@@ -508,7 +508,7 @@ export async function submitInvoice(input: {
       discountAmount,
       discountCode: applied?.code ?? null,
       notes: input.notes?.trim() || null,
-      status: 'NEW',
+      status: 'AWAITING_CONFIRMATION',
       hesabfaCode: null,
     };
 
@@ -566,7 +566,7 @@ export async function submitInvoice(input: {
             shippingOptionId: shipping?.id ?? null,
             paymentMethod: 'COD',
             paymentTerms,
-            status: 'NEW',
+            status: 'AWAITING_CONFIRMATION',
             snapshotProvince: address?.city.province.name ?? '',
             snapshotCity: address?.city.name ?? '',
             snapshotStreet: address?.street ?? '',

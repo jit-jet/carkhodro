@@ -17,15 +17,19 @@ interface Props {
   status: OrderStatus | '';
   perPage: number;
   orderNumber: string;
+  isWholesale: boolean;
 }
 
-export default function OrdersFilterBar({ status, perPage, orderNumber }: Props) {
+export default function OrdersFilterBar({ status, perPage, orderNumber, isWholesale }: Props) {
   const router = useRouter();
   const [number, setNumber] = useState(orderNumber);
+  const visibleStatus = isWholesale && status !== 'AWAITING_CONFIRMATION' && status !== 'CONFIRMED_AWAITING_PAYMENT'
+    ? ''
+    : status;
 
   function pushQuery(patch: Record<string, string>) {
     const params = new URLSearchParams();
-    const next = { status, perPage: String(perPage), q: number, ...patch };
+    const next = { status: visibleStatus, perPage: String(perPage), q: number, ...patch };
     if (next.status) params.set('status', String(next.status));
     if (next.perPage && Number(next.perPage) !== 50) params.set('perPage', String(next.perPage));
     if (next.q) params.set('q', String(next.q));
@@ -39,15 +43,18 @@ export default function OrdersFilterBar({ status, perPage, orderNumber }: Props)
       <div>
         <label className="block text-xs font-semibold text-gray-500 mb-1.5">وضعیت</label>
         <select
-          value={status}
+          value={visibleStatus}
           onChange={(e) => pushQuery({ status: e.target.value })}
           className="w-full border-2 border-silver focus:border-accent rounded-xl px-3 py-2.5 text-sm outline-none transition-colors bg-white"
         >
           <option value="">همه وضعیت‌ها</option>
-          {ORDER_STATUS_ORDER.map((s) => (
-            <option key={s} value={s}>
-              {ORDER_STATUS_FA[s]}
-            </option>
+          {isWholesale ? (
+            <>
+              <option value="AWAITING_CONFIRMATION">در انتظار تأیید</option>
+              <option value="CONFIRMED_AWAITING_PAYMENT">تأیید مدیریت</option>
+            </>
+          ) : ORDER_STATUS_ORDER.map((s) => (
+            <option key={s} value={s}>{ORDER_STATUS_FA[s]}</option>
           ))}
         </select>
       </div>

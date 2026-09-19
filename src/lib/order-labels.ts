@@ -11,7 +11,6 @@ export type AdminOrderStatusFilter = OrderStatus | 'pending';
 export const PENDING_ADMIN_ORDER_STATUSES: OrderStatus[] = [
   'NEW',
   'AWAITING_CONFIRMATION',
-  'CONFIRMED_AWAITING_PAYMENT',
 ];
 
 export const ORDER_STATUS_FA: Record<OrderStatus, string> = {
@@ -42,6 +41,22 @@ export const ORDER_STATUS_STYLE: Record<OrderStatus, string> = {
   CANCELLED_BY_MANAGER: 'bg-red-50 text-red-600 border-red-200',
   ARCHIVED: 'bg-gray-100 text-gray-500 border-gray-200',
 };
+
+export const WHOLESALE_PENDING_STATUSES: OrderStatus[] = ['NEW', 'AWAITING_CONFIRMATION'];
+export const WHOLESALE_APPROVED_STATUSES: OrderStatus[] = [
+  'CONFIRMED_AWAITING_PAYMENT', 'PAID', 'SHIPPED', 'COMPLETED',
+];
+
+/** Show the approval state for normal partner invoices; retain exceptional statuses. */
+export function wholesaleInvoiceStatusDisplay(status: OrderStatus): { label: string; style: string } {
+  if (WHOLESALE_PENDING_STATUSES.includes(status)) {
+    return { label: 'در انتظار تأیید', style: ORDER_STATUS_STYLE.AWAITING_CONFIRMATION };
+  }
+  if (WHOLESALE_APPROVED_STATUSES.includes(status)) {
+    return { label: 'تأیید مدیریت', style: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+  }
+  return { label: ORDER_STATUS_FA[status], style: ORDER_STATUS_STYLE[status] };
+}
 
 /**
  * The statuses an order can move through, in lifecycle order — used to populate
