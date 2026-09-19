@@ -14,7 +14,8 @@ import {
 } from './client';
 import { contactPrimaryMobile, mobileLookupVariants, normalizeIranMobile } from './phone';
 import {
-  HESABFA_CONTACT_NODE_FAMILY,
+  HESABFA_RETAIL_CONTACT_NODE_FAMILY,
+  HESABFA_WHOLESALE_CONTACT_NODE_FAMILY,
   HESABFA_CONTACT_TYPE_CUSTOMER,
   HESABFA_TAG,
   type HesabfaContact,
@@ -385,7 +386,7 @@ async function buildContactPayload(userId: string): Promise<Record<string, unkno
     state: address?.city.province.name ?? '',
     postalCode: address?.postalCode ?? '',
     active: user.isActive,
-    nodeFamily: HESABFA_CONTACT_NODE_FAMILY,
+    nodeFamily: HESABFA_WHOLESALE_CONTACT_NODE_FAMILY,
     tag: HESABFA_TAG,
   };
 }
@@ -468,7 +469,7 @@ async function resolveRetailInvoiceContactCode(): Promise<string | null> {
     contactType: HESABFA_CONTACT_TYPE_CUSTOMER,
     isCustomer: true,
     active: true,
-    nodeFamily: HESABFA_CONTACT_NODE_FAMILY,
+    nodeFamily: HESABFA_RETAIL_CONTACT_NODE_FAMILY,
     tag: RETAIL_INVOICE_CONTACT_TAG,
   });
   return codeOf(saved) || null;
