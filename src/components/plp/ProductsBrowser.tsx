@@ -399,7 +399,7 @@ export default function ProductsBrowser({
               const categoryLabels = selectedCategories
                 .map((key) => allCategories.find((c) => c.key === key)?.label ?? key);
               openPDFWindow(
-                filteredProducts,
+                filteredProducts.filter((product) => product.stock > 0),
                 buildPdfTitle({
                   searchQuery,
                   brandNames,

@@ -96,7 +96,7 @@ export async function getPriceListRequest(id: string): Promise<PriceListRequestV
       });
       if (!request) return null;
 
-      const where: Prisma.ProductWhereInput = { isActive: true };
+      const where: Prisma.ProductWhereInput = { isActive: true, stock: { gt: 0 } };
       if (request.partsBrandIds.length > 0) {
         where.partsBrandId = { in: request.partsBrandIds };
       }
@@ -128,6 +128,7 @@ export async function getPriceListRequest(id: string): Promise<PriceListRequestV
 
           const rawFilters: Prisma.Sql[] = [
             Prisma.sql`p.is_active = true`,
+            Prisma.sql`p.stock > 0`,
             Prisma.sql`(${titleConditions})`,
           ];
           if (request.partsBrandIds.length > 0) {
