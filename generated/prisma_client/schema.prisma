@@ -394,9 +394,8 @@ model Product {
   wholesalePrice        BigInt  @map("wholesale_price")
   /// Optional purchase / cost price in Toman (Hesabfa `BuyPrice`).
   buyPrice              BigInt? @map("buy_price")
-  /// Percentage deducted for WHOLESALE users (0–100).
-  /// wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100)
-  wholesaleDiscountPct  Decimal @default(0) @map("wholesale_discount_pct") @db.Decimal(5, 2)
+  /// Cash discount label shown to wholesale users (0–100); does not change prices.
+  cashDiscountPct       Decimal @default(0) @map("cash_discount_pct") @db.Decimal(5, 2)
   /// Percentage added to wholesalePrice to derive the retail list price (1–100).
   /// retailPrice = wholesalePrice × (1 + retailPriceDiffPct / 100)
   retailPriceDiffPct    Decimal @default(25) @map("retail_price_diff_pct") @db.Decimal(5, 2)

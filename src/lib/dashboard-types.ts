@@ -37,7 +37,8 @@ export interface DashboardCartLineVM {
   sku: string;
   name: string;
   unitPriceToman: number; // list price (Toman)
-  discountPct: number; // wholesale/cash discount applied to this line
+  discountPct: number; // payable line discount; zero for current wholesale products
+  cashDiscountPct: number; // display-only cash discount badge
   quantity: number;
   stock: number;
   /** True when wholesale call-for-price is enabled — not purchasable. */
@@ -58,6 +59,7 @@ export interface InvoiceSearchResultVM {
   name: string;
   priceToman: number;
   discountPct: number;
+  cashDiscountPct: number;
   unit: string;
   stock: number;
   callForPrice: boolean;

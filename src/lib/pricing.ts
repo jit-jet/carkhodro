@@ -2,7 +2,8 @@
  * Product pricing — wholesale vs retail tiers.
  * ───────────────────────────────────────────
  * Wholesale:
- *   wholesalePrice → apply wholesaleDiscountPct → wholesaleFinal
+ *   wholesalePrice is the displayed and payable price. cashDiscountPct is a
+ *   display-only label and never reduces the product or order price.
  *
  * Retail:
  *   wholesalePrice → apply retailPriceDiffPct → retailPrice (list)
@@ -18,7 +19,8 @@ const RETAIL_ROUNDING_STEP_TOMAN = 1_000;
 
 export interface ProductPriceFields {
   wholesalePrice: bigint | number;
-  wholesaleDiscountPct: number | Prisma.Decimal;
+  /** Display-only badge; ignored by every price calculation. */
+  cashDiscountPct?: number | Prisma.Decimal;
   retailPriceDiffPct: number | Prisma.Decimal;
   retailDiscountPct: number | Prisma.Decimal;
 }
@@ -53,13 +55,6 @@ export function computeRetailPrice(fields: ProductPriceFields): number {
   return roundRetailPrice((wholesale * (100 + diff)) / 100);
 }
 
-/** wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100) */
-export function computeWholesaleFinal(fields: ProductPriceFields): number {
-  const wholesale = toNumber(fields.wholesalePrice);
-  const discount = pct(fields.wholesaleDiscountPct);
-  return applyDiscount(wholesale, discount);
-}
-
 /** retailFinal = retailPrice × (1 − retailDiscountPct / 100) */
 export function computeRetailFinal(fields: ProductPriceFields): number {
   const retail = computeRetailPrice(fields);
@@ -91,11 +86,10 @@ export function resolveProductPrice(
 ): ResolvedPrice {
   if (isWholesaleUser(role)) {
     const basePrice = toNumber(fields.wholesalePrice);
-    const discountPct = pct(fields.wholesaleDiscountPct);
     return {
       basePrice,
-      discountPct,
-      finalPrice: applyDiscount(basePrice, discountPct),
+      discountPct: 0,
+      finalPrice: basePrice,
     };
   }
 

@@ -74,7 +74,7 @@ const cartArgs = {
             sku: true,
             name: true,
             wholesalePrice: true,
-            wholesaleDiscountPct: true,
+            cashDiscountPct: true,
             retailPriceDiffPct: true,
             retailDiscountPct: true,
             stock: true,
@@ -109,6 +109,7 @@ async function loadDashboardCart(userId: string, role: UserRole): Promise<Dashbo
       name: item.product.name,
       unitPriceToman: resolved.basePrice,
       discountPct: resolved.discountPct,
+      cashDiscountPct: Number(item.product.cashDiscountPct),
       quantity: item.quantity,
       stock: item.product.stock,
       callForPrice,
@@ -246,7 +247,7 @@ function toSearchResult(
     sku: string;
     name: string;
     wholesalePrice: bigint;
-    wholesaleDiscountPct: Prisma.Decimal;
+    cashDiscountPct: Prisma.Decimal;
     retailPriceDiffPct: Prisma.Decimal;
     retailDiscountPct: Prisma.Decimal;
     unit: string;
@@ -272,6 +273,7 @@ function toSearchResult(
       name: r.name,
       priceToman: resolved.finalPrice,
       discountPct: callForPrice ? 0 : resolved.discountPct,
+      cashDiscountPct: Number(r.cashDiscountPct),
       unit: r.unit?.trim() || 'عدد',
       stock: r.stock,
       callForPrice,
@@ -284,7 +286,7 @@ const searchSelect = {
   sku: true,
   name: true,
   wholesalePrice: true,
-  wholesaleDiscountPct: true,
+  cashDiscountPct: true,
   retailPriceDiffPct: true,
   retailDiscountPct: true,
   unit: true,
@@ -431,7 +433,7 @@ export async function submitInvoice(input: {
       const pricing = resolveProductPrice(
         {
           wholesalePrice: item.product.wholesalePrice,
-          wholesaleDiscountPct: item.product.wholesaleDiscountPct,
+          cashDiscountPct: item.product.cashDiscountPct,
           retailPriceDiffPct: item.product.retailPriceDiffPct,
           retailDiscountPct: item.product.retailDiscountPct,
         },

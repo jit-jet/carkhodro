@@ -11,6 +11,7 @@ import RelatedProducts from '@/src/components/pdp/RelatedProducts';
 import CallForPrice    from '@/src/components/product/CallForPrice';
 import WishlistButton  from '@/src/components/product/WishlistButton';
 import CompareButton   from '@/src/components/product/CompareButton';
+import CashDiscountBadge from '@/src/components/product/CashDiscountBadge';
 import { getCurrentUser } from '@/src/lib/session';
 import { primaryContactPhone } from '@/src/lib/site-settings-display';
 import { pricingRoleFromUser } from '@/src/lib/user-role';
@@ -155,6 +156,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
             <h1 className="text-xl lg:text-2xl font-bold text-charcoal leading-8 [overflow-wrap:anywhere]">
               {product.name}
             </h1>
+            {product.cashDiscount && <CashDiscountBadge percent={product.cashDiscount} className="w-fit" />}
 
             {/* Rating + review count */}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">

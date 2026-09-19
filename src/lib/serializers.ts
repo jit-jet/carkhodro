@@ -16,7 +16,7 @@ import type { Prisma, OrderStatus, PaymentMethod, PaymentStatus } from '@/genera
 import { resolveProductPrice, type ProductPriceFields } from '@/src/lib/pricing';
 import { isCallForPriceForRole } from '@/src/lib/call-for-price';
 import { orderQuantityCapForRole } from '@/src/lib/order-quantity';
-import type { PricingRole } from '@/src/lib/user-role';
+import { isWholesaleUser, type PricingRole } from '@/src/lib/user-role';
 
 // ── Prisma query shapes ─────────────────────────────────────────────────────
 
@@ -48,9 +48,11 @@ export interface ProductVM {
   oldPrice?: number;
   /** Active discount percent for the viewer's role. */
   discount?: number;
+  /** Wholesale-only cash discount badge; never changes the price. */
+  cashDiscount?: number;
   /** Raw pricing fields — used to re-resolve when role is known after cache. */
   wholesalePrice: number;
-  wholesaleDiscountPct: number;
+  cashDiscountPct: number;
   retailPriceDiffPct: number;
   retailDiscountPct: number;
   /** Admin flags — used to re-resolve call-for-price when role is known after cache. */
@@ -425,13 +427,13 @@ const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
 
 export function pricingFieldsFromProduct(p: {
   wholesalePrice: bigint;
-  wholesaleDiscountPct: Prisma.Decimal;
+  cashDiscountPct: Prisma.Decimal;
   retailPriceDiffPct: Prisma.Decimal;
   retailDiscountPct: Prisma.Decimal;
 }): ProductPriceFields {
   return {
     wholesalePrice: p.wholesalePrice,
-    wholesaleDiscountPct: p.wholesaleDiscountPct,
+    cashDiscountPct: p.cashDiscountPct,
     retailPriceDiffPct: p.retailPriceDiffPct,
     retailDiscountPct: p.retailDiscountPct,
   };
@@ -449,7 +451,7 @@ export function applyRoleToProduct(vm: ProductVM, role: PricingRole): ProductVM 
   const resolved = resolveProductPrice(
     {
       wholesalePrice: vm.wholesalePrice,
-      wholesaleDiscountPct: vm.wholesaleDiscountPct,
+      cashDiscountPct: vm.cashDiscountPct,
       retailPriceDiffPct: vm.retailPriceDiffPct,
       retailDiscountPct: vm.retailDiscountPct,
     },
@@ -469,6 +471,9 @@ export function applyRoleToProduct(vm: ProductVM, role: PricingRole): ProductVM 
       : resolved.discountPct > 0
         ? Math.round(resolved.discountPct)
         : undefined,
+    cashDiscount: isWholesaleUser(role) && vm.cashDiscountPct > 0
+      ? vm.cashDiscountPct
+      : undefined,
     orderQuantityCap: orderQuantityCapForRole(vm.stock, role),
   };
 }
@@ -526,8 +531,11 @@ export function toProductVM(
       : resolved.discountPct > 0
         ? Math.round(resolved.discountPct)
         : undefined,
+    cashDiscount: isWholesaleUser(role) && Number(p.cashDiscountPct) > 0
+      ? Number(p.cashDiscountPct)
+      : undefined,
     wholesalePrice: Number(p.wholesalePrice),
-    wholesaleDiscountPct: Number(p.wholesaleDiscountPct),
+    cashDiscountPct: Number(p.cashDiscountPct),
     retailPriceDiffPct: Number(p.retailPriceDiffPct),
     retailDiscountPct: Number(p.retailDiscountPct),
     callForPriceRetail,

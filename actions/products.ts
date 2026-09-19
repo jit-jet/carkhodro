@@ -33,7 +33,6 @@ import { buildAdminProductWhere } from '@/src/lib/admin-product-where';
 import {
   computeRetailPrice,
   computeRetailFinal,
-  computeWholesaleFinal,
 } from '@/src/lib/pricing';
 
 /** Re-resolve cached product VMs for the current viewer's role. */
@@ -104,7 +103,7 @@ export async function getSpecialOffers(limit = 12): Promise<ProductVM[]> {
 export async function getProductById(id: string): Promise<PDPProductVM | null> {
   'use cache';
   cacheLife('hours');
-  cacheTag(tags.product(id), tags.siteSettings);
+  cacheTag(tags.product(id), tags.products, tags.siteSettings);
 
   return safeQuery(`getProductById:${id}`, async () => {
     const [row, fallbackImage] = await Promise.all([prisma.product.findFirst({
@@ -231,12 +230,11 @@ export interface AdminProductListItemVM {
   /** Joined compatible car model names — “مدل خودرو”. */
   carType: string;
   wholesalePrice: number;
-  wholesaleDiscountPct: number;
+  cashDiscountPct: number;
   retailPriceDiffPct: number;
   retailDiscountPct: number;
   retailPrice: number; // computed list price
   retailFinal: number; // computed after retail discount
-  wholesaleFinal: number; // computed after wholesale discount
   stock: number;
   isActive: boolean;
   isOffer: boolean;
@@ -280,7 +278,7 @@ function toAdminProductListItem(p: {
   partsBrand: { name: string };
   compatibilities: { carModelId: number; carModel: { name: string } }[];
   wholesalePrice: bigint;
-  wholesaleDiscountPct: unknown;
+  cashDiscountPct: unknown;
   retailPriceDiffPct: unknown;
   retailDiscountPct: unknown;
   stock: number;
@@ -292,7 +290,7 @@ function toAdminProductListItem(p: {
 }): AdminProductListItemVM {
   const fields = {
     wholesalePrice: p.wholesalePrice,
-    wholesaleDiscountPct: Number(p.wholesaleDiscountPct),
+    cashDiscountPct: Number(p.cashDiscountPct),
     retailPriceDiffPct: Number(p.retailPriceDiffPct),
     retailDiscountPct: Number(p.retailDiscountPct),
   };
@@ -308,12 +306,11 @@ function toAdminProductListItem(p: {
     carModelIds: p.compatibilities.map((c) => c.carModelId),
     carType: carTypes.join('، '),
     wholesalePrice: Number(p.wholesalePrice),
-    wholesaleDiscountPct: fields.wholesaleDiscountPct,
+    cashDiscountPct: fields.cashDiscountPct,
     retailPriceDiffPct: fields.retailPriceDiffPct,
     retailDiscountPct: fields.retailDiscountPct,
     retailPrice: computeRetailPrice(fields),
     retailFinal: computeRetailFinal(fields),
-    wholesaleFinal: computeWholesaleFinal(fields),
     stock: p.stock,
     isActive: p.isActive,
     isOffer: p.isOffer,
@@ -439,7 +436,7 @@ export async function getProductAdminById(id: string) {
         carModelIds: row.compatibilities.map((c) => c.carModelId),
         wholesalePrice: Number(row.wholesalePrice),
         buyPrice: row.buyPrice != null ? Number(row.buyPrice) : null,
-        wholesaleDiscountPct: Number(row.wholesaleDiscountPct),
+        cashDiscountPct: Number(row.cashDiscountPct),
         retailPriceDiffPct: Number(row.retailPriceDiffPct),
         retailDiscountPct: Number(row.retailDiscountPct),
         isOffer: row.isOffer,

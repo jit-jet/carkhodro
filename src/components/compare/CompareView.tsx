@@ -10,6 +10,7 @@ import { useCartUI, handleAddToCartResult } from '@/src/store/cart-ui';
 import type { ProductVM } from '@/src/lib/serializers';
 import { CALL_FOR_PRICE_LABEL } from '@/src/lib/call-for-price';
 import CallForPrice from '@/src/components/product/CallForPrice';
+import CashDiscountBadge from '@/src/components/product/CashDiscountBadge';
 
 const ORIGIN_FLAGS: Record<string, string> = {
   'آلمان': '🇩🇪', 'ژاپن': '🇯🇵', 'ایران': '🇮🇷',
@@ -336,6 +337,7 @@ export default function CompareView({ initial, loggedIn }: Props) {
                         {p.name}
                       </p>
                     </Link>
+                    {p.cashDiscount && <CashDiscountBadge percent={p.cashDiscount} className="text-[10px]" />}
                     {/* SKU */}
                     <span className="text-[10px] font-mono text-gray-400 select-all">
                       {p.sku}

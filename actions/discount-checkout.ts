@@ -35,7 +35,7 @@ const DISCOUNT_PRODUCT_SELECT = {
   categoryId: true,
   partsBrandId: true,
   wholesalePrice: true,
-  wholesaleDiscountPct: true,
+  cashDiscountPct: true,
   retailPriceDiffPct: true,
   retailDiscountPct: true,
   compatibilities: {
@@ -51,7 +51,7 @@ type DiscountProductRow = {
   categoryId: number;
   partsBrandId: number;
   wholesalePrice: ProductPriceFields['wholesalePrice'];
-  wholesaleDiscountPct: ProductPriceFields['wholesaleDiscountPct'];
+  cashDiscountPct: ProductPriceFields['cashDiscountPct'];
   retailPriceDiffPct: ProductPriceFields['retailPriceDiffPct'];
   retailDiscountPct: ProductPriceFields['retailDiscountPct'];
   compatibilities: { carModelId: number; carModel: { carBrandId: number } }[];
@@ -117,7 +117,7 @@ function buildDiscountLines(
     const pricing = resolveProductPriceBigInt(
       {
         wholesalePrice: item.product.wholesalePrice,
-        wholesaleDiscountPct: item.product.wholesaleDiscountPct,
+        cashDiscountPct: item.product.cashDiscountPct,
         retailPriceDiffPct: item.product.retailPriceDiffPct,
         retailDiscountPct: item.product.retailDiscountPct,
       },

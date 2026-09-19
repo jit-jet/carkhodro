@@ -25,7 +25,7 @@ export default async function NewProductPage() {
           carModelIds: [],
           wholesalePrice: 0,
           buyPrice: null,
-          wholesaleDiscountPct: 0,
+          cashDiscountPct: 0,
           retailPriceDiffPct: 25,
           retailDiscountPct: 0,
           origin: "",

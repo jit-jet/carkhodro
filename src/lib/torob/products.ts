@@ -15,7 +15,7 @@ const torobProductSelect = {
   sku: true,
   name: true,
   wholesalePrice: true,
-  wholesaleDiscountPct: true,
+  cashDiscountPct: true,
   retailPriceDiffPct: true,
   retailDiscountPct: true,
   stock: true,

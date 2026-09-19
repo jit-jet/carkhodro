@@ -27,7 +27,7 @@ import { wholesaleFromHesabfaItem } from './product-pricing';
 import { stockFromHesabfaItem } from './stock';
 import { dispatchStockNotificationsForProducts } from '@/src/lib/stock-notification';
 import { planProductIdentitySync } from './product-identity';
-import { computeRetailPrice, computeWholesaleFinal } from '@/src/lib/pricing';
+import { computeRetailPrice } from '@/src/lib/pricing';
 import {
   HESABFA_ITEM_TYPE_PRODUCT,
   HESABFA_TAG,
@@ -376,7 +376,6 @@ export interface HesabfaProductPayloadInput {
   wholesalePrice: bigint | number;
   retailPriceDiffPct?: number | string;
   retailDiscountPct?: number | string;
-  wholesaleDiscountPct?: number | string;
   /** Optional buy/cost price in Toman. */
   buyPrice?: bigint | number | null;
   description?: string | null;
@@ -387,13 +386,11 @@ export interface HesabfaProductPayloadInput {
 export function toHesabfaItemPayload(input: HesabfaProductPayloadInput): Record<string, unknown> {
   const priceFields = {
     wholesalePrice: Number(input.wholesalePrice),
-    wholesaleDiscountPct: Number(input.wholesaleDiscountPct ?? 0),
     retailPriceDiffPct: Number(input.retailPriceDiffPct ?? 25),
     retailDiscountPct: Number(input.retailDiscountPct ?? 0),
   };
   // «قیمت کلی فروشی» — base wholesale / seller price entered in admin.
   const wholesale = priceFields.wholesalePrice;
-  const wholesaleFinal = computeWholesaleFinal(priceFields);
   const retailPrice = computeRetailPrice(priceFields);
   const buy =
     input.buyPrice != null && Number(input.buyPrice) > 0 ? Number(input.buyPrice) : null;
@@ -418,7 +415,7 @@ export function toHesabfaItemPayload(input: HesabfaProductPayloadInput): Record<
       {
         title: 'همکار',
         currency: 'IRR',
-        price: tomanToRial(wholesaleFinal),
+        price: tomanToRial(wholesale),
       },
       {
         title: 'تک فروشی',
@@ -496,7 +493,6 @@ export async function pushProductToHesabfa(productId: string): Promise<void> {
     wholesalePrice: product.wholesalePrice,
     retailPriceDiffPct: Number(product.retailPriceDiffPct),
     retailDiscountPct: Number(product.retailDiscountPct),
-    wholesaleDiscountPct: Number(product.wholesaleDiscountPct),
     buyPrice: product.buyPrice,
     description: product.description,
     active: product.isActive,
@@ -552,7 +548,6 @@ export async function pushProductsToHesabfa(productIds: string[]): Promise<void>
           wholesalePrice: product.wholesalePrice,
           retailPriceDiffPct: Number(product.retailPriceDiffPct),
           retailDiscountPct: Number(product.retailDiscountPct),
-          wholesaleDiscountPct: Number(product.wholesaleDiscountPct),
           buyPrice: product.buyPrice,
           description: product.description,
           active: product.isActive,

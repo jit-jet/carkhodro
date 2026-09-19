@@ -178,9 +178,9 @@ function ProductRow({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[11px] font-mono text-gray-400">{product.sku}</span>
-          {product.discountPct > 0 && (
-            <span className="text-[10px] font-bold text-red-500 bg-red-50 rounded px-1.5 py-0.5">
-              ٪{product.discountPct.toLocaleString('fa-IR')} تخفیف
+          {product.cashDiscountPct > 0 && (
+            <span className="text-[10px] font-bold text-amber-900 bg-amber-100 rounded px-1.5 py-0.5">
+              {product.cashDiscountPct.toLocaleString('fa-IR', { maximumFractionDigits: 2 })}٪ تخفیف نقدی
             </span>
           )}
         </div>

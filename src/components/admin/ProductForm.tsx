@@ -5,10 +5,9 @@
  *   1. Wholesale price (قیمت کلی فروشی) is the baseline the admin enters.
  *   2. Retail price (قیمت تک‌فروشی) is *calculated*: wholesale × (1 + diff%).
  *   3. The wholesale↔retail difference is set via `retailPriceDiffPct` (%).
- *   4. Retail and partner (wholesale) discounts are set independently.
- * A live preview panel below the pricing fields shows all four resulting
- * prices as the admin types, using the same pure functions the storefront
- * uses (`src/lib/pricing.ts`) so the preview can never drift from reality.
+ *   4. Retail discount changes the retail price; cash discount is a wholesale
+ *      product badge only and leaves the wholesale price unchanged.
+ * A live preview panel uses the same retail pricing functions as the storefront.
  */
 
 import { useMemo, useRef, useState, useTransition } from "react";
@@ -20,7 +19,7 @@ import {
   uploadProductImage,
   type ProductInput,
 } from "@/actions/admin-products";
-import { computeRetailPrice, computeRetailFinal, computeWholesaleFinal } from "@/src/lib/pricing";
+import { computeRetailPrice, computeRetailFinal } from "@/src/lib/pricing";
 import { formatToman } from "@/src/lib/format";
 import { useCartUI } from "@/src/store/cart-ui";
 import {
@@ -76,7 +75,7 @@ export default function ProductForm({
   const [buyPrice, setBuyPrice] = useState(
     initial.buyPrice != null && initial.buyPrice > 0 ? String(initial.buyPrice) : "",
   );
-  const [wholesaleDiscountPct, setWholesaleDiscountPct] = useState(String(initial.wholesaleDiscountPct ?? 0));
+  const [cashDiscountPct, setCashDiscountPct] = useState(String(initial.cashDiscountPct ?? 0));
   const [retailPriceDiffPct, setRetailPriceDiffPct] = useState(String(initial.retailPriceDiffPct ?? 25));
   const [retailDiscountPct, setRetailDiscountPct] = useState(String(initial.retailDiscountPct ?? 0));
   const [origin, setOrigin] = useState(initial.origin ?? "");
@@ -109,16 +108,15 @@ export default function ProductForm({
   const preview = useMemo(() => {
     const fields = {
       wholesalePrice: Number(wholesalePrice) || 0,
-      wholesaleDiscountPct: Number(wholesaleDiscountPct) || 0,
       retailPriceDiffPct: Number(retailPriceDiffPct) || 0,
       retailDiscountPct: Number(retailDiscountPct) || 0,
     };
     return {
       retailPrice: computeRetailPrice(fields),
       retailFinal: computeRetailFinal(fields),
-      wholesaleFinal: computeWholesaleFinal(fields),
+      wholesalePrice: Number(wholesalePrice) || 0,
     };
-  }, [wholesalePrice, wholesaleDiscountPct, retailPriceDiffPct, retailDiscountPct]);
+  }, [wholesalePrice, retailPriceDiffPct, retailDiscountPct]);
 
   function addUploadedUrls(urls: string[]) {
     if (urls.length === 0) return;
@@ -234,7 +232,7 @@ export default function ProductForm({
       carModelIds,
       wholesalePrice: Number(wholesalePrice),
       buyPrice: buyPrice.trim() === "" ? null : Number(buyPrice),
-      wholesaleDiscountPct: Number(wholesaleDiscountPct),
+      cashDiscountPct: Number(cashDiscountPct),
       retailPriceDiffPct: Number(retailPriceDiffPct),
       retailDiscountPct: Number(retailDiscountPct),
       origin: origin || null,
@@ -536,14 +534,16 @@ export default function ProductForm({
             />
           </div>
           <div>
-            <Label>تخفیف همکار / عمده (٪)</Label>
+            <Label>تخفیف نقدی همکار (٪)</Label>
             <Input
               type="number"
               min={0}
               max={100}
-              value={wholesaleDiscountPct}
-              onChange={(e) => setWholesaleDiscountPct(e.target.value)}
+              step={0.01}
+              value={cashDiscountPct}
+              onChange={(e) => setCashDiscountPct(e.target.value)}
             />
+            <p className="mt-1 text-xs text-gray-500">فقط به‌صورت برچسب نمایش داده می‌شود و قیمت محصول را تغییر نمی‌دهد.</p>
           </div>
           <div>
             <Label>تخفیف تک‌فروشی (٪)</Label>
@@ -558,7 +558,7 @@ export default function ProductForm({
         </div>
 
         <div className="grid sm:grid-cols-3 gap-3 bg-gray-50 rounded-xl border border-gray-100 p-4">
-          <PricePreview label="قیمت نهایی همکار (عمده)" value={preview.wholesaleFinal} />
+          <PricePreview label="قیمت همکار (عمده)" value={preview.wholesalePrice} />
           <PricePreview label="قیمت لیست تک‌فروشی" value={preview.retailPrice} />
           <PricePreview label="قیمت نهایی تک‌فروشی" value={preview.retailFinal} highlight />
         </div>

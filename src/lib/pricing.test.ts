@@ -5,6 +5,7 @@ import {
   computeRetailPrice,
   netLineTotalBigIntForRole,
   netLineTotalForOrder,
+  resolveProductPrice,
   roundRetailPrice,
 } from './pricing';
 
@@ -23,7 +24,7 @@ test('keeps imported invoice prices without retail tier rounding', () => {
 test('rounds both the retail list price and discounted price', () => {
   const fields = {
     wholesalePrice: 100_399,
-    wholesaleDiscountPct: 0 as never,
+    cashDiscountPct: 0 as never,
     retailPriceDiffPct: 25 as never,
     retailDiscountPct: 10 as never,
   };
@@ -35,4 +36,20 @@ test('rounds both the retail list price and discounted price', () => {
 test('uses the same retail rounding policy for persisted BigInt line totals', () => {
   assert.equal(netLineTotalBigIntForRole(BigInt(125_000), 2, 10, 'RETAIL'), BigInt(226_000));
   assert.equal(netLineTotalBigIntForRole(BigInt(125_000), 2, 10, 'WHOLESALE'), BigInt(225_000));
+});
+
+test('cash discount labels never reduce wholesale prices or order line totals', () => {
+  const fields = {
+    wholesalePrice: 100_000,
+    cashDiscountPct: 5,
+    retailPriceDiffPct: 25,
+    retailDiscountPct: 10,
+  };
+  assert.deepEqual(resolveProductPrice(fields, 'WHOLESALE'), {
+    basePrice: 100_000,
+    discountPct: 0,
+    finalPrice: 100_000,
+  });
+  assert.equal(netLineTotalBigIntForRole(BigInt(100_000), 3, 0, 'WHOLESALE'), BigInt(300_000));
+  assert.equal(resolveProductPrice(fields, 'RETAIL').finalPrice, 113_000);
 });

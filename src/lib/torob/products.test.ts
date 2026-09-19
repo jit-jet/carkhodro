@@ -8,7 +8,7 @@ function source(overrides: Partial<TorobProductSource> = {}): TorobProductSource
     sku: 'SKU-1',
     name: 'لنت ترمز',
     wholesalePrice: BigInt(100_000),
-    wholesaleDiscountPct: 0 as never,
+    cashDiscountPct: 0 as never,
     retailPriceDiffPct: 25 as never,
     retailDiscountPct: 10 as never,
     stock: 4,

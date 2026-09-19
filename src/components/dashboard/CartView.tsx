@@ -224,7 +224,6 @@ function StatefulCartView({ initialCart, previousPurchases, paymentTerms }: Prop
                     <th className="py-3 px-2 font-medium text-right">کد</th>
                     <th className="py-3 px-2 font-medium text-right">قطعه خودرو</th>
                     <th className="py-3 px-2 font-medium">قیمت (ریال)</th>
-                    <th className="py-3 px-2 font-medium">تخفیف</th>
                     <th className="py-3 px-2 font-medium">تعداد</th>
                     <th className="py-3 px-2 font-medium">مجموع</th>
                   </tr>
@@ -244,6 +243,11 @@ function StatefulCartView({ initialCart, previousPurchases, paymentTerms }: Prop
                       <td className="py-3 px-2 font-mono text-xs text-gray-500 text-right">{line.sku}</td>
                       <td className="py-3 px-2 text-right font-semibold max-w-[16rem]">
                         <span className="block truncate">{line.name}</span>
+                        {line.cashDiscountPct > 0 && (
+                          <span className="mt-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-900">
+                            {line.cashDiscountPct.toLocaleString('fa-IR', { maximumFractionDigits: 2 })}٪ تخفیف نقدی
+                          </span>
+                        )}
                         {line.stock < 1 && (
                           <span className="text-xs font-medium text-red-600">ناموجود</span>
                         )}
@@ -252,9 +256,6 @@ function StatefulCartView({ initialCart, previousPurchases, paymentTerms }: Prop
                         {line.callForPrice
                           ? 'تماس برای قیمت'
                           : formatNumberFa(line.unitPriceToman * 10)}
-                      </td>
-                      <td className="py-3 px-2 text-center text-gray-500">
-                        {line.callForPrice ? '—' : `٪${line.discountPct.toLocaleString('fa-IR')}`}
                       </td>
                       <td className="py-3 px-2">
                         {line.stock < 1 ? (

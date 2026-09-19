@@ -71,7 +71,7 @@ const itemSelect = {
   sku: true,
   name: true,
   wholesalePrice: true,
-  wholesaleDiscountPct: true,
+  cashDiscountPct: true,
   retailPriceDiffPct: true,
   retailDiscountPct: true,
   callForPriceRetail: true,

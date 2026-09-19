@@ -262,7 +262,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   categoryId: 'categoryId',
   wholesalePrice: 'wholesalePrice',
   buyPrice: 'buyPrice',
-  wholesaleDiscountPct: 'wholesaleDiscountPct',
+  cashDiscountPct: 'cashDiscountPct',
   retailPriceDiffPct: 'retailPriceDiffPct',
   retailDiscountPct: 'retailDiscountPct',
   isOffer: 'isOffer',

@@ -11,6 +11,7 @@ import { handleAddToCartResult, notifyStockLimit, useCartUI } from '@/src/store/
 import CallForPrice from '@/src/components/product/CallForPrice';
 import WishlistButton from '@/src/components/product/WishlistButton';
 import CompareButton from '@/src/components/product/CompareButton';
+import CashDiscountBadge from '@/src/components/product/CashDiscountBadge';
 
 interface ProductCardProps {
   product: Product;
@@ -112,7 +113,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
           <ProductImage
             src={product.mainImage}
             alt={product.name}
-            occupiedCorners={(!product.callForPrice && product.discount) || isNew ? ['top-right', 'top-left'] : []}
+            occupiedCorners={(!product.callForPrice && product.discount) || product.cashDiscount || isNew ? ['top-right', 'top-left'] : []}
             fill
             sizes={isGrid
               ? '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
@@ -120,16 +121,19 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
             className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
           />
 
-          {/* Discount / New badge — end side (left in RTL) */}
+          {/* Price discount or display-only cash discount above the product. */}
           {!product.callForPrice && product.discount ? (
             <span className="absolute top-2 inset-e-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
               {product.discount}٪ تخفیف
             </span>
-          ) : isNew ? (
-            <span className="absolute top-2 inset-e-2 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
+          ) : product.cashDiscount ? (
+            <CashDiscountBadge percent={product.cashDiscount} className="absolute top-2 inset-e-2 shadow" />
+          ) : null}
+          {isNew && (
+            <span className={`absolute top-2 ${product.discount || product.cashDiscount ? 'inset-s-2' : 'inset-e-2'} bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow`}>
               جدید
             </span>
-          ) : null}
+          )}
         </Link>
 
       </div>

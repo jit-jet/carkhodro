@@ -2,6 +2,7 @@ import { ProductImage } from '@/src/components/product/ProductImageWatermark';
 import type { ProductVM as Product } from '@/src/lib/serializers';
 import Link from 'next/link';
 import { CALL_FOR_PRICE_LABEL } from '@/src/lib/call-for-price';
+import CashDiscountBadge from '@/src/components/product/CashDiscountBadge';
 
 interface Props {
   products: Product[];
@@ -29,7 +30,7 @@ export default function RelatedProducts({ products }: Props) {
               <ProductImage
                 src={p.mainImage}
                 alt={p.name}
-                occupiedCorners={!p.callForPrice && p.discount ? ['top-right', 'top-left'] : []}
+                occupiedCorners={(!p.callForPrice && p.discount) || p.cashDiscount ? ['top-right', 'top-left'] : []}
                 fill
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
@@ -38,6 +39,9 @@ export default function RelatedProducts({ products }: Props) {
                 <span className="absolute top-2 inset-e-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow">
                   {p.discount}٪−
                 </span>
+              )}
+              {p.cashDiscount && (
+                <CashDiscountBadge percent={p.cashDiscount} className="absolute top-2 inset-e-2 text-[10px] shadow" />
               )}
             </div>
 

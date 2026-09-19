@@ -51,7 +51,7 @@ export interface ProductInput {
   wholesalePrice: number;
   /** Optional buy/cost price in Toman (Hesabfa BuyPrice). */
   buyPrice?: number | null;
-  wholesaleDiscountPct?: number;
+  cashDiscountPct?: number;
   retailPriceDiffPct?: number;
   retailDiscountPct?: number;
   isOffer?: boolean;
@@ -143,7 +143,10 @@ export async function createProduct(
 
     const buyPrice = normalizeBuyPrice(input.buyPrice);
     const wholesalePrice = BigInt(Math.round(input.wholesalePrice));
-    const wholesaleDiscountPct = input.wholesaleDiscountPct ?? 0;
+    const cashDiscountPct = clampPct(input.cashDiscountPct ?? 0, 0, 100);
+    if (cashDiscountPct === null) {
+      return fail('درصد تخفیف نقدی باید بین ۰ تا ۱۰۰ باشد.');
+    }
     const retailPriceDiffPct = input.retailPriceDiffPct ?? 25;
     const retailDiscountPct = input.retailDiscountPct ?? 0;
 
@@ -156,7 +159,6 @@ export async function createProduct(
         wholesalePrice,
         retailPriceDiffPct,
         retailDiscountPct,
-        wholesaleDiscountPct,
         buyPrice,
         description: input.description ?? null,
         active: true,
@@ -191,7 +193,7 @@ export async function createProduct(
         categoryId: input.categoryId,
         wholesalePrice,
         buyPrice,
-        wholesaleDiscountPct,
+        cashDiscountPct,
         retailPriceDiffPct,
         retailDiscountPct,
         isOffer: input.isOffer ?? false,
@@ -215,7 +217,7 @@ export async function createProduct(
         categoryId: input.categoryId,
         wholesalePrice,
         buyPrice,
-        wholesaleDiscountPct,
+        cashDiscountPct,
         retailPriceDiffPct,
         retailDiscountPct,
         isOffer: input.isOffer ?? false,
@@ -285,10 +287,16 @@ export async function updateProduct(
         : existing.wholesalePrice;
     const buyPrice =
       input.buyPrice !== undefined ? normalizeBuyPrice(input.buyPrice) : existing.buyPrice;
-    const wholesaleDiscountPct =
-      input.wholesaleDiscountPct !== undefined
-        ? input.wholesaleDiscountPct
-        : Number(existing.wholesaleDiscountPct);
+    const cashDiscountPct = clampPct(
+      input.cashDiscountPct !== undefined
+        ? input.cashDiscountPct
+        : Number(existing.cashDiscountPct),
+      0,
+      100,
+    );
+    if (cashDiscountPct === null) {
+      return fail('درصد تخفیف نقدی باید بین ۰ تا ۱۰۰ باشد.');
+    }
     const retailPriceDiffPct =
       input.retailPriceDiffPct !== undefined
         ? input.retailPriceDiffPct
@@ -312,7 +320,6 @@ export async function updateProduct(
         wholesalePrice,
         retailPriceDiffPct,
         retailDiscountPct,
-        wholesaleDiscountPct,
         buyPrice,
         description,
         active: isActive,
@@ -340,7 +347,7 @@ export async function updateProduct(
         categoryId,
         wholesalePrice,
         buyPrice,
-        wholesaleDiscountPct,
+        cashDiscountPct,
         retailPriceDiffPct,
         retailDiscountPct,
         ...(input.isOffer !== undefined ? { isOffer: input.isOffer } : {}),
@@ -457,7 +464,7 @@ export type BulkProductOp =
   | { op: 'category'; categoryId: number }
   | { op: 'brand'; partsBrandId: number }
   | { op: 'vehicleType'; carModelId: number }
-  | { op: 'wholesaleDiscount'; value: number }
+  | { op: 'cashDiscount'; value: number }
   | { op: 'retailDiscount'; value: number }
   | { op: 'retailPriceDiff'; value: number }
   | { op: 'setActive'; isActive: boolean }
@@ -557,11 +564,11 @@ export async function bulkUpdateProducts(
         touchProductTags(tagScope === 'all-matching' ? 'all-matching' : ids);
         return ok({ count: ids.length });
       }
-      case 'wholesaleDiscount': {
+      case 'cashDiscount': {
         const value = clampPct(action.value, 0, 100);
-        if (value === null) return fail('درصد تخفیف عمده باید بین ۰ تا ۱۰۰ باشد.');
-        const result = await updateHesabfaProductFields({ wholesaleDiscountPct: value });
-        if (!result || result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
+        if (value === null) return fail('درصد تخفیف نقدی باید بین ۰ تا ۱۰۰ باشد.');
+        const result = await prisma.product.updateMany({ where, data: { cashDiscountPct: value } });
+        if (result.count === 0) return fail('هیچ محصولی انتخاب نشده است.');
         touchProductTags(tagScope);
         return ok({ count: result.count });
       }

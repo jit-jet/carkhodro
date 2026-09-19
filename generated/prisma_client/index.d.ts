@@ -19470,7 +19470,7 @@ export namespace Prisma {
     categoryId: number | null
     wholesalePrice: number | null
     buyPrice: number | null
-    wholesaleDiscountPct: Decimal | null
+    cashDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     hesabfaId: number | null
@@ -19488,7 +19488,7 @@ export namespace Prisma {
     categoryId: number | null
     wholesalePrice: bigint | null
     buyPrice: bigint | null
-    wholesaleDiscountPct: Decimal | null
+    cashDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     hesabfaId: number | null
@@ -19509,7 +19509,7 @@ export namespace Prisma {
     categoryId: number | null
     wholesalePrice: bigint | null
     buyPrice: bigint | null
-    wholesaleDiscountPct: Decimal | null
+    cashDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
@@ -19546,7 +19546,7 @@ export namespace Prisma {
     categoryId: number | null
     wholesalePrice: bigint | null
     buyPrice: bigint | null
-    wholesaleDiscountPct: Decimal | null
+    cashDiscountPct: Decimal | null
     retailPriceDiffPct: Decimal | null
     retailDiscountPct: Decimal | null
     isOffer: boolean | null
@@ -19583,7 +19583,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: number
     buyPrice: number
-    wholesaleDiscountPct: number
+    cashDiscountPct: number
     retailPriceDiffPct: number
     retailDiscountPct: number
     isOffer: number
@@ -19619,7 +19619,7 @@ export namespace Prisma {
     categoryId?: true
     wholesalePrice?: true
     buyPrice?: true
-    wholesaleDiscountPct?: true
+    cashDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     hesabfaId?: true
@@ -19637,7 +19637,7 @@ export namespace Prisma {
     categoryId?: true
     wholesalePrice?: true
     buyPrice?: true
-    wholesaleDiscountPct?: true
+    cashDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     hesabfaId?: true
@@ -19658,7 +19658,7 @@ export namespace Prisma {
     categoryId?: true
     wholesalePrice?: true
     buyPrice?: true
-    wholesaleDiscountPct?: true
+    cashDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
@@ -19695,7 +19695,7 @@ export namespace Prisma {
     categoryId?: true
     wholesalePrice?: true
     buyPrice?: true
-    wholesaleDiscountPct?: true
+    cashDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
@@ -19732,7 +19732,7 @@ export namespace Prisma {
     categoryId?: true
     wholesalePrice?: true
     buyPrice?: true
-    wholesaleDiscountPct?: true
+    cashDiscountPct?: true
     retailPriceDiffPct?: true
     retailDiscountPct?: true
     isOffer?: true
@@ -19856,7 +19856,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint
     buyPrice: bigint | null
-    wholesaleDiscountPct: Decimal
+    cashDiscountPct: Decimal
     retailPriceDiffPct: Decimal
     retailDiscountPct: Decimal
     isOffer: boolean
@@ -19912,7 +19912,7 @@ export namespace Prisma {
     categoryId?: boolean
     wholesalePrice?: boolean
     buyPrice?: boolean
-    wholesaleDiscountPct?: boolean
+    cashDiscountPct?: boolean
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
@@ -19960,7 +19960,7 @@ export namespace Prisma {
     categoryId?: boolean
     wholesalePrice?: boolean
     buyPrice?: boolean
-    wholesaleDiscountPct?: boolean
+    cashDiscountPct?: boolean
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
@@ -19999,7 +19999,7 @@ export namespace Prisma {
     categoryId?: boolean
     wholesalePrice?: boolean
     buyPrice?: boolean
-    wholesaleDiscountPct?: boolean
+    cashDiscountPct?: boolean
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
@@ -20038,7 +20038,7 @@ export namespace Prisma {
     categoryId?: boolean
     wholesalePrice?: boolean
     buyPrice?: boolean
-    wholesaleDiscountPct?: boolean
+    cashDiscountPct?: boolean
     retailPriceDiffPct?: boolean
     retailDiscountPct?: boolean
     isOffer?: boolean
@@ -20067,7 +20067,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "wholesaleDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "unit" | "mainImage" | "description" | "metaTitle" | "metaDescription" | "imageAlt" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "partsBrandId" | "categoryId" | "wholesalePrice" | "buyPrice" | "cashDiscountPct" | "retailPriceDiffPct" | "retailDiscountPct" | "isOffer" | "callForPriceRetail" | "callForPriceWholesale" | "hesabfaCode" | "hesabfaId" | "lastSyncedAt" | "stock" | "origin" | "packQuantity" | "cartonQuantity" | "unit" | "mainImage" | "description" | "metaTitle" | "metaDescription" | "imageAlt" | "searchText" | "viewCount" | "saleCount" | "ratingAvg" | "reviewCount" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partsBrand?: boolean | PartsBrandDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -20122,10 +20122,9 @@ export namespace Prisma {
        */
       buyPrice: bigint | null
       /**
-       * Percentage deducted for WHOLESALE users (0–100).
-       * wholesaleFinal = wholesalePrice × (1 − wholesaleDiscountPct / 100)
+       * Cash discount label shown to wholesale users (0–100); does not change prices.
        */
-      wholesaleDiscountPct: Prisma.Decimal
+      cashDiscountPct: Prisma.Decimal
       /**
        * Percentage added to wholesalePrice to derive the retail list price (1–100).
        * retailPrice = wholesalePrice × (1 + retailPriceDiffPct / 100)
@@ -20635,7 +20634,7 @@ export namespace Prisma {
     readonly categoryId: FieldRef<"Product", 'Int'>
     readonly wholesalePrice: FieldRef<"Product", 'BigInt'>
     readonly buyPrice: FieldRef<"Product", 'BigInt'>
-    readonly wholesaleDiscountPct: FieldRef<"Product", 'Decimal'>
+    readonly cashDiscountPct: FieldRef<"Product", 'Decimal'>
     readonly retailPriceDiffPct: FieldRef<"Product", 'Decimal'>
     readonly retailDiscountPct: FieldRef<"Product", 'Decimal'>
     readonly isOffer: FieldRef<"Product", 'Boolean'>
@@ -54940,7 +54939,7 @@ export namespace Prisma {
     categoryId: 'categoryId',
     wholesalePrice: 'wholesalePrice',
     buyPrice: 'buyPrice',
-    wholesaleDiscountPct: 'wholesaleDiscountPct',
+    cashDiscountPct: 'cashDiscountPct',
     retailPriceDiffPct: 'retailPriceDiffPct',
     retailDiscountPct: 'retailDiscountPct',
     isOffer: 'isOffer',
@@ -56693,7 +56692,7 @@ export namespace Prisma {
     categoryId?: IntFilter<"Product"> | number
     wholesalePrice?: BigIntFilter<"Product"> | bigint | number
     buyPrice?: BigIntNullableFilter<"Product"> | bigint | number | null
-    wholesaleDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
@@ -56740,7 +56739,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
     buyPrice?: SortOrderInput | SortOrder
-    wholesaleDiscountPct?: SortOrder
+    cashDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
@@ -56792,7 +56791,7 @@ export namespace Prisma {
     categoryId?: IntFilter<"Product"> | number
     wholesalePrice?: BigIntFilter<"Product"> | bigint | number
     buyPrice?: BigIntNullableFilter<"Product"> | bigint | number | null
-    wholesaleDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
@@ -56837,7 +56836,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
     buyPrice?: SortOrderInput | SortOrder
-    wholesaleDiscountPct?: SortOrder
+    cashDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
@@ -56882,7 +56881,7 @@ export namespace Prisma {
     categoryId?: IntWithAggregatesFilter<"Product"> | number
     wholesalePrice?: BigIntWithAggregatesFilter<"Product"> | bigint | number
     buyPrice?: BigIntNullableWithAggregatesFilter<"Product"> | bigint | number | null
-    wholesaleDiscountPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolWithAggregatesFilter<"Product"> | boolean
@@ -60278,7 +60277,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -60325,7 +60324,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -60368,7 +60367,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -60415,7 +60414,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -60460,7 +60459,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -60495,7 +60494,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -60532,7 +60531,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -64190,7 +64189,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
     buyPrice?: SortOrder
-    wholesaleDiscountPct?: SortOrder
+    cashDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
@@ -64224,7 +64223,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
     buyPrice?: SortOrder
-    wholesaleDiscountPct?: SortOrder
+    cashDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     hesabfaId?: SortOrder
@@ -64245,7 +64244,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
     buyPrice?: SortOrder
-    wholesaleDiscountPct?: SortOrder
+    cashDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
@@ -64282,7 +64281,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
     buyPrice?: SortOrder
-    wholesaleDiscountPct?: SortOrder
+    cashDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     isOffer?: SortOrder
@@ -64316,7 +64315,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     wholesalePrice?: SortOrder
     buyPrice?: SortOrder
-    wholesaleDiscountPct?: SortOrder
+    cashDiscountPct?: SortOrder
     retailPriceDiffPct?: SortOrder
     retailDiscountPct?: SortOrder
     hesabfaId?: SortOrder
@@ -70299,7 +70298,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -70344,7 +70343,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -70418,7 +70417,7 @@ export namespace Prisma {
     categoryId?: IntFilter<"Product"> | number
     wholesalePrice?: BigIntFilter<"Product"> | bigint | number
     buyPrice?: BigIntNullableFilter<"Product"> | bigint | number | null
-    wholesaleDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFilter<"Product"> | boolean
@@ -70453,7 +70452,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -70498,7 +70497,7 @@ export namespace Prisma {
     partsBrandId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -71090,7 +71089,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -71136,7 +71135,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -71194,7 +71193,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -71240,7 +71239,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -71282,7 +71281,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -71328,7 +71327,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -71386,7 +71385,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -71432,7 +71431,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -71474,7 +71473,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -71520,7 +71519,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -71606,7 +71605,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -71652,7 +71651,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -71728,7 +71727,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -71774,7 +71773,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -71907,7 +71906,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -71953,7 +71952,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -72291,7 +72290,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -72337,7 +72336,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -72420,7 +72419,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -72466,7 +72465,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -72583,7 +72582,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -72629,7 +72628,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -72768,7 +72767,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -72814,7 +72813,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -72931,7 +72930,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -72977,7 +72976,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -73116,7 +73115,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -73162,7 +73161,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -74344,7 +74343,7 @@ export namespace Prisma {
     name: string
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -74390,7 +74389,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -74534,7 +74533,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -74580,7 +74579,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -76356,7 +76355,7 @@ export namespace Prisma {
     categoryId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -76391,7 +76390,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -76436,7 +76435,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -76480,7 +76479,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -76516,7 +76515,7 @@ export namespace Prisma {
     partsBrandId: number
     wholesalePrice: bigint | number
     buyPrice?: bigint | number | null
-    wholesaleDiscountPct?: Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
     retailDiscountPct?: Decimal | DecimalJsLike | number | string
     isOffer?: boolean
@@ -76551,7 +76550,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -76596,7 +76595,7 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean
@@ -76640,7 +76639,7 @@ export namespace Prisma {
     partsBrandId?: IntFieldUpdateOperationsInput | number
     wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
     buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    wholesaleDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isOffer?: BoolFieldUpdateOperationsInput | boolean

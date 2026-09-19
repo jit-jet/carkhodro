@@ -40,7 +40,7 @@ type BulkOpKey =
   | "category"
   | "brand"
   | "vehicleType"
-  | "wholesaleDiscount"
+  | "cashDiscount"
   | "retailDiscount"
   | "retailPriceDiff"
   | "setActive"
@@ -52,7 +52,7 @@ const BULK_OPTIONS: { value: BulkOpKey; label: string }[] = [
   { value: "category", label: "تغییر دسته‌بندی" },
   { value: "brand", label: "تغییر برند" },
   { value: "vehicleType", label: "تغییر مدل خودرو" },
-  { value: "wholesaleDiscount", label: "تنظیم تخفیف عمده (%)" },
+  { value: "cashDiscount", label: "تنظیم تخفیف نقدی (%)" },
   { value: "retailDiscount", label: "تنظیم تخفیف تک‌فروشی (%)" },
   { value: "retailPriceDiff", label: "تنظیم اختلاف عمده/تک‌فروشی (%)" },
   { value: "setActive", label: "فعال / غیرفعال کردن محصولات" },
@@ -233,7 +233,7 @@ export default function ProductsTable({
       op === "category" ||
       op === "brand" ||
       op === "vehicleType" ||
-      op === "wholesaleDiscount" ||
+      op === "cashDiscount" ||
       op === "retailDiscount" ||
       op === "retailPriceDiff"
     );
@@ -248,8 +248,8 @@ export default function ProductsTable({
         return { op: "brand", partsBrandId: Number(bulkValue) };
       case "vehicleType":
         return { op: "vehicleType", carModelId: Number(bulkValue) };
-      case "wholesaleDiscount":
-        return { op: "wholesaleDiscount", value: Number(bulkValue) };
+      case "cashDiscount":
+        return { op: "cashDiscount", value: Number(bulkValue) };
       case "retailDiscount":
         return { op: "retailDiscount", value: Number(bulkValue) };
       case "retailPriceDiff":
@@ -444,7 +444,7 @@ export default function ProductsTable({
           </Select>
         )}
 
-        {(bulkOp === "wholesaleDiscount" ||
+        {(bulkOp === "cashDiscount" ||
           bulkOp === "retailDiscount" ||
           bulkOp === "retailPriceDiff") && (
           <Input
@@ -762,12 +762,12 @@ export default function ProductsTable({
                       {p.carType || "—"}
                     </td>
                     <td className={`${tdClass} tabular-nums text-sm`}>
-                      <span className="block truncate" title={formatToman(p.wholesaleFinal)}>
-                        {formatToman(p.wholesaleFinal)}
+                      <span className="block truncate" title={formatToman(p.wholesalePrice)}>
+                        {formatToman(p.wholesalePrice)}
                       </span>
-                      {p.wholesaleDiscountPct > 0 && (
+                      {p.cashDiscountPct > 0 && (
                         <span className="block text-xs text-red-500">
-                          ٪{noFormatNumberFa(p.wholesaleDiscountPct)}
+                          ٪{p.cashDiscountPct.toLocaleString('fa-IR', { useGrouping: false, maximumFractionDigits: 2 })} تخفیف نقدی
                         </span>
                       )}
                     </td>
