@@ -6,6 +6,7 @@ import { getProductReviews } from '@/actions/reviews';
 import { getPublicSiteSettings } from '@/actions/site-settings';
 import ImageGallery    from '@/src/components/pdp/ImageGallery';
 import CartActions     from '@/src/components/pdp/CartActions';
+import ProductVisitTracker from '@/src/components/pdp/ProductVisitTracker';
 import ProductComments from '@/src/components/pdp/ProductComments';
 import RelatedProducts from '@/src/components/pdp/RelatedProducts';
 import CallForPrice    from '@/src/components/product/CallForPrice';
@@ -97,6 +98,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
     getCurrentUser(),
   ]);
   const shopPhone = primaryContactPhone(settings, pricingRoleFromUser(user?.role));
+  const trackVisit = user?.role === 'RETAIL' || user?.role === 'WHOLESALE';
   const flag = ORIGIN_FLAGS[product.origin] ?? '🏭';
 
   const compatibleLabel =
@@ -115,6 +117,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div className="bg-silver-light min-h-screen overflow-x-clip" dir="rtl">
+      {trackVisit && <ProductVisitTracker productId={product.id} />}
       <JsonLd data={[
         { '@context': 'https://schema.org', '@type': 'Product', name: product.name, sku: product.sku, image: product.images, description: plainText(product.description), brand: { '@type': 'Brand', name: product.brand }, offers: { '@type': 'Offer', url: siteUrl(`/products/${product.id}`), priceCurrency: 'IRR', price: product.price * 10, availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }, aggregateRating: product.reviewCount > 0 ? { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviewCount } : undefined, review: comments.map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.author }, reviewRating: { '@type': 'Rating', ratingValue: review.rating }, reviewBody: review.text })) },
         { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'خانه', item: siteUrl('/') }, { '@type': 'ListItem', position: 2, name: 'محصولات', item: siteUrl('/products') }, { '@type': 'ListItem', position: 3, name: product.name, item: siteUrl(`/products/${product.id}`) }] },

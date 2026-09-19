@@ -77,6 +77,7 @@ const NAV_SECTIONS: NavSection[] = [
     icon: "users",
     items: [
       { href: "/admin/users", label: "کاربران", icon: "users" },
+      { href: "/admin/product-visits", label: "بازدید محصولات کاربران", icon: "reports" },
       { href: "/admin/communications", label: "مدیریت ارتباطات", icon: "comms" },
       { href: "/admin/sms", label: "پیامک گروهی", icon: "sms" },
     ],

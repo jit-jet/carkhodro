@@ -230,6 +230,7 @@ model User {
   productSuggestions ProductSuggestion[]
   smsCampaigns       SmsCampaign[]
   adminActivityLogs  AdminActivityLog[]
+  productVisits      ProductVisit[]
 
   @@index([phoneNumber])
   @@index([isActive])
@@ -463,6 +464,7 @@ model Product {
   wishlistedBy       WishlistItem[]
   comparedBy         CompareItem[]
   stockNotifications StockNotification[]
+  visits             ProductVisit[]
 
   @@index([sku])
   @@index([hesabfaCode])
@@ -495,6 +497,21 @@ model StockNotification {
 }
 
 /// Additional product gallery images (beyond mainImage).
+/// A product page opened by a signed-in retail or wholesale user.
+model ProductVisit {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  productId String   @map("product_id")
+  viewedAt  DateTime @default(now()) @map("viewed_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([viewedAt(sort: Desc)])
+  @@index([userId, productId, viewedAt(sort: Desc)])
+  @@map("product_visits")
+}
+
 model ProductImage {
   id        String  @id @default(cuid())
   productId String  @map("product_id")

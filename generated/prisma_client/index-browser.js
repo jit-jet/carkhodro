@@ -302,6 +302,13 @@ exports.Prisma.StockNotificationScalarFieldEnum = {
   lastError: 'lastError'
 };
 
+exports.Prisma.ProductVisitScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  productId: 'productId',
+  viewedAt: 'viewedAt'
+};
+
 exports.Prisma.ProductImageScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
@@ -792,6 +799,7 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   Product: 'Product',
   StockNotification: 'StockNotification',
+  ProductVisit: 'ProductVisit',
   ProductImage: 'ProductImage',
   ProductCompatibility: 'ProductCompatibility',
   Review: 'Review',

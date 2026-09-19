@@ -86,8 +86,14 @@ export type Product = $Result.DefaultSelection<Prisma.$ProductPayload>
  */
 export type StockNotification = $Result.DefaultSelection<Prisma.$StockNotificationPayload>
 /**
- * Model ProductImage
+ * Model ProductVisit
  * Additional product gallery images (beyond mainImage).
+ * A product page opened by a signed-in retail or wholesale user.
+ */
+export type ProductVisit = $Result.DefaultSelection<Prisma.$ProductVisitPayload>
+/**
+ * Model ProductImage
+ * 
  */
 export type ProductImage = $Result.DefaultSelection<Prisma.$ProductImagePayload>
 /**
@@ -686,6 +692,16 @@ export class PrismaClient<
     * ```
     */
   get stockNotification(): Prisma.StockNotificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.productVisit`: Exposes CRUD operations for the **ProductVisit** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProductVisits
+    * const productVisits = await prisma.productVisit.findMany()
+    * ```
+    */
+  get productVisit(): Prisma.ProductVisitDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.productImage`: Exposes CRUD operations for the **ProductImage** model.
@@ -1427,6 +1443,7 @@ export namespace Prisma {
     Category: 'Category',
     Product: 'Product',
     StockNotification: 'StockNotification',
+    ProductVisit: 'ProductVisit',
     ProductImage: 'ProductImage',
     ProductCompatibility: 'ProductCompatibility',
     Review: 'Review',
@@ -1470,7 +1487,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "stockNotification" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "seoRedirect" | "staticPageSeo" | "adminActivityLog" | "systemSetting" | "rulesContent" | "returnContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
+      modelProps: "province" | "city" | "navLink" | "footerLink" | "user" | "otpSession" | "session" | "address" | "carBrand" | "carModel" | "partsBrand" | "category" | "product" | "stockNotification" | "productVisit" | "productImage" | "productCompatibility" | "review" | "cart" | "cartItem" | "wishlistItem" | "compareItem" | "postCategory" | "post" | "faq" | "siteSetting" | "seoRedirect" | "staticPageSeo" | "adminActivityLog" | "systemSetting" | "rulesContent" | "returnContent" | "socialLink" | "heroBanner" | "smsCampaign" | "shippingOption" | "order" | "orderItem" | "supportMessage" | "orderSurvey" | "priceListRequest" | "productSuggestion" | "discountCode"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2507,6 +2524,80 @@ export namespace Prisma {
           count: {
             args: Prisma.StockNotificationCountArgs<ExtArgs>
             result: $Utils.Optional<StockNotificationCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProductVisit: {
+        payload: Prisma.$ProductVisitPayload<ExtArgs>
+        fields: Prisma.ProductVisitFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProductVisitFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProductVisitFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload>
+          }
+          findFirst: {
+            args: Prisma.ProductVisitFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProductVisitFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload>
+          }
+          findMany: {
+            args: Prisma.ProductVisitFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload>[]
+          }
+          create: {
+            args: Prisma.ProductVisitCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload>
+          }
+          createMany: {
+            args: Prisma.ProductVisitCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProductVisitCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload>[]
+          }
+          delete: {
+            args: Prisma.ProductVisitDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload>
+          }
+          update: {
+            args: Prisma.ProductVisitUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProductVisitDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProductVisitUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProductVisitUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProductVisitUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductVisitPayload>
+          }
+          aggregate: {
+            args: Prisma.ProductVisitAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProductVisit>
+          }
+          groupBy: {
+            args: Prisma.ProductVisitGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProductVisitGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProductVisitCountArgs<ExtArgs>
+            result: $Utils.Optional<ProductVisitCountAggregateOutputType> | number
           }
         }
       }
@@ -4719,6 +4810,7 @@ export namespace Prisma {
     category?: CategoryOmit
     product?: ProductOmit
     stockNotification?: StockNotificationOmit
+    productVisit?: ProductVisitOmit
     productImage?: ProductImageOmit
     productCompatibility?: ProductCompatibilityOmit
     review?: ReviewOmit
@@ -4901,6 +4993,7 @@ export namespace Prisma {
     productSuggestions: number
     smsCampaigns: number
     adminActivityLogs: number
+    productVisits: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4916,6 +5009,7 @@ export namespace Prisma {
     productSuggestions?: boolean | UserCountOutputTypeCountProductSuggestionsArgs
     smsCampaigns?: boolean | UserCountOutputTypeCountSmsCampaignsArgs
     adminActivityLogs?: boolean | UserCountOutputTypeCountAdminActivityLogsArgs
+    productVisits?: boolean | UserCountOutputTypeCountProductVisitsArgs
   }
 
   // Custom InputTypes
@@ -5011,6 +5105,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAdminActivityLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AdminActivityLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountProductVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductVisitWhereInput
   }
 
 
@@ -5182,6 +5283,7 @@ export namespace Prisma {
     wishlistedBy: number
     comparedBy: number
     stockNotifications: number
+    visits: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5193,6 +5295,7 @@ export namespace Prisma {
     wishlistedBy?: boolean | ProductCountOutputTypeCountWishlistedByArgs
     comparedBy?: boolean | ProductCountOutputTypeCountComparedByArgs
     stockNotifications?: boolean | ProductCountOutputTypeCountStockNotificationsArgs
+    visits?: boolean | ProductCountOutputTypeCountVisitsArgs
   }
 
   // Custom InputTypes
@@ -5260,6 +5363,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountStockNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StockNotificationWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductVisitWhereInput
   }
 
 
@@ -10103,6 +10213,7 @@ export namespace Prisma {
     productSuggestions?: boolean | User$productSuggestionsArgs<ExtArgs>
     smsCampaigns?: boolean | User$smsCampaignsArgs<ExtArgs>
     adminActivityLogs?: boolean | User$adminActivityLogsArgs<ExtArgs>
+    productVisits?: boolean | User$productVisitsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -10190,6 +10301,7 @@ export namespace Prisma {
     productSuggestions?: boolean | User$productSuggestionsArgs<ExtArgs>
     smsCampaigns?: boolean | User$smsCampaignsArgs<ExtArgs>
     adminActivityLogs?: boolean | User$adminActivityLogsArgs<ExtArgs>
+    productVisits?: boolean | User$productVisitsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -10211,6 +10323,7 @@ export namespace Prisma {
       productSuggestions: Prisma.$ProductSuggestionPayload<ExtArgs>[]
       smsCampaigns: Prisma.$SmsCampaignPayload<ExtArgs>[]
       adminActivityLogs: Prisma.$AdminActivityLogPayload<ExtArgs>[]
+      productVisits: Prisma.$ProductVisitPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10687,6 +10800,7 @@ export namespace Prisma {
     productSuggestions<T extends User$productSuggestionsArgs<ExtArgs> = {}>(args?: Subset<T, User$productSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     smsCampaigns<T extends User$smsCampaignsArgs<ExtArgs> = {}>(args?: Subset<T, User$smsCampaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     adminActivityLogs<T extends User$adminActivityLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$adminActivityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    productVisits<T extends User$productVisitsArgs<ExtArgs> = {}>(args?: Subset<T, User$productVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11433,6 +11547,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AdminActivityLogScalarFieldEnum | AdminActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.productVisits
+   */
+  export type User$productVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    where?: ProductVisitWhereInput
+    orderBy?: ProductVisitOrderByWithRelationInput | ProductVisitOrderByWithRelationInput[]
+    cursor?: ProductVisitWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductVisitScalarFieldEnum | ProductVisitScalarFieldEnum[]
   }
 
   /**
@@ -19949,6 +20087,7 @@ export namespace Prisma {
     wishlistedBy?: boolean | Product$wishlistedByArgs<ExtArgs>
     comparedBy?: boolean | Product$comparedByArgs<ExtArgs>
     stockNotifications?: boolean | Product$stockNotificationsArgs<ExtArgs>
+    visits?: boolean | Product$visitsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -20079,6 +20218,7 @@ export namespace Prisma {
     wishlistedBy?: boolean | Product$wishlistedByArgs<ExtArgs>
     comparedBy?: boolean | Product$comparedByArgs<ExtArgs>
     stockNotifications?: boolean | Product$stockNotificationsArgs<ExtArgs>
+    visits?: boolean | Product$visitsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20103,6 +20243,7 @@ export namespace Prisma {
       wishlistedBy: Prisma.$WishlistItemPayload<ExtArgs>[]
       comparedBy: Prisma.$CompareItemPayload<ExtArgs>[]
       stockNotifications: Prisma.$StockNotificationPayload<ExtArgs>[]
+      visits: Prisma.$ProductVisitPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20598,6 +20739,7 @@ export namespace Prisma {
     wishlistedBy<T extends Product$wishlistedByArgs<ExtArgs> = {}>(args?: Subset<T, Product$wishlistedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WishlistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comparedBy<T extends Product$comparedByArgs<ExtArgs> = {}>(args?: Subset<T, Product$comparedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompareItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockNotifications<T extends Product$stockNotificationsArgs<ExtArgs> = {}>(args?: Subset<T, Product$stockNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    visits<T extends Product$visitsArgs<ExtArgs> = {}>(args?: Subset<T, Product$visitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -21251,6 +21393,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StockNotificationScalarFieldEnum | StockNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Product.visits
+   */
+  export type Product$visitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    where?: ProductVisitWhereInput
+    orderBy?: ProductVisitOrderByWithRelationInput | ProductVisitOrderByWithRelationInput[]
+    cursor?: ProductVisitWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductVisitScalarFieldEnum | ProductVisitScalarFieldEnum[]
   }
 
   /**
@@ -22405,6 +22571,1064 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: StockNotificationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProductVisit
+   */
+
+  export type AggregateProductVisit = {
+    _count: ProductVisitCountAggregateOutputType | null
+    _min: ProductVisitMinAggregateOutputType | null
+    _max: ProductVisitMaxAggregateOutputType | null
+  }
+
+  export type ProductVisitMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    productId: string | null
+    viewedAt: Date | null
+  }
+
+  export type ProductVisitMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    productId: string | null
+    viewedAt: Date | null
+  }
+
+  export type ProductVisitCountAggregateOutputType = {
+    id: number
+    userId: number
+    productId: number
+    viewedAt: number
+    _all: number
+  }
+
+
+  export type ProductVisitMinAggregateInputType = {
+    id?: true
+    userId?: true
+    productId?: true
+    viewedAt?: true
+  }
+
+  export type ProductVisitMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    productId?: true
+    viewedAt?: true
+  }
+
+  export type ProductVisitCountAggregateInputType = {
+    id?: true
+    userId?: true
+    productId?: true
+    viewedAt?: true
+    _all?: true
+  }
+
+  export type ProductVisitAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductVisit to aggregate.
+     */
+    where?: ProductVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductVisits to fetch.
+     */
+    orderBy?: ProductVisitOrderByWithRelationInput | ProductVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProductVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProductVisits
+    **/
+    _count?: true | ProductVisitCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductVisitMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductVisitMaxAggregateInputType
+  }
+
+  export type GetProductVisitAggregateType<T extends ProductVisitAggregateArgs> = {
+        [P in keyof T & keyof AggregateProductVisit]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProductVisit[P]>
+      : GetScalarType<T[P], AggregateProductVisit[P]>
+  }
+
+
+
+
+  export type ProductVisitGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductVisitWhereInput
+    orderBy?: ProductVisitOrderByWithAggregationInput | ProductVisitOrderByWithAggregationInput[]
+    by: ProductVisitScalarFieldEnum[] | ProductVisitScalarFieldEnum
+    having?: ProductVisitScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductVisitCountAggregateInputType | true
+    _min?: ProductVisitMinAggregateInputType
+    _max?: ProductVisitMaxAggregateInputType
+  }
+
+  export type ProductVisitGroupByOutputType = {
+    id: string
+    userId: string
+    productId: string
+    viewedAt: Date
+    _count: ProductVisitCountAggregateOutputType | null
+    _min: ProductVisitMinAggregateOutputType | null
+    _max: ProductVisitMaxAggregateOutputType | null
+  }
+
+  type GetProductVisitGroupByPayload<T extends ProductVisitGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProductVisitGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductVisitGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductVisitGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductVisitGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductVisitSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    productId?: boolean
+    viewedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productVisit"]>
+
+  export type ProductVisitSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    productId?: boolean
+    viewedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productVisit"]>
+
+  export type ProductVisitSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    productId?: boolean
+    viewedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["productVisit"]>
+
+  export type ProductVisitSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    productId?: boolean
+    viewedAt?: boolean
+  }
+
+  export type ProductVisitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "productId" | "viewedAt", ExtArgs["result"]["productVisit"]>
+  export type ProductVisitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type ProductVisitIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type ProductVisitIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $ProductVisitPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProductVisit"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      productId: string
+      viewedAt: Date
+    }, ExtArgs["result"]["productVisit"]>
+    composites: {}
+  }
+
+  type ProductVisitGetPayload<S extends boolean | null | undefined | ProductVisitDefaultArgs> = $Result.GetResult<Prisma.$ProductVisitPayload, S>
+
+  type ProductVisitCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProductVisitFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProductVisitCountAggregateInputType | true
+    }
+
+  export interface ProductVisitDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProductVisit'], meta: { name: 'ProductVisit' } }
+    /**
+     * Find zero or one ProductVisit that matches the filter.
+     * @param {ProductVisitFindUniqueArgs} args - Arguments to find a ProductVisit
+     * @example
+     * // Get one ProductVisit
+     * const productVisit = await prisma.productVisit.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProductVisitFindUniqueArgs>(args: SelectSubset<T, ProductVisitFindUniqueArgs<ExtArgs>>): Prisma__ProductVisitClient<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProductVisit that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProductVisitFindUniqueOrThrowArgs} args - Arguments to find a ProductVisit
+     * @example
+     * // Get one ProductVisit
+     * const productVisit = await prisma.productVisit.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProductVisitFindUniqueOrThrowArgs>(args: SelectSubset<T, ProductVisitFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProductVisitClient<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductVisit that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductVisitFindFirstArgs} args - Arguments to find a ProductVisit
+     * @example
+     * // Get one ProductVisit
+     * const productVisit = await prisma.productVisit.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProductVisitFindFirstArgs>(args?: SelectSubset<T, ProductVisitFindFirstArgs<ExtArgs>>): Prisma__ProductVisitClient<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductVisit that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductVisitFindFirstOrThrowArgs} args - Arguments to find a ProductVisit
+     * @example
+     * // Get one ProductVisit
+     * const productVisit = await prisma.productVisit.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProductVisitFindFirstOrThrowArgs>(args?: SelectSubset<T, ProductVisitFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProductVisitClient<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProductVisits that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductVisitFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProductVisits
+     * const productVisits = await prisma.productVisit.findMany()
+     * 
+     * // Get first 10 ProductVisits
+     * const productVisits = await prisma.productVisit.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productVisitWithIdOnly = await prisma.productVisit.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProductVisitFindManyArgs>(args?: SelectSubset<T, ProductVisitFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProductVisit.
+     * @param {ProductVisitCreateArgs} args - Arguments to create a ProductVisit.
+     * @example
+     * // Create one ProductVisit
+     * const ProductVisit = await prisma.productVisit.create({
+     *   data: {
+     *     // ... data to create a ProductVisit
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProductVisitCreateArgs>(args: SelectSubset<T, ProductVisitCreateArgs<ExtArgs>>): Prisma__ProductVisitClient<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProductVisits.
+     * @param {ProductVisitCreateManyArgs} args - Arguments to create many ProductVisits.
+     * @example
+     * // Create many ProductVisits
+     * const productVisit = await prisma.productVisit.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProductVisitCreateManyArgs>(args?: SelectSubset<T, ProductVisitCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProductVisits and returns the data saved in the database.
+     * @param {ProductVisitCreateManyAndReturnArgs} args - Arguments to create many ProductVisits.
+     * @example
+     * // Create many ProductVisits
+     * const productVisit = await prisma.productVisit.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProductVisits and only return the `id`
+     * const productVisitWithIdOnly = await prisma.productVisit.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProductVisitCreateManyAndReturnArgs>(args?: SelectSubset<T, ProductVisitCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProductVisit.
+     * @param {ProductVisitDeleteArgs} args - Arguments to delete one ProductVisit.
+     * @example
+     * // Delete one ProductVisit
+     * const ProductVisit = await prisma.productVisit.delete({
+     *   where: {
+     *     // ... filter to delete one ProductVisit
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProductVisitDeleteArgs>(args: SelectSubset<T, ProductVisitDeleteArgs<ExtArgs>>): Prisma__ProductVisitClient<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProductVisit.
+     * @param {ProductVisitUpdateArgs} args - Arguments to update one ProductVisit.
+     * @example
+     * // Update one ProductVisit
+     * const productVisit = await prisma.productVisit.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProductVisitUpdateArgs>(args: SelectSubset<T, ProductVisitUpdateArgs<ExtArgs>>): Prisma__ProductVisitClient<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProductVisits.
+     * @param {ProductVisitDeleteManyArgs} args - Arguments to filter ProductVisits to delete.
+     * @example
+     * // Delete a few ProductVisits
+     * const { count } = await prisma.productVisit.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProductVisitDeleteManyArgs>(args?: SelectSubset<T, ProductVisitDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductVisits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductVisitUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProductVisits
+     * const productVisit = await prisma.productVisit.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProductVisitUpdateManyArgs>(args: SelectSubset<T, ProductVisitUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductVisits and returns the data updated in the database.
+     * @param {ProductVisitUpdateManyAndReturnArgs} args - Arguments to update many ProductVisits.
+     * @example
+     * // Update many ProductVisits
+     * const productVisit = await prisma.productVisit.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProductVisits and only return the `id`
+     * const productVisitWithIdOnly = await prisma.productVisit.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProductVisitUpdateManyAndReturnArgs>(args: SelectSubset<T, ProductVisitUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProductVisit.
+     * @param {ProductVisitUpsertArgs} args - Arguments to update or create a ProductVisit.
+     * @example
+     * // Update or create a ProductVisit
+     * const productVisit = await prisma.productVisit.upsert({
+     *   create: {
+     *     // ... data to create a ProductVisit
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProductVisit we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProductVisitUpsertArgs>(args: SelectSubset<T, ProductVisitUpsertArgs<ExtArgs>>): Prisma__ProductVisitClient<$Result.GetResult<Prisma.$ProductVisitPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProductVisits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductVisitCountArgs} args - Arguments to filter ProductVisits to count.
+     * @example
+     * // Count the number of ProductVisits
+     * const count = await prisma.productVisit.count({
+     *   where: {
+     *     // ... the filter for the ProductVisits we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductVisitCountArgs>(
+      args?: Subset<T, ProductVisitCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductVisitCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProductVisit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductVisitAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductVisitAggregateArgs>(args: Subset<T, ProductVisitAggregateArgs>): Prisma.PrismaPromise<GetProductVisitAggregateType<T>>
+
+    /**
+     * Group by ProductVisit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductVisitGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductVisitGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductVisitGroupByArgs['orderBy'] }
+        : { orderBy?: ProductVisitGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductVisitGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductVisitGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProductVisit model
+   */
+  readonly fields: ProductVisitFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProductVisit.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProductVisitClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProductVisit model
+   */
+  interface ProductVisitFieldRefs {
+    readonly id: FieldRef<"ProductVisit", 'String'>
+    readonly userId: FieldRef<"ProductVisit", 'String'>
+    readonly productId: FieldRef<"ProductVisit", 'String'>
+    readonly viewedAt: FieldRef<"ProductVisit", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProductVisit findUnique
+   */
+  export type ProductVisitFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductVisit to fetch.
+     */
+    where: ProductVisitWhereUniqueInput
+  }
+
+  /**
+   * ProductVisit findUniqueOrThrow
+   */
+  export type ProductVisitFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductVisit to fetch.
+     */
+    where: ProductVisitWhereUniqueInput
+  }
+
+  /**
+   * ProductVisit findFirst
+   */
+  export type ProductVisitFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductVisit to fetch.
+     */
+    where?: ProductVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductVisits to fetch.
+     */
+    orderBy?: ProductVisitOrderByWithRelationInput | ProductVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductVisits.
+     */
+    cursor?: ProductVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductVisits.
+     */
+    distinct?: ProductVisitScalarFieldEnum | ProductVisitScalarFieldEnum[]
+  }
+
+  /**
+   * ProductVisit findFirstOrThrow
+   */
+  export type ProductVisitFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductVisit to fetch.
+     */
+    where?: ProductVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductVisits to fetch.
+     */
+    orderBy?: ProductVisitOrderByWithRelationInput | ProductVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductVisits.
+     */
+    cursor?: ProductVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductVisits.
+     */
+    distinct?: ProductVisitScalarFieldEnum | ProductVisitScalarFieldEnum[]
+  }
+
+  /**
+   * ProductVisit findMany
+   */
+  export type ProductVisitFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductVisits to fetch.
+     */
+    where?: ProductVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductVisits to fetch.
+     */
+    orderBy?: ProductVisitOrderByWithRelationInput | ProductVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProductVisits.
+     */
+    cursor?: ProductVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductVisits.
+     */
+    distinct?: ProductVisitScalarFieldEnum | ProductVisitScalarFieldEnum[]
+  }
+
+  /**
+   * ProductVisit create
+   */
+  export type ProductVisitCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProductVisit.
+     */
+    data: XOR<ProductVisitCreateInput, ProductVisitUncheckedCreateInput>
+  }
+
+  /**
+   * ProductVisit createMany
+   */
+  export type ProductVisitCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProductVisits.
+     */
+    data: ProductVisitCreateManyInput | ProductVisitCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProductVisit createManyAndReturn
+   */
+  export type ProductVisitCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProductVisits.
+     */
+    data: ProductVisitCreateManyInput | ProductVisitCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductVisit update
+   */
+  export type ProductVisitUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProductVisit.
+     */
+    data: XOR<ProductVisitUpdateInput, ProductVisitUncheckedUpdateInput>
+    /**
+     * Choose, which ProductVisit to update.
+     */
+    where: ProductVisitWhereUniqueInput
+  }
+
+  /**
+   * ProductVisit updateMany
+   */
+  export type ProductVisitUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProductVisits.
+     */
+    data: XOR<ProductVisitUpdateManyMutationInput, ProductVisitUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductVisits to update
+     */
+    where?: ProductVisitWhereInput
+    /**
+     * Limit how many ProductVisits to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductVisit updateManyAndReturn
+   */
+  export type ProductVisitUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * The data used to update ProductVisits.
+     */
+    data: XOR<ProductVisitUpdateManyMutationInput, ProductVisitUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductVisits to update
+     */
+    where?: ProductVisitWhereInput
+    /**
+     * Limit how many ProductVisits to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductVisit upsert
+   */
+  export type ProductVisitUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProductVisit to update in case it exists.
+     */
+    where: ProductVisitWhereUniqueInput
+    /**
+     * In case the ProductVisit found by the `where` argument doesn't exist, create a new ProductVisit with this data.
+     */
+    create: XOR<ProductVisitCreateInput, ProductVisitUncheckedCreateInput>
+    /**
+     * In case the ProductVisit was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProductVisitUpdateInput, ProductVisitUncheckedUpdateInput>
+  }
+
+  /**
+   * ProductVisit delete
+   */
+  export type ProductVisitDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
+    /**
+     * Filter which ProductVisit to delete.
+     */
+    where: ProductVisitWhereUniqueInput
+  }
+
+  /**
+   * ProductVisit deleteMany
+   */
+  export type ProductVisitDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductVisits to delete
+     */
+    where?: ProductVisitWhereInput
+    /**
+     * Limit how many ProductVisits to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductVisit without action
+   */
+  export type ProductVisitDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductVisit
+     */
+    select?: ProductVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductVisit
+     */
+    omit?: ProductVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductVisitInclude<ExtArgs> | null
   }
 
 
@@ -54985,6 +56209,16 @@ export namespace Prisma {
   export type StockNotificationScalarFieldEnum = (typeof StockNotificationScalarFieldEnum)[keyof typeof StockNotificationScalarFieldEnum]
 
 
+  export const ProductVisitScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    productId: 'productId',
+    viewedAt: 'viewedAt'
+  };
+
+  export type ProductVisitScalarFieldEnum = (typeof ProductVisitScalarFieldEnum)[keyof typeof ProductVisitScalarFieldEnum]
+
+
   export const ProductImageScalarFieldEnum: {
     id: 'id',
     productId: 'productId',
@@ -56042,6 +57276,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionListRelationFilter
     smsCampaigns?: SmsCampaignListRelationFilter
     adminActivityLogs?: AdminActivityLogListRelationFilter
+    productVisits?: ProductVisitListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -56078,6 +57313,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionOrderByRelationAggregateInput
     smsCampaigns?: SmsCampaignOrderByRelationAggregateInput
     adminActivityLogs?: AdminActivityLogOrderByRelationAggregateInput
+    productVisits?: ProductVisitOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -56117,6 +57353,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionListRelationFilter
     smsCampaigns?: SmsCampaignListRelationFilter
     adminActivityLogs?: AdminActivityLogListRelationFilter
+    productVisits?: ProductVisitListRelationFilter
   }, "id" | "phoneNumber" | "username" | "hesabfaCode" | "hesabfaId">
 
   export type UserOrderByWithAggregationInput = {
@@ -56729,6 +57966,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemListRelationFilter
     comparedBy?: CompareItemListRelationFilter
     stockNotifications?: StockNotificationListRelationFilter
+    visits?: ProductVisitListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -56776,6 +58014,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemOrderByRelationAggregateInput
     comparedBy?: CompareItemOrderByRelationAggregateInput
     stockNotifications?: StockNotificationOrderByRelationAggregateInput
+    visits?: ProductVisitOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -56826,6 +58065,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemListRelationFilter
     comparedBy?: CompareItemListRelationFilter
     stockNotifications?: StockNotificationListRelationFilter
+    visits?: ProductVisitListRelationFilter
   }, "id" | "sku" | "hesabfaCode" | "hesabfaId">
 
   export type ProductOrderByWithAggregationInput = {
@@ -56981,6 +58221,59 @@ export namespace Prisma {
     sentAt?: DateTimeNullableWithAggregatesFilter<"StockNotification"> | Date | string | null
     attemptCount?: IntWithAggregatesFilter<"StockNotification"> | number
     lastError?: StringNullableWithAggregatesFilter<"StockNotification"> | string | null
+  }
+
+  export type ProductVisitWhereInput = {
+    AND?: ProductVisitWhereInput | ProductVisitWhereInput[]
+    OR?: ProductVisitWhereInput[]
+    NOT?: ProductVisitWhereInput | ProductVisitWhereInput[]
+    id?: StringFilter<"ProductVisit"> | string
+    userId?: StringFilter<"ProductVisit"> | string
+    productId?: StringFilter<"ProductVisit"> | string
+    viewedAt?: DateTimeFilter<"ProductVisit"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }
+
+  export type ProductVisitOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    viewedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type ProductVisitWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProductVisitWhereInput | ProductVisitWhereInput[]
+    OR?: ProductVisitWhereInput[]
+    NOT?: ProductVisitWhereInput | ProductVisitWhereInput[]
+    userId?: StringFilter<"ProductVisit"> | string
+    productId?: StringFilter<"ProductVisit"> | string
+    viewedAt?: DateTimeFilter<"ProductVisit"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }, "id">
+
+  export type ProductVisitOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    viewedAt?: SortOrder
+    _count?: ProductVisitCountOrderByAggregateInput
+    _max?: ProductVisitMaxOrderByAggregateInput
+    _min?: ProductVisitMinOrderByAggregateInput
+  }
+
+  export type ProductVisitScalarWhereWithAggregatesInput = {
+    AND?: ProductVisitScalarWhereWithAggregatesInput | ProductVisitScalarWhereWithAggregatesInput[]
+    OR?: ProductVisitScalarWhereWithAggregatesInput[]
+    NOT?: ProductVisitScalarWhereWithAggregatesInput | ProductVisitScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProductVisit"> | string
+    userId?: StringWithAggregatesFilter<"ProductVisit"> | string
+    productId?: StringWithAggregatesFilter<"ProductVisit"> | string
+    viewedAt?: DateTimeWithAggregatesFilter<"ProductVisit"> | Date | string
   }
 
   export type ProductImageWhereInput = {
@@ -59549,6 +60842,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -59585,6 +60879,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -59621,6 +60916,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -59657,6 +60953,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -60314,6 +61611,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -60359,6 +61657,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -60404,6 +61703,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -60449,6 +61749,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -60634,6 +61935,53 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     attemptCount?: IntFieldUpdateOperationsInput | number
     lastError?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProductVisitCreateInput = {
+    id?: string
+    viewedAt?: Date | string
+    user: UserCreateNestedOneWithoutProductVisitsInput
+    product: ProductCreateNestedOneWithoutVisitsInput
+  }
+
+  export type ProductVisitUncheckedCreateInput = {
+    id?: string
+    userId: string
+    productId: string
+    viewedAt?: Date | string
+  }
+
+  export type ProductVisitUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutProductVisitsNestedInput
+    product?: ProductUpdateOneRequiredWithoutVisitsNestedInput
+  }
+
+  export type ProductVisitUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductVisitCreateManyInput = {
+    id?: string
+    userId: string
+    productId: string
+    viewedAt?: Date | string
+  }
+
+  export type ProductVisitUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductVisitUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductImageCreateInput = {
@@ -63573,6 +64921,12 @@ export namespace Prisma {
     none?: AdminActivityLogWhereInput
   }
 
+  export type ProductVisitListRelationFilter = {
+    every?: ProductVisitWhereInput
+    some?: ProductVisitWhereInput
+    none?: ProductVisitWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -63619,6 +64973,10 @@ export namespace Prisma {
   }
 
   export type AdminActivityLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProductVisitOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -64409,6 +65767,27 @@ export namespace Prisma {
 
   export type StockNotificationSumOrderByAggregateInput = {
     attemptCount?: SortOrder
+  }
+
+  export type ProductVisitCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    viewedAt?: SortOrder
+  }
+
+  export type ProductVisitMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    viewedAt?: SortOrder
+  }
+
+  export type ProductVisitMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    productId?: SortOrder
+    viewedAt?: SortOrder
   }
 
   export type ProductImageCountOrderByAggregateInput = {
@@ -66283,6 +67662,13 @@ export namespace Prisma {
     connect?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
   }
 
+  export type ProductVisitCreateNestedManyWithoutUserInput = {
+    create?: XOR<ProductVisitCreateWithoutUserInput, ProductVisitUncheckedCreateWithoutUserInput> | ProductVisitCreateWithoutUserInput[] | ProductVisitUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProductVisitCreateOrConnectWithoutUserInput | ProductVisitCreateOrConnectWithoutUserInput[]
+    createMany?: ProductVisitCreateManyUserInputEnvelope
+    connect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+  }
+
   export type AddressUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -66371,6 +67757,13 @@ export namespace Prisma {
     connectOrCreate?: AdminActivityLogCreateOrConnectWithoutActorInput | AdminActivityLogCreateOrConnectWithoutActorInput[]
     createMany?: AdminActivityLogCreateManyActorInputEnvelope
     connect?: AdminActivityLogWhereUniqueInput | AdminActivityLogWhereUniqueInput[]
+  }
+
+  export type ProductVisitUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ProductVisitCreateWithoutUserInput, ProductVisitUncheckedCreateWithoutUserInput> | ProductVisitCreateWithoutUserInput[] | ProductVisitUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProductVisitCreateOrConnectWithoutUserInput | ProductVisitCreateOrConnectWithoutUserInput[]
+    createMany?: ProductVisitCreateManyUserInputEnvelope
+    connect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
   }
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -66579,6 +67972,20 @@ export namespace Prisma {
     deleteMany?: AdminActivityLogScalarWhereInput | AdminActivityLogScalarWhereInput[]
   }
 
+  export type ProductVisitUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ProductVisitCreateWithoutUserInput, ProductVisitUncheckedCreateWithoutUserInput> | ProductVisitCreateWithoutUserInput[] | ProductVisitUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProductVisitCreateOrConnectWithoutUserInput | ProductVisitCreateOrConnectWithoutUserInput[]
+    upsert?: ProductVisitUpsertWithWhereUniqueWithoutUserInput | ProductVisitUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ProductVisitCreateManyUserInputEnvelope
+    set?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    disconnect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    delete?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    connect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    update?: ProductVisitUpdateWithWhereUniqueWithoutUserInput | ProductVisitUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ProductVisitUpdateManyWithWhereWithoutUserInput | ProductVisitUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProductVisitScalarWhereInput | ProductVisitScalarWhereInput[]
+  }
+
   export type AddressUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -66755,6 +68162,20 @@ export namespace Prisma {
     update?: AdminActivityLogUpdateWithWhereUniqueWithoutActorInput | AdminActivityLogUpdateWithWhereUniqueWithoutActorInput[]
     updateMany?: AdminActivityLogUpdateManyWithWhereWithoutActorInput | AdminActivityLogUpdateManyWithWhereWithoutActorInput[]
     deleteMany?: AdminActivityLogScalarWhereInput | AdminActivityLogScalarWhereInput[]
+  }
+
+  export type ProductVisitUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ProductVisitCreateWithoutUserInput, ProductVisitUncheckedCreateWithoutUserInput> | ProductVisitCreateWithoutUserInput[] | ProductVisitUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProductVisitCreateOrConnectWithoutUserInput | ProductVisitCreateOrConnectWithoutUserInput[]
+    upsert?: ProductVisitUpsertWithWhereUniqueWithoutUserInput | ProductVisitUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ProductVisitCreateManyUserInputEnvelope
+    set?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    disconnect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    delete?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    connect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    update?: ProductVisitUpdateWithWhereUniqueWithoutUserInput | ProductVisitUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ProductVisitUpdateManyWithWhereWithoutUserInput | ProductVisitUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProductVisitScalarWhereInput | ProductVisitScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -67091,6 +68512,13 @@ export namespace Prisma {
     connect?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
   }
 
+  export type ProductVisitCreateNestedManyWithoutProductInput = {
+    create?: XOR<ProductVisitCreateWithoutProductInput, ProductVisitUncheckedCreateWithoutProductInput> | ProductVisitCreateWithoutProductInput[] | ProductVisitUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductVisitCreateOrConnectWithoutProductInput | ProductVisitCreateOrConnectWithoutProductInput[]
+    createMany?: ProductVisitCreateManyProductInputEnvelope
+    connect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+  }
+
   export type ProductImageUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput> | ProductImageCreateWithoutProductInput[] | ProductImageUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductImageCreateOrConnectWithoutProductInput | ProductImageCreateOrConnectWithoutProductInput[]
@@ -67145,6 +68573,13 @@ export namespace Prisma {
     connectOrCreate?: StockNotificationCreateOrConnectWithoutProductInput | StockNotificationCreateOrConnectWithoutProductInput[]
     createMany?: StockNotificationCreateManyProductInputEnvelope
     connect?: StockNotificationWhereUniqueInput | StockNotificationWhereUniqueInput[]
+  }
+
+  export type ProductVisitUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<ProductVisitCreateWithoutProductInput, ProductVisitUncheckedCreateWithoutProductInput> | ProductVisitCreateWithoutProductInput[] | ProductVisitUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductVisitCreateOrConnectWithoutProductInput | ProductVisitCreateOrConnectWithoutProductInput[]
+    createMany?: ProductVisitCreateManyProductInputEnvelope
+    connect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
   }
 
   export type NullableBigIntFieldUpdateOperationsInput = {
@@ -67291,6 +68726,20 @@ export namespace Prisma {
     deleteMany?: StockNotificationScalarWhereInput | StockNotificationScalarWhereInput[]
   }
 
+  export type ProductVisitUpdateManyWithoutProductNestedInput = {
+    create?: XOR<ProductVisitCreateWithoutProductInput, ProductVisitUncheckedCreateWithoutProductInput> | ProductVisitCreateWithoutProductInput[] | ProductVisitUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductVisitCreateOrConnectWithoutProductInput | ProductVisitCreateOrConnectWithoutProductInput[]
+    upsert?: ProductVisitUpsertWithWhereUniqueWithoutProductInput | ProductVisitUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: ProductVisitCreateManyProductInputEnvelope
+    set?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    disconnect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    delete?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    connect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    update?: ProductVisitUpdateWithWhereUniqueWithoutProductInput | ProductVisitUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: ProductVisitUpdateManyWithWhereWithoutProductInput | ProductVisitUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: ProductVisitScalarWhereInput | ProductVisitScalarWhereInput[]
+  }
+
   export type ProductImageUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput> | ProductImageCreateWithoutProductInput[] | ProductImageUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductImageCreateOrConnectWithoutProductInput | ProductImageCreateOrConnectWithoutProductInput[]
@@ -67403,6 +68852,20 @@ export namespace Prisma {
     deleteMany?: StockNotificationScalarWhereInput | StockNotificationScalarWhereInput[]
   }
 
+  export type ProductVisitUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<ProductVisitCreateWithoutProductInput, ProductVisitUncheckedCreateWithoutProductInput> | ProductVisitCreateWithoutProductInput[] | ProductVisitUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductVisitCreateOrConnectWithoutProductInput | ProductVisitCreateOrConnectWithoutProductInput[]
+    upsert?: ProductVisitUpsertWithWhereUniqueWithoutProductInput | ProductVisitUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: ProductVisitCreateManyProductInputEnvelope
+    set?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    disconnect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    delete?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    connect?: ProductVisitWhereUniqueInput | ProductVisitWhereUniqueInput[]
+    update?: ProductVisitUpdateWithWhereUniqueWithoutProductInput | ProductVisitUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: ProductVisitUpdateManyWithWhereWithoutProductInput | ProductVisitUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: ProductVisitScalarWhereInput | ProductVisitScalarWhereInput[]
+  }
+
   export type ProductCreateNestedOneWithoutStockNotificationsInput = {
     create?: XOR<ProductCreateWithoutStockNotificationsInput, ProductUncheckedCreateWithoutStockNotificationsInput>
     connectOrCreate?: ProductCreateOrConnectWithoutStockNotificationsInput
@@ -67415,6 +68878,34 @@ export namespace Prisma {
     upsert?: ProductUpsertWithoutStockNotificationsInput
     connect?: ProductWhereUniqueInput
     update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutStockNotificationsInput, ProductUpdateWithoutStockNotificationsInput>, ProductUncheckedUpdateWithoutStockNotificationsInput>
+  }
+
+  export type UserCreateNestedOneWithoutProductVisitsInput = {
+    create?: XOR<UserCreateWithoutProductVisitsInput, UserUncheckedCreateWithoutProductVisitsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProductVisitsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutVisitsInput = {
+    create?: XOR<ProductCreateWithoutVisitsInput, ProductUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutVisitsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutProductVisitsNestedInput = {
+    create?: XOR<UserCreateWithoutProductVisitsInput, UserUncheckedCreateWithoutProductVisitsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProductVisitsInput
+    upsert?: UserUpsertWithoutProductVisitsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProductVisitsInput, UserUpdateWithoutProductVisitsInput>, UserUncheckedUpdateWithoutProductVisitsInput>
+  }
+
+  export type ProductUpdateOneRequiredWithoutVisitsNestedInput = {
+    create?: XOR<ProductCreateWithoutVisitsInput, ProductUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutVisitsInput
+    upsert?: ProductUpsertWithoutVisitsInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutVisitsInput, ProductUpdateWithoutVisitsInput>, ProductUncheckedUpdateWithoutVisitsInput>
   }
 
   export type ProductCreateNestedOneWithoutImagesInput = {
@@ -69279,6 +70770,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProductVisitCreateWithoutUserInput = {
+    id?: string
+    viewedAt?: Date | string
+    product: ProductCreateNestedOneWithoutVisitsInput
+  }
+
+  export type ProductVisitUncheckedCreateWithoutUserInput = {
+    id?: string
+    productId: string
+    viewedAt?: Date | string
+  }
+
+  export type ProductVisitCreateOrConnectWithoutUserInput = {
+    where: ProductVisitWhereUniqueInput
+    create: XOR<ProductVisitCreateWithoutUserInput, ProductVisitUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProductVisitCreateManyUserInputEnvelope = {
+    data: ProductVisitCreateManyUserInput | ProductVisitCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AddressUpsertWithWhereUniqueWithoutUserInput = {
     where: AddressWhereUniqueInput
     update: XOR<AddressUpdateWithoutUserInput, AddressUncheckedUpdateWithoutUserInput>
@@ -69669,6 +71182,32 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AdminActivityLog"> | Date | string
   }
 
+  export type ProductVisitUpsertWithWhereUniqueWithoutUserInput = {
+    where: ProductVisitWhereUniqueInput
+    update: XOR<ProductVisitUpdateWithoutUserInput, ProductVisitUncheckedUpdateWithoutUserInput>
+    create: XOR<ProductVisitCreateWithoutUserInput, ProductVisitUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProductVisitUpdateWithWhereUniqueWithoutUserInput = {
+    where: ProductVisitWhereUniqueInput
+    data: XOR<ProductVisitUpdateWithoutUserInput, ProductVisitUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ProductVisitUpdateManyWithWhereWithoutUserInput = {
+    where: ProductVisitScalarWhereInput
+    data: XOR<ProductVisitUpdateManyMutationInput, ProductVisitUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ProductVisitScalarWhereInput = {
+    AND?: ProductVisitScalarWhereInput | ProductVisitScalarWhereInput[]
+    OR?: ProductVisitScalarWhereInput[]
+    NOT?: ProductVisitScalarWhereInput | ProductVisitScalarWhereInput[]
+    id?: StringFilter<"ProductVisit"> | string
+    userId?: StringFilter<"ProductVisit"> | string
+    productId?: StringFilter<"ProductVisit"> | string
+    viewedAt?: DateTimeFilter<"ProductVisit"> | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id?: string
     phoneNumber: string
@@ -69702,6 +71241,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -69737,6 +71277,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -69788,6 +71329,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -69823,6 +71365,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAddressesInput = {
@@ -69858,6 +71401,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAddressesInput = {
@@ -69893,6 +71437,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAddressesInput = {
@@ -70048,6 +71593,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAddressesInput = {
@@ -70083,6 +71629,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CityUpsertWithoutAddressesInput = {
@@ -70334,6 +71881,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutPartsBrandInput = {
@@ -70378,6 +71926,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPartsBrandInput = {
@@ -70488,6 +72037,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -70532,6 +72082,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -70832,6 +72383,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProductVisitCreateWithoutProductInput = {
+    id?: string
+    viewedAt?: Date | string
+    user: UserCreateNestedOneWithoutProductVisitsInput
+  }
+
+  export type ProductVisitUncheckedCreateWithoutProductInput = {
+    id?: string
+    userId: string
+    viewedAt?: Date | string
+  }
+
+  export type ProductVisitCreateOrConnectWithoutProductInput = {
+    where: ProductVisitWhereUniqueInput
+    create: XOR<ProductVisitCreateWithoutProductInput, ProductVisitUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProductVisitCreateManyProductInputEnvelope = {
+    data: ProductVisitCreateManyProductInput | ProductVisitCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PartsBrandUpsertWithoutProductsInput = {
     update: XOR<PartsBrandUpdateWithoutProductsInput, PartsBrandUncheckedUpdateWithoutProductsInput>
     create: XOR<PartsBrandCreateWithoutProductsInput, PartsBrandUncheckedCreateWithoutProductsInput>
@@ -71083,6 +72656,22 @@ export namespace Prisma {
     lastError?: StringNullableFilter<"StockNotification"> | string | null
   }
 
+  export type ProductVisitUpsertWithWhereUniqueWithoutProductInput = {
+    where: ProductVisitWhereUniqueInput
+    update: XOR<ProductVisitUpdateWithoutProductInput, ProductVisitUncheckedUpdateWithoutProductInput>
+    create: XOR<ProductVisitCreateWithoutProductInput, ProductVisitUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProductVisitUpdateWithWhereUniqueWithoutProductInput = {
+    where: ProductVisitWhereUniqueInput
+    data: XOR<ProductVisitUpdateWithoutProductInput, ProductVisitUncheckedUpdateWithoutProductInput>
+  }
+
+  export type ProductVisitUpdateManyWithWhereWithoutProductInput = {
+    where: ProductVisitScalarWhereInput
+    data: XOR<ProductVisitUpdateManyMutationInput, ProductVisitUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type ProductCreateWithoutStockNotificationsInput = {
     id?: string
     sku: string
@@ -71125,6 +72714,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStockNotificationsInput = {
@@ -71169,6 +72759,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStockNotificationsInput = {
@@ -71229,6 +72820,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStockNotificationsInput = {
@@ -71273,6 +72865,363 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type UserCreateWithoutProductVisitsInput = {
+    id?: string
+    phoneNumber: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserRole
+    isVerified?: boolean
+    isActive?: boolean
+    shopName?: string | null
+    accountBalance?: bigint | number
+    activityField?: string | null
+    username?: string | null
+    passwordHash?: string | null
+    isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addresses?: AddressCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    cart?: CartCreateNestedOneWithoutUserInput
+    wishlist?: WishlistItemCreateNestedManyWithoutUserInput
+    compareItems?: CompareItemCreateNestedManyWithoutUserInput
+    supportMessages?: SupportMessageCreateNestedManyWithoutUserInput
+    orderSurveys?: OrderSurveyCreateNestedManyWithoutUserInput
+    priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+  }
+
+  export type UserUncheckedCreateWithoutProductVisitsInput = {
+    id?: string
+    phoneNumber: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserRole
+    isVerified?: boolean
+    isActive?: boolean
+    shopName?: string | null
+    accountBalance?: bigint | number
+    activityField?: string | null
+    username?: string | null
+    passwordHash?: string | null
+    isSuperAdmin?: boolean
+    failedAdminLoginAttempts?: number
+    adminLockedUntil?: Date | string | null
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    hesabfaSyncedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    cart?: CartUncheckedCreateNestedOneWithoutUserInput
+    wishlist?: WishlistItemUncheckedCreateNestedManyWithoutUserInput
+    compareItems?: CompareItemUncheckedCreateNestedManyWithoutUserInput
+    supportMessages?: SupportMessageUncheckedCreateNestedManyWithoutUserInput
+    orderSurveys?: OrderSurveyUncheckedCreateNestedManyWithoutUserInput
+    priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
+    productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
+    smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  }
+
+  export type UserCreateOrConnectWithoutProductVisitsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProductVisitsInput, UserUncheckedCreateWithoutProductVisitsInput>
+  }
+
+  export type ProductCreateWithoutVisitsInput = {
+    id?: string
+    sku: string
+    name: string
+    wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
+    retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
+    retailDiscountPct?: Decimal | DecimalJsLike | number | string
+    isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    lastSyncedAt?: Date | string | null
+    stock?: number
+    origin?: string | null
+    packQuantity?: number
+    cartonQuantity?: number
+    unit?: string
+    mainImage?: string | null
+    description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
+    searchText?: string | null
+    viewCount?: number
+    saleCount?: number
+    ratingAvg?: Decimal | DecimalJsLike | number | string
+    reviewCount?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partsBrand: PartsBrandCreateNestedOneWithoutProductsInput
+    category: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    compatibilities?: ProductCompatibilityCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+    cartItems?: CartItemCreateNestedManyWithoutProductInput
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
+    comparedBy?: CompareItemCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutVisitsInput = {
+    id?: string
+    sku: string
+    name: string
+    partsBrandId: number
+    categoryId: number
+    wholesalePrice: bigint | number
+    buyPrice?: bigint | number | null
+    cashDiscountPct?: Decimal | DecimalJsLike | number | string
+    retailPriceDiffPct?: Decimal | DecimalJsLike | number | string
+    retailDiscountPct?: Decimal | DecimalJsLike | number | string
+    isOffer?: boolean
+    callForPriceRetail?: boolean
+    callForPriceWholesale?: boolean
+    hesabfaCode?: string | null
+    hesabfaId?: number | null
+    lastSyncedAt?: Date | string | null
+    stock?: number
+    origin?: string | null
+    packQuantity?: number
+    cartonQuantity?: number
+    unit?: string
+    mainImage?: string | null
+    description?: string | null
+    metaTitle?: string | null
+    metaDescription?: string | null
+    imageAlt?: string | null
+    searchText?: string | null
+    viewCount?: number
+    saleCount?: number
+    ratingAvg?: Decimal | DecimalJsLike | number | string
+    reviewCount?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    compatibilities?: ProductCompatibilityUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
+    comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
+    stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutVisitsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutVisitsInput, ProductUncheckedCreateWithoutVisitsInput>
+  }
+
+  export type UserUpsertWithoutProductVisitsInput = {
+    update: XOR<UserUpdateWithoutProductVisitsInput, UserUncheckedUpdateWithoutProductVisitsInput>
+    create: XOR<UserCreateWithoutProductVisitsInput, UserUncheckedCreateWithoutProductVisitsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProductVisitsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProductVisitsInput, UserUncheckedUpdateWithoutProductVisitsInput>
+  }
+
+  export type UserUpdateWithoutProductVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    shopName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
+    activityField?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: AddressUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    cart?: CartUpdateOneWithoutUserNestedInput
+    wishlist?: WishlistItemUpdateManyWithoutUserNestedInput
+    compareItems?: CompareItemUpdateManyWithoutUserNestedInput
+    supportMessages?: SupportMessageUpdateManyWithoutUserNestedInput
+    orderSurveys?: OrderSurveyUpdateManyWithoutUserNestedInput
+    priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProductVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    shopName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountBalance?: BigIntFieldUpdateOperationsInput | bigint | number
+    activityField?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    isSuperAdmin?: BoolFieldUpdateOperationsInput | boolean
+    failedAdminLoginAttempts?: IntFieldUpdateOperationsInput | number
+    adminLockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    hesabfaSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    cart?: CartUncheckedUpdateOneWithoutUserNestedInput
+    wishlist?: WishlistItemUncheckedUpdateManyWithoutUserNestedInput
+    compareItems?: CompareItemUncheckedUpdateManyWithoutUserNestedInput
+    supportMessages?: SupportMessageUncheckedUpdateManyWithoutUserNestedInput
+    orderSurveys?: OrderSurveyUncheckedUpdateManyWithoutUserNestedInput
+    priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
+    productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
+    smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  }
+
+  export type ProductUpsertWithoutVisitsInput = {
+    update: XOR<ProductUpdateWithoutVisitsInput, ProductUncheckedUpdateWithoutVisitsInput>
+    create: XOR<ProductCreateWithoutVisitsInput, ProductUncheckedCreateWithoutVisitsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutVisitsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutVisitsInput, ProductUncheckedUpdateWithoutVisitsInput>
+  }
+
+  export type ProductUpdateWithoutVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    origin?: NullableStringFieldUpdateOperationsInput | string | null
+    packQuantity?: IntFieldUpdateOperationsInput | number
+    cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    mainImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
+    viewCount?: IntFieldUpdateOperationsInput | number
+    saleCount?: IntFieldUpdateOperationsInput | number
+    ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reviewCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partsBrand?: PartsBrandUpdateOneRequiredWithoutProductsNestedInput
+    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    compatibilities?: ProductCompatibilityUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+    cartItems?: CartItemUpdateManyWithoutProductNestedInput
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
+    comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    partsBrandId?: IntFieldUpdateOperationsInput | number
+    categoryId?: IntFieldUpdateOperationsInput | number
+    wholesalePrice?: BigIntFieldUpdateOperationsInput | bigint | number
+    buyPrice?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cashDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retailPriceDiffPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    retailDiscountPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isOffer?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceRetail?: BoolFieldUpdateOperationsInput | boolean
+    callForPriceWholesale?: BoolFieldUpdateOperationsInput | boolean
+    hesabfaCode?: NullableStringFieldUpdateOperationsInput | string | null
+    hesabfaId?: NullableIntFieldUpdateOperationsInput | number | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    stock?: IntFieldUpdateOperationsInput | number
+    origin?: NullableStringFieldUpdateOperationsInput | string | null
+    packQuantity?: IntFieldUpdateOperationsInput | number
+    cartonQuantity?: IntFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    mainImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    imageAlt?: NullableStringFieldUpdateOperationsInput | string | null
+    searchText?: NullableStringFieldUpdateOperationsInput | string | null
+    viewCount?: IntFieldUpdateOperationsInput | number
+    saleCount?: IntFieldUpdateOperationsInput | number
+    ratingAvg?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reviewCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    compatibilities?: ProductCompatibilityUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+    comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
+    stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutImagesInput = {
@@ -71317,6 +73266,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutImagesInput = {
@@ -71361,6 +73311,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutImagesInput = {
@@ -71421,6 +73372,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -71465,6 +73417,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutCompatibilitiesInput = {
@@ -71509,6 +73462,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCompatibilitiesInput = {
@@ -71553,6 +73507,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCompatibilitiesInput = {
@@ -71641,6 +73596,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCompatibilitiesInput = {
@@ -71685,6 +73641,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CarModelUpsertWithoutCompatibilitiesInput = {
@@ -71763,6 +73720,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutReviewsInput = {
@@ -71807,6 +73765,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutReviewsInput = {
@@ -71847,6 +73806,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -71882,6 +73842,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -71942,6 +73903,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutReviewsInput = {
@@ -71986,6 +73948,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -72032,6 +73995,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -72067,6 +74031,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutCartInput = {
@@ -72102,6 +74067,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCartInput = {
@@ -72137,6 +74103,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCartInput = {
@@ -72212,6 +74179,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCartInput = {
@@ -72247,6 +74215,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CartItemUpsertWithWhereUniqueWithoutCartInput = {
@@ -72326,6 +74295,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCartItemsInput = {
@@ -72370,6 +74340,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCartItemsInput = {
@@ -72455,6 +74426,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCartItemsInput = {
@@ -72499,6 +74471,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutWishlistInput = {
@@ -72534,6 +74507,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWishlistInput = {
@@ -72569,6 +74543,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWishlistInput = {
@@ -72618,6 +74593,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutWishlistedByInput = {
@@ -72662,6 +74638,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutWishlistedByInput = {
@@ -72713,6 +74690,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWishlistInput = {
@@ -72748,6 +74726,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutWishlistedByInput = {
@@ -72803,6 +74782,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutWishlistedByInput = {
@@ -72847,6 +74827,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutCompareItemsInput = {
@@ -72882,6 +74863,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompareItemsInput = {
@@ -72917,6 +74899,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompareItemsInput = {
@@ -72966,6 +74949,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutComparedByInput = {
@@ -73010,6 +74994,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutComparedByInput = {
@@ -73061,6 +75046,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompareItemsInput = {
@@ -73096,6 +75082,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutComparedByInput = {
@@ -73151,6 +75138,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutComparedByInput = {
@@ -73195,6 +75183,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type PostCreateWithoutCategoryInput = {
@@ -73391,6 +75380,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAdminActivityLogsInput = {
@@ -73426,6 +75416,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAdminActivityLogsInput = {
@@ -73477,6 +75468,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAdminActivityLogsInput = {
@@ -73512,6 +75504,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSmsCampaignsInput = {
@@ -73547,6 +75540,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSmsCampaignsInput = {
@@ -73582,6 +75576,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSmsCampaignsInput = {
@@ -73633,6 +75628,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSmsCampaignsInput = {
@@ -73668,6 +75664,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutShippingOptionInput = {
@@ -73805,6 +75802,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -73840,6 +75838,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -74051,6 +76050,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -74086,6 +76086,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AddressUpsertWithoutOrdersInput = {
@@ -74379,6 +76380,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationCreateNestedManyWithoutProductInput
+    visits?: ProductVisitCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -74423,6 +76425,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
     comparedBy?: CompareItemUncheckedCreateNestedManyWithoutProductInput
     stockNotifications?: StockNotificationUncheckedCreateNestedManyWithoutProductInput
+    visits?: ProductVisitUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -74569,6 +76572,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -74613,6 +76617,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutSupportMessagesInput = {
@@ -74648,6 +76653,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSupportMessagesInput = {
@@ -74683,6 +76689,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSupportMessagesInput = {
@@ -74734,6 +76741,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSupportMessagesInput = {
@@ -74769,6 +76777,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutSurveyInput = {
@@ -74885,6 +76894,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrderSurveysInput = {
@@ -74920,6 +76930,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrderSurveysInput = {
@@ -75057,6 +77068,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrderSurveysInput = {
@@ -75092,6 +77104,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPriceListRequestsInput = {
@@ -75127,6 +77140,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPriceListRequestsInput = {
@@ -75162,6 +77176,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPriceListRequestsInput = {
@@ -75213,6 +77228,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPriceListRequestsInput = {
@@ -75248,6 +77264,7 @@ export namespace Prisma {
     productSuggestions?: ProductSuggestionUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutProductSuggestionsInput = {
@@ -75283,6 +77300,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProductSuggestionsInput = {
@@ -75318,6 +77336,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedCreateNestedManyWithoutUserInput
     smsCampaigns?: SmsCampaignUncheckedCreateNestedManyWithoutCreatedByInput
     adminActivityLogs?: AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+    productVisits?: ProductVisitUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProductSuggestionsInput = {
@@ -75369,6 +77388,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProductSuggestionsInput = {
@@ -75404,6 +77424,7 @@ export namespace Prisma {
     priceListRequests?: PriceListRequestUncheckedUpdateManyWithoutUserNestedInput
     smsCampaigns?: SmsCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
     adminActivityLogs?: AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+    productVisits?: ProductVisitUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutCouponInput = {
@@ -75712,6 +77733,12 @@ export namespace Prisma {
     userAgent?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+  }
+
+  export type ProductVisitCreateManyUserInput = {
+    id?: string
+    productId: string
+    viewedAt?: Date | string
   }
 
   export type AddressUpdateWithoutUserInput = {
@@ -76136,6 +78163,24 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProductVisitUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutVisitsNestedInput
+  }
+
+  export type ProductVisitUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductVisitUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrderCreateManyAddressInput = {
     id?: string
     orderNumber?: number
@@ -76426,6 +78471,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPartsBrandInput = {
@@ -76470,6 +78516,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutPartsBrandInput = {
@@ -76586,6 +78633,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -76630,6 +78678,7 @@ export namespace Prisma {
     wishlistedBy?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
     comparedBy?: CompareItemUncheckedUpdateManyWithoutProductNestedInput
     stockNotifications?: StockNotificationUncheckedUpdateManyWithoutProductNestedInput
+    visits?: ProductVisitUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -76732,6 +78781,12 @@ export namespace Prisma {
     sentAt?: Date | string | null
     attemptCount?: number
     lastError?: string | null
+  }
+
+  export type ProductVisitCreateManyProductInput = {
+    id?: string
+    userId: string
+    viewedAt?: Date | string
   }
 
   export type ProductImageUpdateWithoutProductInput = {
@@ -76930,6 +78985,24 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     attemptCount?: IntFieldUpdateOperationsInput | number
     lastError?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProductVisitUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutProductVisitsNestedInput
+  }
+
+  export type ProductVisitUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductVisitUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CartItemCreateManyCartInput = {

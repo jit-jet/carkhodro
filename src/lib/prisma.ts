@@ -17,10 +17,12 @@ function supportsCurrentSchema(client: PrismaClient | undefined): boolean {
   const delegates = client as unknown as {
     adminActivityLog?: { count?: unknown }
     systemSetting?: { findUnique?: unknown }
+    productVisit?: { findFirst?: unknown }
   }
   return (
     typeof delegates.adminActivityLog?.count === 'function' &&
-    typeof delegates.systemSetting?.findUnique === 'function'
+    typeof delegates.systemSetting?.findUnique === 'function' &&
+    typeof delegates.productVisit?.findFirst === 'function'
   )
 }
 
