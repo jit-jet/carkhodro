@@ -15,8 +15,8 @@ import CashDiscountBadge from '@/src/components/product/CashDiscountBadge';
 
 interface ProductCardProps {
   product: Product;
-  /** slider = fixed narrow width for horizontal scroll; grid = full width for PLP grid */
-  variant?: 'slider' | 'grid';
+  /** slider = horizontal carousel; grid = regular grid; plp = compact mobile PLP card */
+  variant?: 'slider' | 'grid' | 'plp';
 }
 
 const ORIGIN_FLAGS: Record<string, string> = {
@@ -41,7 +41,8 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
   const [pending, startTransition]  = useTransition();
   const notify = useCartUI((s) => s.notify);
 
-  const isGrid  = variant === 'grid';
+  const isGrid  = variant !== 'slider';
+  const isPlp   = variant === 'plp';
   const { inStock, stockCapped, maxQty } = resolveOrderQtyUI(product);
   const flag    = ORIGIN_FLAGS[product.origin] ?? '🏭';
 
@@ -101,14 +102,15 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
   return (
     <div
       className={[
-        'bg-white rounded-2xl border border-gray-100 shadow-sm',
+        'bg-white border border-gray-100 shadow-sm',
         'hover:shadow-xl hover:-translate-y-1 transition-all duration-200',
         'overflow-hidden group flex flex-col',
+        isPlp ? 'rounded-xl sm:rounded-2xl' : 'rounded-2xl',
         isGrid ? 'w-full' : 'w-56 sm:w-60 shrink-0',
       ].join(' ')}
     >
       {/* ── Product image ──────────────────────────────────── */}
-      <div className={`relative ${isGrid ? 'h-48' : 'h-40'}`}>
+      <div className={`relative ${isPlp ? 'h-32 sm:h-48' : isGrid ? 'h-48' : 'h-40'}`}>
         <Link href={`/products/${product.id}`} className="block w-full h-full bg-white overflow-hidden">
           <ProductImage
             src={product.mainImage}
@@ -116,21 +118,23 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
             occupiedCorners={(!product.callForPrice && product.discount) || product.cashDiscount || isNew ? ['top-right', 'top-left'] : []}
             fill
             sizes={isGrid
-              ? '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
+              ? isPlp
+                ? '(max-width: 639px) 50vw, (max-width: 1280px) 50vw, 33vw'
+                : '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
               : '240px'}
-            className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
+            className={`object-contain group-hover:scale-105 transition-transform duration-300 ${isPlp ? 'p-2 sm:p-3' : 'p-3'}`}
           />
 
           {/* Price discount or display-only cash discount above the product. */}
           {!product.callForPrice && product.discount ? (
-            <span className="absolute top-2 inset-e-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
+            <span className={`absolute top-2 inset-e-2 bg-red-500 text-white font-bold py-0.5 rounded-full shadow ${isPlp ? 'text-[9px] px-1.5 sm:text-xs sm:px-2' : 'text-xs px-2'}`}>
               {product.discount}٪ تخفیف
             </span>
           ) : product.cashDiscount ? (
-            <CashDiscountBadge percent={product.cashDiscount} className="absolute top-2 inset-e-2 shadow" />
+            <CashDiscountBadge percent={product.cashDiscount} className={`absolute top-2 inset-e-2 shadow ${isPlp ? 'text-[9px] px-1.5 sm:text-xs sm:px-2' : ''}`} />
           ) : null}
           {isNew && (
-            <span className={`absolute top-2 ${product.discount || product.cashDiscount ? 'inset-s-2' : 'inset-e-2'} bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow`}>
+            <span className={`absolute top-2 ${product.discount || product.cashDiscount ? 'inset-s-2' : 'inset-e-2'} bg-green-500 text-white font-bold py-0.5 rounded-full shadow ${isPlp ? 'text-[9px] px-1.5 sm:text-xs sm:px-2' : 'text-xs px-2'}`}>
               جدید
             </span>
           )}
@@ -139,29 +143,29 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
       </div>
 
       {/* ── SKU code ───────────────────────────────────────── */}
-      <div className="px-3 pt-2">
-        <span className="text-[10px] font-mono text-gray-400 tracking-wider select-all">
+      <div className={isPlp ? 'px-2 pt-1.5 sm:px-3 sm:pt-2' : 'px-3 pt-2'}>
+        <span className={`${isPlp ? 'text-[9px] sm:text-[10px]' : 'text-[10px]'} font-mono text-gray-400 tracking-wider select-all`}>
           کد: {product.sku}
         </span>
       </div>
 
       {/* ── Main content ───────────────────────────────────── */}
-      <div className="px-3 pb-3 pt-1.5 flex flex-col flex-1">
+      <div className={`${isPlp ? 'px-2 pb-2 pt-1 sm:px-3 sm:pb-3 sm:pt-1.5' : 'px-3 pb-3 pt-1.5'} flex flex-col flex-1`}>
         {/* Brand • Car type */}
-        <p className="text-xs text-gray-400 mb-1 line-clamp-1">
+        <p className={`${isPlp ? 'text-[10px] mb-0.5 sm:text-xs sm:mb-1' : 'text-xs mb-1'} text-gray-400 line-clamp-1`}>
           {product.brand}
           {product.carType ? ` • ${product.carType}` : ""}
         </p>
 
         {/* Product name */}
-        <Link href={`/products/${product.id}`} className="flex-1 mb-2">
-          <h3 className="text-sm font-semibold text-charcoal hover:text-accent-dark leading-5 line-clamp-2 transition-colors">
+        <Link href={`/products/${product.id}`} className={`flex-1 ${isPlp ? 'mb-1.5 sm:mb-2' : 'mb-2'}`}>
+          <h3 className={`${isPlp ? 'text-xs leading-4 sm:text-sm sm:leading-5' : 'text-sm leading-5'} font-semibold text-charcoal hover:text-accent-dark line-clamp-2 transition-colors`}>
             {product.name}
           </h3>
         </Link>
 
         {/* Origin + Stock */}
-        <div className="flex items-center gap-2 flex-wrap mb-3">
+        <div className={`${isPlp ? 'hidden sm:flex' : 'flex'} items-center gap-2 flex-wrap mb-3`}>
           <span className="text-xs text-gray-500">
             {flag} {product.origin}
           </span>
@@ -170,51 +174,51 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
         {/* Price / Call for price */}
         {product.callForPrice ? (
           !inStock ? (
-            <div className="mt-auto space-y-3">
-              <div className="flex items-center gap-2">
-                <WishlistButton productId={product.id} productName={product.name} variant="compact" />
-                <CompareButton productId={product.id} productName={product.name} variant="compact" />
+            <div className={`mt-auto ${isPlp ? 'space-y-2 sm:space-y-3' : 'space-y-3'}`}>
+              <div className={`flex items-center ${isPlp ? 'gap-1 sm:gap-2' : 'gap-2'}`}>
+                <WishlistButton productId={product.id} productName={product.name} variant="compact" iconOnlyOnMobile={isPlp} />
+                <CompareButton productId={product.id} productName={product.name} variant="compact" iconOnlyOnMobile={isPlp} />
               </div>
-              <p className="w-full rounded-xl bg-red-50 px-3 py-3 text-center text-sm font-bold text-red-600">
+              <p className={`w-full bg-red-50 text-center font-bold text-red-600 ${isPlp ? 'rounded-lg px-2 py-2 text-xs sm:rounded-xl sm:px-3 sm:py-3 sm:text-sm' : 'rounded-xl px-3 py-3 text-sm'}`}>
                 ناموجود
               </p>
             </div>
           ) : (
-            <div className="mt-auto flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <WishlistButton productId={product.id} productName={product.name} variant="compact" />
-                <CompareButton productId={product.id} productName={product.name} variant="compact" />
+            <div className={`mt-auto flex flex-col ${isPlp ? 'gap-2 sm:gap-3' : 'gap-3'}`}>
+              <div className={`flex items-center ${isPlp ? 'gap-1 sm:gap-2' : 'gap-2'}`}>
+                <WishlistButton productId={product.id} productName={product.name} variant="compact" iconOnlyOnMobile={isPlp} />
+                <CompareButton productId={product.id} productName={product.name} variant="compact" iconOnlyOnMobile={isPlp} />
               </div>
-              <CallForPrice variant="card" />
+              <CallForPrice variant="card" compactOnMobile={isPlp} />
             </div>
           )
         ) : (
           <>
-            <div className="mb-3">
+            <div className={isPlp ? 'mb-2 sm:mb-3' : 'mb-3'}>
               {product.oldPrice && (
-                <p className="text-xs text-gray-400 line-through mb-0.5">
+                <p className={`${isPlp ? 'text-[10px] sm:text-xs' : 'text-xs'} text-gray-400 line-through mb-0.5`}>
                   {formatPrice(product.oldPrice)}
                 </p>
               )}
-              <p className="text-base font-bold text-accent-dark leading-none">
+              <p className={`${isPlp ? 'text-xs leading-tight sm:text-base sm:leading-none' : 'text-base leading-none'} font-bold text-accent-dark`}>
                 {formatPrice(product.price)}
               </p>
             </div>
 
             {/* Wishlist + Compare */}
-            <div className="flex items-center gap-2 mb-3">
-              <WishlistButton productId={product.id} productName={product.name} variant="compact" />
-              <CompareButton productId={product.id} productName={product.name} variant="compact" />
+            <div className={`flex items-center ${isPlp ? 'gap-1 mb-2 sm:gap-2 sm:mb-3' : 'gap-2 mb-3'}`}>
+              <WishlistButton productId={product.id} productName={product.name} variant="compact" iconOnlyOnMobile={isPlp} />
+              <CompareButton productId={product.id} productName={product.name} variant="compact" iconOnlyOnMobile={isPlp} />
             </div>
 
             {inStock ? (
               <>
                 {/* Quantity stepper */}
-                <div dir="ltr" className="flex items-center border border-gray-200 rounded-xl overflow-hidden mb-2">
+                <div dir="ltr" className={`flex items-center border border-gray-200 overflow-hidden mb-2 ${isPlp ? 'rounded-lg sm:rounded-xl' : 'rounded-xl'}`}>
                   <button
                     onClick={() => changeQty(-1)}
                     disabled={qty <= 1}
-                    className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
+                    className={`${isPlp ? 'px-2 sm:px-3' : 'px-3'} py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors`}
                     aria-label="کاهش تعداد"
                   >
                     −
@@ -234,7 +238,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
                   <button
                     onClick={() => changeQty(1)}
                     disabled={stockCapped && maxQty != null && qty >= maxQty}
-                    className="px-3 py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors"
+                    className={`${isPlp ? 'px-2 sm:px-3' : 'px-3'} py-1.5 text-charcoal font-bold text-base leading-none hover:bg-silver-light disabled:opacity-30 transition-colors`}
                     aria-label="افزایش تعداد"
                   >
                     +
@@ -246,7 +250,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
                   onClick={handleAddToCart}
                   disabled={pending}
                   className={[
-                    'w-full active:scale-95 font-semibold text-sm py-2 rounded-xl transition-all duration-150 disabled:opacity-60',
+                    `w-full active:scale-95 font-semibold transition-all duration-150 disabled:opacity-60 ${isPlp ? 'text-xs py-1.5 rounded-lg sm:text-sm sm:py-2 sm:rounded-xl' : 'text-sm py-2 rounded-xl'}`,
                     added
                       ? 'bg-green-500 text-white'
                       : 'bg-accent hover:bg-accent-dark text-charcoal',

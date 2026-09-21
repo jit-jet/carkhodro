@@ -17,6 +17,8 @@ interface Props {
   productName: string;
   /** icon = circular overlay · full = labelled pill (PDP) · compact = small card-body row button */
   variant?: 'icon' | 'full' | 'compact';
+  /** Collapse compact button copy below the sm breakpoint. */
+  iconOnlyOnMobile?: boolean;
 }
 
 function HeartIcon({ filled }: { filled: boolean }) {
@@ -43,7 +45,7 @@ function Spinner() {
   );
 }
 
-export default function WishlistButton({ productId, productName, variant = 'icon' }: Props) {
+export default function WishlistButton({ productId, productName, variant = 'icon', iconOnlyOnMobile = false }: Props) {
   const active = useListsUI((s) => s.wishlist.has(productId));
   const setWishlist = useListsUI((s) => s.setWishlist);
   const notify = useCartUI((s) => s.notify);
@@ -99,14 +101,14 @@ export default function WishlistButton({ productId, productName, variant = 'icon
         aria-pressed={active}
         aria-label={active ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}
         className={[
-          'flex-1 flex items-center justify-center gap-1.5 text-xs font-medium py-2 px-2 rounded-xl border transition-all duration-150 active:scale-95 disabled:opacity-60',
+          `flex-1 flex items-center justify-center text-xs font-medium rounded-xl border transition-all duration-150 active:scale-95 disabled:opacity-60 ${iconOnlyOnMobile ? 'gap-0 px-1 py-1.5 sm:gap-1.5 sm:px-2 sm:py-2' : 'gap-1.5 py-2 px-2'}`,
           active
             ? 'border-red-400 bg-red-50 text-red-600'
             : 'border-gray-200 text-gray-500 hover:border-red-300 hover:text-red-500 hover:bg-red-50/60',
         ].join(' ')}
       >
         {pending ? <Spinner /> : <HeartIcon filled={active} />}
-        <span>علاقه‌مندی</span>
+        <span className={iconOnlyOnMobile ? 'hidden sm:inline' : ''}>علاقه‌مندی</span>
       </button>
     );
   }

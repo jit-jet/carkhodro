@@ -448,7 +448,7 @@ export default function ProductsBrowser({
 
           {/* Product grid */}
           {searchLoading && searchResults === null ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
@@ -458,9 +458,9 @@ export default function ProductsBrowser({
             </div>
           ) : filteredProducts.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-2 sm:gap-4 xl:grid-cols-3">
                 {visibleProducts.map(product => (
-                  <ProductCard key={product.id} product={product} variant="grid" />
+                  <ProductCard key={product.id} product={product} variant="plp" />
                 ))}
               </div>
 
