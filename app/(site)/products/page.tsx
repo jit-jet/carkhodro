@@ -100,7 +100,7 @@ function ProductsBrowserSkeleton() {
         <div className="hidden lg:block h-96 rounded-2xl border border-gray-100 bg-white shadow-sm animate-pulse" />
         <div className="min-w-0">
           <div className="h-14 mb-4 rounded-2xl border border-gray-100 bg-white shadow-sm animate-pulse" />
-          <div className="grid grid-cols-2 gap-2 sm:gap-4 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-3 lg:gap-3 xl:grid-cols-4">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}

@@ -19,8 +19,8 @@ interface Props {
   productName: string;
   /** icon = circular overlay · full = labelled pill (PDP) · compact = small card-body row button */
   variant?: 'icon' | 'full' | 'compact';
-  /** Collapse compact button copy below the sm breakpoint. */
-  iconOnlyOnMobile?: boolean;
+  /** Collapse compact button copy in the dense mobile and desktop PLP layouts. */
+  compactInPlp?: boolean;
 }
 
 function CompareIcon() {
@@ -48,7 +48,7 @@ function Spinner() {
   );
 }
 
-export default function CompareButton({ productId, productName, variant = 'icon', iconOnlyOnMobile = false }: Props) {
+export default function CompareButton({ productId, productName, variant = 'icon', compactInPlp = false }: Props) {
   const active = useListsUI((s) => s.compare.has(productId));
   const compareSize = useListsUI((s) => s.compare.size);
   const hydrated = useListsUI((s) => s.hydrated);
@@ -117,14 +117,14 @@ export default function CompareButton({ productId, productName, variant = 'icon'
         aria-pressed={active}
         aria-label={active ? 'حذف از لیست مقایسه' : 'افزودن به لیست مقایسه'}
         className={[
-          `flex-1 flex items-center justify-center text-xs font-medium rounded-xl border transition-all duration-150 active:scale-95 disabled:opacity-60 ${iconOnlyOnMobile ? 'gap-0 px-1 py-1.5 sm:gap-1.5 sm:px-2 sm:py-2' : 'gap-1.5 py-2 px-2'}`,
+          `flex-1 flex items-center justify-center text-xs font-medium rounded-xl border transition-all duration-150 active:scale-95 disabled:opacity-60 ${compactInPlp ? 'gap-0 px-1 py-1.5 sm:gap-1.5 sm:px-2 sm:py-2 xl:gap-0 xl:px-1 xl:py-1.5' : 'gap-1.5 py-2 px-2'}`,
           active
             ? 'border-blue-500 bg-blue-50 text-blue-700'
             : 'border-gray-200 text-gray-500 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50/60',
         ].join(' ')}
       >
         {pending ? <Spinner /> : <CompareIcon />}
-        <span className={iconOnlyOnMobile ? 'hidden sm:inline' : ''}>مقایسه</span>
+        <span className={compactInPlp ? 'hidden sm:inline xl:hidden' : ''}>مقایسه</span>
       </button>
     );
   }

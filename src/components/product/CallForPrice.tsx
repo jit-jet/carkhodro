@@ -42,8 +42,8 @@ interface Props {
   variant?: 'default' | 'compact' | 'card';
   /** @deprecated use variant="compact" */
   compact?: boolean;
-  /** Tighten the card treatment below the sm breakpoint. */
-  compactOnMobile?: boolean;
+  /** Tighten the card treatment in the dense mobile and desktop PLP layouts. */
+  compactInPlp?: boolean;
 }
 
 export default function CallForPrice({
@@ -51,7 +51,7 @@ export default function CallForPrice({
   className = '',
   variant,
   compact = false,
-  compactOnMobile = false,
+  compactInPlp = false,
 }: Props) {
   const mode = variant ?? (compact ? 'compact' : 'default');
   const [phone, setPhone] = useState(phoneProp?.trim() ?? '');
@@ -73,9 +73,9 @@ export default function CallForPrice({
   if (mode === 'card') {
     return (
       <div className={['flex flex-col gap-2', className].filter(Boolean).join(' ')}>
-        <div className={`${compactOnMobile ? 'rounded-lg px-2 py-2 sm:rounded-xl sm:px-3 sm:py-2.5' : 'rounded-xl px-3 py-2.5'} bg-amber-50 border border-amber-100`}>
-          <p className={`${compactOnMobile ? 'text-[9px] sm:text-[11px]' : 'text-[11px]'} font-medium text-amber-800/80 mb-0.5`}>قیمت اعلامی</p>
-          <p className={`${compactOnMobile ? 'text-xs sm:text-sm' : 'text-sm'} font-bold text-charcoal leading-none`}>{CALL_FOR_PRICE_LABEL}</p>
+        <div className={`${compactInPlp ? 'rounded-lg px-2 py-2 sm:rounded-xl sm:px-3 sm:py-2.5 xl:rounded-lg xl:px-2 xl:py-2' : 'rounded-xl px-3 py-2.5'} bg-amber-50 border border-amber-100`}>
+          <p className={`${compactInPlp ? 'text-[9px] sm:text-[11px] xl:text-[10px]' : 'text-[11px]'} font-medium text-amber-800/80 mb-0.5`}>قیمت اعلامی</p>
+          <p className={`${compactInPlp ? 'text-xs sm:text-sm xl:text-xs' : 'text-sm'} font-bold text-charcoal leading-none`}>{CALL_FOR_PRICE_LABEL}</p>
           {phone ? (
             <p dir="ltr" className="mt-1.5 text-xs font-semibold text-gray-600 tracking-wide">
               {phone}
@@ -85,13 +85,13 @@ export default function CallForPrice({
         {phone ? (
           <a
             href={toTelHref(phone)}
-            className={`w-full inline-flex items-center justify-center gap-2 bg-charcoal hover:bg-gray-800 active:scale-95 text-white font-semibold transition-all duration-150 ${compactOnMobile ? 'text-xs py-1.5 rounded-lg sm:text-sm sm:py-2 sm:rounded-xl' : 'text-sm py-2 rounded-xl'}`}
+            className={`w-full inline-flex items-center justify-center gap-2 bg-charcoal hover:bg-gray-800 active:scale-95 text-white font-semibold transition-all duration-150 ${compactInPlp ? 'text-xs py-1.5 rounded-lg sm:text-sm sm:py-2 sm:rounded-xl xl:text-xs xl:py-1.5 xl:rounded-lg' : 'text-sm py-2 rounded-xl'}`}
           >
             <PhoneIcon className="w-4 h-4" />
             تماس بگیرید
           </a>
         ) : (
-          <span className={`w-full inline-flex items-center justify-center gap-2 bg-gray-100 text-gray-400 font-semibold ${compactOnMobile ? 'text-xs py-1.5 rounded-lg sm:text-sm sm:py-2 sm:rounded-xl' : 'text-sm py-2 rounded-xl'}`}>
+          <span className={`w-full inline-flex items-center justify-center gap-2 bg-gray-100 text-gray-400 font-semibold ${compactInPlp ? 'text-xs py-1.5 rounded-lg sm:text-sm sm:py-2 sm:rounded-xl xl:text-xs xl:py-1.5 xl:rounded-lg' : 'text-sm py-2 rounded-xl'}`}>
             <PhoneIcon className="w-4 h-4" />
             در حال بارگذاری…
           </span>
