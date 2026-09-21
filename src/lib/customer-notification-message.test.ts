@@ -8,7 +8,12 @@ import {
 } from './customer-notification-message';
 
 test('customer messages identify the event without exposing admin details', () => {
-  assert.match(wholesaleActivationMessage(), /قیمت همکاری/);
+  assert.equal(wholesaleActivationMessage(), [
+    'کاربر گرامی کارخودرو',
+    'حساب کاربری شما به «همکار» تغییر یافت.',
+    'از این پس می‌توانید از قیمت‌ها و امکانات همکاری استفاده کنید.',
+    'carkhodro.com',
+  ].join('\n'));
   assert.match(wholesaleInvoiceApprovedMessage('1001'), /فاکتور 1001 شما تأیید شد/);
   assert.match(retailPurchasePaidMessage(42), /خرید 42 با موفقیت پرداخت و ثبت شد/);
 });

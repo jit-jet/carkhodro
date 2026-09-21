@@ -11,7 +11,12 @@ export function isWholesaleApprovalTransition(
 }
 
 export function wholesaleActivationMessage(): string {
-  return 'کارخودرو: حساب شما همکار شد. از این پس قیمت همکاری را می‌بینید.';
+  return [
+    'کاربر گرامی کارخودرو',
+    'حساب کاربری شما به «همکار» تغییر یافت.',
+    'از این پس می‌توانید از قیمت‌ها و امکانات همکاری استفاده کنید.',
+    'carkhodro.com',
+  ].join('\n');
 }
 
 export function wholesaleInvoiceApprovedMessage(invoiceNumber: string): string {
