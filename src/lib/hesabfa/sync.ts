@@ -26,6 +26,7 @@ import {
 import { type HesabfaWebhookPayload } from './types';
 import { classifyHesabfaWebhookAction } from './webhook-actions';
 import { itemCodesFromInvoices } from './invoice-stock';
+import { fetchWebhookInvoices } from './webhook-invoices';
 
 export interface ProductSyncSummary {
   categories: CategorySyncStats;
@@ -116,14 +117,8 @@ export async function handleHesabfaWebhook(
     }
     if (actionKind !== 'upsert') return { objectType, action, ignored: true };
 
-    const invoices = await getInvoicesById(ids);
+    const invoices = await fetchWebhookInvoices(ids, { getByIds: getInvoicesById });
     const stats: InvoiceSyncStats = await syncInvoicesFromHesabfa(invoices);
-    const returnedIds = new Set(
-      invoices
-        .map((invoice) => invoice.Id)
-        .filter((id): id is number => typeof id === 'number'),
-    );
-    stats.skipped += ids.filter((id) => !returnedIds.has(id)).length;
 
     // Hook IDs are invoice IDs. Read the invoices, extract their item codes,
     // then pull each item's authoritative Stock value from Hesabfa.

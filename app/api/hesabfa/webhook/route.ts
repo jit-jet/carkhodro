@@ -6,6 +6,9 @@
 
 import { handleHesabfaWebhook } from '@/src/lib/hesabfa/sync';
 import { readHesabfaWebhookRequest } from '@/src/lib/hesabfa/webhook-request';
+import { after } from 'next/server';
+
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   const parsed = await readHesabfaWebhookRequest(request);
@@ -22,12 +25,20 @@ export async function POST(request: Request) {
     // Password intentionally omitted
   });
 
-  try {
-    const result = await handleHesabfaWebhook(payload);
-    console.log('[hesabfa:webhook] result', result);
-    return Response.json({ ok: true, ...result });
-  } catch (err) {
-    console.error('[hesabfa:webhook] sync_failed', err);
-    return Response.json({ ok: false, error: 'sync_failed' }, { status: 500 });
-  }
+  // Acknowledge immediately. Hesabfa may time out while we wait for its invoice
+  // API to expose a just-created/edited row. `after` keeps this request alive
+  // while the retrying synchronization finishes on the self-hosted Next server.
+  after(async () => {
+    try {
+      const result = await handleHesabfaWebhook(payload);
+      console.log('[hesabfa:webhook] result', result);
+    } catch (err) {
+      console.error('[hesabfa:webhook] sync_failed', err);
+    }
+  });
+
+  return Response.json(
+    { ok: true, accepted: true, objectType: payload.ObjectType, action: payload.Action },
+    { status: 202 },
+  );
 }

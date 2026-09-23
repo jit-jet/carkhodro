@@ -138,6 +138,78 @@ async function resolveItemCodes(
   });
 }
 
+async function importedInvoiceLines(inv: HesabfaInvoice): Promise<InvoiceLine[]> {
+  const invoiceItems = inv.InvoiceItems ?? [];
+  const itemCodes = [...new Set(invoiceItems.map((line) =>
+    String(line.ItemCode ?? line.Item?.Code ?? '').trim()).filter(Boolean))];
+  const itemIds = invoiceItems
+    .map((line) => line.Item?.Id)
+    .filter((value): value is number => typeof value === 'number');
+  const products = await prisma.product.findMany({
+    where: {
+      OR: [
+        { hesabfaCode: { in: itemCodes } },
+        { sku: { in: itemCodes } },
+        { hesabfaId: { in: itemIds } },
+      ],
+    },
+    select: { id: true, sku: true, name: true, hesabfaCode: true, hesabfaId: true },
+  });
+  const byCode = new Map(products.filter((p) => p.hesabfaCode).map((p) => [p.hesabfaCode!, p]));
+  const bySku = new Map(products.map((p) => [p.sku, p]));
+  const byItemId = new Map(products.filter((p) => p.hesabfaId != null).map((p) => [p.hesabfaId!, p]));
+
+  return invoiceItems.map((line) => {
+    const code = String(line.ItemCode ?? line.Item?.Code ?? '').trim();
+    const product = byCode.get(code)
+      ?? bySku.get(code)
+      ?? (line.Item?.Id != null ? byItemId.get(line.Item.Id) : undefined);
+    const quantity = Math.max(1, Math.round(Number(line.Quantity) || 1));
+    const priceAtPurchase = rialToToman(line.UnitPrice);
+    const grossRial = Number(line.UnitPrice ?? 0) * quantity;
+    const discountPct = grossRial > 0
+      ? Math.min(100, Math.max(0, Number(line.Discount ?? 0) / grossRial * 100))
+      : 0;
+    return {
+      productId: product?.id ?? null,
+      productSku: product?.sku ?? code,
+      productName: line.Description?.trim() || product?.name || line.Item?.Name?.trim() || code || 'Item',
+      priceAtPurchase,
+      discountPct,
+      taxAmount: rialToToman(line.Tax),
+      quantity,
+    };
+  });
+}
+
+function invoiceLineKey(line: InvoiceLine): string {
+  return JSON.stringify([
+    line.productId,
+    line.productSku,
+    line.productName,
+    String(line.priceAtPurchase),
+    Number(line.discountPct),
+    String(line.taxAmount),
+    line.quantity,
+  ]);
+}
+
+async function replaceInvoiceLinesIfChanged(
+  tx: Prisma.TransactionClient,
+  orderId: string,
+  lines: InvoiceLine[],
+): Promise<void> {
+  const currentLines = await tx.orderItem.findMany({ where: { orderId } });
+  const currentKeys = currentLines.map(invoiceLineKey).sort();
+  const incomingKeys = lines.map(invoiceLineKey).sort();
+  if (JSON.stringify(currentKeys) === JSON.stringify(incomingKeys)) return;
+
+  await tx.orderItem.deleteMany({ where: { orderId } });
+  if (lines.length > 0) {
+    await tx.orderItem.createMany({ data: lines.map((line) => ({ ...line, orderId })) });
+  }
+}
+
 function buildInvoicePayload(
   order: WholesaleInvoiceDraft,
   contactCode: string,
@@ -475,7 +547,7 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
   const id = typeof inv.Id === 'number' ? inv.Id : null;
   const tagOrderId = type === 0 && inv.Tag?.startsWith(`${HESABFA_TAG}:`)
     ? inv.Tag.slice(HESABFA_TAG.length + 1) : null;
-  const orderSelect = { id: true, source: true, status: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, paidAt: true, shippedAt: true, user: { select: { role: true } } } as const;
+  const orderSelect = { id: true, source: true, status: true, hesabfaCode: true, hesabfaId: true, invoiceType: true, discountAmount: true, paidAt: true, shippedAt: true, user: { select: { role: true } } } as const;
   const [byNumber, byId, byTag] = await Promise.all([
     prisma.order.findUnique({
       where: { hesabfaCode_invoiceType: { hesabfaCode: number, invoiceType: type } },
@@ -508,62 +580,56 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
     const patch = mapHesabfaToLocalStatus(inv, existing.user.role, existing.status);
     const approvalTransition = patch.status != null
       && isWholesaleApprovalTransition(existing.user.role, existing.status, patch.status);
-    if (approvalTransition) {
-      const changed = await prisma.order.updateMany({
-        where: { id: existing.id, status: existing.status },
-        data: { status: 'CONFIRMED_AWAITING_PAYMENT' },
-      });
-      delete patch.status;
-      if (changed.count > 0) {
-        queueCustomerNotification('WHOLESALE_INVOICE_APPROVED', existing.id);
+    const lines = Array.isArray(inv.InvoiceItems) ? await importedInvoiceLines(inv) : null;
+    const shippingCost = rialToToman(inv.Freight);
+    const taxAmount = lines?.reduce((sum, line) => sum + line.taxAmount, BigInt(0));
+    const totalAmount = rialToToman(inv.Payable ?? inv.Sum);
+    const subtotal = taxAmount != null
+      ? totalAmount + existing.discountAmount > shippingCost + taxAmount
+        ? totalAmount + existing.discountAmount - shippingCost - taxAmount
+        : BigInt(0)
+      : null;
+    let notifyApproval = false;
+
+    await prisma.$transaction(async (tx) => {
+      if (approvalTransition) {
+        const changed = await tx.order.updateMany({
+          where: { id: existing.id, status: existing.status },
+          data: { status: 'CONFIRMED_AWAITING_PAYMENT' },
+        });
+        delete patch.status;
+        notifyApproval = changed.count > 0;
       }
-    }
-    await prisma.order.update({
-      where: { id: existing.id },
-      data: {
-        ...patch,
-        hesabfaCode: number,
-        invoiceType: type,
-        ...(id != null ? { hesabfaId: id } : {}),
-        hesabfaSyncedAt: new Date(),
-      },
+      await tx.order.update({
+        where: { id: existing.id },
+        data: {
+          ...patch,
+          ...(subtotal != null ? { subtotal } : {}),
+          ...(taxAmount != null ? { taxAmount, shippingCost, totalAmount } : {}),
+          ...(inv.Note !== undefined ? { notes: inv.Note?.trim() || null } : {}),
+          ...(inv.Contact?.State !== undefined ? { snapshotProvince: contactState(inv) } : {}),
+          ...(inv.Contact?.City !== undefined ? { snapshotCity: inv.Contact.City?.trim() ?? '' } : {}),
+          ...(inv.Contact?.Address !== undefined ? { snapshotStreet: inv.Contact.Address?.trim() ?? '' } : {}),
+          ...(inv.Contact?.PostalCode !== undefined ? { snapshotPostalCode: inv.Contact.PostalCode?.trim() ?? '' } : {}),
+          hesabfaCode: number,
+          invoiceType: type,
+          ...(id != null ? { hesabfaId: id } : {}),
+          hesabfaSyncedAt: new Date(),
+        },
+      });
+      if (lines) await replaceInvoiceLinesIfChanged(tx, existing.id, lines);
     });
+    if (notifyApproval) queueCustomerNotification('WHOLESALE_INVOICE_APPROVED', existing.id);
     return 'updated';
   }
 
   // Full-list rows have no InvoiceItems. Never replace line snapshots from a
   // summary; callers hydrate each invoice before reaching this point.
   if (!Array.isArray(inv.InvoiceItems)) return 'skipped';
-  const itemCodes = [...new Set(inv.InvoiceItems.map((line) =>
-    String(line.ItemCode ?? line.Item?.Code ?? '').trim()).filter(Boolean))];
-  const itemIds = inv.InvoiceItems.map((line) => line.Item?.Id).filter((value): value is number => typeof value === 'number');
-  const [userId, products] = await Promise.all([
+  const [userId, lines] = await Promise.all([
     resolveInvoiceUser(inv),
-    prisma.product.findMany({
-      where: { OR: [{ hesabfaCode: { in: itemCodes } }, { sku: { in: itemCodes } }, { hesabfaId: { in: itemIds } }] },
-      select: { id: true, sku: true, name: true, hesabfaCode: true, hesabfaId: true },
-    }),
+    importedInvoiceLines(inv),
   ]);
-  const byCode = new Map(products.filter((p) => p.hesabfaCode).map((p) => [p.hesabfaCode!, p]));
-  const bySku = new Map(products.map((p) => [p.sku, p]));
-  const byItemId = new Map(products.filter((p) => p.hesabfaId != null).map((p) => [p.hesabfaId!, p]));
-  const lines = inv.InvoiceItems.map((line) => {
-    const code = String(line.ItemCode ?? line.Item?.Code ?? '').trim();
-    const product = byCode.get(code) ?? bySku.get(code) ?? (line.Item?.Id != null ? byItemId.get(line.Item.Id) : undefined);
-    const quantity = Math.max(1, Math.round(Number(line.Quantity) || 1));
-    const priceAtPurchase = rialToToman(line.UnitPrice);
-    const grossRial = Number(line.UnitPrice ?? 0) * quantity;
-    const discountPct = grossRial > 0 ? Math.min(100, Math.max(0, Number(line.Discount ?? 0) / grossRial * 100)) : 0;
-    return {
-      productId: product?.id ?? null,
-      productSku: product?.sku ?? code,
-      productName: line.Description?.trim() || product?.name || line.Item?.Name?.trim() || code || 'Item',
-      priceAtPurchase,
-      discountPct,
-      taxAmount: rialToToman(line.Tax),
-      quantity,
-    };
-  });
   const shippingCost = rialToToman(inv.Freight);
   const taxAmount = lines.reduce((sum, line) => sum + line.taxAmount, BigInt(0));
   const totalAmount = rialToToman(inv.Payable ?? inv.Sum);
@@ -623,17 +689,7 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
         await tx.order.update({ where: { id: orderId }, data });
       }
     }
-    const currentLines = await tx.orderItem.findMany({ where: { orderId } });
-    const key = (line: Omit<typeof lines[number], 'discountPct'> & { discountPct: number | Prisma.Decimal }) => JSON.stringify([
-      line.productId, line.productSku, line.productName, String(line.priceAtPurchase),
-      Number(line.discountPct), String(line.taxAmount), line.quantity,
-    ]);
-    const currentKeys = currentLines.map(key).sort();
-    const incomingKeys = lines.map(key).sort();
-    if (JSON.stringify(currentKeys) !== JSON.stringify(incomingKeys)) {
-      await tx.orderItem.deleteMany({ where: { orderId } });
-      if (lines.length > 0) await tx.orderItem.createMany({ data: lines.map((line) => ({ ...line, orderId })) });
-    }
+    await replaceInvoiceLinesIfChanged(tx, orderId, lines);
     return created ? 'created' as const : 'updated' as const;
   });
   if (approvedOrderId) queueCustomerNotification('WHOLESALE_INVOICE_APPROVED', approvedOrderId);
