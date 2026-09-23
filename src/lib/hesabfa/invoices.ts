@@ -700,6 +700,61 @@ function contactState(inv: HesabfaInvoice): string {
   return inv.Contact?.State?.trim() ?? '';
 }
 
+/** Permanently remove local orders whose invoices were deleted in Hesabfa. */
+export async function deleteOrdersByHesabfaIds(ids: readonly number[]): Promise<number> {
+  const uniqueIds = [...new Set(ids)];
+  if (uniqueIds.length === 0) return 0;
+
+  return prisma.$transaction(async (tx) => {
+    const orders = await tx.order.findMany({
+      where: { hesabfaId: { in: uniqueIds } },
+      select: {
+        id: true,
+        source: true,
+        discountCodeId: true,
+        items: { select: { productId: true, quantity: true } },
+      },
+    });
+    if (orders.length === 0) return 0;
+
+    // Only website-created orders increment these counters. Imported offline
+    // invoices never do, so reversing them would corrupt catalogue statistics.
+    const productQuantities = new Map<string, number>();
+    const couponUses = new Map<string, number>();
+    for (const order of orders) {
+      if (order.source !== 'ONLINE') continue;
+      for (const item of order.items) {
+        if (!item.productId) continue;
+        productQuantities.set(
+          item.productId,
+          (productQuantities.get(item.productId) ?? 0) + item.quantity,
+        );
+      }
+      if (order.discountCodeId) {
+        couponUses.set(order.discountCodeId, (couponUses.get(order.discountCodeId) ?? 0) + 1);
+      }
+    }
+
+    for (const [productId, quantity] of productQuantities) {
+      await tx.product.updateMany({
+        where: { id: productId, saleCount: { gte: quantity } },
+        data: { saleCount: { decrement: quantity } },
+      });
+    }
+    for (const [discountCodeId, count] of couponUses) {
+      await tx.discountCode.updateMany({
+        where: { id: discountCodeId, usedCount: { gte: count } },
+        data: { usedCount: { decrement: count } },
+      });
+    }
+
+    const deleted = await tx.order.deleteMany({
+      where: { id: { in: orders.map((order) => order.id) } },
+    });
+    return deleted.count;
+  });
+}
+
 /** Idempotent importer shared by webhooks and manual full synchronization. */
 export async function syncInvoicesFromHesabfa(invoices: HesabfaInvoice[]): Promise<InvoiceSyncStats> {
   const stats = emptyStats();

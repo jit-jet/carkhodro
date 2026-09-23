@@ -12,7 +12,11 @@ import {
   syncContactsByIds,
 } from './contacts';
 import { getInvoicesById, isHesabfaConfigured } from './client';
-import { syncInvoicesFromHesabfa, type InvoiceSyncStats } from './invoices';
+import {
+  deleteOrdersByHesabfaIds,
+  syncInvoicesFromHesabfa,
+  type InvoiceSyncStats,
+} from './invoices';
 import {
   deleteProductsByHesabfaIds,
   fullSyncProducts,
@@ -103,6 +107,7 @@ export async function handleHesabfaWebhook(
 
   if (objectType === 'Invoice') {
     if (actionKind === 'delete') {
+      const deleted = await deleteOrdersByHesabfaIds(ids);
       // Deleted invoices cannot be fetched to discover their former lines.
       // Pull all current item stocks so manual invoice deletions are reflected.
       const stockUpdated = await refreshAllLocalStockFromHesabfa();
@@ -110,7 +115,8 @@ export async function handleHesabfaWebhook(
         objectType,
         created: 0,
         updated: 0,
-        skipped: ids.length,
+        deleted,
+        skipped: Math.max(0, ids.length - deleted),
         stockUpdated,
         stockItemCodes: 0,
       };
