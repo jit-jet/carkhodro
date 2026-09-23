@@ -16,7 +16,7 @@ export const PENDING_ADMIN_ORDER_STATUSES: OrderStatus[] = [
 export const ORDER_STATUS_FA: Record<OrderStatus, string> = {
   NEW: 'سفارش جدید',
   AWAITING_CONFIRMATION: 'در انتظار تایید',
-  CONFIRMED_AWAITING_PAYMENT: 'تایید شده و در انتظار پرداخت',
+  CONFIRMED_AWAITING_PAYMENT: 'تایید مدیریت',
   PAID: 'پرداخت شده توسط مشتری',
   SHIPPED: 'ارسال سفارش',
   COMPLETED: 'اتمام فاکتور',
@@ -33,7 +33,7 @@ export const ORDER_STATUS_FA: Record<OrderStatus, string> = {
 export const ORDER_STATUS_STYLE: Record<OrderStatus, string> = {
   NEW: 'bg-blue-50 text-blue-600 border-blue-200',
   AWAITING_CONFIRMATION: 'bg-amber-50 text-amber-600 border-amber-200',
-  CONFIRMED_AWAITING_PAYMENT: 'bg-amber-50 text-amber-700 border-amber-200',
+  CONFIRMED_AWAITING_PAYMENT: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   PAID: 'bg-emerald-50 text-emerald-600 border-emerald-200',
   SHIPPED: 'bg-teal-50 text-teal-600 border-teal-200',
   COMPLETED: 'bg-green-50 text-green-700 border-green-200',
@@ -42,21 +42,9 @@ export const ORDER_STATUS_STYLE: Record<OrderStatus, string> = {
   ARCHIVED: 'bg-gray-100 text-gray-500 border-gray-200',
 };
 
-export const WHOLESALE_PENDING_STATUSES: OrderStatus[] = ['NEW', 'AWAITING_CONFIRMATION'];
 export const WHOLESALE_APPROVED_STATUSES: OrderStatus[] = [
   'CONFIRMED_AWAITING_PAYMENT', 'PAID', 'SHIPPED', 'COMPLETED',
 ];
-
-/** Show the approval state for normal partner invoices; retain exceptional statuses. */
-export function wholesaleInvoiceStatusDisplay(status: OrderStatus): { label: string; style: string } {
-  if (WHOLESALE_PENDING_STATUSES.includes(status)) {
-    return { label: 'در انتظار تأیید', style: ORDER_STATUS_STYLE.AWAITING_CONFIRMATION };
-  }
-  if (WHOLESALE_APPROVED_STATUSES.includes(status)) {
-    return { label: 'تأیید مدیریت', style: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
-  }
-  return { label: ORDER_STATUS_FA[status], style: ORDER_STATUS_STYLE[status] };
-}
 
 /**
  * The statuses an order can move through, in lifecycle order — used to populate

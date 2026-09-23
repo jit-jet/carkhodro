@@ -83,7 +83,6 @@ export interface OrderListItemVM {
 
 export interface OrdersPageVM {
   items: OrderListItemVM[];
-  isWholesale: boolean;
   total: number;
   page: number;
   perPage: number;

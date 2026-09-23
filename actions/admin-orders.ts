@@ -20,7 +20,6 @@ import {
   ORDER_STATUS_FA,
   PAYMENT_STATUS_FA,
   PAYMENT_METHOD_FA,
-  wholesaleInvoiceStatusDisplay,
 } from '@/src/lib/order-labels';
 import type { AdminOrderStatusFilter } from '@/src/lib/order-labels';
 import { USER_ROLE_FA } from '@/src/lib/user-labels';
@@ -54,7 +53,6 @@ export type AdminOrderSortDir = 'asc' | 'desc';
 
 export interface AdminOrderListItemVM {
   id: string;
-  isWholesale: boolean;
   isOffline: boolean;
   sourceTypeLabel: string;
   invoiceNumber: string | null;
@@ -113,7 +111,6 @@ export interface AdminOrderDetailVM {
   createdAtLabel: string;
   user: {
     id: string;
-    isWholesale: boolean;
     firstName: string;
     lastName: string;
     phoneNumber: string;
@@ -241,7 +238,6 @@ export async function getOrdersAdmin(
       return {
         items: rows.map((o) => ({
           id: o.id,
-          isWholesale: o.user.role === 'WHOLESALE',
           isOffline: o.source === 'OFFLINE',
           sourceTypeLabel: orderSourceTypeLabel(o.source, o.invoiceType),
           invoiceNumber: o.hesabfaCode,
@@ -251,9 +247,7 @@ export async function getOrdersAdmin(
             '—',
           phoneNumber: o.user.phoneNumber,
           status: o.status,
-          statusLabel: o.user.role === 'WHOLESALE'
-            ? wholesaleInvoiceStatusDisplay(o.status).label
-            : ORDER_STATUS_FA[o.status],
+          statusLabel: ORDER_STATUS_FA[o.status],
           paymentStatus: o.paymentStatus,
           paymentStatusLabel: PAYMENT_STATUS_FA[o.paymentStatus],
           paymentMethod: o.paymentMethod,
@@ -306,8 +300,7 @@ export async function getOrderAdminById(id: string): Promise<AdminOrderDetailVM 
         createdAtLabel: `${formatJalaliDate(o.createdAt)} — ${formatTimeFa(o.createdAt)}`,
         user: {
           id: o.user.id,
-          isWholesale: o.user.role === 'WHOLESALE',
-          firstName: o.user.firstName,
+            firstName: o.user.firstName,
           lastName: o.user.lastName,
           phoneNumber: o.user.phoneNumber,
           shopName: o.user.shopName,
@@ -367,9 +360,7 @@ export async function getInvoiceAdmin(id: string): Promise<InvoiceVM | null> {
         sourceTypeLabel: orderSourceTypeLabel(order.source, order.invoiceType),
         invoiceNumber: order.hesabfaCode,
         status: order.status,
-        statusLabel: order.user.role === 'WHOLESALE'
-          ? wholesaleInvoiceStatusDisplay(order.status).label
-          : ORDER_STATUS_FA[order.status],
+        statusLabel: ORDER_STATUS_FA[order.status],
         date: formatJalaliDate(order.createdAt),
         dateSlash: formatJalaliSlash(order.createdAt),
         time: formatTimeFa(order.createdAt),

@@ -14,9 +14,6 @@ import { getCurrentUser } from '@/src/lib/session';
 import {
   ORDER_STATUS_FA,
   ORDER_STATUS_STYLE,
-  WHOLESALE_APPROVED_STATUSES,
-  WHOLESALE_PENDING_STATUSES,
-  wholesaleInvoiceStatusDisplay,
 } from '@/src/lib/order-labels';
 import {
   formatJalaliDate,
@@ -45,7 +42,6 @@ export interface OrdersQuery {
 
 const EMPTY_PAGE: OrdersPageVM = {
   items: [],
-  isWholesale: false,
   total: 0,
   page: 1,
   perPage: DEFAULT_PER_PAGE,
@@ -63,13 +59,7 @@ export async function getOrdersPage(query: OrdersQuery = {}): Promise<OrdersPage
 
   const where: Prisma.OrderWhereInput = { userId: user.id };
   if (query.status) {
-    if (user.role === 'WHOLESALE' && query.status === 'AWAITING_CONFIRMATION') {
-      where.status = { in: WHOLESALE_PENDING_STATUSES };
-    } else if (user.role === 'WHOLESALE' && query.status === 'CONFIRMED_AWAITING_PAYMENT') {
-      where.status = { in: WHOLESALE_APPROVED_STATUSES };
-    } else if (user.role !== 'WHOLESALE') {
-      where.status = query.status;
-    }
+    where.status = query.status;
   }
   const invoiceNumber = normalizeInvoiceNumber(query.orderNumber ?? '');
   if (invoiceNumber) where.hesabfaCode = invoiceNumber;
@@ -98,19 +88,15 @@ export async function getOrdersPage(query: OrdersQuery = {}): Promise<OrdersPage
         sourceTypeLabel: orderSourceTypeLabel(o.source, o.invoiceType),
         invoiceNumber: o.hesabfaCode,
         status: o.status,
-        statusLabel: user.role === 'WHOLESALE'
-          ? wholesaleInvoiceStatusDisplay(o.status).label
-          : ORDER_STATUS_FA[o.status],
-        statusStyle: user.role === 'WHOLESALE'
-          ? wholesaleInvoiceStatusDisplay(o.status).style
-          : ORDER_STATUS_STYLE[o.status],
+        statusLabel: ORDER_STATUS_FA[o.status],
+        statusStyle: ORDER_STATUS_STYLE[o.status],
         dateFull: `${formatJalaliWithWeekday(o.createdAt)} - ${formatTimeFa(o.createdAt)}`,
         totalToman: Number(o.totalAmount),
         itemCount: o.items.reduce((s, i) => s + i.quantity, 0),
         hasSurvey: o.survey !== null,
       }));
 
-      return { items, isWholesale: user.role === 'WHOLESALE', total, page: safePage, perPage, pageCount } satisfies OrdersPageVM;
+      return { items, total, page: safePage, perPage, pageCount } satisfies OrdersPageVM;
     },
     EMPTY_PAGE,
   );
@@ -158,9 +144,7 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
         sourceTypeLabel: orderSourceTypeLabel(order.source, order.invoiceType),
         invoiceNumber: order.hesabfaCode,
         status: order.status,
-        statusLabel: user.role === 'WHOLESALE'
-          ? wholesaleInvoiceStatusDisplay(order.status).label
-          : ORDER_STATUS_FA[order.status],
+        statusLabel: ORDER_STATUS_FA[order.status],
         date: formatJalaliDate(order.createdAt),
         dateSlash: formatJalaliSlash(order.createdAt),
         time: formatTimeFa(order.createdAt),

@@ -44,13 +44,13 @@ enum AdminActivityStatus {
   BLOCKED
 }
 
-/// Wholesale-order lifecycle, surfaced in the partner dashboard's order list and
-/// status filter. Ordered roughly by progression; cancellation/archive are
+/// Shared order lifecycle, surfaced in customer and admin order lists and
+/// status filters. Ordered roughly by progression; cancellation/archive are
 /// terminal side-states. Persian labels live in `src/lib/order-labels.ts`.
 enum OrderStatus {
   NEW // سفارش جدید — just submitted
   AWAITING_CONFIRMATION // در انتظار تایید — pending shop review
-  CONFIRMED_AWAITING_PAYMENT // تایید شده و در انتظار پرداخت
+  CONFIRMED_AWAITING_PAYMENT // تایید مدیریت
   PAID // پرداخت شده توسط مشتری
   SHIPPED // ارسال سفارش — handed to carrier
   COMPLETED // اتمام فاکتور — invoice closed

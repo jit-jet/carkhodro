@@ -66,7 +66,7 @@ async function OrdersContent({ searchParams }: Props) {
           </svg>
           لیست سفارشات کارخودرو
         </h1>
-        <OrdersFilterBar status={status} perPage={data.perPage} orderNumber={orderNumber} isWholesale={data.isWholesale} />
+        <OrdersFilterBar status={status} perPage={data.perPage} orderNumber={orderNumber} />
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
