@@ -170,8 +170,10 @@ function ProductRow({
   adding: boolean;
   highlighted: boolean;
 }) {
-  const [qty, setQty] = useState(1);
+  const [qty, setQty] = useState('1');
   const unavailable = product.stock < 1;
+  const parsedQty = Number(qty);
+  const hasValidQty = Number.isInteger(parsedQty) && parsedQty >= 1;
 
   return (
     <li className={["flex items-center gap-3 py-3", highlighted ? "border-2 border-accent rounded-xl px-2" : ""].join(" ")}>
@@ -208,13 +210,15 @@ function ProductRow({
               type="number"
               min={1}
               value={qty}
-              onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
+              onChange={(e) => setQty(e.target.value)}
               className="w-16 border border-gray-200 rounded-lg px-2 py-1 text-sm text-center outline-none focus:border-accent"
               aria-label="تعداد"
             />
             <button
-              onClick={() => onAdd(product.id, qty)}
-              disabled={adding}
+              onClick={() => {
+                if (hasValidQty) onAdd(product.id, parsedQty);
+              }}
+              disabled={adding || !hasValidQty}
               className="bg-accent hover:bg-accent-dark text-charcoal text-xs font-bold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
             >
               افزودن
