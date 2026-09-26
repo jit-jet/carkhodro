@@ -49,7 +49,7 @@ enum AdminActivityStatus {
 /// terminal side-states. Persian labels live in `src/lib/order-labels.ts`.
 enum OrderStatus {
   NEW // سفارش جدید — just submitted
-  AWAITING_CONFIRMATION // در انتظار تایید — pending shop review
+  AWAITING_CONFIRMATION // در انتظار تایید — pending shop review  
   CONFIRMED_AWAITING_PAYMENT // تایید مدیریت
   PAID // پرداخت شده توسط مشتری
   SHIPPED // ارسال سفارش — handed to carrier

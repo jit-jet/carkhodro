@@ -9,10 +9,12 @@ import {
   retailPurchasePaidMessage,
   wholesaleActivationMessage,
   wholesaleInvoiceApprovedMessage,
+  wholesaleInvoiceSubmittedMessage,
 } from '@/src/lib/customer-notification-message';
 
 export type CustomerNotificationKind =
   | 'WHOLESALE_ACTIVATED'
+  | 'WHOLESALE_INVOICE_SUBMITTED'
   | 'WHOLESALE_INVOICE_APPROVED'
   | 'RETAIL_PURCHASE_PAID';
 
@@ -42,7 +44,10 @@ async function sendCustomerNotification(kind: CustomerNotificationKind, id: stri
     if (!order) return;
     phoneNumber = normalizeIranMobile(order.user.phoneNumber);
 
-    if (kind === 'WHOLESALE_INVOICE_APPROVED') {
+    if (kind === 'WHOLESALE_INVOICE_SUBMITTED') {
+      if (order.user.role !== 'WHOLESALE' || order.status !== 'AWAITING_CONFIRMATION') return;
+      body = wholesaleInvoiceSubmittedMessage(order.hesabfaCode ?? String(order.orderNumber));
+    } else if (kind === 'WHOLESALE_INVOICE_APPROVED') {
       if (order.user.role !== 'WHOLESALE' || !WHOLESALE_APPROVED_STATUSES.includes(order.status)) return;
       body = wholesaleInvoiceApprovedMessage(order.hesabfaCode ?? String(order.orderNumber));
     } else {

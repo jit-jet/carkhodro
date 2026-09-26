@@ -91,7 +91,11 @@ export async function getPartsBrandsHome(): Promise<
 
   return safeQuery('getPartsBrandsHome', async () => {
     const [rows, fallbackImage] = await Promise.all([prisma.partsBrand.findMany({
-      where: { isActive: true, products: { some: { isActive: true } } },
+      where: {
+        isActive: true,
+        slug: { not: 'unknown' },
+        products: { some: { isActive: true } },
+      },
       orderBy: { name: 'asc' },
       include: { _count: { select: { products: { where: { isActive: true } } } } },
     }), getDefaultImageUrl()]);

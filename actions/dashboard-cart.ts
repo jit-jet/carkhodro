@@ -45,6 +45,7 @@ import {
   type WholesaleInvoiceDraft,
 } from '@/src/lib/hesabfa/invoices';
 import { queueAdminOrderNotification } from '@/src/lib/order-notification';
+import { queueCustomerNotification } from '@/src/lib/customer-notification';
 import {
   resolveDiscountForCheckout,
   incrementDiscountUsage,
@@ -623,6 +624,7 @@ export async function submitInvoice(input: {
     revalidatePath('/dashboard/orders');
     revalidatePath('/dashboard');
     queueAdminOrderNotification(order.id, 'WHOLESALE_INVOICE');
+    queueCustomerNotification('WHOLESALE_INVOICE_SUBMITTED', order.id);
     return ok({ id: order.id, invoiceNumber: hesabfaInvoice.code });
   });
 }

@@ -4,7 +4,7 @@ import { getCategories } from "@/actions/categories";
 import type { CategoryVM } from "@/src/lib/serializers";
 
 export default async function CategoriesSlider() {
-  const categories = await getCategories();
+  const categories = (await getCategories()).filter((category) => category.key !== "uncategorized");
   return (
     <section className="py-10 bg-silver-light">
       <div className="max-w-7xl mx-auto px-4">
