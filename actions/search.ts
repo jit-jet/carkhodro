@@ -16,15 +16,13 @@ import { normalizePersianText } from '@/src/lib/persian';
 import { getCurrentUser } from '@/src/lib/session';
 import { pricingRoleFromUser } from '@/src/lib/user-role';
 import { getDefaultImageUrl } from '@/src/lib/default-image';
+import type { ProductBrowseInput, ProductBrowseSort } from '@/src/lib/product-browse';
 
 /**
  * Trigram word-similarity threshold used by the `%>` operator (default 0.6).
  * Lowered for recall so misspellings still match. Tune up for tighter results.
  */
 const WORD_SIMILARITY_THRESHOLD = 0.3;
-
-/** Hard cap on candidate rows scored by the DB before view-model hydration. */
-const MAX_RESULTS = 200;
 
 /**
  * Typo-tolerant fuzzy search over the denormalized `search_text` document
@@ -49,7 +47,7 @@ const MAX_RESULTS = 200;
  *   • out-of-order words     → each token is matched independently of position
  *
  * Not cached: the query string is unbounded, so per-keystroke results would
- * pollute the cache. The `limit`/MAX_RESULTS caps keep each lookup cheap.
+ * pollute the cache. Callers choose the number of hydrated rows they need.
  */
 export async function searchProducts(query: string, limit = 8): Promise<ProductVM[]> {
   const normalized = normalizePersianText(query);
@@ -58,7 +56,7 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
   const tokens = normalized.split(' ').filter(Boolean);
   if (tokens.length === 0) return [];
 
-  const take = Math.min(Math.max(limit, 1), MAX_RESULTS);
+  const take = Math.max(1, Math.trunc(limit) || 8);
 
   return safeQuery(`searchProducts:${normalized}`, async () => {
     // Each token contributes an OR-able, index-usable match condition. The
@@ -141,4 +139,192 @@ export async function searchProducts(query: string, limit = 8): Promise<ProductV
       .filter((r): r is NonNullable<typeof r> => r != null)
       .map((r) => toProductVM(r, role, fallbackImage));
   }, []);
+}
+
+function sqlValues(values: string[]) {
+  return Prisma.join(values.map((value) => Prisma.sql`${value}`));
+}
+
+function browseOrder(
+  sort: ProductBrowseSort,
+  normalized: string,
+  nameFuzzyScore: Prisma.Sql,
+  documentFuzzyScore: Prisma.Sql,
+): Prisma.Sql {
+  switch (sort) {
+    case 'oldest':
+      return Prisma.sql`(c.stock > 0) DESC, c.created_at ASC, c.id ASC`;
+    case 'best_selling':
+      return Prisma.sql`(c.stock > 0) DESC, c.sale_count DESC, c.id ASC`;
+    case 'most_viewed':
+      return Prisma.sql`(c.stock > 0) DESC, c.view_count DESC, c.id ASC`;
+    case 'alpha_asc':
+      return Prisma.sql`(c.stock > 0) DESC, c.name ASC, c.id ASC`;
+    case 'alpha_desc':
+      return Prisma.sql`(c.stock > 0) DESC, c.name DESC, c.id ASC`;
+    case 'newest':
+      return Prisma.sql`(c.stock > 0) DESC, c.created_at DESC, c.id ASC`;
+    case 'relevance':
+      return Prisma.sql`
+        c.matched_token_count DESC,
+        c.exact_token_count DESC,
+        (c.stock > 0) DESC,
+        CASE
+          WHEN c.normalized_name = ${normalized} THEN 4
+          WHEN left(c.normalized_name, length(${normalized}) + 1) = ${normalized} || ' ' THEN 3
+          WHEN strpos(' ' || c.normalized_name || ' ', ' ' || ${normalized} || ' ') > 0 THEN 2
+          WHEN strpos(c.normalized_name, ${normalized}) > 0 THEN 1
+          ELSE 0
+        END DESC,
+        nullif(strpos(c.normalized_name, ${normalized}), 0) ASC NULLS LAST,
+        (${nameFuzzyScore}) DESC,
+        (${documentFuzzyScore}) DESC,
+        c.sale_count DESC,
+        c.id ASC
+      `;
+  }
+}
+
+/**
+ * Paginated catalogue search. Unlike `searchProducts`, this query counts the
+ * complete match set and hydrates only the requested slice, so infinite scroll
+ * can reach every result without recreating the old all-products payload.
+ * Passing `take: null` is reserved for the explicit PDF export action.
+ */
+export async function searchProductBrowsePage(
+  input: ProductBrowseInput,
+  offset: number,
+  take: number | null,
+): Promise<{ items: ProductVM[]; total: number }> {
+  const normalized = normalizePersianText(input.query);
+  if (normalized.length < 2) return { items: [], total: 0 };
+
+  const tokens = normalized.split(' ').filter(Boolean);
+  if (tokens.length === 0) return { items: [], total: 0 };
+
+  const safeOffset = Math.max(0, Math.trunc(offset) || 0);
+  const safeTake = take == null ? null : Math.max(1, Math.trunc(take) || 1);
+  const brands = Array.isArray(input.brands) ? input.brands : [];
+  const carBrands = Array.isArray(input.carBrands) ? input.carBrands : [];
+  const carTypes = Array.isArray(input.carTypes) ? input.carTypes : [];
+  const categories = Array.isArray(input.categories) ? input.categories : [];
+
+  return safeQuery(`searchProductBrowsePage:${normalized}:${safeOffset}`, async () => {
+    const searchConditions = Prisma.join(
+      tokens.map((token) => Prisma.sql`p.search_text %> ${token}`),
+      ' OR ',
+    );
+    const whereConditions: Prisma.Sql[] = [
+      Prisma.sql`p.is_active = true`,
+      Prisma.sql`(${searchConditions})`,
+    ];
+    if (brands.length) {
+      whereConditions.push(Prisma.sql`
+        EXISTS (
+          SELECT 1 FROM parts_brands pb
+          WHERE pb.id = p.parts_brand_id AND pb.slug IN (${sqlValues(brands)})
+        )
+      `);
+    }
+    if (carBrands.length) {
+      whereConditions.push(Prisma.sql`
+        EXISTS (
+          SELECT 1
+          FROM product_compatibilities pc
+          JOIN car_models cm ON cm.id = pc.car_model_id
+          JOIN car_brands cb ON cb.id = cm.car_brand_id
+          WHERE pc.product_id = p.id AND cb.slug IN (${sqlValues(carBrands)})
+        )
+      `);
+    }
+    if (carTypes.length) {
+      whereConditions.push(Prisma.sql`
+        EXISTS (
+          SELECT 1
+          FROM product_compatibilities pc
+          JOIN car_models cm ON cm.id = pc.car_model_id
+          WHERE pc.product_id = p.id AND cm.name IN (${sqlValues(carTypes)})
+        )
+      `);
+    }
+    if (categories.length) {
+      whereConditions.push(Prisma.sql`
+        EXISTS (
+          SELECT 1 FROM categories category
+          WHERE category.id = p.category_id AND category.key IN (${sqlValues(categories)})
+        )
+      `);
+    }
+    if (input.offerOnly) whereConditions.push(Prisma.sql`p.is_offer = true`);
+
+    const matchedTokenCount = Prisma.join(
+      tokens.map((token) => Prisma.sql`(p.search_text %> ${token})::int`),
+      ' + ',
+    );
+    const exactTokenCount = Prisma.join(
+      tokens.map((token) => Prisma.sql`(strpos(' ' || p.search_text || ' ', ' ' || ${token} || ' ') > 0)::int`),
+      ' + ',
+    );
+    const documentFuzzyScore = Prisma.join(
+      tokens.map((token) => Prisma.sql`word_similarity(${token}, c.search_text)`),
+      ' + ',
+    );
+    const nameFuzzyScore = Prisma.join(
+      tokens.map((token) => Prisma.sql`word_similarity(${token}, c.normalized_name)`),
+      ' + ',
+    );
+    const orderBy = browseOrder(input.sort, normalized, nameFuzzyScore, documentFuzzyScore);
+    const pagination = safeTake == null
+      ? Prisma.sql``
+      : Prisma.sql`LIMIT ${safeTake} OFFSET ${safeOffset}`;
+
+    const ranked = await prisma.$transaction(async (tx) => {
+      await tx.$executeRawUnsafe(
+        `SET LOCAL pg_trgm.word_similarity_threshold = ${WORD_SIMILARITY_THRESHOLD}`,
+      );
+      return tx.$queryRaw<{ id: string; total_count: bigint }[]>(Prisma.sql`
+        WITH candidates AS (
+          SELECT
+            p.id,
+            p.name,
+            p.stock,
+            p.sale_count,
+            p.view_count,
+            p.created_at,
+            p.search_text,
+            (${matchedTokenCount}) AS matched_token_count,
+            (${exactTokenCount}) AS exact_token_count,
+            fts_normalize(p.name) AS normalized_name
+          FROM products p
+          WHERE ${Prisma.join(whereConditions, ' AND ')}
+        )
+        SELECT c.id, COUNT(*) OVER() AS total_count
+        FROM candidates c
+        ORDER BY ${orderBy}
+        ${pagination}
+      `);
+    });
+
+    const ids = ranked.map((row) => row.id);
+    const total = ranked[0] ? Number(ranked[0].total_count) : 0;
+    if (ids.length === 0) return { items: [], total };
+
+    const rows = await prisma.product.findMany({
+      where: { id: { in: ids } },
+      include: productInclude,
+    });
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    const [user, fallbackImage] = await Promise.all([
+      getCurrentUser(),
+      getDefaultImageUrl(),
+    ]);
+    const role = pricingRoleFromUser(user?.role);
+    return {
+      items: ids
+        .map((id) => byId.get(id))
+        .filter((row): row is NonNullable<typeof row> => row != null)
+        .map((row) => toProductVM(row, role, fallbackImage)),
+      total,
+    };
+  }, { items: [], total: 0 });
 }

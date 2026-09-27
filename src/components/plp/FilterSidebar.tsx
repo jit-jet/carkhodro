@@ -5,8 +5,6 @@ import { useState } from 'react';
 type AppliedFilter = { type: string; value: string; label: string };
 
 interface FilterSidebarProps {
-  searchQuery: string;
-  onSearchChange: (v: string) => void;
   selectedBrands: string[];
   onBrandToggle: (brand: string) => void;
   selectedCarBrands: string[];
@@ -19,7 +17,8 @@ interface FilterSidebarProps {
   onOfferToggle: () => void;
   onClearAll: () => void;
   onRemoveFilter: (type: string, value: string) => void;
-  onExportPDF: () => void;
+  onExportPDF: () => void | Promise<void>;
+  exporting?: boolean;
   allBrands: { slug: string; name: string }[];
   allCarBrands: { slug: string; name: string }[];
   allCarTypes: string[];
@@ -110,8 +109,6 @@ function CheckItem({
 }
 
 export default function FilterSidebar({
-  searchQuery,
-  onSearchChange,
   selectedBrands,
   onBrandToggle,
   selectedCarBrands,
@@ -125,6 +122,7 @@ export default function FilterSidebar({
   onClearAll,
   onRemoveFilter,
   onExportPDF,
+  exporting = false,
   allBrands,
   allCarBrands,
   allCarTypes,
@@ -235,7 +233,8 @@ export default function FilterSidebar({
       {/* PDF export */}
       <button
         onClick={onExportPDF}
-        className="mt-5 w-full flex items-center justify-center gap-2 bg-charcoal hover:bg-gray-800 active:scale-95 text-white font-semibold text-sm py-2.5 rounded-xl transition-all duration-150"
+        disabled={exporting}
+        className="mt-5 w-full flex items-center justify-center gap-2 bg-charcoal hover:bg-gray-800 active:scale-95 disabled:cursor-wait disabled:opacity-60 text-white font-semibold text-sm py-2.5 rounded-xl transition-all duration-150"
       >
         <svg
           className="w-4 h-4"
@@ -251,7 +250,7 @@ export default function FilterSidebar({
           <line x1="16" y1="13" x2="8" y2="13" />
           <line x1="16" y1="17" x2="8" y2="17" />
         </svg>
-        دانلود PDF
+        {exporting ? 'در حال آماده‌سازی…' : 'دانلود PDF'}
       </button>
     </aside>
   );

@@ -1,7 +1,9 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import ProductsBrowser from '@/src/components/plp/ProductsBrowser';
-import { getProducts, getProductFilters, withViewerPricing } from '@/actions/products';
+import { getProductFilters } from '@/actions/products';
+import { getProductBrowsePage } from '@/actions/product-browser';
+import { productBrowseInputFromParams, productBrowseKey } from '@/src/lib/product-browse';
 import type { Metadata } from 'next';
 import { prisma } from '@/src/lib/prisma';
 import { siteUrl } from '@/src/lib/seo';
@@ -75,12 +77,23 @@ async function FilteredBrowser({
   searchParams: Props['searchParams'];
 }) {
   const params = await searchParams;
-  const entity = await taxonomySeo(params);
-  const products = await withViewerPricing(await getProducts());
+  const browseInput = productBrowseInputFromParams(params);
+  const [entity, initialPage] = await Promise.all([
+    taxonomySeo(params),
+    getProductBrowsePage(browseInput),
+  ]);
   return (
     <>
       {entity && <JsonLd data={{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'خانه', item: siteUrl('/') }, { '@type': 'ListItem', position: 2, name: 'محصولات', item: siteUrl('/products') }, { '@type': 'ListItem', position: 3, name: entity.name }] }} />}
-      <ProductsBrowser products={products} allBrands={filters.brands} allCarBrands={filters.carBrands} allCarTypes={filters.carTypes} allCategories={filters.categories} />
+      <ProductsBrowser
+        key={productBrowseKey(browseInput)}
+        initialPage={initialPage}
+        browseInput={browseInput}
+        allBrands={filters.brands}
+        allCarBrands={filters.carBrands}
+        allCarTypes={filters.carTypes}
+        allCategories={filters.categories}
+      />
     </>
   );
 }

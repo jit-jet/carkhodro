@@ -1,21 +1,20 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import FilterSidebar from '@/src/components/plp/FilterSidebar';
 import ProductCard from '@/src/components/ui/ProductCard';
-import { searchProducts } from '@/actions/search';
+import { getProductBrowsePage, getProductsForExport } from '@/actions/product-browser';
 import type { ProductVM as Product } from '@/src/lib/serializers';
+import type {
+  ProductBrowseInput,
+  ProductBrowsePage,
+  ProductBrowseSort,
+} from '@/src/lib/product-browse';
 import { formatJalaliDateTime, formatNumberFa, formatRial } from '@/src/lib/format';
 import { printDocument } from '@/src/lib/native/print';
 
-const PAGE_SIZE = 12;
-/** Upper bound on fuzzy-search results pulled for the results page. */
-const SEARCH_RESULT_CAP = 200;
-
-type SortOption = 'relevance' | 'newest' | 'oldest' | 'best_selling' | 'most_viewed' | 'alpha_asc' | 'alpha_desc';
-
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+const SORT_OPTIONS: { value: ProductBrowseSort; label: string }[] = [
   { value: 'relevance',    label: 'مرتبط‌ترین' },
   { value: 'newest',       label: 'جدیدترین' },
   { value: 'oldest',       label: 'قدیمی‌ترین' },
@@ -24,29 +23,6 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'alpha_asc',    label: 'الفبا (الف-ی)' },
   { value: 'alpha_desc',   label: 'الفبا (ی-الف)' },
 ];
-
-function stockFirst(a: Product, b: Product): number {
-  return (b.stock > 0 ? 1 : 0) - (a.stock > 0 ? 1 : 0);
-}
-
-function applySorting(products: Product[], sort: SortOption): Product[] {
-  const arr = [...products];
-  switch (sort) {
-    case 'relevance':    return arr; // Keep the server's relevance tiers and stock order.
-    case 'newest':       return arr.sort((a, b) => stockFirst(a, b) || b.createdDate.localeCompare(a.createdDate));
-    case 'oldest':       return arr.sort((a, b) => stockFirst(a, b) || a.createdDate.localeCompare(b.createdDate));
-    case 'best_selling': return arr.sort((a, b) => stockFirst(a, b) || b.salesCount - a.salesCount);
-    case 'most_viewed':  return arr.sort((a, b) => stockFirst(a, b) || b.viewCount - a.viewCount);
-    case 'alpha_asc':    return arr.sort((a, b) => stockFirst(a, b) || a.name.localeCompare(b.name, 'fa'));
-    case 'alpha_desc':   return arr.sort((a, b) => stockFirst(a, b) || b.name.localeCompare(a.name, 'fa'));
-  }
-}
-
-function resolveSortOption(value: string | null, isSearching: boolean): SortOption {
-  if (value === 'relevance') return isSearching ? 'relevance' : 'newest';
-  if (SORT_OPTIONS.some((option) => option.value === value)) return value as SortOption;
-  return isSearching ? 'relevance' : 'newest';
-}
 
 function formatCarTypeForPdf(carType: string | null | undefined): string {
   const name = carType?.trim();
@@ -179,7 +155,8 @@ function toggleValue(arr: string[], value: string): string[] {
 }
 
 interface Props {
-  products: Product[];
+  initialPage: ProductBrowsePage;
+  browseInput: ProductBrowseInput;
   allBrands: { slug: string; name: string }[];
   allCarBrands: { slug: string; name: string }[];
   allCarTypes: string[];
@@ -187,7 +164,8 @@ interface Props {
 }
 
 export default function ProductsBrowser({
-  products,
+  initialPage,
+  browseInput,
   allBrands,
   allCarBrands,
   allCarTypes,
@@ -197,14 +175,15 @@ export default function ProductsBrowser({
   const pathname    = usePathname();
   const searchParams = useSearchParams();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [products, setProducts] = useState(initialPage.items);
+  const [total, setTotal] = useState(initialPage.total);
+  const [nextPage, setNextPage] = useState(initialPage.nextPage);
+  const [hasMore, setHasMore] = useState(initialPage.hasMore);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
-
-  // Typo-tolerant text search runs server-side (pg_trgm); the facet filters and
-  // sorting below still run client-side over the matched set. `searchResults` is
-  // null while idle (no query) and an array once results stream in.
-  const [searchResults, setSearchResults] = useState<Product[] | null>(null);
-  const [searchLoading, setSearchLoading] = useState(false);
+  const loadingRef = useRef(false);
 
   // All filter state is derived from URL — single source of truth
   const searchQuery        = searchParams.get('q') ?? '';
@@ -214,7 +193,7 @@ export default function ProductsBrowser({
   const selectedCategories = searchParams.getAll('category');
   const offerOnly          = searchParams.get('offer') === '1';
   const isSearching        = searchQuery.trim().length > 0;
-  const sortBy             = resolveSortOption(searchParams.get('sort'), isSearching);
+  const sortBy             = browseInput.sort;
 
   function buildUrl(updates: Record<string, string | string[] | null>): string {
     const params = new URLSearchParams(searchParams.toString());
@@ -234,13 +213,12 @@ export default function ProductsBrowser({
     router.replace(url, { scroll: false });
   }
 
-  function handleSearchChange(v: string)    { push(buildUrl({ q: v || null })); }
   function handleBrandToggle(b: string)     { push(buildUrl({ brand:    toggleValue(selectedBrands,     b) })); }
   function handleCarBrandToggle(b: string)  { push(buildUrl({ carBrand: toggleValue(selectedCarBrands,  b) })); }
   function handleCarTypeToggle(ct: string)  { push(buildUrl({ car:      toggleValue(selectedCarTypes,   ct) })); }
   function handleCategoryToggle(c: string)  { push(buildUrl({ category: toggleValue(selectedCategories, c) })); }
   function handleOfferToggle()              { push(buildUrl({ offer: offerOnly ? null : '1' })); }
-  function handleSortChange(s: SortOption)  { push(buildUrl({ sort: s })); }
+  function handleSortChange(s: ProductBrowseSort)  { push(buildUrl({ sort: s })); }
 
   function removeFilter(type: string, value: string) {
     switch (type) {
@@ -255,68 +233,46 @@ export default function ProductsBrowser({
 
   function clearAll() { push(pathname); }
 
-  // Debounced fuzzy search. When `q` is set, the matched set comes from the
-  // server (typo-tolerant pg_trgm); otherwise we browse the full catalogue.
-  useEffect(() => {
-    const q = searchQuery.trim();
-    if (!q) { setSearchResults(null); setSearchLoading(false); return; }
-    setSearchLoading(true);
-    let active = true;
-    const timer = setTimeout(async () => {
-      const found = await searchProducts(q, SEARCH_RESULT_CAP);
-      if (!active) return;
-      setSearchResults(found);
-      setSearchLoading(false);
-    }, 300);
-    return () => { active = false; clearTimeout(timer); };
-  }, [searchQuery]);
-
-  const filteredProducts = useMemo(() => {
-    // Base set: fuzzy matches when searching (empty until they arrive), else the
-    // full catalogue passed from the server.
-    let result = searchQuery.trim() ? (searchResults ?? []) : products;
-
-    if (selectedBrands.length)     result = result.filter(p => selectedBrands.includes(p.brandSlug));
-    if (selectedCarBrands.length)  result = result.filter(p =>
-      selectedCarBrands.some((slug) => p.carBrandSlugs.includes(slug)),
-    );
-    if (selectedCarTypes.length)   result = result.filter(p =>
-      selectedCarTypes.some((type) => p.carTypes.includes(type)),
-    );
-    if (selectedCategories.length) result = result.filter(p => selectedCategories.includes(p.category));
-    if (offerOnly)                 result = result.filter(p => p.isOffer);
-
-    return applySorting(result, sortBy);
-  }, [products, searchQuery, searchResults, selectedBrands, selectedCarBrands, selectedCarTypes, selectedCategories, offerOnly, sortBy]);
-
-  // Reset pagination whenever filters or sort change
-  const filterKey = [searchQuery, ...selectedBrands, ...selectedCarBrands, ...selectedCarTypes, ...selectedCategories, offerOnly ? '1' : '0', sortBy].join('|');
-  useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-  }, [filterKey]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const visibleProducts = useMemo(
-    () => filteredProducts.slice(0, visibleCount),
-    [filteredProducts, visibleCount],
-  );
-  const hasMore = visibleProducts.length < filteredProducts.length;
+  const loadMore = useCallback(async () => {
+    if (loadingRef.current || !hasMore) return;
+    loadingRef.current = true;
+    setLoadingMore(true);
+    setLoadError(false);
+    try {
+      const page = await getProductBrowsePage({ ...browseInput, page: nextPage });
+      if (page.failed) {
+        setLoadError(true);
+        return;
+      }
+      setProducts((current) => {
+        const knownIds = new Set(current.map((product) => product.id));
+        return [...current, ...page.items.filter((product) => !knownIds.has(product.id))];
+      });
+      setTotal(page.total);
+      setNextPage(page.nextPage);
+      setHasMore(page.hasMore);
+    } catch {
+      setLoadError(true);
+    } finally {
+      loadingRef.current = false;
+      setLoadingMore(false);
+    }
+  }, [browseInput, hasMore, nextPage]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
-    if (!sentinel || !hasMore) return;
+    if (!sentinel || !hasMore || loadError) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisibleCount(c => c + PAGE_SIZE);
-        }
+        if (entries[0].isIntersecting) void loadMore();
       },
       { rootMargin: '200px' },
     );
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [hasMore, visibleCount]);
+  }, [hasMore, loadError, loadMore]);
 
   const activeFilterCount =
     selectedBrands.length +
@@ -377,8 +333,6 @@ export default function ProductsBrowser({
         {/* Sidebar */}
         <div className={`${sidebarOpen ? 'block' : 'hidden'} lg:block lg:sticky lg:top-44`}>
           <FilterSidebar
-            searchQuery={searchQuery}
-            onSearchChange={handleSearchChange}
             selectedBrands={selectedBrands}
             onBrandToggle={handleBrandToggle}
             selectedCarBrands={selectedCarBrands}
@@ -391,25 +345,30 @@ export default function ProductsBrowser({
             onOfferToggle={handleOfferToggle}
             onClearAll={clearAll}
             onRemoveFilter={removeFilter}
-            onExportPDF={() => {
+            onExportPDF={async () => {
               const brandNames = selectedBrands
                 .map((slug) => allBrands.find((b) => b.slug === slug)?.name ?? slug);
               const carBrandNames = selectedCarBrands
                 .map((slug) => allCarBrands.find((b) => b.slug === slug)?.name ?? slug);
               const categoryLabels = selectedCategories
                 .map((key) => allCategories.find((c) => c.key === key)?.label ?? key);
-              openPDFWindow(
-                filteredProducts.filter((product) => product.stock > 0),
-                buildPdfTitle({
+              const title = buildPdfTitle({
                   searchQuery,
                   brandNames,
                   carBrandNames,
                   carTypes: selectedCarTypes,
                   categoryLabels,
                   offerOnly,
-                }),
-              );
+                });
+              setExporting(true);
+              try {
+                const exportProducts = await getProductsForExport(browseInput);
+                await openPDFWindow(exportProducts, title);
+              } finally {
+                setExporting(false);
+              }
             }}
+            exporting={exporting}
             allBrands={allBrands}
             allCarBrands={allCarBrands}
             allCarTypes={allCarTypes}
@@ -426,7 +385,7 @@ export default function ProductsBrowser({
             <p className="text-sm text-gray-600">
               تعداد کالاها:{' '}
               <span className="font-bold text-charcoal">
-                {filteredProducts.length.toLocaleString('fa-IR')}
+                {total.toLocaleString('fa-IR')}
               </span>
             </p>
             <div className="flex items-center gap-2">
@@ -436,7 +395,7 @@ export default function ProductsBrowser({
               <select
                 id="plp-sort"
                 value={sortBy}
-                onChange={e => handleSortChange(e.target.value as SortOption)}
+                onChange={e => handleSortChange(e.target.value as ProductBrowseSort)}
                 className="border border-gray-200 rounded-xl px-3 py-1.5 text-sm text-charcoal bg-white focus:outline-none focus:border-accent transition-colors cursor-pointer"
               >
                 {SORT_OPTIONS.filter(opt => isSearching || opt.value !== 'relevance').map(opt => (
@@ -447,19 +406,10 @@ export default function ProductsBrowser({
           </div>
 
           {/* Product grid */}
-          {searchLoading && searchResults === null ? (
-            <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-3 lg:gap-3 xl:grid-cols-4">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-72 rounded-2xl border border-gray-100 bg-white shadow-sm animate-pulse"
-                />
-              ))}
-            </div>
-          ) : filteredProducts.length > 0 ? (
+          {products.length > 0 ? (
             <>
               <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-3 lg:gap-3 xl:grid-cols-4">
-                {visibleProducts.map(product => (
+                {products.map(product => (
                   <ProductCard key={product.id} product={product} variant="plp" />
                 ))}
               </div>
@@ -470,7 +420,19 @@ export default function ProductsBrowser({
                   className="flex justify-center items-center py-10"
                   aria-label="در حال بارگذاری محصولات"
                 >
-                  <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" />
+                  {loadError ? (
+                    <button
+                      type="button"
+                      onClick={() => void loadMore()}
+                      className="rounded-xl border border-gray-200 bg-white px-5 py-2 text-sm font-semibold text-charcoal hover:border-accent"
+                    >
+                      تلاش دوباره
+                    </button>
+                  ) : loadingMore ? (
+                    <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <span className="h-8" aria-hidden="true" />
+                  )}
                 </div>
               ) : (
                 <p className="text-center text-sm text-gray-400 py-8 select-none">
