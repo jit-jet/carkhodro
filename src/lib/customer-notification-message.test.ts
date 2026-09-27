@@ -17,23 +17,22 @@ test('customer messages identify the event without exposing admin details', () =
   ].join('\n'));
   assert.equal(wholesaleInvoiceSubmittedMessage('1000'), [
     'کارخودرو',
-    'همکار گرامی، سفارش شما با شماره فاکتور 1000 با موفقیت ثبت شد.',
-    'سفارش در انتظار بررسی و تأیید مدیریت است.',
-    'پس از تأیید، نتیجه از طریق پیامک به شما اطلاع داده می‌شود.',
-    'carkhodro.com',
+    '',
+    'همکار گرامی،سفارش شما با شماره فاکتور 1000 با موفقیت ثبت شد.',
   ].join('\n'));
   assert.equal(wholesaleInvoiceApprovedMessage('1001'), [
     'کارخودرو',
-    'همکار گرامی، سفارش شما با شماره فاکتور 1001 توسط مدیریت تأیید شد.',
-    'برای مشاهده جزئیات و ادامه فرایند، به پنل همکاری مراجعه کنید.',
-    'carkhodro.com',
+    'همکار گرامی، فاکتور 1001 شما تأیید شد.',
   ].join('\n'));
   assert.equal(retailPurchasePaidMessage(42), [
     'کارخودرو',
-    'مشتری گرامی، سفارش شما با شماره 42 با موفقیت پرداخت و ثبت شد.',
-    'سفارش شما در حال بررسی و آماده‌سازی است.',
-    'carkhodro.com',
+    'سفارش 42 با موفقیت پرداخت و ثبت شد.',
   ].join('\n'));
+});
+
+test('approved wholesale and paid retail messages fit in one Persian SMS part', () => {
+  assert.ok(wholesaleInvoiceApprovedMessage('1001').length < 70);
+  assert.ok(retailPurchasePaidMessage(42).length < 70);
 });
 
 test('approval SMS belongs only to the first pending-to-approved wholesale transition', () => {

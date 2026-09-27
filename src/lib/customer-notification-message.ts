@@ -22,27 +22,21 @@ export function wholesaleActivationMessage(): string {
 export function wholesaleInvoiceApprovedMessage(invoiceNumber: string): string {
   return [
     'کارخودرو',
-    `همکار گرامی، سفارش شما با شماره فاکتور ${invoiceNumber} توسط مدیریت تأیید شد.`,
-    'برای مشاهده جزئیات و ادامه فرایند، به پنل همکاری مراجعه کنید.',
-    'carkhodro.com',
+    `همکار گرامی، فاکتور ${invoiceNumber} شما تأیید شد.`,
   ].join('\n');
 }
 
 export function wholesaleInvoiceSubmittedMessage(invoiceNumber: string): string {
   return [
     'کارخودرو',
-    `همکار گرامی، سفارش شما با شماره فاکتور ${invoiceNumber} با موفقیت ثبت شد.`,
-    'سفارش در انتظار بررسی و تأیید مدیریت است.',
-    'پس از تأیید، نتیجه از طریق پیامک به شما اطلاع داده می‌شود.',
-    'carkhodro.com',
+    '',
+    `همکار گرامی،سفارش شما با شماره فاکتور ${invoiceNumber} با موفقیت ثبت شد.`,
   ].join('\n');
 }
 
 export function retailPurchasePaidMessage(orderNumber: number): string {
   return [
     'کارخودرو',
-    `مشتری گرامی، سفارش شما با شماره ${orderNumber} با موفقیت پرداخت و ثبت شد.`,
-    'سفارش شما در حال بررسی و آماده‌سازی است.',
-    'carkhodro.com',
+    `سفارش شما با شماره فاکتور ${orderNumber} با موفقیت پرداخت و ثبت شد.`,
   ].join('\n');
 }
