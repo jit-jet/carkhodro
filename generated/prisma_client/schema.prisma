@@ -44,13 +44,13 @@ enum AdminActivityStatus {
   BLOCKED
 }
 
-/// Wholesale-order lifecycle, surfaced in the partner dashboard's order list and
-/// status filter. Ordered roughly by progression; cancellation/archive are
+/// Shared order lifecycle, surfaced in customer and admin order lists and
+/// status filters. Ordered roughly by progression; cancellation/archive are
 /// terminal side-states. Persian labels live in `src/lib/order-labels.ts`.
 enum OrderStatus {
   NEW // سفارش جدید — just submitted
-  AWAITING_CONFIRMATION // در انتظار تایید — pending shop review
-  CONFIRMED_AWAITING_PAYMENT // تایید شده و در انتظار پرداخت
+  AWAITING_CONFIRMATION // در انتظار تایید — pending shop review  
+  CONFIRMED_AWAITING_PAYMENT // تایید مدیریت
   PAID // پرداخت شده توسط مشتری
   SHIPPED // ارسال سفارش — handed to carrier
   COMPLETED // اتمام فاکتور — invoice closed
@@ -986,17 +986,20 @@ model Order {
   snapshotPostalCode String @map("snapshot_postal_code")
 
   // ── Financials ─────────────────────────────────────────────────────────────
-  subtotal       BigInt  @map("subtotal")
-  shippingCost   BigInt  @map("shipping_cost")
+  subtotal                   BigInt  @map("subtotal")
+  shippingCost               BigInt  @map("shipping_cost")
   /// VAT or other applicable tax collected on this order
-  taxAmount      BigInt  @default(0) @map("tax_amount")
+  taxAmount                  BigInt  @default(0) @map("tax_amount")
   /// Coupon discount applied at checkout (Toman). 0 when no code was used.
-  discountAmount BigInt  @default(0) @map("discount_amount")
+  discountAmount             BigInt  @default(0) @map("discount_amount")
   /// Snapshot of the redeemed code string (kept even if the code row is deleted).
-  discountCode   String? @map("discount_code")
-  discountCodeId String? @map("discount_code_id")
+  discountCode               String? @map("discount_code")
+  discountCodeId             String? @map("discount_code_id")
   /// subtotal + shippingCost + taxAmount − discountAmount (stored to prevent drift)
-  totalAmount    BigInt  @map("total_amount")
+  totalAmount                BigInt  @map("total_amount")
+  /// Customer balance in Rial captured once when the invoice is registered locally.
+  /// Null for legacy invoices; retail invoices store zero. Never updated by sync.
+  accountBalanceSnapshotRial BigInt? @map("account_balance_snapshot_rial")
 
   notes        String?
   trackingCode String? @map("tracking_code")

@@ -26,6 +26,7 @@ import {
   type HesabfaInvoice,
 } from './types';
 import { getSystemConfig } from '@/src/lib/system-settings';
+import { getAccountBalanceSnapshotRial } from './account-balance';
 import { hesabfaApprovalOrderStatus, mapHesabfaToLocalStatus } from './invoice-status';
 import { hesabfaInvoiceStatusForRole } from './invoice-approval';
 import { contactPrimaryMobile, mobileLookupVariants } from './phone';
@@ -274,7 +275,7 @@ function buildInvoicePayload(
 /** Save a new wholesale invoice before creating the local order. Hesabfa assigns Number. */
 export async function saveNewWholesaleInvoice(
   order: WholesaleInvoiceDraft,
-): Promise<{ code: string; id: number | null }> {
+): Promise<{ code: string; id: number | null; accountBalanceSnapshotRial: bigint }> {
   if (order.hesabfaCode) {
     throw new Error('Order is already linked to a Hesabfa invoice');
   }
@@ -290,12 +291,16 @@ export async function saveNewWholesaleInvoice(
 
   const lines = await resolveItemCodes(order.items);
   const payload = buildInvoicePayload(order, contactCode, lines, { paidNote: false });
+  // Capture before the external write: a failed balance read must not leave an orphan invoice.
+  const accountBalanceSnapshotRial = await getAccountBalanceSnapshotRial({
+    role: order.user.role, hesabfaCode: contactCode,
+  });
   const saved = await saveInvoice(payload);
   const code = invoiceNumber(saved);
   if (!code || code === '0') {
     throw new Error('Hesabfa returned an invalid invoice number');
   }
-  return { code, id: typeof saved.Id === 'number' ? saved.Id : null };
+  return { code, id: typeof saved.Id === 'number' ? saved.Id : null, accountBalanceSnapshotRial };
 }
 
 async function persistInvoiceLink(orderId: string, saved: HesabfaInvoice): Promise<void> {
@@ -655,12 +660,19 @@ async function importInvoice(inv: HesabfaInvoice): Promise<'created' | 'updated'
   };
 
   let approvedOrderId: string | null = null;
+  // Only first registration captures a balance. Existing invoices (including legacy
+  // null snapshots) and concurrent import winners must retain their original value.
+  const accountBalanceSnapshotRial = existing ? undefined : await getAccountBalanceSnapshotRial(
+    await prisma.user.findUniqueOrThrow({
+      where: { id: userId }, select: { role: true, hesabfaCode: true },
+    }),
+  );
   const result = await prisma.$transaction(async (tx) => {
     let orderId = existing?.id;
     let created = false;
     if (!orderId) {
       const inserted = await tx.order.createMany({
-        data: [{ ...data, createdAt: invoiceDate(inv.Date) }], skipDuplicates: true,
+        data: [{ ...data, accountBalanceSnapshotRial, createdAt: invoiceDate(inv.Date) }], skipDuplicates: true,
       });
       created = inserted.count > 0;
       const row = await tx.order.findUnique({

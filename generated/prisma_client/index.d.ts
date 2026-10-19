@@ -48487,6 +48487,7 @@ export namespace Prisma {
     taxAmount: number | null
     discountAmount: number | null
     totalAmount: number | null
+    accountBalanceSnapshotRial: number | null
     paymentTrackId: number | null
     hesabfaId: number | null
   }
@@ -48499,6 +48500,7 @@ export namespace Prisma {
     taxAmount: bigint | null
     discountAmount: bigint | null
     totalAmount: bigint | null
+    accountBalanceSnapshotRial: bigint | null
     paymentTrackId: bigint | null
     hesabfaId: number | null
   }
@@ -48526,6 +48528,7 @@ export namespace Prisma {
     discountCode: string | null
     discountCodeId: string | null
     totalAmount: bigint | null
+    accountBalanceSnapshotRial: bigint | null
     notes: string | null
     trackingCode: string | null
     paymentTrackId: bigint | null
@@ -48563,6 +48566,7 @@ export namespace Prisma {
     discountCode: string | null
     discountCodeId: string | null
     totalAmount: bigint | null
+    accountBalanceSnapshotRial: bigint | null
     notes: string | null
     trackingCode: string | null
     paymentTrackId: bigint | null
@@ -48600,6 +48604,7 @@ export namespace Prisma {
     discountCode: number
     discountCodeId: number
     totalAmount: number
+    accountBalanceSnapshotRial: number
     notes: number
     trackingCode: number
     paymentTrackId: number
@@ -48624,6 +48629,7 @@ export namespace Prisma {
     taxAmount?: true
     discountAmount?: true
     totalAmount?: true
+    accountBalanceSnapshotRial?: true
     paymentTrackId?: true
     hesabfaId?: true
   }
@@ -48636,6 +48642,7 @@ export namespace Prisma {
     taxAmount?: true
     discountAmount?: true
     totalAmount?: true
+    accountBalanceSnapshotRial?: true
     paymentTrackId?: true
     hesabfaId?: true
   }
@@ -48663,6 +48670,7 @@ export namespace Prisma {
     discountCode?: true
     discountCodeId?: true
     totalAmount?: true
+    accountBalanceSnapshotRial?: true
     notes?: true
     trackingCode?: true
     paymentTrackId?: true
@@ -48700,6 +48708,7 @@ export namespace Prisma {
     discountCode?: true
     discountCodeId?: true
     totalAmount?: true
+    accountBalanceSnapshotRial?: true
     notes?: true
     trackingCode?: true
     paymentTrackId?: true
@@ -48737,6 +48746,7 @@ export namespace Prisma {
     discountCode?: true
     discountCodeId?: true
     totalAmount?: true
+    accountBalanceSnapshotRial?: true
     notes?: true
     trackingCode?: true
     paymentTrackId?: true
@@ -48861,6 +48871,7 @@ export namespace Prisma {
     discountCode: string | null
     discountCodeId: string | null
     totalAmount: bigint
+    accountBalanceSnapshotRial: bigint | null
     notes: string | null
     trackingCode: string | null
     paymentTrackId: bigint | null
@@ -48917,6 +48928,7 @@ export namespace Prisma {
     discountCode?: boolean
     discountCodeId?: boolean
     totalAmount?: boolean
+    accountBalanceSnapshotRial?: boolean
     notes?: boolean
     trackingCode?: boolean
     paymentTrackId?: boolean
@@ -48961,6 +48973,7 @@ export namespace Prisma {
     discountCode?: boolean
     discountCodeId?: boolean
     totalAmount?: boolean
+    accountBalanceSnapshotRial?: boolean
     notes?: boolean
     trackingCode?: boolean
     paymentTrackId?: boolean
@@ -49002,6 +49015,7 @@ export namespace Prisma {
     discountCode?: boolean
     discountCodeId?: boolean
     totalAmount?: boolean
+    accountBalanceSnapshotRial?: boolean
     notes?: boolean
     trackingCode?: boolean
     paymentTrackId?: boolean
@@ -49043,6 +49057,7 @@ export namespace Prisma {
     discountCode?: boolean
     discountCodeId?: boolean
     totalAmount?: boolean
+    accountBalanceSnapshotRial?: boolean
     notes?: boolean
     trackingCode?: boolean
     paymentTrackId?: boolean
@@ -49057,7 +49072,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "source" | "invoiceType" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "discountAmount" | "discountCode" | "discountCodeId" | "totalAmount" | "notes" | "trackingCode" | "paymentTrackId" | "paymentRefNumber" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "userId" | "addressId" | "shippingOptionId" | "status" | "source" | "invoiceType" | "paymentMethod" | "paymentStatus" | "paymentTerms" | "snapshotProvince" | "snapshotCity" | "snapshotStreet" | "snapshotPostalCode" | "subtotal" | "shippingCost" | "taxAmount" | "discountAmount" | "discountCode" | "discountCodeId" | "totalAmount" | "accountBalanceSnapshotRial" | "notes" | "trackingCode" | "paymentTrackId" | "paymentRefNumber" | "hesabfaCode" | "hesabfaId" | "hesabfaSyncedAt" | "paidAt" | "shippedAt" | "deliveredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
@@ -49140,6 +49155,11 @@ export namespace Prisma {
        * subtotal + shippingCost + taxAmount − discountAmount (stored to prevent drift)
        */
       totalAmount: bigint
+      /**
+       * Customer balance in Rial captured once when the invoice is registered locally.
+       * Null for legacy invoices; retail invoices store zero. Never updated by sync.
+       */
+      accountBalanceSnapshotRial: bigint | null
       notes: string | null
       trackingCode: string | null
       /**
@@ -49618,6 +49638,7 @@ export namespace Prisma {
     readonly discountCode: FieldRef<"Order", 'String'>
     readonly discountCodeId: FieldRef<"Order", 'String'>
     readonly totalAmount: FieldRef<"Order", 'BigInt'>
+    readonly accountBalanceSnapshotRial: FieldRef<"Order", 'BigInt'>
     readonly notes: FieldRef<"Order", 'String'>
     readonly trackingCode: FieldRef<"Order", 'String'>
     readonly paymentTrackId: FieldRef<"Order", 'BigInt'>
@@ -57739,6 +57760,7 @@ export namespace Prisma {
     discountCode: 'discountCode',
     discountCodeId: 'discountCodeId',
     totalAmount: 'totalAmount',
+    accountBalanceSnapshotRial: 'accountBalanceSnapshotRial',
     notes: 'notes',
     trackingCode: 'trackingCode',
     paymentTrackId: 'paymentTrackId',
@@ -61155,6 +61177,7 @@ export namespace Prisma {
     discountCode?: StringNullableFilter<"Order"> | string | null
     discountCodeId?: StringNullableFilter<"Order"> | string | null
     totalAmount?: BigIntFilter<"Order"> | bigint | number
+    accountBalanceSnapshotRial?: BigIntNullableFilter<"Order"> | bigint | number | null
     notes?: StringNullableFilter<"Order"> | string | null
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
@@ -61198,6 +61221,7 @@ export namespace Prisma {
     discountCode?: SortOrderInput | SortOrder
     discountCodeId?: SortOrderInput | SortOrder
     totalAmount?: SortOrder
+    accountBalanceSnapshotRial?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     trackingCode?: SortOrderInput | SortOrder
     paymentTrackId?: SortOrderInput | SortOrder
@@ -61246,6 +61270,7 @@ export namespace Prisma {
     discountCode?: StringNullableFilter<"Order"> | string | null
     discountCodeId?: StringNullableFilter<"Order"> | string | null
     totalAmount?: BigIntFilter<"Order"> | bigint | number
+    accountBalanceSnapshotRial?: BigIntNullableFilter<"Order"> | bigint | number | null
     notes?: StringNullableFilter<"Order"> | string | null
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
@@ -61288,6 +61313,7 @@ export namespace Prisma {
     discountCode?: SortOrderInput | SortOrder
     discountCodeId?: SortOrderInput | SortOrder
     totalAmount?: SortOrder
+    accountBalanceSnapshotRial?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     trackingCode?: SortOrderInput | SortOrder
     paymentTrackId?: SortOrderInput | SortOrder
@@ -61333,6 +61359,7 @@ export namespace Prisma {
     discountCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
     discountCodeId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     totalAmount?: BigIntWithAggregatesFilter<"Order"> | bigint | number
+    accountBalanceSnapshotRial?: BigIntNullableWithAggregatesFilter<"Order"> | bigint | number | null
     notes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     trackingCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableWithAggregatesFilter<"Order"> | bigint | number | null
@@ -65071,6 +65098,7 @@ export namespace Prisma {
     discountAmount?: bigint | number
     discountCode?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -65114,6 +65142,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -65148,6 +65177,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -65191,6 +65221,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -65230,6 +65261,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -65262,6 +65294,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -65299,6 +65332,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -68288,6 +68322,7 @@ export namespace Prisma {
     discountCode?: SortOrder
     discountCodeId?: SortOrder
     totalAmount?: SortOrder
+    accountBalanceSnapshotRial?: SortOrder
     notes?: SortOrder
     trackingCode?: SortOrder
     paymentTrackId?: SortOrder
@@ -68310,6 +68345,7 @@ export namespace Prisma {
     taxAmount?: SortOrder
     discountAmount?: SortOrder
     totalAmount?: SortOrder
+    accountBalanceSnapshotRial?: SortOrder
     paymentTrackId?: SortOrder
     hesabfaId?: SortOrder
   }
@@ -68337,6 +68373,7 @@ export namespace Prisma {
     discountCode?: SortOrder
     discountCodeId?: SortOrder
     totalAmount?: SortOrder
+    accountBalanceSnapshotRial?: SortOrder
     notes?: SortOrder
     trackingCode?: SortOrder
     paymentTrackId?: SortOrder
@@ -68374,6 +68411,7 @@ export namespace Prisma {
     discountCode?: SortOrder
     discountCodeId?: SortOrder
     totalAmount?: SortOrder
+    accountBalanceSnapshotRial?: SortOrder
     notes?: SortOrder
     trackingCode?: SortOrder
     paymentTrackId?: SortOrder
@@ -68396,6 +68434,7 @@ export namespace Prisma {
     taxAmount?: SortOrder
     discountAmount?: SortOrder
     totalAmount?: SortOrder
+    accountBalanceSnapshotRial?: SortOrder
     paymentTrackId?: SortOrder
     hesabfaId?: SortOrder
   }
@@ -71790,6 +71829,7 @@ export namespace Prisma {
     discountAmount?: bigint | number
     discountCode?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -71831,6 +71871,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -72245,6 +72286,7 @@ export namespace Prisma {
     discountCode?: StringNullableFilter<"Order"> | string | null
     discountCodeId?: StringNullableFilter<"Order"> | string | null
     totalAmount?: BigIntFilter<"Order"> | bigint | number
+    accountBalanceSnapshotRial?: BigIntNullableFilter<"Order"> | bigint | number | null
     notes?: StringNullableFilter<"Order"> | string | null
     trackingCode?: StringNullableFilter<"Order"> | string | null
     paymentTrackId?: BigIntNullableFilter<"Order"> | bigint | number | null
@@ -72850,6 +72892,7 @@ export namespace Prisma {
     discountAmount?: bigint | number
     discountCode?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -72891,6 +72934,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -77054,6 +77098,7 @@ export namespace Prisma {
     discountAmount?: bigint | number
     discountCode?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -77095,6 +77140,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -77644,6 +77690,7 @@ export namespace Prisma {
     discountAmount?: bigint | number
     discountCode?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -77686,6 +77733,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -77830,6 +77878,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -77872,6 +77921,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -78167,6 +78217,7 @@ export namespace Prisma {
     discountAmount?: bigint | number
     discountCode?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -78209,6 +78260,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -78335,6 +78387,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -78377,6 +78430,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -78814,6 +78868,7 @@ export namespace Prisma {
     discountAmount?: bigint | number
     discountCode?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -78855,6 +78910,7 @@ export namespace Prisma {
     discountAmount?: bigint | number
     discountCode?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -79003,6 +79059,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -79180,6 +79237,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -79221,6 +79279,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -79259,6 +79318,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -79571,6 +79631,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -79603,6 +79664,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -79644,6 +79706,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -79682,6 +79745,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -80510,6 +80574,7 @@ export namespace Prisma {
     discountCode?: string | null
     discountCodeId?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -80542,6 +80607,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -80583,6 +80649,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -80621,6 +80688,7 @@ export namespace Prisma {
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     discountCodeId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -80701,6 +80769,7 @@ export namespace Prisma {
     discountAmount?: bigint | number
     discountCode?: string | null
     totalAmount: bigint | number
+    accountBalanceSnapshotRial?: bigint | number | null
     notes?: string | null
     trackingCode?: string | null
     paymentTrackId?: bigint | number | null
@@ -80733,6 +80802,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -80774,6 +80844,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -80812,6 +80883,7 @@ export namespace Prisma {
     discountAmount?: BigIntFieldUpdateOperationsInput | bigint | number
     discountCode?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: BigIntFieldUpdateOperationsInput | bigint | number
+    accountBalanceSnapshotRial?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     paymentTrackId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null

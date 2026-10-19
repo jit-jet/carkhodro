@@ -415,6 +415,7 @@ export async function submitCheckout(
           discountCode: applied?.code ?? null,
           discountCodeId: applied?.discountCodeId ?? null,
           totalAmount,
+          accountBalanceSnapshotRial: BigInt(0),
           notes: input.notes ?? null,
           items: { create: lineItems },
         },

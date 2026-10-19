@@ -126,7 +126,7 @@ export interface InvoiceVM {
   /** Applied coupon code, if any. */
   discountCode: string | null;
   payableToman: number; // net
-  previousBalanceToman: number;
+  accountBalanceRial: number | null;
   isRetail: boolean;
   hasSurvey: boolean;
 }

@@ -17,10 +17,10 @@ function rialAmt(toman: number): string {
   return formatNumberFa(toman * RIAL_PER_TOMAN);
 }
 
-function balanceLabel(toman: number): string {
-  const abs = Math.abs(toman);
-  if (abs === 0) return '۰ ریال';
-  return `${formatNumberFa(abs * RIAL_PER_TOMAN)} ریال بدهکار`;
+function balanceLabel(rial: number | null): string {
+  if (rial === null) return '_';
+  if (rial === 0) return '۰ ریال';
+  return `${formatNumberFa(Math.abs(rial))} ریال ${rial > 0 ? 'بدهکار' : 'بستانکار'}`;
 }
 
 export default function InvoicePrint({ invoice, seller: s }: Props) {
@@ -33,7 +33,6 @@ export default function InvoicePrint({ invoice, seller: s }: Props) {
     0,
   );
   const discountToman = lineDiscountToman + invoice.couponDiscountToman;
-  const balanceWithInvoice = invoice.previousBalanceToman + invoice.payableToman;
 
   return (
     <article dir="rtl" className="inv">
@@ -149,16 +148,9 @@ export default function InvoicePrint({ invoice, seller: s }: Props) {
           <p className="inv-words">
             مبلغ کل: <b>{rialInWords(invoice.payableToman)}</b>
           </p>
-          {!invoice.isRetail && (
-            <>
-              <p>
-                مانده حساب از قبل: <b>{balanceLabel(invoice.previousBalanceToman)}</b>
-              </p>
-              <p>
-                با احتساب فاکتور: <b>{balanceLabel(balanceWithInvoice)}</b>
-              </p>
-            </>
-          )}
+          <p>
+            مانده حساب: <b>{balanceLabel(invoice.isRetail ? 0 : invoice.accountBalanceRial)}</b>
+          </p>
         </div>
 
         <div className="inv-sign">امضای فروشنده</div>

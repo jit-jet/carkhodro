@@ -997,6 +997,9 @@ model Order {
   discountCodeId String? @map("discount_code_id")
   /// subtotal + shippingCost + taxAmount − discountAmount (stored to prevent drift)
   totalAmount    BigInt  @map("total_amount")
+  /// Customer balance in Rial captured once when the invoice is registered locally.
+  /// Null for legacy invoices; retail invoices store zero. Never updated by sync.
+  accountBalanceSnapshotRial BigInt? @map("account_balance_snapshot_rial")
 
   notes        String?
   trackingCode String? @map("tracking_code")

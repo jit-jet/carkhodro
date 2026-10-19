@@ -14,20 +14,9 @@ import { getCurrentUser } from '@/src/lib/session';
 import { safeQuery } from '@/src/lib/result';
 import { USER_ROLE_FA } from '@/src/lib/user-labels';
 import { formatJalaliDate } from '@/src/lib/format';
-import { getContactByCode } from '@/src/lib/hesabfa/client';
-import { contactBalanceRial } from '@/src/lib/hesabfa/contact-balance';
+import { getAccountBalanceRial } from '@/src/lib/hesabfa/account-balance';
 import type { OrderStatus } from '@/generated/prisma_client';
 import type { DashboardStatsVM } from '@/src/lib/dashboard-types';
-
-async function getWholesaleBalanceRial(code: string | null): Promise<number | null> {
-  if (!code) return null;
-  try {
-    return contactBalanceRial(await getContactByCode(code));
-  } catch (error) {
-    console.error('[dashboard:hesabfa-balance]', error);
-    return null;
-  }
-}
 
 /** Orders still moving through the pipeline (not completed / cancelled / archived). */
 const IN_PROGRESS_STATUSES: OrderStatus[] = [
@@ -70,7 +59,7 @@ export async function getDashboardStats(): Promise<DashboardStatsVM | null> {
           select: { id: true, hesabfaCode: true, createdAt: true },
         }),
         user.role === 'WHOLESALE'
-          ? getWholesaleBalanceRial(user.hesabfaCode)
+          ? getAccountBalanceRial(user)
           : Promise.resolve(null),
       ]);
 

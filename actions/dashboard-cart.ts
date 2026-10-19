@@ -583,6 +583,7 @@ export async function submitInvoice(input: {
             totalAmount,
             notes: input.notes?.trim() || null,
             hesabfaCode: hesabfaInvoice.code,
+            accountBalanceSnapshotRial: hesabfaInvoice.accountBalanceSnapshotRial,
             hesabfaId: hesabfaInvoice.id,
             hesabfaSyncedAt: new Date(),
             items: { create: lineItems },
