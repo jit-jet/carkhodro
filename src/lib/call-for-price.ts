@@ -16,6 +16,7 @@ export function isCallForPriceForRole(
   flags: CallForPriceFlags,
   role: PricingRole,
 ): boolean {
+  if (role === 'WHOLESALE_PENDING') return true;
   return isWholesaleUser(role)
     ? flags.callForPriceWholesale
     : flags.callForPriceRetail;

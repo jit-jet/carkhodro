@@ -173,7 +173,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
 
         {/* Price / Call for price */}
         {product.callForPrice ? (
-          !inStock ? (
+          !inStock && !product.pendingApproval ? (
             <div className={`mt-auto ${isPlp ? 'space-y-2 sm:space-y-3 xl:space-y-2' : 'space-y-3'}`}>
               <div className={`flex items-center ${isPlp ? 'gap-1 sm:gap-2 xl:gap-1' : 'gap-2'}`}>
                 <WishlistButton productId={product.id} productName={product.name} variant="compact" compactInPlp={isPlp} />
@@ -189,7 +189,7 @@ export default function ProductCard({ product, variant = 'slider' }: ProductCard
                 <WishlistButton productId={product.id} productName={product.name} variant="compact" compactInPlp={isPlp} />
                 <CompareButton productId={product.id} productName={product.name} variant="compact" compactInPlp={isPlp} />
               </div>
-              <CallForPrice variant="card" compactInPlp={isPlp} />
+              <CallForPrice pendingApproval={product.pendingApproval} variant="card" compactInPlp={isPlp} />
             </div>
           )
         ) : (

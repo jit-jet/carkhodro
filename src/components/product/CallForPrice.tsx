@@ -7,6 +7,7 @@
 import { useEffect, useState } from 'react';
 import { CALL_FOR_PRICE_LABEL } from '@/src/lib/call-for-price';
 import { getShopContactPhone } from '@/actions/shop-phone';
+import { WHOLESALE_PENDING_MESSAGE } from '@/src/lib/user-role';
 
 /** In-flight dedupe for sibling cards on the same page (role-aware server action). */
 let phonePromise: Promise<string> | null = null;
@@ -31,6 +32,7 @@ function toTelHref(phone: string): string {
 }
 
 interface Props {
+  pendingApproval?: boolean;
   /** Preloaded phone from a server parent — skips the client fetch when set. */
   phone?: string;
   className?: string;
@@ -47,6 +49,7 @@ interface Props {
 }
 
 export default function CallForPrice({
+  pendingApproval = false,
   phone: phoneProp,
   className = '',
   variant,
@@ -54,13 +57,12 @@ export default function CallForPrice({
   compactInPlp = false,
 }: Props) {
   const mode = variant ?? (compact ? 'compact' : 'default');
-  const [phone, setPhone] = useState(phoneProp?.trim() ?? '');
+  const [loadedPhone, setPhone] = useState('');
+  const phone = phoneProp?.trim() || loadedPhone;
 
   useEffect(() => {
-    if (phoneProp?.trim()) {
-      setPhone(phoneProp.trim());
-      return;
-    }
+    if (pendingApproval) return;
+    if (phoneProp?.trim()) return;
     let cancelled = false;
     loadPhone().then((value) => {
       if (!cancelled) setPhone(value);
@@ -68,7 +70,9 @@ export default function CallForPrice({
     return () => {
       cancelled = true;
     };
-  }, [phoneProp]);
+  }, [phoneProp, pendingApproval]);
+
+  if (pendingApproval) return <p className={`rounded-xl bg-amber-50 p-3 text-sm leading-6 text-amber-800 ${className}`}>{WHOLESALE_PENDING_MESSAGE}</p>;
 
   if (mode === 'card') {
     return (

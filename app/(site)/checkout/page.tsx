@@ -1,3 +1,4 @@
+import { WHOLESALE_PENDING_MESSAGE } from '@/src/lib/user-role';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -47,6 +48,7 @@ async function CheckoutContent() {
   // data source and send guests to the SMS login, returning them to /checkout.
   const user = await getCurrentUser();
   if (!user) redirect('/login?redirect=/checkout');
+  if (user?.role === 'WHOLESALE_PENDING') return <p className="rounded-xl bg-amber-50 p-6 text-amber-800">{WHOLESALE_PENDING_MESSAGE}</p>;
   if (!canUseRetailCheckout(user.role)) redirect('/dashboard/cart');
 
   const [cart, shippingOptions, profile, provinces] = await Promise.all([

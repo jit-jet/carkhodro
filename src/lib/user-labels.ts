@@ -8,6 +8,7 @@ import type { UserRole } from '@/generated/prisma_client';
 
 export const USER_ROLE_FA: Record<UserRole, string> = {
   RETAIL: 'مشتری',
+  WHOLESALE_PENDING: 'همکار در انتظار تأیید',
   WHOLESALE: 'همکار',
   ADMIN: 'مدیر',
   SUPPORT: 'پشتیبانی',

@@ -42,6 +42,7 @@ import { mergeGuestCartIntoUser } from '@/src/lib/guest-cart';
 import { resolveLocation } from '@/src/lib/resolve-location';
 import { sendOtpSms } from '@/src/lib/sms-gateway';
 import { isAndroidAppUserAgent } from '@/src/lib/native-app';
+import { queuePartnerRegistrationNotification } from '@/src/lib/partner-notification';
 
 const PHONE_RE = /^09\d{9}$/;
 const VERIFIED_PHONE_COOKIE = 'verified_phone';
@@ -63,6 +64,7 @@ export interface VerifyOtpData {
 }
 
 export interface RegisterInput {
+  registerAsPartner?: boolean;
   phoneNumber: string;
   firstName: string;
   lastName: string;
@@ -255,7 +257,8 @@ export async function registerUser(
     // Create the user + their default delivery address atomically.
     const user = await prisma.$transaction(async (tx) => {
       const created = await tx.user.create({
-        data: { phoneNumber: phone, firstName, lastName, isVerified: true },
+        data: { phoneNumber: phone, firstName, lastName, isVerified: true,
+          role: input.registerAsPartner === true ? 'WHOLESALE_PENDING' : 'RETAIL' },
         select: { id: true },
       });
       await tx.address.create({
@@ -270,6 +273,7 @@ export async function registerUser(
       return created;
     });
 
+    if (input.registerAsPartner === true) queuePartnerRegistrationNotification(user.id);
     await createSession(user.id);
     (await cookies()).delete(VERIFIED_PHONE_COOKIE);
     await mergeGuestCartIntoUser(user.id);

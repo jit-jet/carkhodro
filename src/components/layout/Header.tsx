@@ -1,4 +1,5 @@
 "use client";
+import { WHOLESALE_PENDING_MESSAGE } from '@/src/lib/user-role';
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
@@ -170,9 +171,9 @@ function SearchDropdown({
                     <span className="block text-sm font-medium text-charcoal truncate">{p.name}</span>
                     <span className="block text-xs text-gray-400 mt-0.5 truncate">{p.brand}</span>
                   </span>
-                  <span className="shrink-0 text-sm font-semibold text-charcoal whitespace-nowrap">
+                  <span className={`shrink-0 text-sm font-semibold text-charcoal ${p.pendingApproval ? 'max-w-40 whitespace-normal leading-6' : 'whitespace-nowrap'}`}>
                     {p.callForPrice ? (
-                      "تماس برای قیمت"
+                      p.pendingApproval ? WHOLESALE_PENDING_MESSAGE : "تماس برای قیمت"
                     ) : (
                       <>
                         {p.price.toLocaleString("fa-IR")}{" "}

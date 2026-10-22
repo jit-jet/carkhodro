@@ -1,4 +1,6 @@
 'use client';
+import { WHOLESALE_PENDING_MESSAGE } from '@/src/lib/user-role';
+
 
 import { useState, useEffect, useRef } from 'react';
 import { ProductImage } from '@/src/components/product/ProductImageWatermark';
@@ -47,7 +49,7 @@ function AddToCartCell({ product }: { product: ProductVM }) {
   }
 
   if (product.callForPrice) {
-    return <CallForPrice compact />;
+    return <CallForPrice pendingApproval={product.pendingApproval} compact />;
   }
 
   function handleAdd() {
@@ -202,7 +204,7 @@ export default function CompareView({ initial, loggedIn }: Props) {
       cell: (p) => (
         <div className="py-3 px-4 space-y-1">
           {p.callForPrice ? (
-            <p className="text-sm font-bold text-accent-dark">{CALL_FOR_PRICE_LABEL}</p>
+            <p className="text-sm font-bold text-accent-dark">{p.pendingApproval ? WHOLESALE_PENDING_MESSAGE : CALL_FOR_PRICE_LABEL}</p>
           ) : (
             <>
               {p.oldPrice && (

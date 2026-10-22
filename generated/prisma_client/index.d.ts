@@ -261,6 +261,7 @@ export type DiscountCode = $Result.DefaultSelection<Prisma.$DiscountCodePayload>
 export namespace $Enums {
   export const UserRole: {
   RETAIL: 'RETAIL',
+  WHOLESALE_PENDING: 'WHOLESALE_PENDING',
   WHOLESALE: 'WHOLESALE',
   ADMIN: 'ADMIN',
   SUPPORT: 'SUPPORT'

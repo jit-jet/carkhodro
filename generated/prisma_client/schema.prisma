@@ -18,6 +18,7 @@ datasource db {
 
 enum UserRole {
   RETAIL
+  WHOLESALE_PENDING
   WHOLESALE
   ADMIN // full back-office access
   SUPPORT // read-only order/customer access

@@ -1,4 +1,6 @@
 'use server';
+import { WHOLESALE_PENDING_MESSAGE } from '@/src/lib/user-role';
+
 
 /**
  * Cart mutation Server Actions (file-level `'use server'`, so it is safe to
@@ -69,6 +71,7 @@ export async function addToCart(
     if (!product) return fail('محصول یافت نشد.');
 
     const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return fail(WHOLESALE_PENDING_MESSAGE);
     const role = pricingRoleFromUser(user?.role);
     if (product.stock < 1) {
       return fail('این محصول موجود نیست.');
@@ -134,6 +137,7 @@ export async function updateCartItemQuantity(
 ): Promise<ActionResult<CartMutationVM>> {
   return runMutation('updateCartItemQuantity', async () => {
     const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return fail(WHOLESALE_PENDING_MESSAGE);
 
     if (!user) {
       // Guest: `itemId` is the productId.
@@ -180,6 +184,7 @@ export async function updateCartItemQuantity(
 export async function removeCartItem(itemId: string): Promise<ActionResult<CartMutationVM>> {
   return runMutation('removeCartItem', async () => {
     const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return fail(WHOLESALE_PENDING_MESSAGE);
 
     if (!user) {
       // Guest: `itemId` is the productId.
@@ -206,6 +211,7 @@ export async function removeCartItem(itemId: string): Promise<ActionResult<CartM
 export async function clearCart(): Promise<ActionResult> {
   return runMutation('clearCart', async () => {
     const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return fail(WHOLESALE_PENDING_MESSAGE);
 
     if (!user) {
       await writeGuestCart([]);
@@ -228,6 +234,7 @@ export async function clearCart(): Promise<ActionResult> {
 export async function validateCartStockForCheckout(): Promise<ActionResult> {
   return runMutation('validateCartStockForCheckout', async () => {
     const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return fail(WHOLESALE_PENDING_MESSAGE);
     if (user && !canUseRetailCheckout(user.role)) {
       return ok(undefined);
     }
@@ -366,6 +373,7 @@ export async function validateCartStockForCheckout(): Promise<ActionResult> {
 export async function getCartCount(): Promise<number> {
   try {
     const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return 0;
     if (!user) {
       const lines = await readGuestCart();
       return (await buildGuestCartVM(lines)).totalItems;

@@ -13,7 +13,7 @@ export function isWholesaleApprovalTransition(
 export function wholesaleActivationMessage(): string {
   return [
     'کاربر گرامی کارخودرو',
-    'حساب کاربری شما به «همکار» تغییر یافت.',
+    'شما به عنوان همکار تأیید شدید. حساب کاربری شما به «همکار» تغییر یافت.',
     'از این پس می‌توانید از قیمت‌ها و امکانات همکاری استفاده کنید.',
     'carkhodro.com',
   ].join('\n');

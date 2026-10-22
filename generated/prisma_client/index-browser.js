@@ -717,6 +717,7 @@ exports.FooterLinkGroup = exports.$Enums.FooterLinkGroup = {
 
 exports.UserRole = exports.$Enums.UserRole = {
   RETAIL: 'RETAIL',
+  WHOLESALE_PENDING: 'WHOLESALE_PENDING',
   WHOLESALE: 'WHOLESALE',
   ADMIN: 'ADMIN',
   SUPPORT: 'SUPPORT'

@@ -1,3 +1,4 @@
+import { WHOLESALE_PENDING_MESSAGE } from '@/src/lib/user-role';
 import { ProductImage } from '@/src/components/product/ProductImageWatermark';
 import type { ProductVM as Product } from '@/src/lib/serializers';
 import Link from 'next/link';
@@ -52,11 +53,11 @@ export default function RelatedProducts({ products }: Props) {
                 {p.name}
               </h3>
               <div>
-                {p.stock < 1 ? (
+                {p.stock < 1 && !p.pendingApproval ? (
                   <p className="text-sm font-bold text-gray-400 leading-none">ناموجود</p>
                 ) : p.callForPrice ? (
                   <p className="text-sm font-bold text-accent-dark leading-none">
-                    {CALL_FOR_PRICE_LABEL}
+                    {p.pendingApproval ? WHOLESALE_PENDING_MESSAGE : CALL_FOR_PRICE_LABEL}
                   </p>
                 ) : (
                   <>

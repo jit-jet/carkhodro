@@ -1,3 +1,4 @@
+import { WHOLESALE_PENDING_MESSAGE } from '@/src/lib/user-role';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -32,6 +33,7 @@ export default function CartPage() {
 async function CartContent() {
   const [cart, user] = await Promise.all([getCart(), getCurrentUser()]);
 
+  if (user?.role === 'WHOLESALE_PENDING') return <p className="rounded-xl bg-amber-50 p-6 text-amber-800">{WHOLESALE_PENDING_MESSAGE}</p>;
   if (user && !canUseRetailCheckout(user.role)) redirect('/dashboard/cart');
 
   if (cart.items.length === 0) return <EmptyCart />;

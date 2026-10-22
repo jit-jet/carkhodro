@@ -1,4 +1,6 @@
 'use server';
+import { WHOLESALE_PENDING_MESSAGE } from '@/src/lib/user-role';
+
 
 /**
  * Order Server Actions (checkout + history). File-level `'use server'` so the
@@ -56,6 +58,7 @@ const TAX_RATE = 0;
 
 export async function getUserOrders(): Promise<OrderSummaryVM[]> {
   const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return [];
   if (!user) return [];
 
   return safeQuery('getUserOrders', async () => {
@@ -83,6 +86,7 @@ export async function getOrderConfirmation(
   id: string,
 ): Promise<OrderConfirmationVM | null> {
   const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return null;
   if (!user) return null;
 
   return safeQuery(`getOrderConfirmation:${id}`, async () => {
@@ -109,6 +113,7 @@ export async function getOrderConfirmation(
  */
 export async function getOrderReceipt(id: string): Promise<OrderReceiptVM | null> {
   const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return null;
   if (!user) return null;
 
   return safeQuery(`getOrderReceipt:${id}`, async () => {
@@ -197,6 +202,7 @@ export async function submitCheckout(
 ): Promise<ActionResult<{ id: string; gatewayUrl?: string }>> {
   return runMutation('submitCheckout', async () => {
     const user = await getCurrentUser();
+    if (user?.role === 'WHOLESALE_PENDING') return fail(WHOLESALE_PENDING_MESSAGE);
     if (!user) return fail('برای ثبت سفارش وارد شوید.');
     if (!canUseRetailCheckout(user.role)) {
       return fail('سفارش عمده‌فروشی از طریق پنل کاربری ثبت می‌شود.');

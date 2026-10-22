@@ -33,8 +33,10 @@ export function cartPathForRole(role: PricingRole): '/cart' | '/dashboard/cart' 
 
 /** Retail storefront cart + checkout (guests included). */
 export function canUseRetailCheckout(role: UserRole | undefined | null): boolean {
-  return !isWholesaleUser(role ?? null);
+  return role !== 'WHOLESALE_PENDING' && !isWholesaleUser(role ?? null);
 }
+
+export const WHOLESALE_PENDING_MESSAGE = 'برای مشاهده قیمت همکار لطفاً منتظر تایید مدیریت باشید';
 
 /** Dashboard invoice cart — wholesale partners only. */
 export function canUseDashboardCart(role: UserRole | undefined | null): boolean {

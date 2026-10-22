@@ -10,6 +10,7 @@ import type { ProvinceVM } from '@/src/lib/serializers';
 // ── Field-level form state ─────────────────────────────────────────────────────
 
 interface FormState {
+  registerAsPartner: boolean;
   firstName: string;
   lastName: string;
   provinceId: number | '';
@@ -20,6 +21,7 @@ interface FormState {
 }
 
 const INITIAL: FormState = {
+  registerAsPartner: false,
   firstName: '',
   lastName: '',
   provinceId: '',
@@ -93,6 +95,7 @@ export default function SignupForm({ phoneNumber, redirectTo = '/dashboard', pro
     setServerError('');
     try {
       const res = await registerUser({
+        registerAsPartner: form.registerAsPartner,
         phoneNumber,
         firstName:  form.firstName.trim(),
         lastName:   form.lastName.trim(),
@@ -236,6 +239,13 @@ export default function SignupForm({ phoneNumber, redirectTo = '/dashboard', pro
       />
 
       {/* Rules checkbox */}
+      <label className="flex items-center gap-3 cursor-pointer text-sm text-charcoal">
+        <input type="checkbox" checked={form.registerAsPartner}
+          onChange={(e) => set('registerAsPartner', e.target.checked)}
+          className="w-4 h-4 accent-[#F4C232]" />
+        ثبت نام به عنوان همکار
+      </label>
+      {form.registerAsPartner && <p className="text-xs text-amber-700">برای مشاهده قیمت همکار لطفاً منتظر تایید مدیریت باشید</p>}
       <div className="pt-1">
         <label className="flex items-start gap-3 cursor-pointer">
           <input

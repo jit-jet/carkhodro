@@ -119,7 +119,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
     <div className="bg-silver-light min-h-screen overflow-x-clip" dir="rtl">
       {trackVisit && <ProductVisitTracker productId={product.id} />}
       <JsonLd data={[
-        { '@context': 'https://schema.org', '@type': 'Product', name: product.name, sku: product.sku, image: product.images, description: plainText(product.description), brand: { '@type': 'Brand', name: product.brand }, offers: { '@type': 'Offer', url: siteUrl(`/products/${product.id}`), priceCurrency: 'IRR', price: product.price * 10, availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }, aggregateRating: product.reviewCount > 0 ? { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviewCount } : undefined, review: comments.map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.author }, reviewRating: { '@type': 'Rating', ratingValue: review.rating }, reviewBody: review.text })) },
+        { '@context': 'https://schema.org', '@type': 'Product', name: product.name, sku: product.sku, image: product.images, description: plainText(product.description), brand: { '@type': 'Brand', name: product.brand }, offers: product.callForPrice ? undefined : { '@type': 'Offer', url: siteUrl(`/products/${product.id}`), priceCurrency: 'IRR', price: product.price * 10, availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }, aggregateRating: product.reviewCount > 0 ? { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviewCount } : undefined, review: comments.map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.author }, reviewRating: { '@type': 'Rating', ratingValue: review.rating }, reviewBody: review.text })) },
         { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'خانه', item: siteUrl('/') }, { '@type': 'ListItem', position: 2, name: 'محصولات', item: siteUrl('/products') }, { '@type': 'ListItem', position: 3, name: product.name, item: siteUrl(`/products/${product.id}`) }] },
       ]} />
 
@@ -176,10 +176,10 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
 
             {/* Price box */}
             <div className="bg-silver-light rounded-xl px-5 py-4">
-              {product.stock < 1 ? (
+              {product.stock < 1 && !product.pendingApproval ? (
                 <p className="text-lg font-bold text-red-600">ناموجود</p>
               ) : product.callForPrice ? (
-                <CallForPrice phone={shopPhone} />
+                <CallForPrice pendingApproval={product.pendingApproval} phone={shopPhone} />
               ) : (
                 <>
                   {product.oldPrice && (

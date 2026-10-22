@@ -11,7 +11,7 @@ import {
 test('customer messages identify the event without exposing admin details', () => {
   assert.equal(wholesaleActivationMessage(), [
     'کاربر گرامی کارخودرو',
-    'حساب کاربری شما به «همکار» تغییر یافت.',
+    'شما به عنوان همکار تأیید شدید. حساب کاربری شما به «همکار» تغییر یافت.',
     'از این پس می‌توانید از قیمت‌ها و امکانات همکاری استفاده کنید.',
     'carkhodro.com',
   ].join('\n'));
@@ -26,7 +26,7 @@ test('customer messages identify the event without exposing admin details', () =
   ].join('\n'));
   assert.equal(retailPurchasePaidMessage(42), [
     'کارخودرو',
-    'سفارش 42 با موفقیت پرداخت و ثبت شد.',
+    'سفارش شما با شماره فاکتور 42 با موفقیت پرداخت و ثبت شد.',
   ].join('\n'));
 });
 

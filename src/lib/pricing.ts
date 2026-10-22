@@ -84,6 +84,7 @@ export function resolveProductPrice(
   fields: ProductPriceFields,
   role: PricingRole,
 ): ResolvedPrice {
+  if (role === 'WHOLESALE_PENDING') return { basePrice: 0, discountPct: 0, finalPrice: 0 };
   if (isWholesaleUser(role)) {
     const basePrice = toNumber(fields.wholesalePrice);
     return {

@@ -12,6 +12,7 @@
  */
 
 import { prisma } from '@/src/lib/prisma';
+import { revalidatePath } from 'next/cache';
 import { ok, fail, safeQuery, runMutation, type ActionResult } from '@/src/lib/result';
 import { formatJalaliDate } from '@/src/lib/format';
 import { USER_ROLE_FA } from '@/src/lib/user-labels';
@@ -227,7 +228,7 @@ export async function updateUser(
     if (target.role === 'ADMIN' || target.role === 'SUPPORT') {
       return fail('اطلاعات مدیران از این بخش قابل تغییر نیست.');
     }
-    if (!ASSIGNABLE_ROLES.includes(input.role)) {
+    if (!ASSIGNABLE_ROLES.includes(input.role) && !(target.role === 'WHOLESALE_PENDING' && input.role === 'WHOLESALE_PENDING')) {
       return fail('این نقش از این بخش قابل تنظیم نیست.');
     }
     if (!input.firstName?.trim() || !input.lastName?.trim()) {
@@ -305,10 +306,15 @@ export async function updateUser(
     // The contact helper itself rejects RETAIL users as a second line of defence.
     if (input.role === 'WHOLESALE') {
       runHesabfaBackground('pushContact:adminUpdate', () => pushContactToHesabfa(userId));
-      if (target.role === 'RETAIL') {
+      if (target.role !== 'WHOLESALE') {
         queueCustomerNotification('WHOLESALE_ACTIVATED', userId);
       }
     }
+    if (target.role === 'WHOLESALE_PENDING' && input.role === 'RETAIL') {
+      queueCustomerNotification('WHOLESALE_REJECTED', userId);
+    }
+    revalidatePath('/admin', 'layout');
+    revalidatePath('/', 'layout');
     return ok(undefined);
   });
 }
@@ -348,6 +354,7 @@ export async function setUserActive(
 export async function updateUserRole(
   userId: string,
   role: UserRole,
+  pendingOnly = false,
 ): Promise<ActionResult> {
   return runMutation('updateUserRole', async () => {
     const admin = await getCurrentAdmin();
@@ -358,6 +365,7 @@ export async function updateUserRole(
     }
     const target = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } });
     if (!target) return fail('کاربر پیدا نشد.');
+    if (pendingOnly && target.role !== 'WHOLESALE_PENDING') return fail('این درخواست قبلاً بررسی شده است.');
     if (target.role === 'ADMIN' || target.role === 'SUPPORT') {
       return fail('نقش مدیران از این بخش قابل تغییر نیست.');
     }
@@ -369,10 +377,15 @@ export async function updateUserRole(
     if (updated.count === 0) return fail('نقش کاربر هم‌زمان تغییر کرده است. صفحه را تازه‌سازی کنید.');
     if (role === 'WHOLESALE') {
       runHesabfaBackground('pushContact:adminRole', () => pushContactToHesabfa(userId));
-      if (target.role === 'RETAIL') {
+      if (target.role !== 'WHOLESALE') {
         queueCustomerNotification('WHOLESALE_ACTIVATED', userId);
       }
     }
+    if (target.role === 'WHOLESALE_PENDING' && role === 'RETAIL') {
+      queueCustomerNotification('WHOLESALE_REJECTED', userId);
+    }
+    revalidatePath('/admin', 'layout');
+    revalidatePath('/', 'layout');
     return ok(undefined);
   });
 }

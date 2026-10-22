@@ -167,7 +167,7 @@ export default function UsersTable({
                     className={headerSelectClass}
                   >
                     <option value="">همه</option>
-                    {ASSIGNABLE_ROLES.map((r) => (
+                    {[...ASSIGNABLE_ROLES, 'WHOLESALE_PENDING' as const].map((r) => (
                       <option key={r} value={r}>
                         {USER_ROLE_FA[r]}
                       </option>

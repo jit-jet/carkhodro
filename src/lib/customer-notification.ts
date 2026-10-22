@@ -14,6 +14,7 @@ import {
 
 export type CustomerNotificationKind =
   | 'WHOLESALE_ACTIVATED'
+  | 'WHOLESALE_REJECTED'
   | 'WHOLESALE_INVOICE_SUBMITTED'
   | 'WHOLESALE_INVOICE_APPROVED'
   | 'RETAIL_PURCHASE_PAID';
@@ -22,14 +23,15 @@ async function sendCustomerNotification(kind: CustomerNotificationKind, id: stri
   let phoneNumber: string | null = null;
   let body: string | null = null;
 
-  if (kind === 'WHOLESALE_ACTIVATED') {
+  if (kind === 'WHOLESALE_ACTIVATED' || kind === 'WHOLESALE_REJECTED') {
     const user = await prisma.user.findUnique({
       where: { id },
       select: { role: true, phoneNumber: true },
     });
-    if (user?.role !== 'WHOLESALE') return;
+    if (!user || user.role !== (kind === 'WHOLESALE_ACTIVATED' ? 'WHOLESALE' : 'RETAIL')) return;
     phoneNumber = normalizeIranMobile(user.phoneNumber);
-    body = wholesaleActivationMessage();
+    body = kind === 'WHOLESALE_ACTIVATED' ? wholesaleActivationMessage()
+      : 'کاربر گرامی کارخودرو، درخواست همکاری شما رد شد. حساب شما به عنوان مشتری فعال است.';
   } else {
     const order = await prisma.order.findUnique({
       where: { id },

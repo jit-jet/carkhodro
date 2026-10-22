@@ -38,7 +38,7 @@ export async function proxy(request: NextRequest) {
 
   if (isAndroidAppUserAgent(request.headers.get('user-agent'))) {
     const token = request.cookies.get(SESSION_COOKIE)?.value;
-    let role: 'WHOLESALE' | 'RETAIL' | 'ADMIN' | 'SUPPORT' | null = null;
+    let role: 'WHOLESALE' | 'WHOLESALE_PENDING' | 'RETAIL' | 'ADMIN' | 'SUPPORT' | null = null;
     if (token) {
       try {
         const session = await prisma.session.findUnique({

@@ -54,7 +54,7 @@ export default function UserForm({
   const [firstName, setFirstName] = useState(initial.firstName);
   const [lastName, setLastName] = useState(initial.lastName);
   const [role, setRole] = useState<UserRole>(
-    ASSIGNABLE_ROLES.includes(initial.role) ? initial.role : "RETAIL",
+    initial.role === 'WHOLESALE_PENDING' || ASSIGNABLE_ROLES.includes(initial.role) ? initial.role : "RETAIL",
   );
   const isVerified = initial.isVerified;
   const [isActive, setIsActive] = useState(initial.isActive);
@@ -143,6 +143,7 @@ export default function UserForm({
               <div>
                 <Label>نقش</Label>
                 <Select value={role} onChange={(e) => setRole(e.target.value as UserRole)} required>
+                  {initial.role === 'WHOLESALE_PENDING' && <option value="WHOLESALE_PENDING">همکار در انتظار تأیید</option>}
                   {ASSIGNABLE_ROLES.map((r) => (
                     <option key={r} value={r}>
                       {USER_ROLE_FA[r]}

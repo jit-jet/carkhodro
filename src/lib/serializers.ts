@@ -34,6 +34,7 @@ export type ProductWithRelations = Prisma.ProductGetPayload<{
 // ── View-model types (id is the DB cuid → string) ───────────────────────────
 
 export interface ProductVM {
+  pendingApproval?: boolean;
   id: string;
   name: string;
   partsBrandId: number;
@@ -459,6 +460,8 @@ export function applyRoleToProduct(vm: ProductVM, role: PricingRole): ProductVM 
   );
   return {
     ...vm,
+    pendingApproval: role === 'WHOLESALE_PENDING',
+    ...(role === 'WHOLESALE_PENDING' ? { wholesalePrice: 0, cashDiscountPct: 0, retailPriceDiffPct: 0, retailDiscountPct: 0 } : {}),
     callForPrice,
     price: resolved.finalPrice,
     oldPrice: callForPrice
@@ -534,10 +537,11 @@ export function toProductVM(
     cashDiscount: isWholesaleUser(role) && Number(p.cashDiscountPct) > 0
       ? Number(p.cashDiscountPct)
       : undefined,
-    wholesalePrice: Number(p.wholesalePrice),
-    cashDiscountPct: Number(p.cashDiscountPct),
-    retailPriceDiffPct: Number(p.retailPriceDiffPct),
-    retailDiscountPct: Number(p.retailDiscountPct),
+    pendingApproval: role === 'WHOLESALE_PENDING',
+    wholesalePrice: role === 'WHOLESALE_PENDING' ? 0 : Number(p.wholesalePrice),
+    cashDiscountPct: role === 'WHOLESALE_PENDING' ? 0 : Number(p.cashDiscountPct),
+    retailPriceDiffPct: role === 'WHOLESALE_PENDING' ? 0 : Number(p.retailPriceDiffPct),
+    retailDiscountPct: role === 'WHOLESALE_PENDING' ? 0 : Number(p.retailDiscountPct),
     callForPriceRetail,
     callForPriceWholesale,
     callForPrice,
