@@ -245,7 +245,6 @@ export default function SignupForm({ phoneNumber, redirectTo = '/dashboard', pro
           className="w-4 h-4 accent-[#F4C232]" />
         ثبت نام به عنوان همکار
       </label>
-      {form.registerAsPartner && <p className="text-xs text-amber-700">برای مشاهده قیمت همکار لطفاً منتظر تایید مدیریت باشید</p>}
       <div className="pt-1">
         <label className="flex items-start gap-3 cursor-pointer">
           <input

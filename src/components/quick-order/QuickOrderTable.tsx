@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { getProductBrowsePage } from '@/actions/product-browser';
 import { addToCart } from '@/actions/cart';
-import { ProductImage } from '@/src/components/product/ProductImageWatermark';
+import Image from 'next/image';
 import CallForPrice from '@/src/components/product/CallForPrice';
 import { productBrowseInputFromParams, type ProductBrowseInput, type ProductBrowsePage } from '@/src/lib/product-browse';
 import AdminPagination from '@/src/components/admin/AdminPagination';
@@ -261,5 +261,5 @@ export default function QuickOrderTable({ initialPage, filters, cartHref }: {
 function Thumbnail({ product }: { product: ProductVM }) {
   const [failed, setFailed] = useState(false);
   if (failed) return <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 text-center text-[9px] text-gray-400" aria-label={`تصویر ${product.name} در دسترس نیست`}>بدون تصویر</span>;
-  return <ProductImage src={product.mainImage} alt={product.name} width={48} height={48} onError={() => setFailed(true)} className="h-12 w-12 rounded-lg bg-white object-contain" />;
+  return <Image src={product.mainImage} alt={product.name} width={48} height={48} onError={() => setFailed(true)} className="h-12 w-12 rounded-lg bg-white object-contain" />;
 }
