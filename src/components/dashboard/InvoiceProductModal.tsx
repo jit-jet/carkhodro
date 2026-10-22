@@ -173,7 +173,12 @@ function ProductRow({
   const [qty, setQty] = useState('1');
   const unavailable = product.stock < 1;
   const parsedQty = Number(qty);
-  const hasValidQty = Number.isInteger(parsedQty) && parsedQty >= 1;
+  const hasValidQty = Number.isSafeInteger(parsedQty) && parsedQty >= 1;
+  const quantityForControls = hasValidQty ? parsedQty : 1;
+
+  function stepQuantity(direction: -1 | 1) {
+    setQty(String(Math.max(1, quantityForControls + direction)));
+  }
 
   return (
     <li className={["flex items-center gap-3 py-3", highlighted ? "border-2 border-accent rounded-xl px-2" : ""].join(" ")}>
@@ -206,15 +211,37 @@ function ProductRow({
           <p className="text-[11px] text-amber-700 mt-1">فقط با تماس</p>
         ) : (
           <div className="flex items-center gap-1.5 mt-1.5 justify-end">
-            <input
-              type="number"
-              min={1}
-              value={qty}
-              onChange={(e) => setQty(e.target.value)}
-              className="w-16 border border-gray-200 rounded-lg px-2 py-1 text-sm text-center outline-none focus:border-accent"
-              aria-label="تعداد"
-            />
+            <div dir="ltr" className="flex w-20 overflow-hidden rounded-lg border border-gray-200 bg-white focus-within:border-accent">
+              <input
+                type="text"
+                inputMode="numeric"
+                value={qty}
+                onChange={(e) => setQty(e.target.value)}
+                className="min-w-0 w-full bg-white px-1 py-1 text-sm text-center outline-none"
+                aria-label={`تعداد ${product.name}`}
+              />
+              <span className="flex w-6 shrink-0 flex-col border-l border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => stepQuantity(1)}
+                  className="flex flex-1 items-center justify-center border-b border-gray-200 text-[9px] leading-none text-gray-600 hover:bg-amber-50"
+                  aria-label={`افزایش تعداد ${product.name}`}
+                >
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  onClick={() => stepQuantity(-1)}
+                  disabled={quantityForControls <= 1}
+                  className="flex flex-1 items-center justify-center text-[9px] leading-none text-gray-600 hover:bg-amber-50 disabled:cursor-not-allowed disabled:text-gray-300"
+                  aria-label={`کاهش تعداد ${product.name}`}
+                >
+                  ▼
+                </button>
+              </span>
+            </div>
             <button
+              type="button"
               onClick={() => {
                 if (hasValidQty) onAdd(product.id, parsedQty);
               }}
