@@ -138,15 +138,15 @@ async function queryNonSearchProducts(
   return { rows, total };
 }
 
-async function browsePage(input: ProductBrowseInput): Promise<ProductBrowsePage> {
+async function browsePage(input: ProductBrowseInput, perPage: number): Promise<ProductBrowsePage> {
   const normalized = normalizeInput(input);
-  const offset = (normalized.page - 1) * PRODUCT_PAGE_SIZE;
+  const offset = (normalized.page - 1) * perPage;
 
   if (normalized.query) {
     const result = await searchProductBrowsePage(
       normalized,
       offset,
-      PRODUCT_PAGE_SIZE,
+      perPage,
     );
     return {
       items: result.items,
@@ -157,7 +157,7 @@ async function browsePage(input: ProductBrowseInput): Promise<ProductBrowsePage>
   }
 
   const [{ rows, total }, user, fallbackImage] = await Promise.all([
-    queryNonSearchProducts(normalized, PRODUCT_PAGE_SIZE),
+    queryNonSearchProducts(normalized, perPage),
     getCurrentUser(),
     getDefaultImageUrl(),
   ]);
@@ -173,8 +173,10 @@ async function browsePage(input: ProductBrowseInput): Promise<ProductBrowsePage>
 
 export async function getProductBrowsePage(
   input: ProductBrowseInput,
+  perPage = PRODUCT_PAGE_SIZE,
 ): Promise<ProductBrowsePage> {
-  return safeQuery(`getProductBrowsePage:${input.page}`, () => browsePage(input), {
+  const pageSize = [10, 12, 20, 50, 100].includes(perPage) ? perPage : PRODUCT_PAGE_SIZE;
+  return safeQuery(`getProductBrowsePage:${input.page}`, () => browsePage(input, pageSize), {
     ...EMPTY_PAGE,
     nextPage: Math.max(2, input.page + 1),
     failed: true,

@@ -41,6 +41,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard', label: 'داشبورد', icon: 'grid' },
+  { href: '/quick-order', label: 'خرید سریع', icon: 'cart' },
   { href: '/dashboard/support', label: 'پشتیبانی', icon: 'support' },
   { href: '/dashboard/cart', label: 'سبد خرید', icon: 'cart', wholesaleOnly: true },
   { href: '/dashboard/orders', label: 'سفارشات', icon: 'orders' },

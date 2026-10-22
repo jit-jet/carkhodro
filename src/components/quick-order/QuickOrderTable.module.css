@@ -1,0 +1,72 @@
+.table {
+  table-layout: fixed;
+  overflow-wrap: anywhere;
+}
+
+.table th,
+.table td {
+  min-width: 0;
+}
+
+@media (max-width: 1023px) {
+  .table,
+  .table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .table colgroup {
+    display: none;
+  }
+
+  /* Keep column headers available to assistive technology. */
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .table tbody tr {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) 56px minmax(110px, 1fr);
+    grid-template-areas:
+      'photo title title title'
+      'price price quantity buy';
+    column-gap: 8px;
+    row-gap: 14px;
+    padding: 16px 12px;
+  }
+
+  .table td {
+    display: block;
+    border: 0;
+    padding: 0;
+  }
+
+  .table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 400;
+  }
+
+  .table td:nth-child(1),
+  .table td:nth-child(4),
+  .table td:nth-child(5),
+  .table td:nth-child(6) { display: none; }
+  .table td:nth-child(2) { grid-area: photo; }
+  .table td:nth-child(3) { grid-area: title; }
+  .table td:nth-child(7) { grid-area: price; align-self: end; }
+  .table td:nth-child(8) { grid-area: quantity; align-self: end; }
+  .table td:nth-child(9) { grid-area: buy; align-self: end; }
+
+  .table td:nth-child(9) button {
+    padding-inline: 6px;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+}

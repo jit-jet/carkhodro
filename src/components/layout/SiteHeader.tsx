@@ -45,12 +45,13 @@ export default async function SiteHeader() {
   ]);
 
   const viewerRole = pricingRoleFromUser(user?.role);
+  const links = [...navLinks];
 
   const cartHref = cartPathForRole(viewerRole);
 
   if (isWholesaleUser(viewerRole)) {
 
-    navLinks.push({
+    links.push({
 
       id: 100,
 
@@ -68,7 +69,7 @@ export default async function SiteHeader() {
 
     <Header
 
-      navLinks={navLinks}
+      navLinks={links}
 
       cartHref={cartHref}
 
