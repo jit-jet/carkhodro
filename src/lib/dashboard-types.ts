@@ -130,6 +130,8 @@ export interface InvoiceVM {
   accountBalanceBeforeInvoiceRial: number | null;
   accountBalanceRial: number | null;
   isRetail: boolean;
+  accountBalanceLabel: string;
+  accountBalanceNote: string | null;
   hasSurvey: boolean;
 }
 

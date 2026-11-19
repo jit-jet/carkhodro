@@ -154,8 +154,9 @@ export default function InvoicePrint({ invoice, seller: s }: Props) {
             </p>
           )}
           <p>
-            مانده حساب: <b>{balanceLabel(invoice.isRetail ? 0 : invoice.accountBalanceRial)}</b>
+            {invoice.accountBalanceLabel}: <b>{balanceLabel(invoice.isRetail ? 0 : invoice.accountBalanceRial)}</b>
           </p>
+          {invoice.accountBalanceNote && <p>{invoice.accountBalanceNote}</p>}
         </div>
 
         <div className="inv-sign">امضای فروشنده</div>

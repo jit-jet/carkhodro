@@ -36,6 +36,7 @@ import type {
   Prisma,
 } from '@/generated/prisma_client';
 import type { InvoiceVM, InvoiceLineVM } from '@/src/lib/dashboard-types';
+import { getInvoiceBalances } from '@/src/lib/hesabfa/invoice-balances';
 import { netLineTotalForOrder } from '@/src/lib/pricing';
 import { normalizeInvoiceNumber } from '@/src/lib/invoice-number';
 import { orderSourceTypeLabel } from '@/src/lib/hesabfa/invoice-type';
@@ -381,11 +382,7 @@ export async function getInvoiceAdmin(id: string): Promise<InvoiceVM | null> {
         couponDiscountToman: Number(order.discountAmount),
         discountCode: order.discountCode,
         payableToman: Number(order.totalAmount),
-        accountBalanceBeforeInvoiceRial: order.user.role === 'RETAIL' ? 0
-          : order.source !== 'ONLINE' || order.accountBalanceSnapshotRial == null
-            ? null : Number(order.accountBalanceSnapshotRial),
-        accountBalanceRial: order.user.role === 'RETAIL' ? 0
-          : order.accountBalanceSnapshotRial == null ? null : Number(order.accountBalanceSnapshotRial),
+        ...await getInvoiceBalances({ ...order, role: order.user.role }),
         isRetail: order.user.role === 'RETAIL',
         hasSurvey: order.survey !== null,
       } satisfies InvoiceVM;

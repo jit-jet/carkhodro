@@ -30,6 +30,7 @@ import type {
   InvoiceLineVM,
 } from '@/src/lib/dashboard-types';
 import { netLineTotalForOrder } from '@/src/lib/pricing';
+import { getInvoiceBalances } from '@/src/lib/hesabfa/invoice-balances';
 import { normalizeInvoiceNumber } from '@/src/lib/invoice-number';
 import { orderSourceTypeLabel } from '@/src/lib/hesabfa/invoice-type';
 
@@ -165,11 +166,7 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
         couponDiscountToman: Number(order.discountAmount),
         discountCode: order.discountCode,
         payableToman,
-        accountBalanceBeforeInvoiceRial: user.role === 'RETAIL' ? 0
-          : order.source !== 'ONLINE' || order.accountBalanceSnapshotRial == null
-            ? null : Number(order.accountBalanceSnapshotRial),
-        accountBalanceRial: user.role === 'RETAIL' ? 0
-          : order.accountBalanceSnapshotRial == null ? null : Number(order.accountBalanceSnapshotRial),
+        ...await getInvoiceBalances({ ...order, role: user.role }),
         isRetail: user.role === 'RETAIL',
         hasSurvey: order.survey !== null,
       } satisfies InvoiceVM;
