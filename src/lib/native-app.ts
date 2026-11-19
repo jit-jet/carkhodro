@@ -9,6 +9,8 @@ export function isAndroidAppUserAgent(userAgent: string | null): boolean {
 
 /** Return a route only when the Android app must leave the requested page. */
 export function androidAppRedirect(pathname: string, role: UserRole | null): string | null {
+  if (pathname === '/downloads/android') return null;
+
   if (role === 'WHOLESALE') {
     return ['/login', '/signup'].includes(pathname)
       ? '/dashboard'

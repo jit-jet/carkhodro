@@ -165,6 +165,9 @@ export async function getInvoice(id: string): Promise<InvoiceVM | null> {
         couponDiscountToman: Number(order.discountAmount),
         discountCode: order.discountCode,
         payableToman,
+        accountBalanceBeforeInvoiceRial: user.role === 'RETAIL' ? 0
+          : order.source !== 'ONLINE' || order.accountBalanceSnapshotRial == null
+            ? null : Number(order.accountBalanceSnapshotRial),
         accountBalanceRial: user.role === 'RETAIL' ? 0
           : order.accountBalanceSnapshotRial == null ? null : Number(order.accountBalanceSnapshotRial),
         isRetail: user.role === 'RETAIL',

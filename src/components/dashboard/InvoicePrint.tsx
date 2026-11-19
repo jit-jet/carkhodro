@@ -148,6 +148,11 @@ export default function InvoicePrint({ invoice, seller: s }: Props) {
           <p className="inv-words">
             مبلغ کل: <b>{rialInWords(invoice.payableToman)}</b>
           </p>
+          {invoice.accountBalanceBeforeInvoiceRial !== null && (
+            <p>
+              مانده حساب قبل از فاکتور: <b>{balanceLabel(invoice.accountBalanceBeforeInvoiceRial)}</b>
+            </p>
+          )}
           <p>
             مانده حساب: <b>{balanceLabel(invoice.isRetail ? 0 : invoice.accountBalanceRial)}</b>
           </p>

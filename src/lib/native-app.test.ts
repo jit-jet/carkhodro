@@ -24,3 +24,11 @@ test('keeps non-partner accounts off app pages', () => {
   assert.equal(androidAppRedirect('/login', 'RETAIL'), null);
   assert.equal(androidAppRedirect('/dashboard', 'ADMIN'), '/login');
 });
+
+test('allows public Android downloads without opening other download paths', () => {
+  for (const role of [null, 'WHOLESALE', 'WHOLESALE_PENDING', 'RETAIL', 'ADMIN', 'SUPPORT'] as const) {
+    assert.equal(androidAppRedirect('/downloads/android', role), null);
+  }
+  assert.equal(androidAppRedirect('/downloads/android/private', null), '/login');
+  assert.equal(androidAppRedirect('/downloads/other', null), '/login');
+});

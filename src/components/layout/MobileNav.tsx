@@ -13,8 +13,8 @@ export default function MobileNav({ items }: { items: MobileNavItemVM[] }) {
 
   return (
     <>
-      <div aria-hidden="true" className="h-[calc(4.25rem+env(safe-area-inset-bottom,0px))] md:hidden" />
-      <nav aria-label="منوی پایین موبایل" className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white shadow-[0_-4px_16px_rgba(0,0,0,0.08)] md:hidden">
+      <div aria-hidden="true" className="no-print h-[calc(4.25rem+env(safe-area-inset-bottom,0px))] md:hidden" />
+      <nav aria-label="منوی پایین موبایل" className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white shadow-[0_-4px_16px_rgba(0,0,0,0.08)] md:hidden">
         <div className="flex min-h-[4.25rem] items-stretch overflow-x-auto px-1 pb-[env(safe-area-inset-bottom,0px)] [scrollbar-width:none]">
           {visible.map((item) => {
             const targetPath = item.href.split('?')[0];

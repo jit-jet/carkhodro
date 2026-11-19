@@ -126,6 +126,8 @@ export interface InvoiceVM {
   /** Applied coupon code, if any. */
   discountCode: string | null;
   payableToman: number; // net
+  /** Pre-save snapshot for site-issued invoices; unavailable for accounting imports. */
+  accountBalanceBeforeInvoiceRial: number | null;
   accountBalanceRial: number | null;
   isRetail: boolean;
   hasSurvey: boolean;
